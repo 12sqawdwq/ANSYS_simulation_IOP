@@ -21,7 +21,9 @@ etable,ostat,cont,stat
 esel,r,etab,ostat,1,1e12
 *get,n_outer,elem,0,count
 nsle,s
-nwrite,outer_nodes,txt
+/output,outer_nodes,txt
+nlist,all
+/output
 
 ! Bonded eyelid-cornea contact: inner effective transfer area.
 allsel
@@ -29,9 +31,15 @@ esel,s,real,,4
 esel,r,ename,,170
 etable,istat,cont,stat
 esel,r,etab,istat,1,1e12
+! Bonded contact status may be zero; export its complete contact-side footprint.
+allsel
+esel,s,real,,4
+esel,r,ename,,170
 *get,n_inner,elem,0,count
 nsle,s
-nwrite,inner_nodes,txt
+/output,inner_nodes,txt
+nlist,all
+/output
 
 ! Material-specific maxima prevent the probe from masking tissue stress.
 allsel
