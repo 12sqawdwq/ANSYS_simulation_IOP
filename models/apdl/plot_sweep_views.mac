@@ -1,5 +1,4 @@
 ! Nine stable, material-separated views. PNG suffix order is fixed by this macro.
-resume,%ARG1%,db
 /post1
 set,last
 /show,png

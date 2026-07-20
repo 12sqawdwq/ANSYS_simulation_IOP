@@ -31,8 +31,9 @@ def run_case(args: tuple[Path, float, float, int]) -> dict[str, str]:
     driver.write_text(
         f"xoff={offset / 1000:.9g}\\nindent={indent / 1000:.9g}\\n"
         f"*use,param_eye_sweep.mac,xoff,indent\\n"
-        f"*use,post_sweep.mac,{name}\\n"
-        f"*use,plot_sweep_views.mac,{name}\\n",
+        f"resume,{name},db\\n"
+        "*use,post_sweep.mac\\n"
+        "*use,plot_sweep_views.mac\\n",
         encoding="ascii",
     )
     command = [
