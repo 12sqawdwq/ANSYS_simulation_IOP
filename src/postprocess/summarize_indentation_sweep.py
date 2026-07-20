@@ -104,8 +104,21 @@ def add_check(checks: list[dict], severity: str, code: str, case: str, message: 
     checks.append({"severity": severity, "code": code, "case": case, "message": message})
 
 
-def build_qc(manifest: list[dict[str, str]], rows: list[dict]) -> dict:
+def build_qc(
+    manifest: list[dict[str, str]],
+    rows: list[dict],
+    expected_cases: list[dict] | None = None,
+) -> dict:
     checks: list[dict] = []
+    expected_pairs = {
+        (float(item["offset_mm"]), float(item["indent_mm"])) for item in (expected_cases or [])
+    }
+    manifest_pairs = {
+        (float(raw["offset_mm"]), float(raw["indent_mm"])) for raw in manifest
+    }
+    for offset, indent in sorted(expected_pairs - manifest_pairs):
+        add_check(checks, "error", "missing_manifest_case", "",
+                  f"missing offset={offset:g} mm, indentation={indent:g} mm")
     for raw in manifest:
         if raw.get("status") != "complete":
             add_check(checks, "error", "case_not_complete", raw.get("case", ""),
@@ -172,6 +185,7 @@ def build_qc(manifest: list[dict[str, str]], rows: list[dict]) -> dict:
     return {
         "generated_at_utc": utc_now(),
         "passed": severities["error"] == 0,
+        "expected_cases": len(expected_pairs) if expected_cases is not None else len(manifest),
         "manifest_cases": len(manifest),
         "complete_cases": len(rows),
         "counts": severities,
@@ -205,9 +219,11 @@ def main() -> int:
     parser.add_argument("run_root", type=Path)
     cli = parser.parse_args()
     manifest = read_manifest(cli.run_root / "run_manifest.csv")
+    metadata_path = cli.run_root / "run_metadata.json"
+    metadata = json.loads(metadata_path.read_text(encoding="utf-8")) if metadata_path.exists() else {}
     rows = summary_rows(manifest)
     write_summary(cli.run_root / "summary.csv", rows)
-    qc = build_qc(manifest, rows)
+    qc = build_qc(manifest, rows, metadata.get("cases"))
     (cli.run_root / "qc_report.json").write_text(
         json.dumps(qc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )

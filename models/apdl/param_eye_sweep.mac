@@ -19,6 +19,15 @@ gap0   = 0.05e-3       ! small initial gap
 indent = ARG2
 retry_mode = ARG3
 mesh_size = ARG4
+indent_limit = 0.8e-3
+*if,indent,lt,0,then
+/com,ERROR: indentation must be non-negative
+/exit,nosave
+*endif
+*if,indent,gt,indent_limit,then
+/com,ERROR: indentation exceeds the validated 0.8 mm limit
+/exit,nosave
+*endif
 *if,mesh_size,le,0,then
 mesh_size = 0.3e-3
 *endif

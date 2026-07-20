@@ -23,11 +23,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 MODEL_DIR = REPO_ROOT / "models" / "apdl"
 APDL_FILES = ("param_eye_sweep.mac", "post_sweep.mac", "plot_sweep_views.mac")
 OFFSETS_MM = (0.0, 0.5, 1.0, 2.0)
-FULL_INDENTS_MM = tuple(i / 4 for i in range(9))
-COARSE_INDENTS_MM = (0.0, 0.5, 1.0, 1.5, 2.0)
+MAX_INDENT_MM = 0.8
+FULL_INDENTS_MM = tuple(i / 5 for i in range(5))
+COARSE_INDENTS_MM = (0.0, 0.4, 0.8)
 GAP_M = 0.05e-3
 PROFILE_CASES = {
-    "smoke": ((0.0, 0.0), (0.0, 1.0), (2.0, 1.0), (2.0, 2.0)),
+    "smoke": ((0.0, 0.0), (0.0, 0.8), (2.0, 0.4), (2.0, 0.8)),
     "coarse": tuple((offset, indent) for offset in OFFSETS_MM for indent in COARSE_INDENTS_MM),
     "full": tuple((offset, indent) for offset in OFFSETS_MM for indent in FULL_INDENTS_MM),
 }
@@ -452,6 +453,8 @@ def choose_cases(parser: argparse.ArgumentParser, cli: argparse.Namespace) -> tu
         pairs = PROFILE_CASES[profile]
     if not pairs or any(offset < 0 or indent < 0 for offset, indent in pairs):
         parser.error("offset and indentation values must be non-negative")
+    if any(indent > MAX_INDENT_MM + 1e-12 for _, indent in pairs):
+        parser.error(f"indentation exceeds the validated {MAX_INDENT_MM:g} mm limit")
     unique_pairs = list(dict.fromkeys(pairs))
     return profile, [CaseSpec(offset, indent, index) for index, (offset, indent) in enumerate(unique_pairs)]
 

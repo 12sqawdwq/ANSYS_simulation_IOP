@@ -1,0 +1,6 @@
+run_id,git_commit,offset_mm,indent_mm,attempt,status,returncode,ansys_error_count,high_distortion_events,last_result_time,disposition
+20260720T103400Z_7bd36dd8_smoke,7bd36dd8118e7fcce4305daa8b42304aca9af3bc,0.0,0.0,1,complete,0,0,0,2.0,baseline_only
+20260720T103400Z_7bd36dd8_smoke,7bd36dd8118e7fcce4305daa8b42304aca9af3bc,0.0,1.0,1,complete,0,0,0,2.0,excluded_above_limit
+20260720T103400Z_7bd36dd8_smoke,7bd36dd8118e7fcce4305daa8b42304aca9af3bc,2.0,1.0,1,ansys_error,1,1,1,2.0,excluded_high_distortion
+20260720T103400Z_7bd36dd8_smoke,7bd36dd8118e7fcce4305daa8b42304aca9af3bc,2.0,1.0,2,interrupted,,0,0,1.025,stopped_after_limit_change
+20260720T103400Z_7bd36dd8_smoke,7bd36dd8118e7fcce4305daa8b42304aca9af3bc,2.0,2.0,1,interrupted,,6,6,1.64801,excluded_high_distortion

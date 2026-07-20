@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import io
 import os
 import sys
 import tempfile
@@ -16,6 +17,7 @@ class APDLContractTests(unittest.TestCase):
         model = (runner.MODEL_DIR / "param_eye_sweep.mac").read_text().lower()
         self.assertIn("cm,probe_top_nodes,node", model)
         self.assertIn("cnvtol,f,,0.01", model)
+        self.assertIn("indent_limit = 0.8e-3", model)
         self.assertLess(model.index("time,1"), model.index("time,2"))
         self.assertLess(model.index("time,2"), model.index("*cfopen,solution_status,csv"))
 
@@ -69,7 +71,7 @@ class AttemptValidationTests(unittest.TestCase):
 
     def test_recoverable_generic_error_can_complete(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            case = runner.CaseSpec(0.0, 1.0, 0)
+            case = runner.CaseSpec(0.0, 0.8, 0)
             attempt = self.make_attempt(
                 Path(directory), case, output="*** ERROR *** automatic cutback\nRUN COMPLETED"
             )
@@ -79,14 +81,14 @@ class AttemptValidationTests(unittest.TestCase):
 
     def test_final_load_step_is_required(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            case = runner.CaseSpec(0.0, 1.0, 0)
+            case = runner.CaseSpec(0.0, 0.8, 0)
             attempt = self.make_attempt(Path(directory), case, load_step=1.0, result_time=1.0)
             outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
             self.assertEqual(outcome.status, "invalid_metrics")
 
     def test_non_finite_metric_is_rejected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            case = runner.CaseSpec(0.0, 1.0, 0)
+            case = runner.CaseSpec(0.0, 0.8, 0)
             attempt = self.make_attempt(Path(directory), case, metric_override={"pmax_pa": float("nan")})
             outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
             self.assertEqual(outcome.status, "invalid_metrics")
@@ -126,7 +128,7 @@ class RunnerBehaviorTests(unittest.TestCase):
 
     def test_nonconverged_case_retries_once(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
-            case = runner.CaseSpec(2.0, 2.0, 0)
+            case = runner.CaseSpec(2.0, 0.8, 0)
             failed = runner.AttemptOutcome("nonconverged", "failed", 1, 2.0, 1, 0, {}, None)
             with mock.patch.object(runner, "run_attempt", side_effect=(failed, self.complete_outcome())) as call:
                 row = runner.run_case(case, self.config(Path(directory)))
@@ -137,8 +139,15 @@ class RunnerBehaviorTests(unittest.TestCase):
 
     def test_profile_case_counts(self) -> None:
         self.assertEqual(len(runner.PROFILE_CASES["smoke"]), 4)
-        self.assertEqual(len(runner.PROFILE_CASES["coarse"]), 20)
-        self.assertEqual(len(runner.PROFILE_CASES["full"]), 36)
+        self.assertEqual(len(runner.PROFILE_CASES["coarse"]), 12)
+        self.assertEqual(len(runner.PROFILE_CASES["full"]), 20)
+        self.assertEqual(max(runner.FULL_INDENTS_MM), 0.8)
+
+    def test_custom_case_rejects_indent_above_limit(self) -> None:
+        parser = runner.build_parser()
+        cli = parser.parse_args(["--case", "0:1.0"])
+        with mock.patch("sys.stderr", new=io.StringIO()), self.assertRaises(SystemExit):
+            runner.choose_cases(parser, cli)
 
 
 class QualityControlTests(unittest.TestCase):
@@ -147,7 +156,7 @@ class QualityControlTests(unittest.TestCase):
             "case": "offset_0p00mm_indent_1p00mm",
             "profile": "smoke",
             "offset_mm": "0",
-            "indent_mm": "1",
+            "indent_mm": "0.8",
             "mesh_size_mm": "0.3",
             "status": status,
             "failure_reason": "" if status == "complete" else "test failure",
@@ -160,8 +169,8 @@ class QualityControlTests(unittest.TestCase):
             "n_outer": "10",
             "cornea_peak_pa": "2000",
             "eyelid_peak_pa": "3000",
-            "probe_uy_m": "-0.00105",
-            "commanded_push_m": "0.00105",
+            "probe_uy_m": "-0.00085",
+            "commanded_push_m": "0.00085",
             "attempt_count": "1",
             "elapsed_seconds": "10",
             "git_commit": "a" * 40,
@@ -177,6 +186,16 @@ class QualityControlTests(unittest.TestCase):
         manifest = [self.manifest_row("nonconverged")]
         report = summary.build_qc(manifest, summary.summary_rows(manifest))
         self.assertFalse(report["passed"])
+
+    def test_missing_expected_case_fails_qc(self) -> None:
+        manifest = [self.manifest_row()]
+        expected = [
+            {"offset_mm": 0.0, "indent_mm": 0.8},
+            {"offset_mm": 2.0, "indent_mm": 0.8},
+        ]
+        report = summary.build_qc(manifest, summary.summary_rows(manifest), expected)
+        self.assertFalse(report["passed"])
+        self.assertEqual(report["expected_cases"], 2)
 
     def test_qc_plots_are_valid_png_files(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
