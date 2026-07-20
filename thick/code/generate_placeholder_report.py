@@ -12,9 +12,11 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import os, shutil, warnings
+from pathlib import Path
 warnings.filterwarnings("ignore")
 
 OUT_DIR = os.path.dirname(os.path.abspath(__file__))
+STUDY_DIR = Path(__file__).resolve().parents[1]
 
 # ============================================================
 # STYLE — matches existing visu.py
@@ -200,7 +202,7 @@ def generate_offaxis_markdown():
     print("Generating off-axis markdown document...")
     doc_name = "偏心测量曲线分析"
     doc_dir = os.path.join(OUT_DIR, doc_name)
-    img_dir = os.path.join(OUT_DIR, doc_name + "_files")
+    img_dir = str(STUDY_DIR / "figures" / "placeholder")
     os.makedirs(doc_dir, exist_ok=True)
     os.makedirs(img_dir, exist_ok=True)
 
@@ -548,8 +550,10 @@ def generate_thickness_markdown():
     plt.close(fig)
 
     # ---- Write markdown ----
-    rel_imgs = doc_name + "_files"
+    rel_imgs = "../figures/placeholder"
     md = f"""# 眼睑角膜厚度影响分析
+
+> **数据状态：占位参数扫描。** 该报告用于实验设计和内部汇报，不是重复仿体实验结果。真实实验完成后，以 `data/processed/` 生成的结果替换正式结论。
 
 ## Eyelid & Cornea Thickness Effect Analysis
 
@@ -644,7 +648,7 @@ Corneal thickness also plays a role: a thicker cornea has higher bending stiffne
 - Thicker eyelids require larger correction factors for accurate IOP estimation
 """
 
-    md_path = os.path.join(OUT_DIR, f"{doc_name}.md")
+    md_path = str(STUDY_DIR / "docs" / f"{doc_name}.md")
     with open(md_path, "w", encoding="utf-8") as f:
         f.write(md)
     print(f"  -> {md_path}")
@@ -652,12 +656,5 @@ Corneal thickness also plays a role: a thicker cornea has higher bending stiffne
 
 # ============================================================
 if __name__ == "__main__":
-    # Clean up any old temp directories
-    for d in ["偏心测量曲线分析", "眼睑角膜厚度影响分析"]:
-        p = os.path.join(OUT_DIR, d)
-        if os.path.exists(p) and os.path.isdir(p):
-            shutil.rmtree(p)
-
-    generate_offaxis_markdown()
     generate_thickness_markdown()
     print("Done!")

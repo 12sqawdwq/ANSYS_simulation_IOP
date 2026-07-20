@@ -49,3 +49,8 @@ _ProjectScratch/
 /偏心测量曲线分析_files/
 /眼睑角膜厚度影响分析_files/
 
+# Local Workbench projects and raw experiment media are not versioned.
+/baseline/workbench/
+/offset/workbench/
+/thick/data/raw/**
+!/thick/data/raw/README.md
