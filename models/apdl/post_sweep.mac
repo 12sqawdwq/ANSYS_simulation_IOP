@@ -1,0 +1,70 @@
+! Metrics for one indentation-sweep case. Values are written in SI units.
+resume
+/post1
+set,last
+
+! Probe top reaction: the primary instrument reading.
+allsel
+cmsel,s,vprobe
+nsle,s
+*get,pymax,node,0,mxloc,y
+nsel,r,loc,y,pymax-0.6e-3,pymax+0.1e-3
+fsum
+*get,probe_fy,fsum,0,item,fy
+
+! Probe-eyelid active contact: outer applanation area and pressure integral.
+allsel
+esel,s,real,,3
+esel,r,ename,,174
+etable,opres,cont,pres
+etable,ostat,cont,stat
+etable,oarea,cont,area
+smult,oforce,opres,oarea
+esel,r,etab,ostat,1,1e12
+ssum
+*get,outer_area,ssum,0,item,oarea
+*get,outer_force,ssum,0,item,oforce
+
+! Bonded eyelid-cornea contact: inner effective transfer area.
+allsel
+esel,s,real,,4
+esel,r,ename,,170
+etable,iarea,cont,area
+etable,istat,cont,stat
+esel,r,etab,istat,1,1e12
+ssum
+*get,inner_area,ssum,0,item,iarea
+
+! Material-specific maxima prevent the probe from masking tissue stress.
+allsel
+esel,s,type,,1
+esel,r,mat,,1
+nsle,s
+nsort,s,eqv
+*get,cornea_s,sort,0,max
+allsel
+esel,s,type,,1
+esel,r,mat,,2
+nsle,s
+nsort,s,eqv
+*get,eyelid_s,sort,0,max
+
+! Contact pressure and the minimum probe displacement are diagnostic values.
+allsel
+esel,s,real,,3
+esel,r,ename,,174
+etable,pres,cont,pres
+esort,etab,pres,,1
+*get,pmax,etab,0,etab,pres,max
+allsel
+cmsel,s,vprobe
+nsle,s
+nsort,u,y
+*get,probe_uy,sort,0,min
+
+*cfopen,metrics,csv
+*vwrite,probe_fy,outer_force,outer_area,inner_area,cornea_s,eyelid_s,pmax,probe_uy
+(8(E22.14,','))
+*cfclos
+allsel
+finish

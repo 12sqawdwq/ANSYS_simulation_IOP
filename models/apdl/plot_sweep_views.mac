@@ -1,0 +1,78 @@
+! Nine stable, material-separated views. PNG suffix order is fixed by this macro.
+resume
+/post1
+set,last
+/show,png
+/gfile,1200
+/plopts,info,0
+/number,0
+
+! 0 geometry
+/dscale,1,0
+/view,1,1,0.3,0.5
+/pnum,mat,1
+/title,GEOMETRY - material IDs
+eplot
+
+! 1 outer contact pressure, top
+/pnum,mat,0
+allsel
+esel,s,real,,3
+esel,r,ename,,174
+/view,1,0,1,0
+/title,OUTER CONTACT PRESSURE - top
+plnsol,cont,pres
+
+! 2 outer contact pressure, front
+/view,1,0,0,1
+/title,OUTER CONTACT PRESSURE - front
+plnsol,cont,pres
+
+! 3 eyelid stress
+allsel
+esel,s,type,,1
+esel,r,mat,,2
+/view,1,0,0,1
+/title,EYELID VON MISES STRESS
+plnsol,s,eqv
+
+! 4 cornea stress
+allsel
+esel,s,type,,1
+esel,r,mat,,1
+/view,1,0,0,1
+/title,CORNEA VON MISES STRESS
+plnsol,s,eqv
+
+! 5 probe stress
+allsel
+esel,s,type,,1
+esel,r,mat,,3
+/view,1,0,0,1
+/title,PROBE VON MISES STRESS
+plnsol,s,eqv
+
+! 6 central section
+allsel
+wpcsys,-1,0
+/cplane,1
+/type,1,1
+/view,1,0,0,1
+/title,CENTRAL SECTION - stress
+plnsol,s,eqv
+/type,1,0
+
+! 7 actual-scale deformed shape
+allsel
+/dscale,1,1
+/view,1,0,0,1
+/title,DEFORMED SHAPE - actual scale
+plnsol,s,eqv
+
+! 8 amplified deformed shape, explicitly diagnostic only
+/dscale,1,5
+/title,DEFORMED SHAPE - 5X diagnostic view
+plnsol,s,eqv
+/show,close
+allsel
+finish
