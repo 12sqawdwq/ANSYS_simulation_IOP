@@ -32,6 +32,7 @@ def run_case(args: tuple[Path, float, float, int]) -> dict[str, str]:
         f"xoff={offset / 1000:.9g}\\nindent={indent / 1000:.9g}\\n"
         f"*use,param_eye_sweep.mac,xoff,indent\\n"
         f"resume,{name},db\\n"
+        f"/filname,{name}\\n"
         "*use,post_sweep.mac\\n"
         "*use,plot_sweep_views.mac\\n",
         encoding="ascii",
