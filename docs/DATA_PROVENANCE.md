@@ -1,6 +1,6 @@
 # 模型与数据来源说明
 
-当前报告包含两类证据。`thick/code/generate_placeholder_report.py` 生成的参数扫描用于比较眼睑厚度和角膜厚度趋势，压力分布不是从 ANSYS rst 直接提取；它只作为真实仿体实验开始前的占位资料。当前参数化三维有限元统一使用 `models/apdl/param_eye_sweep.mac`、`src/runners/run_indentation_sweep.py`、`models/apdl/post_sweep.mac` 和 `models/apdl/plot_sweep_views.mac`。模型先建立 IOP 预应力，再保持 IOP 施加探针压入；外侧接触面积来自闭合 CONTA174 单元面积求和，不再使用节点凸包代理。
+当前报告包含两类证据。`thick/code/generate_placeholder_report.py` 生成的参数扫描用于比较眼睑厚度和角膜厚度趋势，压力分布不是从 ANSYS rst 直接提取；它只作为真实仿体实验开始前的占位资料。当前参数化三维有限元统一使用 `models/apdl/param_eye_sweep.mac`、`src/runners/run_indentation_sweep.py`、`models/apdl/post_sweep.mac` 和 `models/apdl/plot_sweep_views.mac`。模型先建立 IOP 预应力，再保持 IOP 施加探针压入；外侧接触面积来自闭合 CONTA174 单元面积求和，不再使用节点凸包代理。探头—眼睑最大数值穿透来自闭合接触单元的 `CONT:PENE` 平均值最大值。
 
 | 项目 | 参数扫描 | 参数化 3D |
 |---|---:|---:|

@@ -64,17 +64,24 @@ wpcsys,-1,0
 plnsol,s,eqv
 /type,1,6
 
-! 7 actual-scale deformed shape
+! 7 actual-scale deformed central section without an overlay
 allsel
+wpcsys,-1,0
+/cplane,1
+/type,1,7
 /dscale,1,1
 /view,1,0,0,1
-/title,DEFORMED SHAPE - actual scale
-plnsol,s,eqv,2
+/title,DEFORMED CENTRAL SECTION - actual scale
+plnsol,s,eqv
+/type,1,6
 
-! 8 amplified deformed shape, explicitly diagnostic only
-/dscale,1,5
-/title,DEFORMED SHAPE - 5X diagnostic view
-plnsol,s,eqv,2
+! 8 numerical contact penetration, top
+allsel
+esel,s,real,,3
+esel,r,ename,,174
+/view,1,0,1,0
+/title,OUTER CONTACT PENETRATION - top
+plnsol,cont,pene
 /show,close
 allsel
 finish

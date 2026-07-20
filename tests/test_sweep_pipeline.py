@@ -26,6 +26,8 @@ class APDLContractTests(unittest.TestCase):
         self.assertIn("/plopts,info,3", plot)
         self.assertIn("/dscale,1,off", plot)
         self.assertIn("/type,1,7", plot)
+        self.assertIn("plnsol,cont,pene", plot)
+        self.assertNotIn("/dscale,1,5", plot)
         self.assertEqual(plot.count("plnsol"), 8)
 
 
@@ -49,6 +51,7 @@ class AttemptValidationTests(unittest.TestCase):
             "contact_area_m2": 1e-6,
             "contact_x_center_m": case.offset_mm / 1000.0,
             "pmax_pa": 1000.0,
+            "max_penetration_m": 1e-6,
             "n_outer": 10.0,
             "cornea_peak_pa": 2000.0,
             "eyelid_peak_pa": 3000.0,
@@ -166,6 +169,7 @@ class QualityControlTests(unittest.TestCase):
             "contact_area_m2": "1e-6",
             "contact_x_center_m": "0",
             "pmax_pa": "1000",
+            "max_penetration_m": "1e-6",
             "n_outer": "10",
             "cornea_peak_pa": "2000",
             "eyelid_peak_pa": "3000",

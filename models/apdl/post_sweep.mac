@@ -28,12 +28,14 @@ etable,eras
 esel,s,real,,3
 esel,r,ename,,174
 etable,opres,cont,pres
+etable,opene,cont,pene
 etable,ostat,cont,stat
 esel,r,etab,ostat,2,3
 *get,n_outer,elem,0,count
 contact_area = 0
 contact_x_center = 0
 pmax = 0
+max_penetration = 0
 *if,n_outer,gt,0,then
 etable,carea,volu
 etable,centx,cent,x
@@ -46,6 +48,9 @@ contact_x_center = area_x_sum/contact_area
 *endif
 esort,etab,opres,0,0
 *get,pmax,sort,0,max
+eusort
+esort,etab,opene,0,0
+*get,max_penetration,sort,0,max
 eusort
 *endif
 
@@ -64,8 +69,8 @@ nsort,s,eqv
 *get,eyelid_s,sort,0,max
 
 *cfopen,metrics,csv
-*vwrite,probe_fx,probe_fy,contact_area,contact_x_center,pmax,n_outer,cornea_s,eyelid_s,probe_uy_min,probe_uy_max,result_lstep,result_time
-(12(E22.14,','))
+*vwrite,probe_fx,probe_fy,contact_area,contact_x_center,pmax,max_penetration,n_outer,cornea_s,eyelid_s,probe_uy_min,probe_uy_max,result_lstep,result_time
+(13(E22.14,','))
 *cfclos
 allsel
 finish

@@ -29,6 +29,8 @@ SUMMARY_FIELDS = (
     "contact_x_center_m",
     "contact_x_center_mm",
     "pmax_pa",
+    "max_penetration_m",
+    "max_penetration_mm",
     "n_outer",
     "cornea_peak_pa",
     "eyelid_peak_pa",
@@ -74,6 +76,7 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict]:
         fy = number(row, "probe_fy_n")
         area = number(row, "contact_area_m2")
         center = number(row, "contact_x_center_m")
+        penetration = number(row, "max_penetration_m")
         rows.append({
             "case": row["case"],
             "profile": row["profile"],
@@ -88,6 +91,8 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict]:
             "contact_x_center_m": center if center is not None else "",
             "contact_x_center_mm": center * 1e3 if center is not None else "",
             "pmax_pa": number(row, "pmax_pa"),
+            "max_penetration_m": penetration,
+            "max_penetration_mm": penetration * 1e3 if penetration is not None else "",
             "n_outer": number(row, "n_outer"),
             "cornea_peak_pa": number(row, "cornea_peak_pa"),
             "eyelid_peak_pa": number(row, "eyelid_peak_pa"),
@@ -139,6 +144,10 @@ def build_qc(
         fx = float(row["probe_fx_n"])
         fy = float(row["probe_fy_n"])
         center = row["contact_x_center_m"]
+        penetration = float(row["max_penetration_m"])
+        if penetration > 0.03e-3:
+            add_check(checks, "warning", "contact_penetration", case,
+                      f"maximum averaged penetration is {penetration * 1e3:.4f} mm")
         if math.isclose(offset, 0.0, abs_tol=1e-12):
             if area > 0 and center != "" and abs(float(center)) > 0.3e-3:
                 add_check(checks, "error", "center_symmetry", case,

@@ -38,6 +38,7 @@ RAW_METRIC_FIELDS = (
     "contact_area_m2",
     "contact_x_center_m",
     "pmax_pa",
+    "max_penetration_m",
     "n_outer",
     "cornea_peak_pa",
     "eyelid_peak_pa",
@@ -69,6 +70,7 @@ MANIFEST_FIELDS = (
     "contact_area_m2",
     "contact_x_center_m",
     "pmax_pa",
+    "max_penetration_m",
     "n_outer",
     "cornea_peak_pa",
     "eyelid_peak_pa",
@@ -311,7 +313,8 @@ def validate_attempt(
     ):
         return AttemptOutcome("invalid_metrics", "final result is not load step 2 at time 2",
                               returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
-    if float(metrics["contact_area_m2"]) < 0 or float(metrics["pmax_pa"]) < 0 or metrics["n_outer"] < 0:
+    if (float(metrics["contact_area_m2"]) < 0 or float(metrics["pmax_pa"]) < 0
+            or float(metrics["max_penetration_m"]) < 0 or metrics["n_outer"] < 0):
         return AttemptOutcome("invalid_metrics", "contact metrics contain negative values",
                               returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
 
