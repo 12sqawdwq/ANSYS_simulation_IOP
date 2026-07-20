@@ -95,9 +95,9 @@ MANIFEST_FIELDS = (
     "n_outer",
     "inner_max_downward_m",
     "inner_effect_area_m2",
-    "inner_area_5deg_m2",
-    "inner_area_10deg_m2",
-    "inner_area_15deg_m2",
+    "inner_area_1deg_m2",
+    "inner_area_2deg_m2",
+    "inner_area_3deg_m2",
     "inner_face_count",
     "cornea_peak_pa",
     "eyelid_peak_pa",
@@ -370,7 +370,7 @@ def validate_attempt(
     if case.kind == "thickness":
         inner_areas = [
             float(metrics[field])
-            for field in ("inner_area_5deg_m2", "inner_area_10deg_m2", "inner_area_15deg_m2")
+            for field in ("inner_area_1deg_m2", "inner_area_2deg_m2", "inner_area_3deg_m2")
         ]
         if (
             float(metrics["inner_max_downward_m"]) <= 0

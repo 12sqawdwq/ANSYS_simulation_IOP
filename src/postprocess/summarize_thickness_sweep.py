@@ -30,12 +30,12 @@ SUMMARY_FIELDS = (
     "pmax_kpa",
     "inner_max_downward_mm",
     "inner_effect_area_mm2",
-    "inner_area_5deg_mm2",
-    "inner_area_10deg_mm2",
-    "inner_area_15deg_mm2",
-    "ae_over_ac_5deg",
-    "ae_over_ac_10deg",
-    "ae_over_ac_15deg",
+    "inner_area_1deg_mm2",
+    "inner_area_2deg_mm2",
+    "inner_area_3deg_mm2",
+    "ae_over_ac_1deg",
+    "ae_over_ac_2deg",
+    "ae_over_ac_3deg",
     "max_penetration_mm",
     "cornea_peak_kpa",
     "eyelid_peak_kpa",
@@ -67,9 +67,9 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
             continue
         force = abs(value(raw, "probe_fy_n"))
         outer = value(raw, "contact_area_m2") * 1e6
-        inner5 = value(raw, "inner_area_5deg_m2") * 1e6
-        inner10 = value(raw, "inner_area_10deg_m2") * 1e6
-        inner15 = value(raw, "inner_area_15deg_m2") * 1e6
+        inner1 = value(raw, "inner_area_1deg_m2") * 1e6
+        inner2 = value(raw, "inner_area_2deg_m2") * 1e6
+        inner3 = value(raw, "inner_area_3deg_m2") * 1e6
         rows.append({
             "case": raw["case"],
             "eyelid_thickness_mm": value(raw, "eyelid_thickness_mm"),
@@ -82,12 +82,12 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
             "pmax_kpa": value(raw, "pmax_pa") / 1e3,
             "inner_max_downward_mm": value(raw, "inner_max_downward_m") * 1e3,
             "inner_effect_area_mm2": value(raw, "inner_effect_area_m2") * 1e6,
-            "inner_area_5deg_mm2": inner5,
-            "inner_area_10deg_mm2": inner10,
-            "inner_area_15deg_mm2": inner15,
-            "ae_over_ac_5deg": outer / inner5,
-            "ae_over_ac_10deg": outer / inner10,
-            "ae_over_ac_15deg": outer / inner15,
+            "inner_area_1deg_mm2": inner1,
+            "inner_area_2deg_mm2": inner2,
+            "inner_area_3deg_mm2": inner3,
+            "ae_over_ac_1deg": outer / inner1,
+            "ae_over_ac_2deg": outer / inner2,
+            "ae_over_ac_3deg": outer / inner3,
             "max_penetration_mm": value(raw, "max_penetration_m") * 1e3,
             "cornea_peak_kpa": value(raw, "cornea_peak_pa") / 1e3,
             "eyelid_peak_kpa": value(raw, "eyelid_peak_pa") / 1e3,
@@ -155,7 +155,7 @@ def build_qc(
             add_check(checks, "warning", "contact_penetration", case,
                       f"maximum averaged penetration is {penetration * 1e3:.4f} mm")
         areas = [value(raw, field) for field in (
-            "inner_area_5deg_m2", "inner_area_10deg_m2", "inner_area_15deg_m2"
+            "inner_area_1deg_m2", "inner_area_2deg_m2", "inner_area_3deg_m2"
         )]
         effect_area = value(raw, "inner_effect_area_m2")
         if not (0 < areas[0] <= areas[1] <= areas[2] <= effect_area):
@@ -164,7 +164,7 @@ def build_qc(
         sensitivity = (areas[2] - areas[0]) / areas[1]
         if sensitivity > 1.0:
             add_check(checks, "warning", "inner_area_threshold_sensitivity", case,
-                      f"5-15 degree inner-area spread is {sensitivity * 100:.1f}% of the 10 degree area")
+                      f"1-3 degree inner-area spread is {sensitivity * 100:.1f}% of the 2 degree area")
     if rows:
         add_check(checks, "info", "trend_span", "",
                   f"force ratio at maximum thickness is {float(rows[-1]['force_ratio_to_0p8']):.3f}")
@@ -195,14 +195,14 @@ def plot_curves(run_root: Path, rows: list[dict[str, float | str]]) -> None:
             ("AE", [(x(row), float(row["outer_area_mm2"])) for row in rows]),
         )),
         ("inner_area_vs_thickness.png", "INNER GEOMETRIC AREA MM2", (
-            ("5 DEG", [(x(row), float(row["inner_area_5deg_mm2"])) for row in rows]),
-            ("10 DEG", [(x(row), float(row["inner_area_10deg_mm2"])) for row in rows]),
-            ("15 DEG", [(x(row), float(row["inner_area_15deg_mm2"])) for row in rows]),
+            ("1 DEG", [(x(row), float(row["inner_area_1deg_mm2"])) for row in rows]),
+            ("2 DEG", [(x(row), float(row["inner_area_2deg_mm2"])) for row in rows]),
+            ("3 DEG", [(x(row), float(row["inner_area_3deg_mm2"])) for row in rows]),
         )),
         ("area_ratio_vs_thickness.png", "AE OVER AC", (
-            ("5 DEG", [(x(row), float(row["ae_over_ac_5deg"])) for row in rows]),
-            ("10 DEG", [(x(row), float(row["ae_over_ac_10deg"])) for row in rows]),
-            ("15 DEG", [(x(row), float(row["ae_over_ac_15deg"])) for row in rows]),
+            ("1 DEG", [(x(row), float(row["ae_over_ac_1deg"])) for row in rows]),
+            ("2 DEG", [(x(row), float(row["ae_over_ac_2deg"])) for row in rows]),
+            ("3 DEG", [(x(row), float(row["ae_over_ac_3deg"])) for row in rows]),
         )),
         ("pressure_vs_thickness.png", "PRESSURE KPA", (
             ("MEAN", [(x(row), float(row["mean_outer_pressure_kpa"])) for row in rows]),

@@ -10,14 +10,14 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-ANGLE_LIMITS_DEG = (5.0, 10.0, 15.0)
+ANGLE_LIMITS_DEG = (1.0, 2.0, 3.0)
 DISPLACEMENT_FRACTION = 0.05
 GEOMETRY_FIELDS = (
     "inner_max_downward_m",
     "inner_effect_area_m2",
-    "inner_area_5deg_m2",
-    "inner_area_10deg_m2",
-    "inner_area_15deg_m2",
+    "inner_area_1deg_m2",
+    "inner_area_2deg_m2",
+    "inner_area_3deg_m2",
     "inner_face_count",
 )
 
