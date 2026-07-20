@@ -4,6 +4,7 @@
 ! ARG2 = nominal indentation after the initial gap in m
 ! ARG3 = solver retry mode (0=standard, 1=smaller initial steps)
 ! ARG4 = mesh size in m (default 0.3 mm)
+! ARG5 = eyelid thickness in m (default 1.0 mm)
 ! Known-working config: tet + flat probe + bonded eyelid-cornea
 ! + lateral probe constraint + IOP preload followed by indentation.
 ! ============================================================
@@ -13,7 +14,18 @@ finish
 
 Rc     = 7.8e-3
 tc     = 0.6e-3
-te     = 1.0e-3
+te     = ARG5
+*if,te,le,0,then
+te = 1.0e-3
+*endif
+*if,te,lt,0.8e-3,then
+/com,ERROR: eyelid thickness is below the validated 0.8 mm limit
+/exit,nosave
+*endif
+*if,te,gt,2.0e-3,then
+/com,ERROR: eyelid thickness exceeds the validated 2.0 mm limit
+/exit,nosave
+*endif
 Rprobe = 2.16e-3
 gap0   = 0.05e-3       ! small initial gap
 indent = ARG2

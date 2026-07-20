@@ -9,6 +9,7 @@ from pathlib import Path
 from unittest import mock
 
 from src.postprocess import summarize_indentation_sweep as summary
+from src.postprocess import summarize_thickness_sweep as thickness_summary
 from src.postprocess import prune_solver_artifacts as pruning
 from src.runners import run_indentation_sweep as runner
 
@@ -19,6 +20,8 @@ class APDLContractTests(unittest.TestCase):
         self.assertIn("cm,probe_top_nodes,node", model)
         self.assertIn("cnvtol,f,,0.01", model)
         self.assertIn("indent_limit = 0.8e-3", model)
+        self.assertIn("te     = arg5", model)
+        self.assertIn("2.0e-3", model)
         self.assertLess(model.index("time,1"), model.index("time,2"))
         self.assertLess(model.index("time,2"), model.index("*cfopen,solution_status,csv"))
 
@@ -71,6 +74,10 @@ class AttemptValidationTests(unittest.TestCase):
         (attempt / "launcher.log").write_text("")
         for index in range(9):
             (attempt / f"{case.name}{index:03d}.png").write_bytes(b"png")
+        if case.kind == "thickness":
+            (attempt / "thickness_area.csv").write_text(
+                "5000,8e-6,7e-6,6e-6,\n"
+            )
         return attempt
 
     def test_recoverable_generic_error_can_complete(self) -> None:
@@ -146,12 +153,34 @@ class RunnerBehaviorTests(unittest.TestCase):
         self.assertEqual(len(runner.PROFILE_CASES["coarse"]), 12)
         self.assertEqual(len(runner.PROFILE_CASES["full"]), 20)
         self.assertEqual(max(runner.FULL_INDENTS_MM), 0.8)
+        parser = runner.build_parser()
+        profile, cases = runner.choose_cases(parser, parser.parse_args(["--profile", "thickness"]))
+        self.assertEqual(profile, "thickness")
+        self.assertEqual([case.eyelid_thickness_mm for case in cases],
+                         [0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0])
+        self.assertTrue(all(case.indent_mm == 0.8 and case.kind == "thickness" for case in cases))
 
     def test_custom_case_rejects_indent_above_limit(self) -> None:
         parser = runner.build_parser()
         cli = parser.parse_args(["--case", "0:1.0"])
         with mock.patch("sys.stderr", new=io.StringIO()), self.assertRaises(SystemExit):
             runner.choose_cases(parser, cli)
+
+    def test_thickness_outside_range_is_rejected(self) -> None:
+        parser = runner.build_parser()
+        cli = parser.parse_args(["--eyelid-thicknesses", "0.6"])
+        with mock.patch("sys.stderr", new=io.StringIO()), self.assertRaises(SystemExit):
+            runner.choose_cases(parser, cli)
+
+    def test_thickness_attempt_requires_ordered_inner_areas(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            case = runner.CaseSpec(0.0, 0.8, 0, 1.2, "thickness")
+            attempt = AttemptValidationTests().make_attempt(Path(directory), case)
+            outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
+            self.assertEqual(outcome.status, "complete")
+            (attempt / "thickness_area.csv").write_text("5000,6e-6,7e-6,8e-6,\n")
+            outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
+            self.assertEqual(outcome.status, "invalid_metrics")
 
 
 class ArtifactRetentionTests(unittest.TestCase):
@@ -268,6 +297,53 @@ class QualityControlTests(unittest.TestCase):
             for figure in figures:
                 self.assertGreater(figure.stat().st_size, 1000)
                 self.assertEqual(figure.read_bytes()[:8], b"\x89PNG\r\n\x1a\n")
+
+
+class ThicknessSummaryTests(unittest.TestCase):
+    def row(self, thickness: float) -> dict[str, str]:
+        return {
+            "case": f"eyelid_{thickness:.1f}",
+            "profile": "thickness",
+            "offset_mm": "0",
+            "indent_mm": "0.8",
+            "eyelid_thickness_mm": str(thickness),
+            "cornea_thickness_mm": "0.6",
+            "mesh_size_mm": "0.3",
+            "status": "complete",
+            "failure_reason": "",
+            "views_count": "9",
+            "probe_fx_n": "0",
+            "probe_fy_n": "-0.7",
+            "contact_area_m2": "1.4e-5",
+            "pmax_pa": "100000",
+            "max_penetration_m": "1e-5",
+            "inner_delta_pmax_pa": "5000",
+            "inner_area_1pct_m2": "1e-5",
+            "inner_area_5pct_m2": "9e-6",
+            "inner_area_10pct_m2": "8e-6",
+            "cornea_peak_pa": "120000",
+            "eyelid_peak_pa": "100000",
+            "probe_uy_m": "-0.00085",
+            "commanded_push_m": "0.00085",
+            "elapsed_seconds": "100",
+            "git_commit": "a" * 40,
+        }
+
+    def test_summary_computes_area_ratios(self) -> None:
+        rows = thickness_summary.summary_rows([self.row(0.8), self.row(1.0)])
+        self.assertAlmostEqual(float(rows[0]["ae_over_ac_5pct"]), 14.0 / 9.0)
+        self.assertAlmostEqual(float(rows[1]["force_ratio_to_0p8"]), 1.0)
+
+    def test_complete_thickness_grid_passes_qc(self) -> None:
+        manifest = [self.row(0.8), self.row(1.0)]
+        expected = [
+            {"eyelid_thickness_mm": 0.8, "indent_mm": 0.8},
+            {"eyelid_thickness_mm": 1.0, "indent_mm": 0.8},
+        ]
+        qc = thickness_summary.build_qc(
+            manifest, thickness_summary.summary_rows(manifest), expected
+        )
+        self.assertTrue(qc["passed"])
 
 
 if __name__ == "__main__":

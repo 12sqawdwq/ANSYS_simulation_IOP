@@ -1,0 +1,38 @@
+{
+  "generated_at_utc": "2026-07-20T13:25:15+00:00",
+  "passed": true,
+  "expected_cases": 12,
+  "manifest_cases": 12,
+  "complete_cases": 12,
+  "counts": {
+    "error": 0,
+    "warning": 0,
+    "info": 4
+  },
+  "checks": [
+    {
+      "severity": "info",
+      "code": "nominal_zero_baseline",
+      "case": "offset_0p00mm_indent_0p00mm",
+      "message": "Fy=-0.0182705 N, contact area=0.984908 mm2"
+    },
+    {
+      "severity": "info",
+      "code": "nominal_zero_baseline",
+      "case": "offset_0p50mm_indent_0p00mm",
+      "message": "Fy=-0.0182706 N, contact area=0.984908 mm2"
+    },
+    {
+      "severity": "info",
+      "code": "nominal_zero_baseline",
+      "case": "offset_1p00mm_indent_0p00mm",
+      "message": "Fy=-0.0182708 N, contact area=0.984908 mm2"
+    },
+    {
+      "severity": "info",
+      "code": "nominal_zero_baseline",
+      "case": "offset_2p00mm_indent_0p00mm",
+      "message": "Fy=-0.0160299 N, contact area=0.729628 mm2"
+    }
+  ]
+}

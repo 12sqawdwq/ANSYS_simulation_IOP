@@ -1,0 +1,85 @@
+{
+  "run_id": "20260720T122940Z_bc861060_coarse",
+  "profile": "coarse",
+  "run_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/indentation_sweep/20260720T122940Z_bc861060_coarse",
+  "host": "xuanyu",
+  "git_commit": "bc8610601a6cfeb201330ea96af96d1f253e4f3b",
+  "git_dirty": false,
+  "ansys_executable": "/ansys_inc/v252/ansys/bin/ansys252",
+  "ansys_version": "Mechanical APDL 2025 R2                    Build 25.2 Update: 20250519\n Copyright 1971-2025 ANSYS, Inc.\n Platform: LINUX x64   \n Using 2025.2.0 (20250506) for linx64.  Updated at Ansys Release 2025 R2.\n Customer Number: 20120530",
+  "invocation": [
+    "/home/xuanyu/miniconda3/envs/grs-pilot/bin/python",
+    "/home/xuanyu/PROJECT/ziyu/blueknow/simulation/src/runners/run_indentation_sweep.py",
+    "--profile",
+    "coarse",
+    "--workers",
+    "4",
+    "--np",
+    "4"
+  ],
+  "workers": 4,
+  "np": 4,
+  "timeout_seconds": 7200,
+  "retry_count": 1,
+  "mesh_size_mm": 0.3,
+  "started_at_utc": "2026-07-20T12:29:43+00:00",
+  "cases": [
+    {
+      "offset_mm": 0.0,
+      "indent_mm": 0.0
+    },
+    {
+      "offset_mm": 0.0,
+      "indent_mm": 0.4
+    },
+    {
+      "offset_mm": 0.0,
+      "indent_mm": 0.8
+    },
+    {
+      "offset_mm": 0.5,
+      "indent_mm": 0.0
+    },
+    {
+      "offset_mm": 0.5,
+      "indent_mm": 0.4
+    },
+    {
+      "offset_mm": 0.5,
+      "indent_mm": 0.8
+    },
+    {
+      "offset_mm": 1.0,
+      "indent_mm": 0.0
+    },
+    {
+      "offset_mm": 1.0,
+      "indent_mm": 0.4
+    },
+    {
+      "offset_mm": 1.0,
+      "indent_mm": 0.8
+    },
+    {
+      "offset_mm": 2.0,
+      "indent_mm": 0.0
+    },
+    {
+      "offset_mm": 2.0,
+      "indent_mm": 0.4
+    },
+    {
+      "offset_mm": 2.0,
+      "indent_mm": 0.8
+    }
+  ],
+  "apdl_sha256": {
+    "param_eye_sweep.mac": "729a0682f772fdf5bcc371f1b92e0bc475da9b525a0a6b8715cadf4bae09b822",
+    "post_sweep.mac": "4b268cb93e1a856b5b5ff494ebae9dceed048246001d01fece8ce7afe85cd0d7",
+    "plot_sweep_views.mac": "c88a9db4487a465834b4ba88e484303ec765e8e8175381bbd7c9ae09a8516ab8"
+  },
+  "artifact_retention_policy": "mapdl-auditable-results",
+  "ended_at_utc": "2026-07-20T13:25:15+00:00",
+  "completed_cases": 12,
+  "failed_cases": 0
+}

@@ -1,0 +1,55 @@
+! Incremental eyelid-cornea compression area for the thickness study.
+! Areas are based on the increase in bonded-interface normal pressure
+! from the end of IOP preload to the final indentation result.
+/post1
+set,1,last
+allsel
+etable,eras
+esel,s,real,,4
+esel,r,ename,,174
+etable,pre_ip,cont,pres
+
+set,last
+etable,fin_ip,cont,pres
+sadd,del_ip,fin_ip,pre_ip,1,-1
+esort,etab,del_ip,0,0
+*get,inner_dpmax,sort,0,max
+eusort
+
+inner_a1 = 0
+inner_a5 = 0
+inner_a10 = 0
+*if,inner_dpmax,gt,0,then
+inner_t1 = 0.01*inner_dpmax
+inner_t5 = 0.05*inner_dpmax
+inner_t10 = 0.10*inner_dpmax
+
+allsel
+esel,s,real,,4
+esel,r,ename,,174
+esel,r,etab,del_ip,inner_t1,1e20
+etable,iarea,volu
+ssum
+*get,inner_a1,ssum,0,item,iarea
+
+allsel
+esel,s,real,,4
+esel,r,ename,,174
+esel,r,etab,del_ip,inner_t5,1e20
+ssum
+*get,inner_a5,ssum,0,item,iarea
+
+allsel
+esel,s,real,,4
+esel,r,ename,,174
+esel,r,etab,del_ip,inner_t10,1e20
+ssum
+*get,inner_a10,ssum,0,item,iarea
+*endif
+
+*cfopen,thickness_area,csv
+*vwrite,inner_dpmax,inner_a1,inner_a5,inner_a10
+(4(E22.14,','))
+*cfclos
+allsel
+finish

@@ -27,9 +27,17 @@ from src.postprocess.prune_solver_artifacts import POLICY as ARTIFACT_POLICY
 from src.postprocess.prune_solver_artifacts import prune_attempt
 
 MODEL_DIR = REPO_ROOT / "models" / "apdl"
-APDL_FILES = ("param_eye_sweep.mac", "post_sweep.mac", "plot_sweep_views.mac")
+APDL_FILES = (
+    "param_eye_sweep.mac",
+    "post_sweep.mac",
+    "post_thickness_area.mac",
+    "plot_sweep_views.mac",
+)
 OFFSETS_MM = (0.0, 0.5, 1.0, 2.0)
 MAX_INDENT_MM = 0.8
+MIN_EYELID_THICKNESS_MM = 0.8
+MAX_EYELID_THICKNESS_MM = 2.0
+THICKNESS_MM = tuple(round(0.8 + 0.2 * index, 1) for index in range(7))
 FULL_INDENTS_MM = tuple(i / 5 for i in range(5))
 COARSE_INDENTS_MM = (0.0, 0.4, 0.8)
 GAP_M = 0.05e-3
@@ -53,11 +61,19 @@ RAW_METRIC_FIELDS = (
     "result_load_step",
     "result_time",
 )
+THICKNESS_AREA_FIELDS = (
+    "inner_delta_pmax_pa",
+    "inner_area_1pct_m2",
+    "inner_area_5pct_m2",
+    "inner_area_10pct_m2",
+)
 MANIFEST_FIELDS = (
     "case",
     "profile",
     "offset_mm",
     "indent_mm",
+    "eyelid_thickness_mm",
+    "cornea_thickness_mm",
     "mesh_size_mm",
     "status",
     "failure_reason",
@@ -81,6 +97,10 @@ MANIFEST_FIELDS = (
     "pmax_pa",
     "max_penetration_m",
     "n_outer",
+    "inner_delta_pmax_pa",
+    "inner_area_1pct_m2",
+    "inner_area_5pct_m2",
+    "inner_area_10pct_m2",
     "cornea_peak_pa",
     "eyelid_peak_pa",
     "probe_uy_m",
@@ -110,9 +130,13 @@ class CaseSpec:
     offset_mm: float
     indent_mm: float
     order: int
+    eyelid_thickness_mm: float = 1.0
+    kind: str = "indentation"
 
     @property
     def name(self) -> str:
+        if self.kind == "thickness":
+            return f"eyelid_{label(self.eyelid_thickness_mm)}mm_indent_{label(self.indent_mm)}mm"
         return f"offset_{label(self.offset_mm)}mm_indent_{label(self.indent_mm)}mm"
 
 
@@ -310,10 +334,15 @@ def validate_attempt(
     try:
         raw_metrics = parse_numeric_csv(metrics_path, len(RAW_METRIC_FIELDS))
         convergence = parse_numeric_csv(solution_status_path, 2)
+        thickness_metrics = (
+            parse_numeric_csv(attempt_dir / "thickness_area.csv", len(THICKNESS_AREA_FIELDS))
+            if case.kind == "thickness" else []
+        )
     except (OSError, ValueError) as error:
         return AttemptOutcome("invalid_metrics", str(error), returncode, elapsed_seconds,
                               error_count, len(views), {}, rst_candidates[0])
     metrics = dict(zip(RAW_METRIC_FIELDS, raw_metrics))
+    metrics.update(zip(THICKNESS_AREA_FIELDS, thickness_metrics))
     metrics["preload_converged"] = int(round(convergence[0]))
     metrics["indentation_converged"] = int(round(convergence[1]))
     metrics["n_outer"] = int(round(float(metrics["n_outer"])))
@@ -338,6 +367,14 @@ def validate_attempt(
                                   returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
     if float(metrics["contact_area_m2"]) == 0:
         metrics["contact_x_center_m"] = ""
+    if case.kind == "thickness":
+        inner_areas = [float(metrics[field]) for field in THICKNESS_AREA_FIELDS[1:]]
+        if float(metrics["inner_delta_pmax_pa"]) <= 0 or any(area <= 0 for area in inner_areas):
+            return AttemptOutcome("invalid_metrics", "incremental inner compression metrics are not positive",
+                                  returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
+        if not (inner_areas[0] >= inner_areas[1] >= inner_areas[2]):
+            return AttemptOutcome("invalid_metrics", "inner compression areas violate threshold ordering",
+                                  returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
     return AttemptOutcome("complete", "", returncode, elapsed_seconds, error_count,
                           len(views), metrics, rst_candidates[0])
 
@@ -349,16 +386,22 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
         shutil.copy2(MODEL_DIR / filename, attempt_dir / filename)
     retry_mode = 1 if attempt_number > 1 else 0
     driver = attempt_dir / "driver.dat"
-    driver.write_text(
+    driver_text = (
         f"xoff={case.offset_mm / 1000:.12g}\n"
         f"indent={case.indent_mm / 1000:.12g}\n"
         f"retry_mode={retry_mode}\n"
         f"mesh_size={config.mesh_size_mm / 1000:.12g}\n"
-        "*use,param_eye_sweep.mac,xoff,indent,retry_mode,mesh_size\n"
+        f"eyelid_thickness={case.eyelid_thickness_mm / 1000:.12g}\n"
+        "*use,param_eye_sweep.mac,xoff,indent,retry_mode,mesh_size,eyelid_thickness\n"
         f"resume,{case.name},db\n"
         f"/filname,{case.name}\n"
         "*use,post_sweep.mac\n"
-        "*use,plot_sweep_views.mac\n",
+    )
+    if case.kind == "thickness":
+        driver_text += "*use,post_thickness_area.mac\n"
+    driver_text += "*use,plot_sweep_views.mac\n"
+    driver.write_text(
+        driver_text,
         encoding="ascii",
     )
     np_used = config.np if attempt_number == 1 else max(1, config.np // 2)
@@ -436,6 +479,8 @@ def run_case(case: CaseSpec, config: RunConfig) -> dict:
         "profile": config.profile,
         "offset_mm": case.offset_mm,
         "indent_mm": case.indent_mm,
+        "eyelid_thickness_mm": case.eyelid_thickness_mm,
+        "cornea_thickness_mm": 0.6,
         "mesh_size_mm": config.mesh_size_mm,
         "status": outcome.status,
         "failure_reason": outcome.reason,
@@ -473,11 +518,31 @@ def parse_case(value: str) -> tuple[float, float]:
 
 def choose_cases(parser: argparse.ArgumentParser, cli: argparse.Namespace) -> tuple[str, list[CaseSpec]]:
     custom_grid = cli.offsets is not None or cli.indents is not None
-    selected_modes = sum((cli.profile is not None, bool(cli.case), custom_grid))
+    thickness_grid = cli.eyelid_thicknesses is not None
+    selected_modes = sum((cli.profile is not None, bool(cli.case), custom_grid, thickness_grid))
     if selected_modes > 1:
-        parser.error("use only one of --profile, --case, or --offsets/--indents")
+        parser.error(
+            "use only one of --profile, --case, --offsets/--indents, or --eyelid-thicknesses"
+        )
     if custom_grid and (cli.offsets is None or cli.indents is None):
         parser.error("--offsets and --indents must be provided together")
+    if thickness_grid or cli.profile == "thickness":
+        profile = "thickness-custom" if thickness_grid else "thickness"
+        thicknesses = cli.eyelid_thicknesses if thickness_grid else THICKNESS_MM
+        if any(
+            value < MIN_EYELID_THICKNESS_MM - 1e-12
+            or value > MAX_EYELID_THICKNESS_MM + 1e-12
+            for value in thicknesses
+        ):
+            parser.error(
+                f"eyelid thickness must be within {MIN_EYELID_THICKNESS_MM:g}-"
+                f"{MAX_EYELID_THICKNESS_MM:g} mm"
+            )
+        unique = list(dict.fromkeys(thicknesses))
+        return profile, [
+            CaseSpec(0.0, 0.8, index, thickness, "thickness")
+            for index, thickness in enumerate(unique)
+        ]
     if cli.case:
         profile = "custom"
         pairs = tuple(cli.case)
@@ -497,10 +562,11 @@ def choose_cases(parser: argparse.ArgumentParser, cli: argparse.Namespace) -> tu
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--profile", choices=PROFILE_CASES)
+    parser.add_argument("--profile", choices=(*PROFILE_CASES, "thickness"))
     parser.add_argument("--case", action="append", type=parse_case, metavar="OFFSET:INDENT")
     parser.add_argument("--offsets", type=float, nargs="+")
     parser.add_argument("--indents", type=float, nargs="+")
+    parser.add_argument("--eyelid-thicknesses", type=float, nargs="+")
     parser.add_argument("--run-root", type=Path)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--np", type=int, default=4)
@@ -555,7 +621,12 @@ def main() -> int:
         "retry_count": cli.retry_count,
         "mesh_size_mm": cli.mesh_size_mm,
         "started_at_utc": utc_now(),
-        "cases": [{"offset_mm": case.offset_mm, "indent_mm": case.indent_mm} for case in cases],
+        "cases": [{
+            "offset_mm": case.offset_mm,
+            "indent_mm": case.indent_mm,
+            "eyelid_thickness_mm": case.eyelid_thickness_mm,
+            "cornea_thickness_mm": 0.6,
+        } for case in cases],
         "apdl_sha256": {filename: sha256(MODEL_DIR / filename) for filename in APDL_FILES},
         "artifact_retention_policy": ARTIFACT_POLICY,
     }
