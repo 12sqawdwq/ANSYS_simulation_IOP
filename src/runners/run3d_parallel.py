@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """Run 4 eccentric 3D tonometer cases in parallel: X = 0, 0.5, 1.0, 2.0 mm"""
 import os, subprocess, re
+from pathlib import Path
 
-PROJECT = '/home/xuanyu/PROJECT/ziyu/ansys_simunation/tonometer_sim'
+REPO_ROOT = Path(__file__).resolve().parents[2]
+PROJECT = Path(os.environ.get("BLUEKNOW_RUN_ROOT", REPO_ROOT / "runs"))
+MODEL = REPO_ROOT / "models" / "apdl" / "param_eye_3d.mac"
+PROJECT.mkdir(parents=True, exist_ok=True)
 os.chdir(PROJECT)
 
 OFFSETS = [0.0, 0.5, 1.0, 2.0]
@@ -13,7 +17,7 @@ for off in OFFSETS:
     sdir = f'scratch_{name}'
     os.makedirs(sdir, exist_ok=True)
     # copy macro into scratch dir
-    subprocess.run(f'cp param_eye_3d.mac {sdir}/', shell=True)
+    subprocess.run(["cp", str(MODEL), f"{sdir}/param_eye_3d.mac"], check=True)
     # driver
     drv = f'{sdir}/drv.dat'
     with open(drv, 'w') as f:
