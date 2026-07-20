@@ -11,28 +11,27 @@ nsel,r,loc,y,pymax-0.6e-3,pymax+0.1e-3
 fsum
 *get,probe_fy,fsum,0,item,fy
 
-! Probe-eyelid active contact: outer applanation area and pressure integral.
+! Probe-eyelid active contact nodes; area is computed from their X-Z footprint
+! in the Python postprocessor because CONT,AREA is unsupported by this setup.
 allsel
 esel,s,real,,3
 esel,r,ename,,174
 etable,opres,cont,pres
 etable,ostat,cont,stat
-etable,oarea,cont,area
-smult,oforce,opres,oarea
 esel,r,etab,ostat,1,1e12
-ssum
-*get,outer_area,ssum,0,item,oarea
-*get,outer_force,ssum,0,item,oforce
+*get,n_outer,elem,0,count
+nsle,s
+nwrite,outer_nodes,txt
 
 ! Bonded eyelid-cornea contact: inner effective transfer area.
 allsel
 esel,s,real,,4
 esel,r,ename,,170
-etable,iarea,cont,area
 etable,istat,cont,stat
 esel,r,etab,istat,1,1e12
-ssum
-*get,inner_area,ssum,0,item,iarea
+*get,n_inner,elem,0,count
+nsle,s
+nwrite,inner_nodes,txt
 
 ! Material-specific maxima prevent the probe from masking tissue stress.
 allsel
@@ -62,8 +61,8 @@ nsort,u,y
 *get,probe_uy,sort,0,min
 
 *cfopen,metrics,csv
-*vwrite,probe_fy,outer_force,outer_area,inner_area,cornea_s,eyelid_s,pmax,probe_uy
-(8(E22.14,','))
+*vwrite,probe_fy,n_outer,n_inner,cornea_s,eyelid_s,pmax,probe_uy
+(7(E22.14,','))
 *cfclos
 allsel
 finish
