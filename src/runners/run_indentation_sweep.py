@@ -29,12 +29,12 @@ def run_case(args: tuple[Path, float, float, int]) -> dict[str, str]:
         shutil.copy2(MODEL_DIR / filename, case_dir / filename)
     driver = case_dir / "driver.dat"
     driver.write_text(
-        f"xoff={offset / 1000:.9g}\\nindent={indent / 1000:.9g}\\n"
-        f"*use,param_eye_sweep.mac,xoff,indent\\n"
-        f"resume,{name},db\\n"
-        f"/filname,{name}\\n"
-        "*use,post_sweep.mac\\n"
-        "*use,plot_sweep_views.mac\\n",
+        f"xoff={offset / 1000:.9g}\nindent={indent / 1000:.9g}\n"
+        "*use,param_eye_sweep.mac,xoff,indent\n"
+        f"resume,{name},db\n"
+        f"/filname,{name}\n"
+        "*use,post_sweep.mac\n"
+        "*use,plot_sweep_views.mac\n",
         encoding="ascii",
     )
     command = [
