@@ -13,9 +13,9 @@ def nodes(path: Path) -> list[tuple[float, float]]:
     points: list[tuple[float, float]] = []
     for line in path.read_text(errors="replace").splitlines():
         values = re.findall(r"[-+]?\\d*\\.?\\d+(?:[Ee][-+]?\\d+)?", line)
-        if len(values) >= 4:
+        if re.match(r"^\\s*\\d+\\s+", line) and len(values) >= 4:
             try:
-                points.append((float(values[-3]), float(values[-1])))
+                points.append((float(values[1]), float(values[3])))
             except ValueError:
                 pass
     return points
