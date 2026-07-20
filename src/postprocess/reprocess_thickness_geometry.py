@@ -35,6 +35,7 @@ def main() -> int:
     driver.write_text(
         "finish\n"
         f"resume,{job},db\n"
+        "/post1\n"
         f"file,{job},rst\n"
         f"*use,{MACRO.name}\n"
         "/exit,nosave\n",
