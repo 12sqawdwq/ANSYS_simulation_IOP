@@ -25,12 +25,14 @@ if str(REPO_ROOT) not in sys.path:
 
 from src.postprocess.prune_solver_artifacts import POLICY as ARTIFACT_POLICY
 from src.postprocess.prune_solver_artifacts import prune_attempt
+from src.postprocess.thickness_geometry import GEOMETRY_FIELDS as THICKNESS_GEOMETRY_FIELDS
+from src.postprocess.thickness_geometry import analyze_files, write_results as write_geometry_results
 
 MODEL_DIR = REPO_ROOT / "models" / "apdl"
 APDL_FILES = (
     "param_eye_sweep.mac",
     "post_sweep.mac",
-    "post_thickness_area.mac",
+    "post_thickness_geometry.mac",
     "plot_sweep_views.mac",
 )
 OFFSETS_MM = (0.0, 0.5, 1.0, 2.0)
@@ -60,12 +62,6 @@ RAW_METRIC_FIELDS = (
     "probe_uy_max_m",
     "result_load_step",
     "result_time",
-)
-THICKNESS_AREA_FIELDS = (
-    "inner_delta_pmax_pa",
-    "inner_area_1pct_m2",
-    "inner_area_5pct_m2",
-    "inner_area_10pct_m2",
 )
 MANIFEST_FIELDS = (
     "case",
@@ -97,10 +93,12 @@ MANIFEST_FIELDS = (
     "pmax_pa",
     "max_penetration_m",
     "n_outer",
-    "inner_delta_pmax_pa",
-    "inner_area_1pct_m2",
-    "inner_area_5pct_m2",
-    "inner_area_10pct_m2",
+    "inner_max_downward_m",
+    "inner_effect_area_m2",
+    "inner_area_5deg_m2",
+    "inner_area_10deg_m2",
+    "inner_area_15deg_m2",
+    "inner_face_count",
     "cornea_peak_pa",
     "eyelid_peak_pa",
     "probe_uy_m",
@@ -335,14 +333,16 @@ def validate_attempt(
         raw_metrics = parse_numeric_csv(metrics_path, len(RAW_METRIC_FIELDS))
         convergence = parse_numeric_csv(solution_status_path, 2)
         thickness_metrics = (
-            parse_numeric_csv(attempt_dir / "thickness_area.csv", len(THICKNESS_AREA_FIELDS))
+            parse_numeric_csv(
+                attempt_dir / "thickness_geometry.csv", len(THICKNESS_GEOMETRY_FIELDS)
+            )
             if case.kind == "thickness" else []
         )
     except (OSError, ValueError) as error:
         return AttemptOutcome("invalid_metrics", str(error), returncode, elapsed_seconds,
                               error_count, len(views), {}, rst_candidates[0])
     metrics = dict(zip(RAW_METRIC_FIELDS, raw_metrics))
-    metrics.update(zip(THICKNESS_AREA_FIELDS, thickness_metrics))
+    metrics.update(zip(THICKNESS_GEOMETRY_FIELDS, thickness_metrics))
     metrics["preload_converged"] = int(round(convergence[0]))
     metrics["indentation_converged"] = int(round(convergence[1]))
     metrics["n_outer"] = int(round(float(metrics["n_outer"])))
@@ -368,12 +368,23 @@ def validate_attempt(
     if float(metrics["contact_area_m2"]) == 0:
         metrics["contact_x_center_m"] = ""
     if case.kind == "thickness":
-        inner_areas = [float(metrics[field]) for field in THICKNESS_AREA_FIELDS[1:]]
-        if float(metrics["inner_delta_pmax_pa"]) <= 0 or any(area <= 0 for area in inner_areas):
-            return AttemptOutcome("invalid_metrics", "incremental inner compression metrics are not positive",
+        inner_areas = [
+            float(metrics[field])
+            for field in ("inner_area_5deg_m2", "inner_area_10deg_m2", "inner_area_15deg_m2")
+        ]
+        if (
+            float(metrics["inner_max_downward_m"]) <= 0
+            or float(metrics["inner_effect_area_m2"]) <= 0
+            or any(area <= 0 for area in inner_areas)
+            or int(round(float(metrics["inner_face_count"]))) <= 0
+        ):
+            return AttemptOutcome("invalid_metrics", "inner geometric metrics are not positive",
                                   returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
-        if not (inner_areas[0] >= inner_areas[1] >= inner_areas[2]):
-            return AttemptOutcome("invalid_metrics", "inner compression areas violate threshold ordering",
+        if not (
+            inner_areas[0] <= inner_areas[1] <= inner_areas[2]
+            <= float(metrics["inner_effect_area_m2"])
+        ):
+            return AttemptOutcome("invalid_metrics", "inner geometric areas violate angle ordering",
                                   returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
     return AttemptOutcome("complete", "", returncode, elapsed_seconds, error_count,
                           len(views), metrics, rst_candidates[0])
@@ -398,7 +409,7 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
         "*use,post_sweep.mac\n"
     )
     if case.kind == "thickness":
-        driver_text += "*use,post_thickness_area.mac\n"
+        driver_text += "*use,post_thickness_geometry.mac\n"
     driver_text += "*use,plot_sweep_views.mac\n"
     driver.write_text(
         driver_text,
@@ -415,6 +426,17 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
     returncode, timed_out, elapsed_seconds = execute_command(
         command, attempt_dir, env, config.timeout_seconds
     )
+    if case.kind == "thickness" and not timed_out and returncode == 0:
+        try:
+            geometry = analyze_files(
+                attempt_dir / "inner_preload_faces.csv",
+                attempt_dir / "inner_final_faces.csv",
+            )
+            write_geometry_results(attempt_dir, geometry)
+        except (OSError, ValueError) as error:
+            (attempt_dir / "thickness_geometry_error.txt").write_text(
+                f"{type(error).__name__}: {error}\n", encoding="utf-8"
+            )
     outcome = validate_attempt(attempt_dir, case, returncode, timed_out, elapsed_seconds)
     try:
         prune_stats = prune_attempt(

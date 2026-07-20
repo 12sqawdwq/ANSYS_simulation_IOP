@@ -1,0 +1,93 @@
+! Export the bonded cornea-side interface faces at preload and final indentation.
+! Python computes projected applanation areas from these deformed coordinates.
+/post1
+rsys,0
+
+set,1,last
+allsel
+esel,s,real,,4
+esel,r,ename,,174
+*get,inner_face_count,elem,0,count
+*cfopen,inner_preload_faces,csv
+inner_elem = elnext(0)
+*do,inner_index,1,inner_face_count
+inner_n1 = nelem(inner_elem,1)
+inner_n2 = nelem(inner_elem,2)
+inner_n3 = nelem(inner_elem,3)
+*get,inner_x1,node,inner_n1,loc,x
+*get,inner_y1,node,inner_n1,loc,y
+*get,inner_z1,node,inner_n1,loc,z
+*get,inner_ux1,node,inner_n1,u,x
+*get,inner_uy1,node,inner_n1,u,y
+*get,inner_uz1,node,inner_n1,u,z
+*get,inner_x2,node,inner_n2,loc,x
+*get,inner_y2,node,inner_n2,loc,y
+*get,inner_z2,node,inner_n2,loc,z
+*get,inner_ux2,node,inner_n2,u,x
+*get,inner_uy2,node,inner_n2,u,y
+*get,inner_uz2,node,inner_n2,u,z
+*get,inner_x3,node,inner_n3,loc,x
+*get,inner_y3,node,inner_n3,loc,y
+*get,inner_z3,node,inner_n3,loc,z
+*get,inner_ux3,node,inner_n3,u,x
+*get,inner_uy3,node,inner_n3,u,y
+*get,inner_uz3,node,inner_n3,u,z
+inner_dx1 = inner_x1 + inner_ux1
+inner_dy1 = inner_y1 + inner_uy1
+inner_dz1 = inner_z1 + inner_uz1
+inner_dx2 = inner_x2 + inner_ux2
+inner_dy2 = inner_y2 + inner_uy2
+inner_dz2 = inner_z2 + inner_uz2
+inner_dx3 = inner_x3 + inner_ux3
+inner_dy3 = inner_y3 + inner_uy3
+inner_dz3 = inner_z3 + inner_uz3
+*vwrite,inner_elem,inner_n1,inner_n2,inner_n3,inner_dx1,inner_dy1,inner_dz1,inner_dx2,inner_dy2,inner_dz2,inner_dx3,inner_dy3,inner_dz3
+(13(E22.14,','))
+inner_elem = elnext(inner_elem)
+*enddo
+*cfclos
+
+set,last
+allsel
+esel,s,real,,4
+esel,r,ename,,174
+*cfopen,inner_final_faces,csv
+inner_elem = elnext(0)
+*do,inner_index,1,inner_face_count
+inner_n1 = nelem(inner_elem,1)
+inner_n2 = nelem(inner_elem,2)
+inner_n3 = nelem(inner_elem,3)
+*get,inner_x1,node,inner_n1,loc,x
+*get,inner_y1,node,inner_n1,loc,y
+*get,inner_z1,node,inner_n1,loc,z
+*get,inner_ux1,node,inner_n1,u,x
+*get,inner_uy1,node,inner_n1,u,y
+*get,inner_uz1,node,inner_n1,u,z
+*get,inner_x2,node,inner_n2,loc,x
+*get,inner_y2,node,inner_n2,loc,y
+*get,inner_z2,node,inner_n2,loc,z
+*get,inner_ux2,node,inner_n2,u,x
+*get,inner_uy2,node,inner_n2,u,y
+*get,inner_uz2,node,inner_n2,u,z
+*get,inner_x3,node,inner_n3,loc,x
+*get,inner_y3,node,inner_n3,loc,y
+*get,inner_z3,node,inner_n3,loc,z
+*get,inner_ux3,node,inner_n3,u,x
+*get,inner_uy3,node,inner_n3,u,y
+*get,inner_uz3,node,inner_n3,u,z
+inner_dx1 = inner_x1 + inner_ux1
+inner_dy1 = inner_y1 + inner_uy1
+inner_dz1 = inner_z1 + inner_uz1
+inner_dx2 = inner_x2 + inner_ux2
+inner_dy2 = inner_y2 + inner_uy2
+inner_dz2 = inner_z2 + inner_uz2
+inner_dx3 = inner_x3 + inner_ux3
+inner_dy3 = inner_y3 + inner_uy3
+inner_dz3 = inner_z3 + inner_uz3
+*vwrite,inner_elem,inner_n1,inner_n2,inner_n3,inner_dx1,inner_dy1,inner_dz1,inner_dx2,inner_dy2,inner_dz2,inner_dx3,inner_dy3,inner_dz3
+(13(E22.14,','))
+inner_elem = elnext(inner_elem)
+*enddo
+*cfclos
+allsel
+finish

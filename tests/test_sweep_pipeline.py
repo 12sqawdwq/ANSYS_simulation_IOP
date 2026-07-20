@@ -10,6 +10,7 @@ from unittest import mock
 
 from src.postprocess import summarize_indentation_sweep as summary
 from src.postprocess import summarize_thickness_sweep as thickness_summary
+from src.postprocess import thickness_geometry
 from src.postprocess import prune_solver_artifacts as pruning
 from src.runners import run_indentation_sweep as runner
 
@@ -75,8 +76,8 @@ class AttemptValidationTests(unittest.TestCase):
         for index in range(9):
             (attempt / f"{case.name}{index:03d}.png").write_bytes(b"png")
         if case.kind == "thickness":
-            (attempt / "thickness_area.csv").write_text(
-                "5000,8e-6,7e-6,6e-6,\n"
+            (attempt / "thickness_geometry.csv").write_text(
+                "0.0008,2e-5,5e-6,8e-6,1.2e-5,1000,\n"
             )
         return attempt
 
@@ -178,7 +179,9 @@ class RunnerBehaviorTests(unittest.TestCase):
             attempt = AttemptValidationTests().make_attempt(Path(directory), case)
             outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
             self.assertEqual(outcome.status, "complete")
-            (attempt / "thickness_area.csv").write_text("5000,6e-6,7e-6,8e-6,\n")
+            (attempt / "thickness_geometry.csv").write_text(
+                "0.0008,2e-5,8e-6,7e-6,6e-6,1000,\n"
+            )
             outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
             self.assertEqual(outcome.status, "invalid_metrics")
 
@@ -317,10 +320,12 @@ class ThicknessSummaryTests(unittest.TestCase):
             "contact_area_m2": "1.4e-5",
             "pmax_pa": "100000",
             "max_penetration_m": "1e-5",
-            "inner_delta_pmax_pa": "5000",
-            "inner_area_1pct_m2": "1e-5",
-            "inner_area_5pct_m2": "9e-6",
-            "inner_area_10pct_m2": "8e-6",
+            "inner_max_downward_m": "0.0007",
+            "inner_effect_area_m2": "2e-5",
+            "inner_area_5deg_m2": "6e-6",
+            "inner_area_10deg_m2": "9e-6",
+            "inner_area_15deg_m2": "1.2e-5",
+            "inner_face_count": "1000",
             "cornea_peak_pa": "120000",
             "eyelid_peak_pa": "100000",
             "probe_uy_m": "-0.00085",
@@ -331,7 +336,7 @@ class ThicknessSummaryTests(unittest.TestCase):
 
     def test_summary_computes_area_ratios(self) -> None:
         rows = thickness_summary.summary_rows([self.row(0.8), self.row(1.0)])
-        self.assertAlmostEqual(float(rows[0]["ae_over_ac_5pct"]), 14.0 / 9.0)
+        self.assertAlmostEqual(float(rows[0]["ae_over_ac_10deg"]), 14.0 / 9.0)
         self.assertAlmostEqual(float(rows[1]["force_ratio_to_0p8"]), 1.0)
 
     def test_complete_thickness_grid_passes_qc(self) -> None:
@@ -344,6 +349,36 @@ class ThicknessSummaryTests(unittest.TestCase):
             manifest, thickness_summary.summary_rows(manifest), expected
         )
         self.assertTrue(qc["passed"])
+
+
+class ThicknessGeometryTests(unittest.TestCase):
+    def face(
+        self,
+        element: int,
+        points: tuple[tuple[float, float, float], ...],
+    ) -> thickness_geometry.Face:
+        return thickness_geometry.Face(element, (1, 2, 3), points)
+
+    def test_flat_faces_are_selected_by_angle_and_displacement(self) -> None:
+        preload = {
+            1: self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1))),
+            2: self.face(2, ((1, 0, 0), (2, 0, 0), (1, 0, 1))),
+        }
+        final = {
+            1: self.face(1, ((0, -1, 0), (1, -1, 0), (0, -1, 1))),
+            2: self.face(2, ((1, -0.01, 0), (2, 0.19, 0), (1, -0.01, 1))),
+        }
+        metrics = thickness_geometry.analyze_faces(preload, final)
+        self.assertAlmostEqual(float(metrics["inner_max_downward_m"]), 1.0)
+        self.assertAlmostEqual(float(metrics["inner_effect_area_m2"]), 0.5)
+        self.assertAlmostEqual(float(metrics["inner_area_5deg_m2"]), 0.5)
+        self.assertAlmostEqual(float(metrics["inner_area_10deg_m2"]), 0.5)
+        self.assertEqual(metrics["inner_face_count"], 2)
+
+    def test_preload_and_final_element_sets_must_match(self) -> None:
+        face = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))
+        with self.assertRaises(ValueError):
+            thickness_geometry.analyze_faces({1: face}, {})
 
 
 if __name__ == "__main__":
