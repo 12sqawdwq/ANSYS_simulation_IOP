@@ -1,0 +1,50 @@
+{
+  "generated_at_utc": "2026-07-20T16:42:38+00:00",
+  "passed": true,
+  "expected_cases": 7,
+  "manifest_cases": 7,
+  "complete_cases": 7,
+  "counts": {
+    "error": 0,
+    "warning": 5,
+    "info": 1
+  },
+  "checks": [
+    {
+      "severity": "warning",
+      "code": "inner_area_threshold_sensitivity",
+      "case": "eyelid_0p80mm_indent_0p80mm",
+      "message": "1-3 degree inner-area spread is 139.2% of the 2 degree area"
+    },
+    {
+      "severity": "warning",
+      "code": "inner_area_threshold_sensitivity",
+      "case": "eyelid_1p00mm_indent_0p80mm",
+      "message": "1-3 degree inner-area spread is 144.3% of the 2 degree area"
+    },
+    {
+      "severity": "warning",
+      "code": "inner_area_threshold_sensitivity",
+      "case": "eyelid_1p20mm_indent_0p80mm",
+      "message": "1-3 degree inner-area spread is 163.4% of the 2 degree area"
+    },
+    {
+      "severity": "warning",
+      "code": "inner_area_threshold_sensitivity",
+      "case": "eyelid_1p40mm_indent_0p80mm",
+      "message": "1-3 degree inner-area spread is 164.0% of the 2 degree area"
+    },
+    {
+      "severity": "warning",
+      "code": "inner_area_threshold_sensitivity",
+      "case": "eyelid_1p60mm_indent_0p80mm",
+      "message": "1-3 degree inner-area spread is 135.6% of the 2 degree area"
+    },
+    {
+      "severity": "info",
+      "code": "trend_span",
+      "case": "",
+      "message": "force ratio at maximum thickness is 2.326"
+    }
+  ]
+}

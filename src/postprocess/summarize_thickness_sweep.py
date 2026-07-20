@@ -210,7 +210,12 @@ def plot_curves(run_root: Path, rows: list[dict[str, float | str]]) -> None:
         )),
     )
     for filename, ylabel, series in plots:
-        plot_lines(figures / filename, ylabel, list(series))
+        plot_lines(
+            figures / filename,
+            ylabel,
+            list(series),
+            x_label="Eyelid thickness (mm)",
+        )
 
 
 def main() -> int:

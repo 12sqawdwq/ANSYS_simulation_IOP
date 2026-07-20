@@ -38,6 +38,7 @@ def plot_lines(
     path: Path,
     title: str,
     series: list[tuple[str, list[tuple[float, float]]]],
+    x_label: str = "Indentation (mm)",
 ) -> None:
     width, height = 1200, 720
     left, right, top, bottom = 120, 1160, 120, 635
@@ -84,7 +85,7 @@ def plot_lines(
 
     draw.line((left, top, left, bottom), fill=(30, 30, 30), width=2)
     draw.line((left, bottom, right, bottom), fill=(30, 30, 30), width=2)
-    draw.text((520, 680), "Indentation (mm)", fill=(35, 35, 35), font=label_font)
+    draw.text((490, 680), x_label, fill=(35, 35, 35), font=label_font)
 
     legend_x, legend_y = 500, 35
     for index, (name, _) in enumerate(series):
