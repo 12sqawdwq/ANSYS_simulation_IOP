@@ -1,5 +1,5 @@
 ! Metrics for one indentation-sweep case. Values are written in SI units.
-resume,ARG1,db
+resume,%ARG1%,db
 /post1
 set,last
 
