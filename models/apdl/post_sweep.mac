@@ -18,7 +18,7 @@ esel,s,real,,3
 esel,r,ename,,174
 etable,opres,cont,pres
 etable,ostat,cont,stat
-esel,r,etab,ostat,1,1e12
+esel,r,etab,ostat,2,3
 *get,n_outer,elem,0,count
 nsle,s
 /output,outer_nodes,txt
@@ -60,8 +60,9 @@ allsel
 esel,s,real,,3
 esel,r,ename,,174
 etable,pres,cont,pres
-esort,etab,pres,,1
-*get,pmax,etab,0,etab,pres,max
+esort,etab,pres,0,0
+*get,pmax,sort,0,max
+eusort
 allsel
 cmsel,s,vprobe
 nsle,s

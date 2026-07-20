@@ -70,25 +70,25 @@ al,8,9,10,11
 ! Revolve 360
 k,200,0,-1
 k,201,0,1
-*get,v0,volu,0,num,maxd
+*get,vol_before,volu,0,num,maxd
 asel,s,area,,1
 vrotat,1,,,,,,200,201,360,4
-*get,v1,volu,0,num,maxd
-vsel,s,volu,,v0+1,v1
+*get,vol_after,volu,0,num,maxd
+vsel,s,volu,,vol_before+1,vol_after
 cm,vcornea,volu
 allsel
-*get,v0,volu,0,num,maxd
+*get,vol_before,volu,0,num,maxd
 asel,s,area,,2
 vrotat,2,,,,,,200,201,360,4
-*get,v1,volu,0,num,maxd
-vsel,s,volu,,v0+1,v1
+*get,vol_after,volu,0,num,maxd
+vsel,s,volu,,vol_before+1,vol_after
 cm,veyelid,volu
 allsel
-*get,v0,volu,0,num,maxd
+*get,vol_before,volu,0,num,maxd
 asel,s,area,,3
 vrotat,3,,,,,,200,201,360,4
-*get,v1,volu,0,num,maxd
-vsel,s,volu,,v0+1,v1
+*get,vol_after,volu,0,num,maxd
+vsel,s,volu,,vol_before+1,vol_after
 cm,vprobe,volu
 allsel
 

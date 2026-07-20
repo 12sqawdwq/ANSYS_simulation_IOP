@@ -39,7 +39,7 @@ scratch*/
 runs/
 _ProjectScratch/
 
-# Local legacy Workbench projects and copied figure sources
+# Local Workbench project copies and copied figure sources
 /tonometer_baseline/
 /tonometer_offset_1mm/
 /tonometer_sim_results/

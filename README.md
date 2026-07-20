@@ -11,11 +11,10 @@
 ## 目录
 
 - `baseline/`：无偏心基线图表、说明与本地 Workbench 工程入口。
-- `offset/`：偏心研究的报告、轻量数据、图表、历史脚本与本地 Workbench 工程入口。
+- `offset/`：偏心研究的报告、轻量数据、图表与本地 Workbench 工程入口。
 - `thick/`：厚度项目的实验协议、占位结果、真实实验数据契约、处理脚本与报告。
 - `models/apdl/`：参数化 APDL 模型、后处理宏和测试输入。
 - `src/runners/`：当前可复现的批量运行入口。
-- `src/legacy/`：历史 Workbench/CAD 修复与偏心方案，仅作追溯。
 - `scripts/reporting/`：共享报告工具。
 - `docs/analysis/`：共享分析说明；项目报告分别位于 `offset/docs/` 与 `thick/docs/`。
 - `docs/DATA_PROVENANCE.md`：模型层级、参数差异和结论适用范围。
@@ -29,3 +28,9 @@
 - arch：`blob:none` 部分克隆，只检出文档、汇总、图和报告脚本。
 
 详细同步命令见 [docs/SYNC_GUIDE.md](docs/SYNC_GUIDE.md)。数据解释和限制见 [docs/DATA_PROVENANCE.md](docs/DATA_PROVENANCE.md)。
+
+## 版本管理
+
+- 工作树只保留一套当前模型、运行入口和后处理脚本。
+- 历史实现通过 Git commit、branch 或 tag 查询；工作树不保留历史代码目录，也不在流程脚本名中添加版本数字、`final`、`old` 或 `backup` 后缀。
+- 每次批量求解在 `run_manifest.csv` 中记录 Git commit 和工作区是否有未提交修改；未提交状态只用于调试，不作为正式结果来源。

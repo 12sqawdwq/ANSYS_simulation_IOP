@@ -14,10 +14,10 @@
 | 文件 | 大小 | 用途 |
 |---|---:|---|
 | `19a_solved_complete.wbpz` | 979.05 MiB | 旧 offset 19a 的完整可恢复 Workbench 项目 |
-| `legacy_offset_code_docs.tar.gz` | 66.41 MiB | 旧 offset 目录中的代码、文档、表格和轻量结果 |
-| `legacy_offset_selected_models.tar.gz` | 850.34 MiB | 07、18a/b/c、19a/b 及材料扫描的代表性模型输入 |
-| `legacy_workbench_metadata.tar.gz` | 29.90 MiB | `exp`、`new` 的 Workbench 元数据，不含可再生大体积结果 |
-| `whole_duplicate_logs.tar.gz` | 0.11 MiB | 被删除重复 Workbench 目录中存在差异的日志和文本 |
+| `offset_evidence_20260720.tar.gz` | 66.41 MiB | 旧 offset 目录中的文档、表格、轻量结果及清理时的追溯材料 |
+| `offset_selected_models_20260720.tar.gz` | 850.34 MiB | 07、18a/b/c、19a/b 及材料扫描的代表性模型输入 |
+| `workbench_metadata_20260720.tar.gz` | 29.90 MiB | `exp`、`new` 的 Workbench 元数据，不含可再生大体积结果 |
+| `duplicate_workbench_logs_20260720.tar.gz` | 0.11 MiB | 被删除重复 Workbench 目录中存在差异的日志和文本 |
 
 每个归档均已成功列出内容；SHA-256 见同目录 `SHA256SUMS`。
 
@@ -27,12 +27,12 @@
 
 | 文件 | 归档内容 |
 |---|---|
-| `indentation_sweep_v1_anchor_results.tar.zst` | v1 扫描的 4 个代表性 `.rst/.db` 锚点及对应日志、驱动和指标 |
-| `indentation_sweep_v1_metadata.tar.zst` | v1 扫描元数据和文本结果，不含大体积求解二进制 |
-| `legacy_e3d_canonical_results.tar.zst` | x=0、0.5、1、2 mm 的旧三维代表性 `.rst/.db` |
-| `legacy_tonometer_metadata.tar.zst` | 旧 tonometer 工程元数据和文本记录 |
+| `indentation_sweep_interrupted_20260720_anchor_results.tar.zst` | 中止扫描的 4 个代表性 `.rst/.db` 锚点及对应日志、驱动和指标 |
+| `indentation_sweep_interrupted_20260720_metadata.tar.zst` | 中止扫描的元数据和文本结果，不含大体积求解二进制 |
+| `eccentric_anchor_results_20260720.tar.zst` | x=0、0.5、1、2 mm 的旧三维代表性 `.rst/.db` |
+| `tonometer_metadata_20260720.tar.zst` | 旧 tonometer 工程元数据和文本记录 |
 
-`SHA256SUMS`、`indentation_sweep_v1_inventory.txt` 和 `legacy_tonometer_inventory.txt` 与归档共同保留。v1 扫描在中止时只有 21 个完成工况，且后处理定义仍需修订，因此这些结果仅用于追溯和脚本复核，不作为厚度实验或最终眼压修正结论。
+`SHA256SUMS`、`indentation_sweep_interrupted_20260720_inventory.txt` 和 `tonometer_inventory_20260720.txt` 与归档共同保留。中止扫描只有 21 个完成工况，且后处理定义仍需修订，因此这些结果仅用于追溯和脚本复核，不作为厚度实验或最终眼压修正结论。
 
 ## 已删除内容
 

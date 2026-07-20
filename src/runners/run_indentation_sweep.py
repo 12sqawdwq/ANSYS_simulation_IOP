@@ -20,8 +20,41 @@ def label(value: float) -> str:
     return f"{value:.2f}".replace(".", "p")
 
 
-def run_case(args: tuple[Path, float, float, int]) -> dict[str, str]:
-    run_root, offset, indent, np = args
+def git_provenance() -> tuple[str, bool]:
+    commit = subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "rev-parse", "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    dirty = bool(
+        subprocess.run(
+            ["git", "-C", str(REPO_ROOT), "status", "--porcelain"],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+    )
+    return commit, dirty
+
+
+def find_ansys_binary(override: Path | None) -> Path:
+    if override is not None:
+        candidate = override.expanduser().resolve()
+        if not candidate.is_file():
+            raise FileNotFoundError(f"ANSYS executable does not exist: {candidate}")
+        return candidate
+    command = shutil.which("ansys")
+    if command:
+        return Path(command)
+    candidates = sorted(Path("/ansys_inc").glob("*/ansys/bin/ansys[0-9]*"), reverse=True)
+    if not candidates:
+        raise FileNotFoundError("ANSYS executable not found; set ANSYS_BIN or pass --ansys-bin")
+    return candidates[0]
+
+
+def run_case(args: tuple[Path, float, float, int, Path]) -> dict[str, str]:
+    run_root, offset, indent, np, ansys_bin = args
     name = f"offset_{label(offset)}mm_indent_{label(indent)}mm"
     case_dir = run_root / name
     case_dir.mkdir(parents=True, exist_ok=True)
@@ -38,7 +71,7 @@ def run_case(args: tuple[Path, float, float, int]) -> dict[str, str]:
         encoding="ascii",
     )
     command = [
-        "/ansys_inc/v252/ansys/bin/ansys252", "-b", "-np", str(np),
+        str(ansys_bin), "-b", "-np", str(np),
         "-dir", str(case_dir), "-i", str(driver), "-o", str(case_dir / "solve.out"),
         "-j", name,
     ]
@@ -60,11 +93,21 @@ def main() -> None:
     parser.add_argument("--np", type=int, default=4)
     parser.add_argument("--offsets", type=float, nargs="+", default=OFFSETS_MM)
     parser.add_argument("--indents", type=float, nargs="+", default=INDENTS_MM)
+    parser.add_argument("--ansys-bin", type=Path, default=os.environ.get("ANSYS_BIN"))
+    parser.add_argument("--allow-dirty", action="store_true",
+                        help="allow an uncommitted worktree for debugging; never use for formal results")
     cli = parser.parse_args()
+    git_commit, git_dirty = git_provenance()
+    if git_dirty and not cli.allow_dirty:
+        parser.error("formal runs require a clean Git worktree; commit changes or use --allow-dirty for debugging")
+    ansys_bin = find_ansys_binary(cli.ansys_bin)
     cli.run_root.mkdir(parents=True, exist_ok=True)
-    jobs = [(cli.run_root, o, d, cli.np) for o in cli.offsets for d in cli.indents]
+    jobs = [(cli.run_root, o, d, cli.np, ansys_bin) for o in cli.offsets for d in cli.indents]
     with concurrent.futures.ThreadPoolExecutor(max_workers=cli.workers) as pool:
         rows = list(pool.map(run_case, jobs))
+    for row in rows:
+        row["git_commit"] = git_commit
+        row["git_dirty"] = str(git_dirty).lower()
     with (cli.run_root / "run_manifest.csv").open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=rows[0].keys())
         writer.writeheader()

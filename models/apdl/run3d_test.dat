@@ -1,3 +1,0 @@
-! Driver for 3D test - offset=0 first
-xoff_val = 0.0
-*use,param_eye_3d.mac,xoff_val

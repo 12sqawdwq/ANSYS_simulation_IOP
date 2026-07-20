@@ -7,7 +7,7 @@ set,last
 /number,0
 
 ! 0 geometry
-/dscale,1,0
+/dscale,1,off
 /view,1,1,0.3,0.5
 /pnum,mat,1
 /title,GEOMETRY - material IDs
@@ -55,23 +55,23 @@ plnsol,s,eqv
 allsel
 wpcsys,-1,0
 /cplane,1
-/type,1,1
+/type,1,7
 /view,1,0,0,1
 /title,CENTRAL SECTION - stress
 plnsol,s,eqv
-/type,1,0
+/type,1,6
 
 ! 7 actual-scale deformed shape
 allsel
 /dscale,1,1
 /view,1,0,0,1
 /title,DEFORMED SHAPE - actual scale
-plnsol,s,eqv
+plnsol,s,eqv,2
 
 ! 8 amplified deformed shape, explicitly diagnostic only
 /dscale,1,5
 /title,DEFORMED SHAPE - 5X diagnostic view
-plnsol,s,eqv
+plnsol,s,eqv,2
 /show,close
 allsel
 finish

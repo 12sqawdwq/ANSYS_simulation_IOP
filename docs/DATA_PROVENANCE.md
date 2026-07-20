@@ -1,17 +1,17 @@
 # 模型与数据来源说明
 
-当前报告包含两类证据。`thick/code/generate_placeholder_report.py` 生成的参数扫描用于比较眼睑厚度和角膜厚度趋势，压力分布不是从 ANSYS rst 直接提取；它只作为真实仿体实验开始前的占位资料。参数化三维有限元使用 `models/apdl/param_eye_3d.mac`、`src/runners/run3d_parallel.py` 和 `offset/code/apdl/post_eccentric.mac`；接触单元数只是接触面积代理，不能直接等同 mm2。
+当前报告包含两类证据。`thick/code/generate_placeholder_report.py` 生成的参数扫描用于比较眼睑厚度和角膜厚度趋势，压力分布不是从 ANSYS rst 直接提取；它只作为真实仿体实验开始前的占位资料。当前参数化三维有限元统一使用 `models/apdl/param_eye_sweep.mac`、`src/runners/run_indentation_sweep.py`、`models/apdl/post_sweep.mac` 和 `models/apdl/plot_sweep_views.mac`。接触单元数只是接触面积代理，不能直接等同 mm2。
 
 | 项目 | 参数扫描 | 参数化 3D |
 |---|---:|---:|
 | IOP | 20 mmHg | 20 mmHg（2666.4 Pa） |
-| 位移 | 0.29 mm | 实际压入约 0.20 mm |
+| 位移 | 0.29 mm | 0.00-2.00 mm，每 0.25 mm 采样 |
 | 眼睑厚度 | 1.25 mm | 1.00 mm |
 | 角膜厚度 | 0.55 mm | 0.60 mm |
 | 眼睑-角膜 | 等效面积传递 | bonded |
 
 两类结果只用于相互验证趋势，不直接比较绝对面积或压力。占位资料的 95% CI 来自参数扫描点，不是人群或重复实验统计区间。真实厚度实验的统计结果将以 `thick/data/processed/` 为唯一来源。
 
-偏心结果必须按来源说明：半经验表在 2.0 mm 时 Ac 降低 27.8%；3D 模型的接触单元代理从 351 降至 180，降低 48.7%。原报告中“45%-50%”只适用于后者。
+现有偏心结果来自清理前的旧求解数据，不代表当前统一链已经完成重算。按来源说明：半经验表在 2.0 mm 时 Ac 降低 27.8%；旧 3D 结果的接触单元代理从 351 降至 180，降低 48.7%。原报告中“45%-50%”只适用于后者。
 
 专利汇报可围绕“外部探头响应—眼睑缓冲—角膜内侧有效压缩—眼压估计”的修正链条组织。眼睑厚度及 Ae/Ac 为主线，角膜厚度、探头偏心和接触质量为从属扩展。
