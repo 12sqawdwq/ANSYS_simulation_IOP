@@ -29,6 +29,17 @@ ops/launch-indentation-sweep-5090d.sh full
 
 状态包括 `complete`、`nonconverged`、`ansys_error`、`missing_results`、`invalid_metrics` 和 `timeout`。`run_metadata.json` 保存 Git、ANSYS、命令、主机、并行设置、时间和 APDL SHA-256；`run_manifest.csv` 每完成一个算例即原子更新。
 
+## 求解产物保留
+
+每次 attempt 完成有效性判定后立即执行固定保留策略。成功算例保留主 `job.rst`、`job.db`、九张 PNG、结构化指标、APDL 输入、`solve.out`、启动日志和 attempt 元数据；删除可由主结果或重新求解恢复的 MPI 编号 RST、`*.rNNN`、`*.esav`、`*.full`、`*.rdb`、`*.ldhi`、`*.DSP` 等暂存文件。失败算例额外删除无效的主 RST/DB，但保留日志、指标和已有视图用于诊断。
+
+`run_manifest.csv` 记录每个最终 attempt 清理的文件数、字节数和异常。对旧批次先执行只读预检，再显式应用：
+
+```bash
+python src/postprocess/prune_solver_artifacts.py /path/to/run
+python src/postprocess/prune_solver_artifacts.py /path/to/run --apply
+```
+
 ## 结果使用
 
 核心量为探针 `Fx/Fy`、闭合接触面积、面积加权接触中心、最大接触压力、最大数值穿透、闭合单元数、组织峰值应力和探针位移。最大数值穿透超过 0.03 mm 时产生 QC 警告。峰值量只作趋势指标；名义 0 mm 工况只作基线，不要求严格零接触力。

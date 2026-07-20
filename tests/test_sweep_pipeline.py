@@ -9,6 +9,7 @@ from pathlib import Path
 from unittest import mock
 
 from src.postprocess import summarize_indentation_sweep as summary
+from src.postprocess import prune_solver_artifacts as pruning
 from src.runners import run_indentation_sweep as runner
 
 
@@ -151,6 +152,63 @@ class RunnerBehaviorTests(unittest.TestCase):
         cli = parser.parse_args(["--case", "0:1.0"])
         with mock.patch("sys.stderr", new=io.StringIO()), self.assertRaises(SystemExit):
             runner.choose_cases(parser, cli)
+
+
+class ArtifactRetentionTests(unittest.TestCase):
+    def populate_attempt(self, root: Path, job: str) -> Path:
+        attempt = root / job / "attempt_1"
+        attempt.mkdir(parents=True)
+        files = {
+            f"{job}.rst": b"primary-result",
+            f"{job}.db": b"primary-database",
+            f"{job}0.rst": b"rank-result",
+            f"{job}1.rst": b"rank-result",
+            f"{job}0.r001": b"rank-partition",
+            f"{job}.esav": b"scratch",
+            f"{job}.full": b"scratch",
+            f"{job}.rdb": b"scratch",
+            f"{job}.DSP": b"scratch",
+            "solve.out": b"diagnostic",
+            "metrics.csv": b"metrics",
+            f"{job}000.png": b"view",
+        }
+        for name, content in files.items():
+            (attempt / name).write_bytes(content)
+        return attempt
+
+    def test_complete_attempt_keeps_primary_and_audit_files(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            job = "offset_0p00mm_indent_0p80mm"
+            attempt = self.populate_attempt(Path(directory), job)
+            stats = pruning.prune_attempt(attempt, job, keep_primary_results=True)
+            self.assertEqual(stats.files_selected, 7)
+            self.assertTrue((attempt / f"{job}.rst").exists())
+            self.assertTrue((attempt / f"{job}.db").exists())
+            self.assertTrue((attempt / "solve.out").exists())
+            self.assertTrue((attempt / "metrics.csv").exists())
+            self.assertTrue((attempt / f"{job}000.png").exists())
+            self.assertFalse((attempt / f"{job}0.rst").exists())
+            self.assertFalse((attempt / f"{job}.esav").exists())
+
+    def test_failed_attempt_also_removes_primary_result_files(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            job = "offset_2p00mm_indent_0p80mm"
+            attempt = self.populate_attempt(Path(directory), job)
+            stats = pruning.prune_attempt(attempt, job, keep_primary_results=False)
+            self.assertEqual(stats.files_selected, 9)
+            self.assertFalse((attempt / f"{job}.rst").exists())
+            self.assertFalse((attempt / f"{job}.db").exists())
+            self.assertTrue((attempt / "solve.out").exists())
+
+    def test_dry_run_does_not_delete_files(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            job = "offset_1p00mm_indent_0p40mm"
+            attempt = self.populate_attempt(Path(directory), job)
+            stats = pruning.prune_attempt(
+                attempt, job, keep_primary_results=True, apply=False
+            )
+            self.assertFalse(stats.applied)
+            self.assertTrue((attempt / f"{job}.esav").exists())
 
 
 class QualityControlTests(unittest.TestCase):

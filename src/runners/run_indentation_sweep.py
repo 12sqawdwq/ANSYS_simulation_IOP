@@ -20,6 +20,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from src.postprocess.prune_solver_artifacts import POLICY as ARTIFACT_POLICY
+from src.postprocess.prune_solver_artifacts import prune_attempt
+
 MODEL_DIR = REPO_ROOT / "models" / "apdl"
 APDL_FILES = ("param_eye_sweep.mac", "post_sweep.mac", "plot_sweep_views.mac")
 OFFSETS_MM = (0.0, 0.5, 1.0, 2.0)
@@ -65,6 +71,9 @@ MANIFEST_FIELDS = (
     "timeout_seconds",
     "ansys_error_count",
     "views_count",
+    "artifact_pruned_files",
+    "artifact_pruned_bytes",
+    "artifact_prune_error",
     "probe_fx_n",
     "probe_fy_n",
     "contact_area_m2",
@@ -130,6 +139,9 @@ class AttemptOutcome:
     views_count: int
     metrics: dict[str, float | int | str]
     rst_path: Path | None
+    artifact_pruned_files: int = 0
+    artifact_pruned_bytes: int = 0
+    artifact_prune_error: str = ""
 
 
 def label(value: float) -> str:
@@ -361,6 +373,18 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
         command, attempt_dir, env, config.timeout_seconds
     )
     outcome = validate_attempt(attempt_dir, case, returncode, timed_out, elapsed_seconds)
+    try:
+        prune_stats = prune_attempt(
+            attempt_dir,
+            case.name,
+            keep_primary_results=outcome.status == "complete",
+        )
+        outcome.artifact_pruned_files = prune_stats.files_selected
+        outcome.artifact_pruned_bytes = prune_stats.bytes_selected
+        if outcome.status != "complete":
+            outcome.rst_path = None
+    except OSError as error:
+        outcome.artifact_prune_error = str(error)
     atomic_json(attempt_dir / "attempt.json", {
         "attempt": attempt_number,
         "retry_mode": retry_mode,
@@ -373,6 +397,12 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
         "reason": outcome.reason,
         "returncode": returncode,
         "ansys_error_count": outcome.error_count,
+        "artifact_retention": {
+            "policy": ARTIFACT_POLICY,
+            "pruned_files": outcome.artifact_pruned_files,
+            "pruned_bytes": outcome.artifact_pruned_bytes,
+            "error": outcome.artifact_prune_error,
+        },
     })
     return outcome
 
@@ -419,6 +449,9 @@ def run_case(case: CaseSpec, config: RunConfig) -> dict:
         "timeout_seconds": config.timeout_seconds,
         "ansys_error_count": outcome.error_count,
         "views_count": outcome.views_count,
+        "artifact_pruned_files": outcome.artifact_pruned_files,
+        "artifact_pruned_bytes": outcome.artifact_pruned_bytes,
+        "artifact_prune_error": outcome.artifact_prune_error,
         "commanded_push_m": GAP_M + case.indent_mm / 1000.0,
         "attempt_dir": str(attempt_dir.relative_to(config.run_root)),
         "git_commit": config.git_commit,
@@ -524,6 +557,7 @@ def main() -> int:
         "started_at_utc": utc_now(),
         "cases": [{"offset_mm": case.offset_mm, "indent_mm": case.indent_mm} for case in cases],
         "apdl_sha256": {filename: sha256(MODEL_DIR / filename) for filename in APDL_FILES},
+        "artifact_retention_policy": ARTIFACT_POLICY,
     }
     atomic_json(run_root / "run_metadata.json", metadata)
     manifest_path = run_root / "run_manifest.csv"
