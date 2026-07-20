@@ -1,0 +1,25 @@
+! Generate 3D contour PNGs from an eccentric case result
+! Called with jobname already set via resume
+resume,ARG1,db
+/post1
+set,last
+/show,png
+/gfile,1000
+/view,1,1,0.4,0.5      ! oblique view
+/angle,1,0
+/vscale,1,1,0
+! Von Mises stress full model
+/title,Eccentric Tonometer - Von Mises Stress (Pa)
+plnsol,s,eqv
+! Section view (cut at Z=0 to see interior)
+/type,1,7
+/cplane,1
+wpoffs,0,0,0
+wprota,0,-90,0
+/cplane,1
+plnsol,s,eqv
+! Y displacement
+/title,Eccentric Tonometer - Y Displacement (m)
+plnsol,u,y
+/show,close
+finish

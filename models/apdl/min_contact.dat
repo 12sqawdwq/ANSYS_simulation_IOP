@@ -1,0 +1,105 @@
+! ============================================================
+! MINIMAL CONTACT VALIDATION (robust, rectangles only)
+! Flat indenter pushed vertically into soft block.
+! Contact normal = vertical = ALIGNED with push (the CAD model lacked this)
+! If block deforms -> parametric approach delivers what CAD couldn't
+! ============================================================
+finish
+/clear
+/prep7
+
+! --- Element types ---
+et,1,182,,,1              ! PLANE182 axisymmetric structural
+et,2,169                 ! TARGE169 (2D target)
+et,3,172                 ! CONTA172 (2D contact)
+
+! --- Materials ---
+! Soft block: Mooney-Rivlin (eyelid-like)
+tb,hyper,1,,2,mooney
+tbdata,1,0.076e6,0.01e6,0.1e-6
+! Indenter: stiff PLA
+mp,ex,2,3500e6
+mp,nuxy,2,0.33
+
+! --- Geometry (axisymmetric X=radial Y=axial) ---
+rectng,0,5e-3,0,3e-3            ! A1 = soft block  (y: 0..3mm)
+rectng,0,3e-3,3.1e-3,6e-3      ! A2 = indenter    (y: 3.1..6mm, gap 0.1mm)
+
+! --- Mesh ---
+esize,0.3e-3
+type,1 $ mat,1 $ amesh,1        ! block
+type,1 $ mat,2 $ amesh,2        ! indenter
+allsel
+
+! --- Contact pair ---
+! Target = indenter bottom face (y=3.1mm), Contact = block top face (y=3mm)
+r,3
+rmod,3,3,1.0                    ! FKN
+rmod,3,6,-1e-3                 ! PINB absolute 1mm (bridge 0.1mm gap)
+keyopt,3,12,0                   ! standard (allow separation)
+keyopt,3,9,0
+keyopt,3,2,1                    ! penalty method (robust)
+
+! Target elements on indenter bottom
+type,2 $ real,3 $ mat,2
+nsel,s,loc,y,3.1e-3
+esln,s,0
+esurf
+allsel
+
+! Contact elements on block top
+type,3 $ real,3 $ mat,1
+nsel,s,loc,y,3e-3
+esln,s,0
+esurf
+allsel
+
+! --- Boundary conditions ---
+nsel,s,loc,y,0                  ! block bottom fixed
+d,all,uy,0
+allsel
+nsel,s,loc,x,0                  ! axis symmetry
+d,all,ux,0
+allsel
+
+finish
+/solu
+antype,static
+nlgeom,on
+nsubst,20,100,5
+outres,all,all
+cnvtol,f,,0.05
+! Push indenter top down 0.5mm
+nsel,s,loc,y,6e-3
+d,all,uy,-0.5e-3
+d,all,ux,0
+allsel
+solve
+finish
+
+/post1
+set,last
+nsort,u,y
+*get,uymax,sort,0,max
+*get,uymin,sort,0,min
+/com,====================================================
+/com,=== UY range = [%uymin%, %uymax%] m ===
+esel,s,mat,,1
+nsle,s
+nsort,u,y
+*get,block_uy,sort,0,max
+*get,block_uymin,sort,0,min
+/com,=== BLOCK UY = [%block_uymin%, %block_uy%] m (should be >0 if pushed) ===
+nsort,s,eqv
+*get,block_s,sort,0,max
+/com,=== BLOCK max SEQV = %block_s% Pa (should be >0 if loaded) ===
+allsel
+! contact status
+esel,s,ename,,172
+etable,cstat,cont,stat
+ssum
+*get,cstot,ssum,0,item,cstat
+/com,=== Contact status sum = %cstot% (>0 = closed contact) ===
+/com,====================================================
+allsel
+finish

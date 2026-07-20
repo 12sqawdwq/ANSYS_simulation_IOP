@@ -1,0 +1,199 @@
+! ============================================================
+! PARAMETRIC 3D TONOMETER - eccentric (ARG1 = X offset in m)
+! Known-working config: tet + flat probe + bonded eyelid-cornea
+! + lateral probe constraint + gentle push. Single load step.
+! ============================================================
+finish
+/clear
+/prep7
+
+Rc     = 7.8e-3
+tc     = 0.6e-3
+te     = 1.0e-3
+Rprobe = 2.16e-3
+gap0   = 0.05e-3       ! small initial gap
+push   = 0.25e-3       ! real indentation = push - gap0 = 0.2mm
+iop    = 2666.4
+rmax   = 6.0e-3
+xoff   = ARG1
+
+et,1,187              ! SOLID187 tet
+et,2,170
+et,3,174
+
+tb,hyper,1,,2,mooney
+tbdata,1,0.11e6,0.025e6,0.1e-6      ! cornea
+tb,hyper,2,,2,mooney
+tbdata,1,0.076e6,0.01e6,0.1e-6      ! eyelid
+mp,ex,3,3500e6
+mp,nuxy,3,0.33
+
+csys,0
+kcen = -Rc
+
+! Cornea section
+Rci = Rc - tc
+k,1,0,0
+k,2,rmax, kcen + sqrt(Rc*Rc-rmax*rmax)
+k,3,0,-tc
+k,4,rmax*Rci/Rc, kcen + sqrt(Rci*Rci-(rmax*Rci/Rc)**2)
+k,100,0,kcen
+larc,1,2,100,Rc
+l,2,4
+larc,3,4,100,Rci
+l,1,3
+al,1,2,3,4
+
+! Eyelid section
+Rce = Rc + te
+k,5,0,te
+k,6,rmax*Rce/Rc, kcen + sqrt(Rce*Rce-(rmax*Rce/Rc)**2)
+larc,5,6,100,Rce
+l,6,2
+l,1,5
+al,5,6,1,7
+
+! Probe section (flat bottom rectangle)
+py = te + gap0
+k,10,0,py
+k,11,Rprobe,py
+k,12,Rprobe,py+4e-3
+k,13,0,py+4e-3
+l,10,11
+l,11,12
+l,12,13
+l,13,10
+al,8,9,10,11
+
+! Revolve 360
+k,200,0,-1
+k,201,0,1
+*get,v0,volu,0,num,maxd
+asel,s,area,,1
+vrotat,1,,,,,,200,201,360,4
+*get,v1,volu,0,num,maxd
+vsel,s,volu,,v0+1,v1
+cm,vcornea,volu
+allsel
+*get,v0,volu,0,num,maxd
+asel,s,area,,2
+vrotat,2,,,,,,200,201,360,4
+*get,v1,volu,0,num,maxd
+vsel,s,volu,,v0+1,v1
+cm,veyelid,volu
+allsel
+*get,v0,volu,0,num,maxd
+asel,s,area,,3
+vrotat,3,,,,,,200,201,360,4
+*get,v1,volu,0,num,maxd
+vsel,s,volu,,v0+1,v1
+cm,vprobe,volu
+allsel
+
+! Offset probe in X
+cmsel,s,vprobe
+vgen,1,all,,,xoff,,,,,1
+allsel
+
+! Mesh
+esize,0.3e-3
+mshape,1,3d
+cmsel,s,vcornea $ vatt,1,,1 $ vmesh,all $ allsel
+cmsel,s,veyelid $ vatt,2,,1 $ vmesh,all $ allsel
+cmsel,s,vprobe  $ vatt,3,,1 $ vmesh,all $ allsel
+
+! Contact 1: probe-eyelid standard
+r,3
+rmod,3,3,1.0
+rmod,3,6,-0.5e-3
+keyopt,3,12,0
+keyopt,3,9,0
+keyopt,3,2,1
+local,13,2,0,kcen,0
+csys,13
+cmsel,s,veyelid $ nslv,s,1
+nsel,r,loc,x,Rce-0.25e-3,Rce+0.3e-3
+csys,0
+type,3 $ real,3 $ mat,2 $ esurf
+allsel
+cmsel,s,vprobe $ nslv,s,1
+*get,pymin,node,0,mnloc,y
+nsel,r,loc,y,pymin-0.01e-3,pymin+0.6e-3
+type,2 $ real,3 $ mat,3 $ esurf
+allsel
+
+! Contact 2: eyelid-cornea bonded
+et,4,170
+et,5,174
+r,4
+keyopt,5,12,5
+keyopt,5,2,1
+csys,13
+cmsel,s,vcornea $ nslv,s,1
+nsel,r,loc,x,Rc-0.25e-3,Rc+0.25e-3
+csys,0
+type,5 $ real,4 $ mat,1 $ esurf
+allsel
+csys,13
+cmsel,s,veyelid $ nslv,s,1
+nsel,r,loc,x,Rc-0.25e-3,Rc+0.25e-3
+csys,0
+type,4 $ real,4 $ mat,2 $ esurf
+allsel
+
+! BCs
+edge_y = kcen + sqrt(Rc*Rc - rmax*rmax)
+cmsel,s,vcornea $ nslv,s,1
+nsel,r,loc,y,edge_y-0.5e-3,edge_y+0.4e-3
+d,all,all,0
+allsel
+csys,13
+cmsel,s,vcornea $ nslv,s,1
+nsel,r,loc,x,Rci-0.2e-3,Rci+0.2e-3
+sf,all,pres,iop
+csys,0
+allsel
+
+finish
+/solu
+antype,static
+nlgeom,on
+nropt,full
+lnsrch,on
+stabilize,constant,energy,1.0e-4
+nsubst,20,200,10
+outres,all,all
+cnvtol,f,,0.05
+! Probe pushed down, laterally constrained
+cmsel,s,vprobe $ nslv,s,1
+*get,pymax,node,0,mxloc,y
+nsel,r,loc,y,pymax-0.6e-3,pymax+0.1e-3
+d,all,uy,-push
+d,all,ux,0
+d,all,uz,0
+allsel
+solve
+finish
+
+/post1
+set,last
+/com,====================================================
+nsort,u,y
+*get,uymax,sort,0,max
+*get,uymin,sort,0,min
+/com,=== XOFF=%xoff% m ===
+/com,=== UY range = [%uymin%, %uymax%] m ===
+esel,s,type,,1 $ esel,r,mat,,1 $ nsle,s $ nsort,s,eqv
+*get,sc,sort,0,max
+/com,=== CORNEA max SEQV = %sc% Pa ===
+allsel $ esel,s,type,,1 $ esel,r,mat,,2 $ nsle,s $ nsort,s,eqv
+*get,se,sort,0,max
+/com,=== EYELID max SEQV = %se% Pa ===
+allsel
+esel,s,real,,3 $ esel,r,ename,,174
+etable,cst,cont,stat
+ssum
+*get,cs,ssum,0,item,cst
+/com,=== Contact status sum = %cs% ===
+allsel
+finish

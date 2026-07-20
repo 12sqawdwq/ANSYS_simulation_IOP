@@ -1,0 +1,51 @@
+# Python and editor state
+__pycache__/
+*.py[cod]
+.venv/
+.idea/
+.vscode/
+
+# ANSYS/Workbench generated state and solver outputs
+*.rst
+*.rdb
+*.db
+*.mechdb
+*.full
+*.esav
+*.emat
+*.mntr
+*.gst
+*.DSP
+*.cnd
+*.ldhi
+*.r[0-9][0-9][0-9]
+*.out
+*.err
+*.log
+*.stat
+*.lock
+*.wbpj
+*.dsco
+*.wbjn
+*.wbdp
+*.engd
+
+# Archives and transient run directories
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+scratch*/
+runs/
+_ProjectScratch/
+
+# Local legacy Workbench projects and copied figure sources
+/tonometer_baseline/
+/tonometer_offset_1mm/
+/tonometer_sim_results/
+/eccentric_3d_plots/
+/multiview/
+/param_eye_plots/
+/偏心测量曲线分析_files/
+/眼睑角膜厚度影响分析_files/
+

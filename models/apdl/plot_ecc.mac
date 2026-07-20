@@ -1,0 +1,27 @@
+! Generate contour PNGs for eccentric case (jobname set by -j)
+resume
+/post1
+set,last
+/show,png
+/gfile,900
+/view,1,1,0.5,0.6
+/angle,1,0
+! Von Mises full model
+/title,Eccentric Tonometer Von Mises Stress (Pa)
+plnsol,s,eqv
+! Section cut at Z=0 (see interior contact)
+/type,1,7
+wpof,0,0,0
+wprota,0,0,0
+/cplane,1
+wprota,0,-90,0
+/cplane,1
+plnsol,s,eqv
+! contact pressure on eyelid top
+esel,s,real,,3
+esel,r,ename,,174
+/title,Contact Pressure (Pa)
+plnsol,cont,pres
+allsel
+/show,close
+finish

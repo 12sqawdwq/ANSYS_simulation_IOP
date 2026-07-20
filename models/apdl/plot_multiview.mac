@@ -1,0 +1,55 @@
+! Multi-view with geometry check + fixed section
+resume
+/post1
+set,last
+/show,png
+/gfile,1000
+/plopts,info,3
+/dscale,1,0            ! undeformed (true geometry)
+
+! ---- 0. GEOMETRY: element plot colored by material (see probe!) ----
+/view,1,1,0.3,0.5
+/angle,1,0
+/number,1
+/pnum,mat,1
+/title,GEOMETRY - Bodies (1=cornea 2=eyelid 3=probe)
+eplot
+
+! ---- 1. FRONT VIEW (X-Y plane, along -Z) ----
+/pnum,mat,0
+/view,1,0,0,1
+/angle,1,0
+/title,FRONT VIEW - Von Mises Stress (Pa)
+plnsol,s,eqv
+
+! ---- 2. TOP VIEW (X-Z plane, along -Y) ----
+/view,1,0,1,0
+/angle,1,0
+/title,TOP VIEW - Von Mises Stress (Pa)
+plnsol,s,eqv
+
+! ---- 3. SIDE VIEW (Y-Z plane, along -X) ----
+/view,1,1,0,0
+/angle,1,0
+/title,SIDE VIEW - Von Mises Stress (Pa)
+plnsol,s,eqv
+
+! ---- 4. SECTION at Z=0 (working plane = global, normal Z) ----
+wpcsys,-1,0            ! align working plane to global cartesian (normal = Z, at origin)
+/cplane,1             ! cutting plane = working plane
+/type,1,1            ! capped hidden section
+/view,1,0,0,1        ! front view to see the cut face
+/angle,1,0
+/title,SECTION (cut Z=0) - Von Mises Stress (Pa)
+plnsol,s,eqv
+/type,1,0            ! restore full model
+
+! ---- 5. DEFORMED shape (scaled 5x) with undeformed edge ----
+/dscale,1,5
+/view,1,0,0,1
+/angle,1,0
+/title,DEFORMED SHAPE (5x) front - Von Mises Stress (Pa)
+plnsol,s,eqv
+
+/show,close
+finish

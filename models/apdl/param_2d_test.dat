@@ -1,0 +1,160 @@
+! ============================================================
+! PARAMETRIC TONOMETER MODEL - 2D Axisymmetric validation
+! Goal: prove contact WORKS when probe has proper curved face
+! (opposing the push direction, unlike the broken CAD geometry)
+! ============================================================
+finish
+/clear
+/prep7
+
+! ---- Parameters (mm, converted to m via *1e-3) ----
+r_cornea = 7.8e-3      ! corneal radius of curvature
+t_cornea = 0.6e-3      ! corneal thickness
+t_eyelid = 1.0e-3      ! eyelid thickness
+r_probe  = 2.16e-3     ! probe radius
+r_probe_face = 3.0e-3  ! probe TIP curvature radius (curved contact face - KEY FIX)
+gap0     = 0.2e-3      ! initial gap probe-eyelid
+push     = 0.3e-3      ! probe displacement
+iop_pa   = 2666.4      ! 20 mmHg
+
+! ---- Element type: 2D axisymmetric structural ----
+et,1,182,,,1           ! PLANE182 axisymmetric (KEYOPT3=1)
+keyopt,1,1,0           ! full integration
+keyopt,1,6,0
+
+! ---- Materials ----
+! Cornea (hyperelastic Mooney-Rivlin)
+tb,hyper,1,,2,mooney
+tbdata,1,0.11e6,0.025e6,0.1e-6   ! C10, C01, D1 (Pa)
+! Eyelid (softer)
+tb,hyper,2,,2,mooney
+tbdata,1,0.076e6,0.01e6,0.1e-6
+! Probe (PLA, linear elastic, stiff)
+mp,ex,3,3500e6
+mp,nuxy,3,0.33
+
+! ---- Geometry (axisymmetric: X=radial, Y=axial) ----
+! Cornea cap: spherical shell centered at (0, -r_cornea + apex_y)
+apex_y = 0.0
+cc_y = apex_y - r_cornea    ! center of curvature
+
+! Cornea outer arc (bottom) and inner arc (top)
+! Use keypoints + arcs. Radial extent 0 to 5mm
+csys,0
+k,1,0,apex_y                        ! cornea apex outer
+k,2,5e-3,apex_y-1.6e-3              ! cornea outer edge (approx)
+k,3,0,apex_y-t_cornea               ! cornea apex inner
+k,4,5e-3,apex_y-1.6e-3-t_cornea
+
+! Simplify: build cornea as a curved quad region via 4 keypoints + splines
+! For validation use a simpler flat-ish layered stack that still has curvature
+! --- Cornea layer ---
+k,10,0,apex_y
+k,11,5e-3,apex_y-1.6e-3
+k,12,5e-3,apex_y-1.6e-3-t_cornea
+k,13,0,apex_y-t_cornea
+! arc top (outer cornea surface)
+larc,10,11,0,r_cornea      ! arc through k10,k11 center-ish
+l,11,12
+larc,13,12,0,r_cornea+t_cornea
+l,10,13
+al,1,2,3,4
+! --- Eyelid layer (above cornea) ---
+k,20,0,apex_y+t_eyelid
+k,21,5e-3,apex_y-1.6e-3+t_eyelid
+larc,20,21,0,r_cornea-t_eyelid
+l,21,11
+l,10,20
+al,5,6,1,7                 ! reuse arc 1 (cornea top = eyelid bottom)
+
+! --- Probe (curved tip cylinder) above eyelid ---
+probe_bot_y = apex_y + t_eyelid + gap0
+k,30,0,probe_bot_y
+k,31,r_probe,probe_bot_y+0.3e-3   ! curved rise at edge
+k,32,r_probe,probe_bot_y+5e-3     ! probe top edge
+k,33,0,probe_bot_y+5e-3           ! probe top center
+larc,30,31,0,r_probe_face         ! CURVED probe face (convex down)
+l,31,32
+l,32,33
+l,33,30
+al,8,9,10,11
+
+! ---- Mesh ----
+esize,0.25e-3
+type,1
+mat,1 $ asel,s,area,,1 $ amesh,1     ! cornea
+mat,2 $ asel,s,area,,2 $ amesh,2     ! eyelid
+mat,3 $ asel,s,area,,3 $ amesh,3     ! probe
+allsel
+
+! ---- Contact: probe-eyelid (standard, curved face) ----
+! Eyelid top line = probe bottom target
+! Use contact wizard-style: TARGE169/CONTA172 for 2D
+et,2,169
+et,3,172
+keyopt,3,12,0          ! standard contact (allow separation)
+keyopt,3,9,0
+r,3,,,1.0,0.1          ! FKN, FTOLN
+! Contact on eyelid top arc (line 5), target on probe face (line 8)
+type,3 $ real,3 $ mat,2
+lsel,s,line,,5
+nsll,s,1
+esln,s,0
+! (simplified - real contact pairing done via ESURF)
+esurf
+allsel
+type,2 $ real,3
+lsel,s,line,,8
+nsll,s,1
+esurf
+allsel
+
+! ---- Boundary conditions ----
+! Fix cornea bottom edge
+lsel,s,line,,2
+nsll,s,1
+d,all,all,0
+allsel
+! Symmetry axis (X=0): UX=0
+nsel,s,loc,x,0
+d,all,ux,0
+allsel
+! IOP pressure on cornea inner (bottom) surface
+lsel,s,line,,3
+sfl,all,pres,iop_pa
+allsel
+
+finish
+/solu
+antype,static
+nlgeom,on
+nsubst,20,100,10
+outres,all,all
+! Probe top: displacement down
+nsel,s,loc,y,probe_bot_y+5e-3
+d,all,uy,-push
+d,all,ux,0
+allsel
+solve
+finish
+
+/post1
+set,last
+! Report contact + deformation
+nsort,u,y
+*get,uymax,sort,0,max
+*get,uymin,sort,0,min
+/com,=== UY range = [%uymin%, %uymax%] m ===
+esel,s,mat,,2
+nsle,s
+nsort,s,eqv
+*get,s_eyelid,sort,0,max
+/com,=== EYELID max SEQV = %s_eyelid% Pa ===
+allsel
+esel,s,mat,,1
+nsle,s
+nsort,s,eqv
+*get,s_cornea,sort,0,max
+/com,=== CORNEA max SEQV = %s_cornea% Pa ===
+allsel
+finish
