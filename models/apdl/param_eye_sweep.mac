@@ -1,8 +1,11 @@
 ! ============================================================
 ! PARAMETRIC 3D TONOMETER SWEEP
-! ARG1 = X offset in m, ARG2 = actual indentation after the initial gap in m
+! ARG1 = X offset in m
+! ARG2 = nominal indentation after the initial gap in m
+! ARG3 = solver retry mode (0=standard, 1=smaller initial steps)
+! ARG4 = mesh size in m (default 0.3 mm)
 ! Known-working config: tet + flat probe + bonded eyelid-cornea
-! + lateral probe constraint + gentle push. Single load step.
+! + lateral probe constraint + IOP preload followed by indentation.
 ! ============================================================
 finish
 /clear
@@ -14,6 +17,11 @@ te     = 1.0e-3
 Rprobe = 2.16e-3
 gap0   = 0.05e-3       ! small initial gap
 indent = ARG2
+retry_mode = ARG3
+mesh_size = ARG4
+*if,mesh_size,le,0,then
+mesh_size = 0.3e-3
+*endif
 push   = gap0 + indent
 iop    = 2666.4
 rmax   = 6.0e-3
@@ -97,12 +105,19 @@ cmsel,s,vprobe
 vgen,1,all,,,xoff,,,,,1
 allsel
 
-! Mesh
-esize,0.3e-3
+! Mesh and stable probe node components
+esize,mesh_size
 mshape,1,3d
 cmsel,s,vcornea $ vatt,1,,1 $ vmesh,all $ allsel
 cmsel,s,veyelid $ vatt,2,,1 $ vmesh,all $ allsel
 cmsel,s,vprobe  $ vatt,3,,1 $ vmesh,all $ allsel
+cmsel,s,vprobe
+nslv,s,1
+cm,probe_nodes,node
+*get,pymax,node,0,mxloc,y
+nsel,r,loc,y,pymax-0.6e-3,pymax+0.1e-3
+cm,probe_top_nodes,node
+allsel
 
 ! Contact 1: probe-eyelid standard
 r,3
@@ -118,7 +133,7 @@ nsel,r,loc,x,Rce-0.25e-3,Rce+0.3e-3
 csys,0
 type,3 $ real,3 $ mat,2 $ esurf
 allsel
-cmsel,s,vprobe $ nslv,s,1
+cmsel,s,probe_nodes
 *get,pymin,node,0,mnloc,y
 nsel,r,loc,y,pymin-0.01e-3,pymin+0.6e-3
 type,2 $ real,3 $ mat,3 $ esurf
@@ -163,40 +178,43 @@ nlgeom,on
 nropt,full
 lnsrch,on
 stabilize,constant,energy,1.0e-4
-nsubst,40,400,10
 outres,all,all
-cnvtol,f,,0.05
-! Probe pushed down, laterally constrained
-cmsel,s,vprobe $ nslv,s,1
-*get,pymax,node,0,mxloc,y
-nsel,r,loc,y,pymax-0.6e-3,pymax+0.1e-3
-d,all,uy,-push
+cnvtol,f,,0.01
+ncnv,1
+autots,on
+kbc,0
+
+! Load step 1: establish IOP prestress while holding the probe at its start position.
+cmsel,s,probe_top_nodes
 d,all,ux,0
+d,all,uy,0
 d,all,uz,0
 allsel
+time,1
+*if,retry_mode,eq,1,then
+nsubst,40,400,10
+*else
+nsubst,20,200,5
+*endif
 solve
-save
-finish
+*get,preload_cnv,active,0,solu,cnvg
 
-/post1
-set,last
-/com,====================================================
-nsort,u,y
-*get,uymax,sort,0,max
-*get,uymin,sort,0,min
-/com,=== XOFF=%xoff% m ===
-/com,=== UY range = [%uymin%, %uymax%] m ===
-esel,s,type,,1 $ esel,r,mat,,1 $ nsle,s $ nsort,s,eqv
-*get,sc,sort,0,max
-/com,=== CORNEA max SEQV = %sc% Pa ===
-allsel $ esel,s,type,,1 $ esel,r,mat,,2 $ nsle,s $ nsort,s,eqv
-*get,se,sort,0,max
-/com,=== EYELID max SEQV = %se% Pa ===
+! Load step 2: retain IOP and ramp the probe to the requested indentation.
+cmsel,s,probe_top_nodes
+d,all,uy,-push
 allsel
-esel,s,real,,3 $ esel,r,ename,,174
-etable,cst,cont,stat
-ssum
-*get,cs,ssum,0,item,cst
-/com,=== Contact status sum = %cs% ===
-allsel
+time,2
+*if,retry_mode,eq,1,then
+nsubst,80,800,20
+*else
+nsubst,40,400,10
+*endif
+solve
+*get,indent_cnv,active,0,solu,cnvg
+
+*cfopen,solution_status,csv
+*vwrite,preload_cnv,indent_cnv
+(2(E22.14,','))
+*cfclos
+save
 finish

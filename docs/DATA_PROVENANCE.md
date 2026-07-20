@@ -1,6 +1,6 @@
 # 模型与数据来源说明
 
-当前报告包含两类证据。`thick/code/generate_placeholder_report.py` 生成的参数扫描用于比较眼睑厚度和角膜厚度趋势，压力分布不是从 ANSYS rst 直接提取；它只作为真实仿体实验开始前的占位资料。当前参数化三维有限元统一使用 `models/apdl/param_eye_sweep.mac`、`src/runners/run_indentation_sweep.py`、`models/apdl/post_sweep.mac` 和 `models/apdl/plot_sweep_views.mac`。接触单元数只是接触面积代理，不能直接等同 mm2。
+当前报告包含两类证据。`thick/code/generate_placeholder_report.py` 生成的参数扫描用于比较眼睑厚度和角膜厚度趋势，压力分布不是从 ANSYS rst 直接提取；它只作为真实仿体实验开始前的占位资料。当前参数化三维有限元统一使用 `models/apdl/param_eye_sweep.mac`、`src/runners/run_indentation_sweep.py`、`models/apdl/post_sweep.mac` 和 `models/apdl/plot_sweep_views.mac`。模型先建立 IOP 预应力，再保持 IOP 施加探针压入；外侧接触面积来自闭合 CONTA174 单元面积求和，不再使用节点凸包代理。
 
 | 项目 | 参数扫描 | 参数化 3D |
 |---|---:|---:|
@@ -11,6 +11,10 @@
 | 眼睑-角膜 | 等效面积传递 | bonded |
 
 两类结果只用于相互验证趋势，不直接比较绝对面积或压力。占位资料的 95% CI 来自参数扫描点，不是人群或重复实验统计区间。真实厚度实验的统计结果将以 `thick/data/processed/` 为唯一来源。
+
+当前三维结果基于超弹性软组织、眼睑—角膜完全粘结、0.3 mm 主扫描网格和准静态加载。最大接触压力、角膜峰值应力和眼睑峰值应力只用于趋势比较。名义 0 mm 压入仍包含 0.05 mm 初始间隙闭合位移，不要求反力严格为零。
+
+完全粘结界面的完整面积不能直接解释为内部有效压平面积，因此当前正式清单不输出旧的 `inner_area`、`Karea`、`DeltaParea` 或 `Parea`；内外面积修正将在有效压缩区域判据确定后单独恢复。
 
 现有偏心结果来自清理前的旧求解数据，不代表当前统一链已经完成重算。按来源说明：半经验表在 2.0 mm 时 Ac 降低 27.8%；旧 3D 结果的接触单元代理从 351 降至 180，降低 48.7%。原报告中“45%-50%”只适用于后者。
 

@@ -1,73 +1,221 @@
 #!/usr/bin/env python3
-"""Build pressure-proxy metrics from MAPDL sweep outputs."""
+"""Summarize validated indentation cases and emit deterministic QC artifacts."""
 from __future__ import annotations
 
 import argparse
 import csv
+import json
 import math
-import re
+from collections import defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 
+try:
+    from .raster_plot import plot_lines
+except ImportError:  # Direct script execution.
+    from raster_plot import plot_lines
 
-def nodes(path: Path) -> list[tuple[float, float]]:
-    points: list[tuple[float, float]] = []
-    for line in path.read_text(errors="replace").splitlines():
-        values = re.findall(r"[-+]?\\d*\\.?\\d+(?:[Ee][-+]?\\d+)?", line)
-        if re.match(r"^\\s*\\d+\\s+", line) and len(values) >= 4:
-            try:
-                points.append((float(values[1]), float(values[3])))
-            except ValueError:
-                pass
-    return points
-
-
-def hull_area(points: list[tuple[float, float]]) -> float:
-    unique = sorted(set(points))
-    if len(unique) < 3:
-        return 0.0
-    def cross(a, b, c):
-        return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
-    lower = []
-    for point in unique:
-        while len(lower) >= 2 and cross(lower[-2], lower[-1], point) <= 0:
-            lower.pop()
-        lower.append(point)
-    upper = []
-    for point in reversed(unique):
-        while len(upper) >= 2 and cross(upper[-2], upper[-1], point) <= 0:
-            upper.pop()
-        upper.append(point)
-    hull = lower[:-1] + upper[:-1]
-    return abs(sum(a[0] * b[1] - b[0] * a[1] for a, b in zip(hull, hull[1:] + hull[:1]))) / 2
+SUMMARY_FIELDS = (
+    "case",
+    "profile",
+    "offset_mm",
+    "indent_mm",
+    "mesh_size_mm",
+    "probe_fx_n",
+    "probe_fy_n",
+    "probe_force_n",
+    "contact_area_m2",
+    "contact_area_mm2",
+    "contact_x_center_m",
+    "contact_x_center_mm",
+    "pmax_pa",
+    "n_outer",
+    "cornea_peak_pa",
+    "eyelid_peak_pa",
+    "probe_uy_m",
+    "commanded_push_m",
+    "attempt_count",
+    "elapsed_seconds",
+    "git_commit",
+)
 
 
-def main() -> None:
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def number(row: dict[str, str], field: str) -> float | None:
+    value = row.get(field, "").strip()
+    if not value:
+        return None
+    parsed = float(value)
+    return parsed if math.isfinite(parsed) else None
+
+
+def read_manifest(path: Path) -> list[dict[str, str]]:
+    with path.open(newline="", encoding="utf-8") as handle:
+        return list(csv.DictReader(handle))
+
+
+def write_summary(path: Path, rows: list[dict]) -> None:
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    with temporary.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=SUMMARY_FIELDS)
+        writer.writeheader()
+        writer.writerows({field: row.get(field, "") for field in SUMMARY_FIELDS} for row in rows)
+    temporary.replace(path)
+
+
+def summary_rows(manifest: list[dict[str, str]]) -> list[dict]:
+    rows = []
+    for row in manifest:
+        if row.get("status") != "complete":
+            continue
+        fy = number(row, "probe_fy_n")
+        area = number(row, "contact_area_m2")
+        center = number(row, "contact_x_center_m")
+        rows.append({
+            "case": row["case"],
+            "profile": row["profile"],
+            "offset_mm": number(row, "offset_mm"),
+            "indent_mm": number(row, "indent_mm"),
+            "mesh_size_mm": number(row, "mesh_size_mm"),
+            "probe_fx_n": number(row, "probe_fx_n"),
+            "probe_fy_n": fy,
+            "probe_force_n": abs(fy) if fy is not None else "",
+            "contact_area_m2": area,
+            "contact_area_mm2": area * 1e6 if area is not None else "",
+            "contact_x_center_m": center if center is not None else "",
+            "contact_x_center_mm": center * 1e3 if center is not None else "",
+            "pmax_pa": number(row, "pmax_pa"),
+            "n_outer": number(row, "n_outer"),
+            "cornea_peak_pa": number(row, "cornea_peak_pa"),
+            "eyelid_peak_pa": number(row, "eyelid_peak_pa"),
+            "probe_uy_m": number(row, "probe_uy_m"),
+            "commanded_push_m": number(row, "commanded_push_m"),
+            "attempt_count": number(row, "attempt_count"),
+            "elapsed_seconds": number(row, "elapsed_seconds"),
+            "git_commit": row["git_commit"],
+        })
+    return sorted(rows, key=lambda item: (item["offset_mm"], item["indent_mm"]))
+
+
+def add_check(checks: list[dict], severity: str, code: str, case: str, message: str) -> None:
+    checks.append({"severity": severity, "code": code, "case": case, "message": message})
+
+
+def build_qc(manifest: list[dict[str, str]], rows: list[dict]) -> dict:
+    checks: list[dict] = []
+    for raw in manifest:
+        if raw.get("status") != "complete":
+            add_check(checks, "error", "case_not_complete", raw.get("case", ""),
+                      f"status={raw.get('status')} reason={raw.get('failure_reason', '')}")
+    for row in rows:
+        case = row["case"]
+        raw = next(item for item in manifest if item["case"] == case)
+        if int(float(raw["views_count"])) != 9:
+            add_check(checks, "error", "missing_views", case, "expected exactly 9 non-empty views")
+        push = float(row["commanded_push_m"])
+        uy = float(row["probe_uy_m"])
+        tolerance = max(1e-8, 0.005 * push)
+        if abs(uy + push) > tolerance:
+            add_check(checks, "error", "probe_displacement", case,
+                      f"probe UY differs from command by {abs(uy + push):.6g} m")
+        offset = float(row["offset_mm"])
+        area = float(row["contact_area_m2"])
+        fx = float(row["probe_fx_n"])
+        fy = float(row["probe_fy_n"])
+        center = row["contact_x_center_m"]
+        if math.isclose(offset, 0.0, abs_tol=1e-12):
+            if area > 0 and center != "" and abs(float(center)) > 0.3e-3:
+                add_check(checks, "error", "center_symmetry", case,
+                          f"centered contact centroid is {float(center) * 1e3:.3f} mm")
+            if abs(fx) > max(1e-6, 0.05 * abs(fy)):
+                add_check(checks, "error", "lateral_force_symmetry", case,
+                          f"|Fx|={abs(fx):.6g} N exceeds symmetry tolerance")
+        if math.isclose(float(row["indent_mm"]), 0.0, abs_tol=1e-12):
+            add_check(checks, "info", "nominal_zero_baseline", case,
+                      f"Fy={fy:.6g} N, contact area={area * 1e6:.6g} mm2")
+
+    grouped: dict[float, list[dict]] = defaultdict(list)
+    for row in rows:
+        grouped[float(row["offset_mm"])].append(row)
+    monotonic_fields = (
+        ("probe_force_n", "reaction force"),
+        ("contact_area_m2", "contact area"),
+        ("n_outer", "closed contact element count"),
+    )
+    for offset, group in grouped.items():
+        ordered = sorted(group, key=lambda item: item["indent_mm"])
+        for previous, current in zip(ordered, ordered[1:]):
+            for field, label in monotonic_fields:
+                old = float(previous[field])
+                new = float(current[field])
+                if old > 0 and new < 0.95 * old:
+                    add_check(checks, "warning", "nonmonotonic_trend", current["case"],
+                              f"{label} decreased by more than 5% at offset={offset:g} mm")
+
+    by_condition = {(float(row["offset_mm"]), float(row["indent_mm"])): row for row in rows}
+    for (offset, indent), row in by_condition.items():
+        if offset <= 0 or row["contact_x_center_m"] == "":
+            continue
+        baseline = by_condition.get((0.0, indent))
+        if not baseline or baseline["contact_x_center_m"] == "":
+            continue
+        shift = float(row["contact_x_center_m"]) - float(baseline["contact_x_center_m"])
+        if shift < -0.15e-3:
+            add_check(checks, "warning", "contact_center_direction", row["case"],
+                      f"contact center shifted {shift * 1e3:.3f} mm opposite the positive offset")
+
+    severities = {level: sum(check["severity"] == level for check in checks)
+                  for level in ("error", "warning", "info")}
+    return {
+        "generated_at_utc": utc_now(),
+        "passed": severities["error"] == 0,
+        "manifest_cases": len(manifest),
+        "complete_cases": len(rows),
+        "counts": severities,
+        "checks": checks,
+    }
+
+
+def plot_curves(output: Path, rows: list[dict]) -> None:
+    figures = output / "figures"
+    figures.mkdir(exist_ok=True)
+    plots = (
+        ("probe_force_n", 1.0, "FORCE N", "force_vs_indent.png"),
+        ("contact_area_m2", 1e6, "CONTACT AREA MM2", "contact_area_vs_indent.png"),
+        ("pmax_pa", 1e-3, "PMAX KPA", "pmax_vs_indent.png"),
+        ("contact_x_center_m", 1e3, "CONTACT CENTER MM", "contact_center_vs_indent.png"),
+    )
+    offsets = sorted({float(row["offset_mm"]) for row in rows})
+    for field, scale, ylabel, filename in plots:
+        series = []
+        for offset in offsets:
+            group = sorted((row for row in rows if float(row["offset_mm"]) == offset),
+                           key=lambda item: item["indent_mm"])
+            points = [(float(row["indent_mm"]), row[field]) for row in group if row[field] != ""]
+            if points:
+                series.append((f"OFFSET {offset:g} MM", [(x, float(y) * scale) for x, y in points]))
+        plot_lines(figures / filename, ylabel, series)
+
+
+def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("run_root", type=Path)
     cli = parser.parse_args()
-    rows = []
-    for case in sorted(cli.run_root.glob("offset_*_indent_*")):
-        match = re.fullmatch(r"offset_(.+)mm_indent_(.+)mm", case.name)
-        if not match or not (case / "metrics.csv").exists():
-            continue
-        values = [float(item) for item in (case / "metrics.csv").read_text().strip().strip(",").split(",")]
-        force, n_outer, n_inner, cornea, eyelid, pmax, uy = values
-        outer = hull_area(nodes(case / "outer_nodes.txt"))
-        inner = hull_area(nodes(case / "inner_nodes.txt"))
-        p_read = abs(force) / outer if outer else math.nan
-        k_area = outer / inner if inner else math.nan
-        delta_p = abs(force) * (1 / inner - 1 / outer) if outer and inner else math.nan
-        rows.append({"case": case.name, "force_N": abs(force), "outer_area_m2": outer,
-                     "inner_area_m2": inner, "Pread_Pa": p_read, "Karea": k_area,
-                     "DeltaParea_Pa": delta_p, "Parea_Pa": p_read * k_area if outer and inner else math.nan,
-                     "outer_contact_elements": n_outer, "inner_contact_elements": n_inner,
-                     "cornea_peak_Pa": cornea, "eyelid_peak_Pa": eyelid,
-                     "contact_pressure_max_Pa": pmax, "probe_uy_m": uy})
-    with (cli.run_root / "summary.csv").open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=rows[0].keys())
-        writer.writeheader()
-        writer.writerows(rows)
+    manifest = read_manifest(cli.run_root / "run_manifest.csv")
+    rows = summary_rows(manifest)
+    write_summary(cli.run_root / "summary.csv", rows)
+    qc = build_qc(manifest, rows)
+    (cli.run_root / "qc_report.json").write_text(
+        json.dumps(qc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    if rows:
+        plot_curves(cli.run_root, rows)
+    print(f"complete={len(rows)} qc_passed={str(qc['passed']).lower()} root={cli.run_root}")
+    return 0 if qc["passed"] else 1
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

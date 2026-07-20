@@ -18,6 +18,7 @@
 - `scripts/reporting/`：共享报告工具。
 - `docs/analysis/`：共享分析说明；项目报告分别位于 `offset/docs/` 与 `thick/docs/`。
 - `docs/DATA_PROVENANCE.md`：模型层级、参数差异和结论适用范围。
+- `docs/INDENTATION_SWEEP.md`：两载荷步扫描、状态判定、质检和分阶段运行协议。
 - `results/summary/`：机器可读汇总和外部结果校验清单。
 - `ops/`：本地、5090d 和 arch 的仓库初始化与同步脚本。
 
@@ -34,3 +35,7 @@
 - 工作树只保留一套当前模型、运行入口和后处理脚本。
 - 历史实现通过 Git commit、branch 或 tag 查询；工作树不保留历史代码目录，也不在流程脚本名中添加版本数字、`final`、`old` 或 `backup` 后缀。
 - 每次批量求解在 `run_manifest.csv` 中记录 Git commit 和工作区是否有未提交修改；未提交状态只用于调试，不作为正式结果来源。
+
+## 扫描入口
+
+5090d 上使用 `ops/launch-indentation-sweep-5090d.sh smoke` 启动四个代表性算例。只有 smoke 质检通过并人工确认后，才依次使用 `coarse` 和 `full`；脚本不会自动跨阶段推进。

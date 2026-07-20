@@ -3,7 +3,10 @@
 set,last
 /show,png
 /gfile,1200
-/plopts,info,0
+/plopts,info,3
+/plopts,leg1,0
+/plopts,date,0
+/plopts,file,0
 /number,0
 
 ! 0 geometry
