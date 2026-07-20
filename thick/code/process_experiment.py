@@ -46,11 +46,15 @@ def t_critical(n: int) -> float:
 def read_valid_rows(raw_csv: Path) -> list[dict[str, object]]:
     with raw_csv.open("r", encoding="utf-8-sig", newline="") as handle:
         reader = csv.DictReader(handle)
-        fields = set(reader.fieldnames or [])
+        reader.fieldnames = [name.strip() for name in (reader.fieldnames or [])]
+        fields = set(reader.fieldnames)
         missing = set(REQUIRED_COLUMNS) - fields
         if missing:
             raise ValueError(f"Missing required columns: {', '.join(sorted(missing))}")
-        rows = list(reader)
+        rows = [
+            {key.strip(): value.strip() if isinstance(value, str) else value for key, value in row.items()}
+            for row in reader
+        ]
     run_ids = [row["run_id"] for row in rows]
     if len(run_ids) != len(set(run_ids)):
         raise ValueError("run_id must be unique.")
