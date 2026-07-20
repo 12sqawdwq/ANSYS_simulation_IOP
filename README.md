@@ -39,3 +39,5 @@
 ## 扫描入口
 
 5090d 上使用 `ops/launch-indentation-sweep-5090d.sh smoke` 启动四个代表性算例。当前名义压入上限为 0.8 mm；只有 smoke 质检通过并人工确认后，才依次使用 `coarse` 和 `full`，脚本不会自动跨阶段推进。
+
+当前正式 smoke 的 manifest、汇总、QC、元数据和趋势图使用 `results/summary/indentation_smoke*` 这一组固定名称更新；历史版本只通过 Git 提交查询。
