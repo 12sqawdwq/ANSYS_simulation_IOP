@@ -55,7 +55,8 @@ def run_case(args: tuple[Path, float, float, int]) -> dict[str, str]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-root", type=Path, default=Path(os.environ.get("BLUEKNOW_RUN_ROOT", "/home/xuanyu/PROJECT/ziyu/blueknow-data/indentation_sweep")))
-    parser.add_argument("--workers", type=int, default=2)
+    parser.add_argument("--workers", type=int, default=4,
+                        help="parallel MAPDL cases; 4 workers x 4 MPI ranks uses 16 physical cores on 5090d")
     parser.add_argument("--np", type=int, default=4)
     parser.add_argument("--offsets", type=float, nargs="+", default=OFFSETS_MM)
     parser.add_argument("--indents", type=float, nargs="+", default=INDENTS_MM)
