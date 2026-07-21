@@ -55,6 +55,7 @@ class APDLContractTests(unittest.TestCase):
         self.assertIn("esel,r,mat,,2", macro)
         self.assertIn("/dscale,1,1", macro)
         self.assertIn("/type,1,7", macro)
+        self.assertIn("/contour,1,9,0,,0.065", macro)
         self.assertIn("plnsol,epel,eqv", macro)
         self.assertEqual(macro.count("plnsol"), 1)
 

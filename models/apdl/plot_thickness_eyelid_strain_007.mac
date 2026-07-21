@@ -22,6 +22,7 @@ wpcsys,-1,0
 /type,1,7
 /dscale,1,1
 /view,1,0,0,1
+/contour,1,9,0,,0.065
 /title,EYELID EQUIVALENT HENCKY STRAIN - actual scale
 plnsol,epel,eqv
 /show,close
