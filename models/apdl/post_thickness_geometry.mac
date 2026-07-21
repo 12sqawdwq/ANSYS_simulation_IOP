@@ -47,7 +47,12 @@ inner_elem = elnext(inner_elem)
 *enddo
 *cfclos
 
+post_time = arg1
+*if,post_time,gt,0,then
+set,,,,,post_time
+*else
 set,last
+*endif
 allsel
 esel,s,real,,4
 esel,r,ename,,174

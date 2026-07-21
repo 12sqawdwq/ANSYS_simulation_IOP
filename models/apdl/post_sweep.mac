@@ -1,6 +1,11 @@
 ! Metrics for one indentation-sweep case. Values are written in SI units.
 /post1
+post_time = arg1
+*if,post_time,gt,0,then
+set,,,,,post_time
+*else
 set,last
+*endif
 *get,result_lstep,active,0,set,lstp
 *get,result_time,active,0,set,time
 

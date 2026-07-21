@@ -11,6 +11,7 @@ from unittest import mock
 from src.postprocess import summarize_indentation_sweep as summary
 from src.postprocess import summarize_thickness_sweep as thickness_summary
 from src.postprocess import thickness_geometry
+from src.postprocess import extract_thickness_state
 from src.postprocess import prune_solver_artifacts as pruning
 from src.runners import run_indentation_sweep as runner
 
@@ -34,6 +35,27 @@ class APDLContractTests(unittest.TestCase):
         self.assertIn("plnsol,cont,pene", plot)
         self.assertNotIn("/dscale,1,5", plot)
         self.assertEqual(plot.count("plnsol"), 8)
+
+    def test_post_macros_accept_an_optional_result_time(self) -> None:
+        for filename in (
+            "post_sweep.mac",
+            "post_thickness_geometry.mac",
+            "plot_sweep_views.mac",
+        ):
+            macro = (runner.MODEL_DIR / filename).read_text().lower()
+            self.assertIn("post_time = arg1", macro)
+            self.assertIn("set,,,,,post_time", macro)
+            self.assertIn("set,last", macro)
+
+
+class ThicknessStateExtractionTests(unittest.TestCase):
+    def test_maps_nominal_indent_to_second_load_step_time(self) -> None:
+        result_time = extract_thickness_state.result_time_for_indent(0.26, 0.8)
+        self.assertAlmostEqual(result_time, 1.0 + 0.31 / 0.85)
+
+    def test_rejects_target_beyond_source_load_path(self) -> None:
+        with self.assertRaises(ValueError):
+            extract_thickness_state.result_time_for_indent(0.81, 0.8)
 
 
 class AttemptValidationTests(unittest.TestCase):

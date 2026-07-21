@@ -1,6 +1,11 @@
 ! Nine stable, material-separated views. PNG suffix order is fixed by this macro.
 /post1
+post_time = arg1
+*if,post_time,gt,0,then
+set,,,,,post_time
+*else
 set,last
+*endif
 /show,png
 /gfile,1200
 /plopts,info,3
