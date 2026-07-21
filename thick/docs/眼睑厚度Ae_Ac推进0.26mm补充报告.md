@@ -83,9 +83,7 @@ MAPDL 的 `SET` 命令支持按时间读取静力分析结果，并在相邻结�
 
 ### 实际比例中央截面
 
-| 0.80 mm 眼睑 | 1.40 mm 眼睑 | 2.00 mm 眼睑 |
-|---|---|---|
-| ![0.8 mm 截面](../figures/fe_sweep_indent_0p26/views/eyelid_0p80mm_indent_0p26mm/eyelid_0p80mm_indent_0p26mm007.png) | ![1.4 mm 截面](../figures/fe_sweep_indent_0p26/views/eyelid_1p40mm_indent_0p26mm/eyelid_1p40mm_indent_0p26mm007.png) | ![2.0 mm 截面](../figures/fe_sweep_indent_0p26/views/eyelid_2p00mm_indent_0p26mm/eyelid_2p00mm_indent_0p26mm007.png) |
+![0.26 mm 推进下全部厚度的 007 中央截面矩阵](../figures/fe_sweep_indent_0p26/matrices/indent_0p26_view_007_thickness_matrix.png)
 
 ## 6. 质量限制与下一步
 

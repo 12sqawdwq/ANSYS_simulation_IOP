@@ -25,3 +25,5 @@
 | 2.00 | [9 张视图](eyelid_2p00mm_indent_0p26mm/) |
 
 不同工况使用自动色标，跨图定量比较应读取 [summary.csv](../../../data/processed/fe_sweep_indent_0p26/summary.csv)。
+
+全部厚度的 `007` 实际比例中央截面已汇总为 [云图展示矩阵](../matrices/indent_0p26_view_007_thickness_matrix.png)。

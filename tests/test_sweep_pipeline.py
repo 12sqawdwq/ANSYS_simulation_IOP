@@ -12,6 +12,7 @@ from src.postprocess import summarize_indentation_sweep as summary
 from src.postprocess import summarize_thickness_sweep as thickness_summary
 from src.postprocess import thickness_geometry
 from src.postprocess import extract_thickness_state
+from src.postprocess import build_thickness_view_matrix
 from src.postprocess import prune_solver_artifacts as pruning
 from src.runners import run_indentation_sweep as runner
 
@@ -57,6 +58,26 @@ class ThicknessStateExtractionTests(unittest.TestCase):
     def test_rejects_target_beyond_source_load_path(self) -> None:
         with self.assertRaises(ValueError):
             extract_thickness_state.result_time_for_indent(0.81, 0.8)
+
+
+class ThicknessViewMatrixTests(unittest.TestCase):
+    def test_builds_matrix_without_cropping_source_aspect_ratio(self) -> None:
+        from PIL import Image
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            sources = []
+            for index, thickness in enumerate((0.8, 1.0, 1.2)):
+                path = root / f"source_{index}.png"
+                Image.new("RGB", (160, 120), (index * 50, 10, 20)).save(path)
+                sources.append((thickness, path))
+            output = root / "matrix.png"
+            build_thickness_view_matrix.build_matrix(
+                sources, output, columns=2, image_width=80, label_height=20, gap=4, margin=6
+            )
+            with Image.open(output) as matrix:
+                self.assertEqual(matrix.size, (176, 176))
+                self.assertEqual(matrix.getpixel((7, 27)), (0, 10, 20))
 
 
 class AttemptValidationTests(unittest.TestCase):
