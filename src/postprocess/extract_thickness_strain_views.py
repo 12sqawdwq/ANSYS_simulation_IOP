@@ -70,6 +70,7 @@ def extract_view(
     np: int,
     timeout_seconds: float,
     git_commit: str,
+    include_probe: bool,
 ) -> dict:
     thickness_mm = float(source["eyelid_thickness_mm"])
     source_case = source["case"]
@@ -111,7 +112,7 @@ def extract_view(
         driver.write_text(
             f"resume,{source_case},db\n"
             f"/filname,{source_case}\n"
-            f"*use,{MACRO.name},{target_time:.14g}\n",
+            f"*use,{MACRO.name},{target_time:.14g},{int(include_probe)}\n",
             encoding="ascii",
         )
         command = [
@@ -159,6 +160,7 @@ def main() -> int:
     parser.add_argument("--np", type=int, default=1)
     parser.add_argument("--timeout-seconds", type=float, default=600)
     parser.add_argument("--ansys-bin", type=Path, default=os.environ.get("ANSYS_BIN"))
+    parser.add_argument("--include-probe", action="store_true")
     cli = parser.parse_args()
     if cli.workers < 1 or cli.np < 1 or cli.timeout_seconds <= 0:
         parser.error("workers, np, and timeout must be positive")
@@ -183,13 +185,19 @@ def main() -> int:
     ansys_bin = find_ansys_binary(cli.ansys_bin)
     git_commit, git_dirty = git_provenance()
     metadata = {
-        "profile": "thickness_eyelid_strain_007",
+        "profile": (
+            "thickness_eyelid_probe_strain_007"
+            if cli.include_probe else "thickness_eyelid_strain_007"
+        ),
         "source_run": str(source_root),
         "source_indent_mm": cli.source_indent_mm,
         "target_indent_mm": cli.target_indent_mm,
         "target_result_time": target_time,
         "result": "EPEL,EQV equivalent Hencky strain; dimensionless",
-        "scope": "MAT=2 eyelid solid elements",
+        "scope": (
+            "MAT=2 eyelid and MAT=3 probe solid elements"
+            if cli.include_probe else "MAT=2 eyelid solid elements"
+        ),
         "view": "actual-scale deformed central section matching standard view 007",
         "git_commit": git_commit,
         "git_dirty": git_dirty,
@@ -209,6 +217,7 @@ def main() -> int:
             pool.submit(
                 extract_view, source_root, output_root, source, cli.target_indent_mm,
                 target_time, ansys_bin, cli.np, cli.timeout_seconds, git_commit,
+                cli.include_probe,
             )
             for source in source_rows
         ]

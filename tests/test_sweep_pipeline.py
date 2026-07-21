@@ -52,7 +52,9 @@ class APDLContractTests(unittest.TestCase):
         macro = (
             runner.MODEL_DIR / "plot_thickness_eyelid_strain_007.mac"
         ).read_text().lower()
+        self.assertIn("show_probe = arg2", macro)
         self.assertIn("esel,r,mat,,2", macro)
+        self.assertIn("esel,a,mat,,3", macro)
         self.assertIn("/dscale,1,1", macro)
         self.assertIn("/type,1,7", macro)
         self.assertIn("/contour,1,9,0,,0.065", macro)

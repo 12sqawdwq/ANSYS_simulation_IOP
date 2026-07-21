@@ -1,6 +1,7 @@
 ! Eyelid-only equivalent Hencky strain on the actual-scale central section.
 /post1
 post_time = arg1
+show_probe = arg2
 *if,post_time,gt,0,then
 set,,,,,post_time
 *else
@@ -17,13 +18,20 @@ set,last
 allsel
 esel,s,type,,1
 esel,r,mat,,2
+*if,show_probe,eq,1,then
+esel,a,mat,,3
+*endif
 wpcsys,-1,0
 /cplane,1
 /type,1,7
 /dscale,1,1
 /view,1,0,0,1
 /contour,1,9,0,,0.065
+*if,show_probe,eq,1,then
+/title,EYELID AND PROBE EQUIVALENT HENCKY STRAIN - actual scale
+*else
 /title,EYELID EQUIVALENT HENCKY STRAIN - actual scale
+*endif
 plnsol,epel,eqv
 /show,close
 /type,1,6
