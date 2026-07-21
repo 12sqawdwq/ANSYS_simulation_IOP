@@ -27,3 +27,5 @@
 不同工况使用自动色标，跨图定量比较应读取 [summary.csv](../../../data/processed/fe_sweep_indent_0p26/summary.csv)。
 
 全部厚度的 `007` 实际比例中央截面已汇总为 [云图展示矩阵](../matrices/indent_0p26_view_007_thickness_matrix.png)。
+
+同视角的应变后处理另见 [仅眼睑应变视图](../strain_views/README.md)和[眼睑与探头应变视图](../strain_probe_views/README.md)。

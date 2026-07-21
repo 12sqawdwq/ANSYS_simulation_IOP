@@ -10,6 +10,8 @@
 | `qc.json` | 完整性、位移、视图、接触和面积判据检查 |
 | `indent_comparison.csv` | `0.26 mm` 与原 `0.80 mm` 推进的七点 `Ae/Ac(2°)` 对照 |
 | `trend_analysis.json` | 端点增幅、线性及指数描述参数 |
+| `strain_007_manifest.csv` / `strain_007_metadata.json` | 仅眼睑 `EPEL,EQV` 后处理状态与来源 |
+| `strain_probe_007_manifest.csv` / `strain_probe_007_metadata.json` | 眼睑与探头 `EPEL,EQV` 后处理状态与来源 |
 | `excluded_endpoint_exploration/` | 被排除的独立终点试算清单、异常日志与排除依据，不进入发布趋势 |
 
 5090d 发布结果目录：

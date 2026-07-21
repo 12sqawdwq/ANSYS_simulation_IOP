@@ -81,9 +81,23 @@ MAPDL 的 `SET` 命令支持按时间读取静力分析结果，并在相邻结�
 
 压力斑保持中心对称，没有偏心漂移或局部穿模形态。各图自动色标不同，颜色仅用于检查分布，绝对值以结果表为准。
 
-### 实际比例中央截面
+### 实际比例中央截面（等效应力）
 
 ![0.26 mm 推进下全部厚度的 007 中央截面矩阵](../figures/fe_sweep_indent_0p26/matrices/indent_0p26_view_007_thickness_matrix.png)
+
+### 实际比例中央截面（等效对数应变）
+
+应变云图使用 `EPEL,EQV`，数值无量纲。七个状态统一采用 `0-0.065` 色标，因而颜色可以直接横向比较。
+
+#### 仅眼睑
+
+![0.26 mm 推进下全部厚度的眼睑等效对数应变](../figures/fe_sweep_indent_0p26/matrices/indent_0p26_view_007_eyelid_equivalent_strain_matrix.png)
+
+#### 眼睑与探头
+
+![0.26 mm 推进下全部厚度的眼睑与探头等效对数应变](../figures/fe_sweep_indent_0p26/matrices/indent_0p26_view_007_eyelid_probe_equivalent_strain_matrix.png)
+
+探头采用高刚度线弹性材料，其应变远低于眼睑，因此在统一色标下主要呈蓝色；保留探头用于确认接触位置和整体几何关系。
 
 ## 6. 质量限制与下一步
 

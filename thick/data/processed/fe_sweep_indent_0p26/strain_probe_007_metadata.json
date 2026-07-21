@@ -1,0 +1,21 @@
+{
+  "profile": "thickness_eyelid_probe_strain_007",
+  "source_run": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260720T153013Z_2ecc954_thickness",
+  "source_indent_mm": 0.8,
+  "target_indent_mm": 0.26,
+  "target_result_time": 1.3647058823529412,
+  "result": "EPEL,EQV equivalent Hencky strain; dimensionless",
+  "scope": "MAT=2 eyelid and MAT=3 probe solid elements",
+  "view": "actual-scale deformed central section matching standard view 007",
+  "git_commit": "6f1e503b05df12d5e4bf902e1cefadfb6e43d68c",
+  "git_dirty": false,
+  "ansys_executable": "/ansys_inc/v252/ansys/bin/ansys252",
+  "ansys_version": "Mechanical APDL 2025 R2                    Build 25.2 Update: 20250519\n Copyright 1971-2025 ANSYS, Inc.\n Platform: LINUX x64   \n Using 2025.2.0 (20250506) for linx64.  Updated at Ansys Release 2025 R2.\n Customer Number: 20120530",
+  "workers": 7,
+  "np": 1,
+  "started_at_utc": "2026-07-21T05:37:29+00:00",
+  "macro_sha256": "569ebfc5eaa62776ac26946c47014c1e08c0acb539e646e2c8c502a40919614e",
+  "ended_at_utc": "2026-07-21T05:37:38+00:00",
+  "completed_cases": 7,
+  "failed_cases": 0
+}
