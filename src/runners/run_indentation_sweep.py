@@ -551,6 +551,12 @@ def choose_cases(parser: argparse.ArgumentParser, cli: argparse.Namespace) -> tu
     if thickness_grid or cli.profile == "thickness":
         profile = "thickness-custom" if thickness_grid else "thickness"
         thicknesses = cli.eyelid_thicknesses if thickness_grid else THICKNESS_MM
+        if cli.thickness_indent_mm < 0:
+            parser.error("thickness indentation must be non-negative")
+        if cli.thickness_indent_mm > MAX_INDENT_MM + 1e-12:
+            parser.error(
+                f"thickness indentation exceeds the validated {MAX_INDENT_MM:g} mm limit"
+            )
         if any(
             value < MIN_EYELID_THICKNESS_MM - 1e-12
             or value > MAX_EYELID_THICKNESS_MM + 1e-12
@@ -562,7 +568,7 @@ def choose_cases(parser: argparse.ArgumentParser, cli: argparse.Namespace) -> tu
             )
         unique = list(dict.fromkeys(thicknesses))
         return profile, [
-            CaseSpec(0.0, 0.8, index, thickness, "thickness")
+            CaseSpec(0.0, cli.thickness_indent_mm, index, thickness, "thickness")
             for index, thickness in enumerate(unique)
         ]
     if cli.case:
@@ -589,6 +595,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--offsets", type=float, nargs="+")
     parser.add_argument("--indents", type=float, nargs="+")
     parser.add_argument("--eyelid-thicknesses", type=float, nargs="+")
+    parser.add_argument("--thickness-indent-mm", type=float, default=0.8)
     parser.add_argument("--run-root", type=Path)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--np", type=int, default=4)

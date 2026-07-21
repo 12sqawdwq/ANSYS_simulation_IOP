@@ -161,6 +161,13 @@ class RunnerBehaviorTests(unittest.TestCase):
                          [0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0])
         self.assertTrue(all(case.indent_mm == 0.8 and case.kind == "thickness" for case in cases))
 
+        profile, cases = runner.choose_cases(
+            parser,
+            parser.parse_args(["--profile", "thickness", "--thickness-indent-mm", "0.26"]),
+        )
+        self.assertEqual(profile, "thickness")
+        self.assertTrue(all(case.indent_mm == 0.26 and case.kind == "thickness" for case in cases))
+
     def test_custom_case_rejects_indent_above_limit(self) -> None:
         parser = runner.build_parser()
         cli = parser.parse_args(["--case", "0:1.0"])
@@ -170,6 +177,12 @@ class RunnerBehaviorTests(unittest.TestCase):
     def test_thickness_outside_range_is_rejected(self) -> None:
         parser = runner.build_parser()
         cli = parser.parse_args(["--eyelid-thicknesses", "0.6"])
+        with mock.patch("sys.stderr", new=io.StringIO()), self.assertRaises(SystemExit):
+            runner.choose_cases(parser, cli)
+
+    def test_thickness_indent_above_limit_is_rejected(self) -> None:
+        parser = runner.build_parser()
+        cli = parser.parse_args(["--profile", "thickness", "--thickness-indent-mm", "1.0"])
         with mock.patch("sys.stderr", new=io.StringIO()), self.assertRaises(SystemExit):
             runner.choose_cases(parser, cli)
 

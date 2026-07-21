@@ -3,6 +3,9 @@ set -euo pipefail
 
 repo=/home/xuanyu/PROJECT/ziyu/blueknow/simulation
 python_bin=${BLUEKNOW_PYTHON:-/home/xuanyu/miniconda3/envs/grs-pilot/bin/python}
+indent_mm=${BLUEKNOW_THICKNESS_INDENT_MM:-0.8}
+workers=${BLUEKNOW_SWEEP_WORKERS:-4}
+np=${BLUEKNOW_CASE_NP:-4}
 
 if [[ ! -x "$python_bin" ]]; then
     printf 'Python interpreter is not executable: %s\n' "$python_bin" >&2
@@ -27,7 +30,11 @@ mkdir -p "$run_root"
 export BLUEKNOW_RUN_ROOT="$run_root"
 printf 'RUN_ROOT=%s\n' "$run_root"
 set +e
-"$python_bin" "$repo/src/runners/run_indentation_sweep.py" --profile thickness --workers 4 --np 4
+"$python_bin" "$repo/src/runners/run_indentation_sweep.py" \
+    --profile thickness \
+    --thickness-indent-mm "$indent_mm" \
+    --workers "$workers" \
+    --np "$np"
 solver_status=$?
 "$python_bin" "$repo/src/postprocess/summarize_thickness_sweep.py" "$run_root"
 summary_status=$?
