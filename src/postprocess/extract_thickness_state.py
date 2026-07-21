@@ -117,6 +117,9 @@ def _failed_row(
         "eyelid_thickness_mm": source["eyelid_thickness_mm"],
         "cornea_thickness_mm": source["cornea_thickness_mm"],
         "mesh_size_mm": source["mesh_size_mm"],
+        "iop_mmhg": source.get("iop_mmhg", 20.0),
+        "eyelid_material_scale": source.get("eyelid_material_scale", 1.0),
+        "cornea_material_scale": source.get("cornea_material_scale", 1.0),
         "status": "invalid_metrics",
         "failure_reason": reason,
         "attempt_count": 1,
@@ -145,6 +148,7 @@ def extract_case(
     timeout_seconds: float,
     git_commit: str,
     git_dirty: bool,
+    view_policy: str = "all",
 ) -> dict:
     thickness_mm = float(source["eyelid_thickness_mm"])
     source_case = source["case"]
@@ -174,12 +178,16 @@ def extract_case(
         shutil.copy2(source_db, linked_db)
         linked_rst.symlink_to(source_rst)
         driver = attempt / "driver.dat"
+        plot_command = (
+            f"*use,plot_sweep_views.mac,{target_time:.14g}\n"
+            if view_policy == "all" else ""
+        )
         driver.write_text(
             f"resume,{source_case},db\n"
             f"/filname,{source_case}\n"
             f"*use,post_sweep.mac,{target_time:.14g}\n"
             f"*use,post_thickness_geometry.mac,{target_time:.14g}\n"
-            f"*use,plot_sweep_views.mac,{target_time:.14g}\n",
+            + plot_command,
             encoding="ascii",
         )
         command = [
@@ -199,8 +207,9 @@ def extract_case(
                 f"MAPDL postprocessing failed: returncode={returncode}, errors={error_count}"
             )
         views_count = _rename_views(attempt, source_case, target_case)
-        if views_count != 9:
-            raise ValueError(f"expected 9 views, found {views_count}")
+        expected_views = 9 if view_policy == "all" else 0
+        if views_count != expected_views:
+            raise ValueError(f"expected {expected_views} views, found {views_count}")
 
         geometry = analyze_files(
             attempt / "inner_preload_faces.csv",
@@ -238,6 +247,9 @@ def extract_case(
             "eyelid_thickness_mm": thickness_mm,
             "cornea_thickness_mm": source["cornea_thickness_mm"],
             "mesh_size_mm": source["mesh_size_mm"],
+            "iop_mmhg": source.get("iop_mmhg", 20.0),
+            "eyelid_material_scale": source.get("eyelid_material_scale", 1.0),
+            "cornea_material_scale": source.get("cornea_material_scale", 1.0),
             "status": "complete",
             "attempt_count": 1,
             "selected_attempt": 1,
@@ -286,6 +298,7 @@ def main() -> int:
     parser.add_argument("--np", type=int, default=1)
     parser.add_argument("--timeout-seconds", type=float, default=900)
     parser.add_argument("--ansys-bin", type=Path, default=os.environ.get("ANSYS_BIN"))
+    parser.add_argument("--view-policy", choices=("all", "none"), default="all")
     cli = parser.parse_args()
     if cli.workers < 1 or cli.np < 1 or cli.timeout_seconds <= 0:
         parser.error("workers, np, and timeout must be positive")
@@ -328,11 +341,15 @@ def main() -> int:
         "workers": cli.workers,
         "np": cli.np,
         "timeout_seconds": cli.timeout_seconds,
+        "view_policy": cli.view_policy,
         "started_at_utc": utc_now(),
         "cases": [{
             "eyelid_thickness_mm": float(row["eyelid_thickness_mm"]),
             "cornea_thickness_mm": float(row["cornea_thickness_mm"]),
             "indent_mm": cli.target_indent_mm,
+            "iop_mmhg": float(row.get("iop_mmhg") or 20.0),
+            "eyelid_material_scale": float(row.get("eyelid_material_scale") or 1.0),
+            "cornea_material_scale": float(row.get("cornea_material_scale") or 1.0),
         } for row in source_rows],
         "apdl_sha256": {
             filename: sha256(MODEL_DIR / filename) for filename in APDL_FILES[1:]
@@ -347,6 +364,7 @@ def main() -> int:
             pool.submit(
                 extract_case, source_root, output_root, source, cli.target_indent_mm,
                 target_time, ansys_bin, cli.np, cli.timeout_seconds, git_commit, git_dirty,
+                cli.view_policy,
             )
             for source in source_rows
         ]
@@ -358,7 +376,8 @@ def main() -> int:
 
     summaries = summary_rows(rows)
     write_summary(output_root / "summary.csv", summaries)
-    qc = build_qc(rows, summaries, metadata["cases"])
+    expected_views = 9 if cli.view_policy == "all" else 0
+    qc = build_qc(rows, summaries, metadata["cases"], expected_views)
     (output_root / "qc_report.json").write_text(
         json.dumps(qc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )

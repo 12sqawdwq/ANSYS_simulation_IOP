@@ -57,6 +57,9 @@ def build_row(
         "eyelid_thickness_mm": case.eyelid_thickness_mm,
         "cornea_thickness_mm": 0.6,
         "mesh_size_mm": metadata.get("mesh_size_mm", 0.3),
+        "iop_mmhg": metadata.get("iop_mmhg", 20.0),
+        "eyelid_material_scale": metadata.get("eyelid_material_scale", 1.0),
+        "cornea_material_scale": metadata.get("cornea_material_scale", 1.0),
         "status": outcome.status,
         "failure_reason": outcome.reason,
         "attempt_count": 1,
@@ -122,7 +125,8 @@ def recover(run_root: Path) -> tuple[int, int]:
         )
         write_geometry_results(attempt, geometry)
         elapsed = elapsed_seconds(attempt)
-        outcome = validate_attempt(attempt, case, 0, False, elapsed)
+        expected_views = 9 if metadata.get("view_policy", "all") == "all" else 0
+        outcome = validate_attempt(attempt, case, 0, False, elapsed, expected_views)
         if outcome.status == "complete":
             try:
                 stats = prune_attempt(attempt, case.name, keep_primary_results=True)

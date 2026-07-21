@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import io
 import os
 import sys
@@ -14,7 +15,9 @@ from src.postprocess import thickness_geometry
 from src.postprocess import extract_thickness_state
 from src.postprocess import build_thickness_view_matrix
 from src.postprocess import prune_solver_artifacts as pruning
+from src.postprocess import check_calibration_run as calibration_monitor
 from src.runners import run_indentation_sweep as runner
+from src.runners import run_thickness_calibration as calibration
 
 
 class APDLContractTests(unittest.TestCase):
@@ -27,6 +30,9 @@ class APDLContractTests(unittest.TestCase):
         self.assertIn("2.0e-3", model)
         self.assertLess(model.index("time,1"), model.index("time,2"))
         self.assertLess(model.index("time,2"), model.index("*cfopen,solution_status,csv"))
+        self.assertIn("iop    = arg6", model)
+        self.assertIn("eyelid_material_scale = arg7", model)
+        self.assertIn("cornea_material_scale = arg8", model)
 
     def test_views_keep_contour_legend_and_explicit_scales(self) -> None:
         plot = (runner.MODEL_DIR / "plot_sweep_views.mac").read_text().lower()
@@ -134,7 +140,7 @@ class AttemptValidationTests(unittest.TestCase):
             (attempt / f"{case.name}{index:03d}.png").write_bytes(b"png")
         if case.kind == "thickness":
             (attempt / "thickness_geometry.csv").write_text(
-                "0.0008,2e-5,5e-6,8e-6,1.2e-5,1000,\n"
+                "0.0008,2e-5,5e-6,8e-6,1.2e-5,1000,9e-6,100,\n"
             )
         return attempt
 
@@ -250,7 +256,7 @@ class RunnerBehaviorTests(unittest.TestCase):
             outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
             self.assertEqual(outcome.status, "complete")
             (attempt / "thickness_geometry.csv").write_text(
-                "0.0008,2e-5,8e-6,7e-6,6e-6,1000,\n"
+                "0.0008,2e-5,8e-6,7e-6,6e-6,1000,9e-6,100,\n"
             )
             outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
             self.assertEqual(outcome.status, "invalid_metrics")
@@ -321,6 +327,9 @@ class QualityControlTests(unittest.TestCase):
             "offset_mm": "0",
             "indent_mm": "0.8",
             "mesh_size_mm": "0.3",
+            "iop_mmhg": "20",
+            "eyelid_material_scale": "1",
+            "cornea_material_scale": "1",
             "status": status,
             "failure_reason": "" if status == "complete" else "test failure",
             "views_count": "9",
@@ -382,6 +391,9 @@ class ThicknessSummaryTests(unittest.TestCase):
             "eyelid_thickness_mm": str(thickness),
             "cornea_thickness_mm": "0.6",
             "mesh_size_mm": "0.3",
+            "iop_mmhg": "20",
+            "eyelid_material_scale": "1",
+            "cornea_material_scale": "1",
             "status": "complete",
             "failure_reason": "",
             "views_count": "9",
@@ -396,6 +408,8 @@ class ThicknessSummaryTests(unittest.TestCase):
             "inner_area_2deg_m2": "9e-6",
             "inner_area_3deg_m2": "1.2e-5",
             "inner_face_count": "1000",
+            "inner_area_smooth_2deg_m2": "1e-5",
+            "inner_smooth_2deg_face_count": "120",
             "cornea_peak_pa": "120000",
             "eyelid_peak_pa": "100000",
             "probe_uy_m": "-0.00085",
@@ -426,8 +440,11 @@ class ThicknessGeometryTests(unittest.TestCase):
         self,
         element: int,
         points: tuple[tuple[float, float, float], ...],
+        nodes: tuple[int, int, int] | None = None,
     ) -> thickness_geometry.Face:
-        return thickness_geometry.Face(element, (1, 2, 3), points)
+        if nodes is None:
+            nodes = (element * 3 - 2, element * 3 - 1, element * 3)
+        return thickness_geometry.Face(element, nodes, points)
 
     def test_flat_faces_are_selected_by_angle_and_displacement(self) -> None:
         preload = {
@@ -443,12 +460,85 @@ class ThicknessGeometryTests(unittest.TestCase):
         self.assertAlmostEqual(float(metrics["inner_effect_area_m2"]), 0.5)
         self.assertAlmostEqual(float(metrics["inner_area_1deg_m2"]), 0.5)
         self.assertAlmostEqual(float(metrics["inner_area_2deg_m2"]), 0.5)
+        self.assertAlmostEqual(float(metrics["inner_area_smooth_2deg_m2"]), 0.5)
+        self.assertEqual(int(metrics["inner_smooth_2deg_face_count"]), 1)
+
+    def test_smoothed_normals_accept_consistently_flat_faces_with_reversed_orientation(self) -> None:
+        preload = {
+            1: self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)), (1, 2, 3)),
+            2: self.face(2, ((1, 0, 0), (1, 0, 1), (0, 0, 1)), (2, 4, 3)),
+        }
+        final = {
+            1: self.face(1, ((0, -1, 0), (1, -1, 0), (0, -1, 1)), (1, 2, 3)),
+            2: self.face(2, ((1, -1, 0), (1, -1, 1), (0, -1, 1)), (2, 4, 3)),
+        }
+        metrics = thickness_geometry.analyze_faces(preload, final)
+        self.assertAlmostEqual(float(metrics["inner_area_smooth_2deg_m2"]), 1.0)
+        self.assertEqual(int(metrics["inner_smooth_2deg_face_count"]), 2)
         self.assertEqual(metrics["inner_face_count"], 2)
 
     def test_preload_and_final_element_sets_must_match(self) -> None:
         face = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))
         with self.assertRaises(ValueError):
             thickness_geometry.analyze_faces({1: face}, {})
+
+
+class ThicknessCalibrationTests(unittest.TestCase):
+    def test_interval_error_is_zero_inside_and_relative_outside(self) -> None:
+        self.assertEqual(calibration.interval_error(1.75, 1.5, 2.0), 0.0)
+        self.assertAlmostEqual(calibration.interval_error(1.2, 1.5, 2.0), 0.2)
+        self.assertAlmostEqual(calibration.interval_error(2.4, 1.5, 2.0), 0.2)
+
+    def test_primary_acceptance_counts_points_within_twenty_percent(self) -> None:
+        values = {0.8: 1.2, 1.0: 1.7, 1.2: 2.0, 1.25: 2.4}
+        rows = [
+            {
+                "eyelid_thickness_mm": str(thickness),
+                "ae_over_ac_smooth_2deg": str(ratio),
+            }
+            for thickness, ratio in values.items()
+        ]
+        passed, mean_error, score = calibration.primary_metrics(rows)
+        self.assertEqual(passed, 4)
+        self.assertAlmostEqual(mean_error, 0.1)
+        self.assertAlmostEqual(score, 0.02)
+
+    def test_secondary_trend_penalizes_a_falling_thick_end(self) -> None:
+        primary = [{
+            "eyelid_thickness_mm": str(thickness),
+            "ae_over_ac_smooth_2deg": "1.8",
+        } for thickness in calibration.PRIMARY_THICKNESSES]
+        secondary = [
+            {"eyelid_thickness_mm": "1.5", "ae_over_ac_smooth_2deg": "2.5"},
+            {"eyelid_thickness_mm": "2.0", "ae_over_ac_smooth_2deg": "1.7"},
+        ]
+        _, penalty = calibration.secondary_metrics(primary, secondary)
+        self.assertEqual(penalty, 1.0)
+
+
+class CalibrationMonitorTests(unittest.TestCase):
+    def test_active_fresh_solver_with_progress_is_healthy(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "controller.pid").write_text(str(os.getpid()), encoding="ascii")
+            attempt = root / "candidate" / "attempt_1"
+            attempt.mkdir(parents=True)
+            (attempt / "solve.out").write_text(
+                "SUBSTEP 1 CONVERGED\nSUBSTEP 2 CONVERGED\nSUBSTEP 3 CONVERGED\n"
+            )
+            status = calibration_monitor.inspect(root)
+            self.assertTrue(status["healthy_to_leave_unattended"])
+
+    def test_manifest_failure_prevents_unattended_status(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "controller.pid").write_text(str(os.getpid()), encoding="ascii")
+            with (root / "run_manifest.csv").open("w", newline="", encoding="utf-8") as handle:
+                writer = csv.DictWriter(handle, fieldnames=("case", "status"))
+                writer.writeheader()
+                writer.writerow({"case": "failed", "status": "nonconverged"})
+            status = calibration_monitor.inspect(root)
+            self.assertFalse(status["healthy_to_leave_unattended"])
 
 
 if __name__ == "__main__":

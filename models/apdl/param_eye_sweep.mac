@@ -5,6 +5,9 @@
 ! ARG3 = solver retry mode (0=standard, 1=smaller initial steps)
 ! ARG4 = mesh size in m (default 0.3 mm)
 ! ARG5 = eyelid thickness in m (default 1.0 mm)
+! ARG6 = IOP in Pa (default 2666.4 Pa = 20 mmHg)
+! ARG7 = eyelid C10/C01 scale (default 1.0)
+! ARG8 = cornea C10/C01 scale (default 1.0)
 ! Known-working config: tet + flat probe + bonded eyelid-cornea
 ! + lateral probe constraint + IOP preload followed by indentation.
 ! ============================================================
@@ -44,7 +47,18 @@ indent_limit = 0.8e-3
 mesh_size = 0.3e-3
 *endif
 push   = gap0 + indent
-iop    = 2666.4
+iop    = ARG6
+*if,iop,le,0,then
+iop = 2666.4
+*endif
+eyelid_material_scale = ARG7
+*if,eyelid_material_scale,le,0,then
+eyelid_material_scale = 1.0
+*endif
+cornea_material_scale = ARG8
+*if,cornea_material_scale,le,0,then
+cornea_material_scale = 1.0
+*endif
 rmax   = 6.0e-3
 xoff   = ARG1
 
@@ -53,9 +67,9 @@ et,2,170
 et,3,174
 
 tb,hyper,1,,2,mooney
-tbdata,1,0.11e6,0.025e6,0.1e-6      ! cornea
+tbdata,1,0.11e6*cornea_material_scale,0.025e6*cornea_material_scale,0.1e-6
 tb,hyper,2,,2,mooney
-tbdata,1,0.076e6,0.01e6,0.1e-6      ! eyelid
+tbdata,1,0.076e6*eyelid_material_scale,0.01e6*eyelid_material_scale,0.1e-6
 mp,ex,3,3500e6
 mp,nuxy,3,0.33
 

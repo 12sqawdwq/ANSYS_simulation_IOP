@@ -71,6 +71,9 @@ MANIFEST_FIELDS = (
     "eyelid_thickness_mm",
     "cornea_thickness_mm",
     "mesh_size_mm",
+    "iop_mmhg",
+    "eyelid_material_scale",
+    "cornea_material_scale",
     "status",
     "failure_reason",
     "attempt_count",
@@ -149,6 +152,10 @@ class RunConfig:
     mesh_size_mm: float
     git_commit: str
     git_dirty: bool
+    iop_mmhg: float = 20.0
+    eyelid_material_scale: float = 1.0
+    cornea_material_scale: float = 1.0
+    view_policy: str = "all"
 
 
 @dataclass
@@ -297,6 +304,7 @@ def validate_attempt(
     returncode: int | None,
     timed_out: bool,
     elapsed_seconds: float,
+    expected_views: int = 9,
 ) -> AttemptOutcome:
     solve_path = attempt_dir / "solve.out"
     launcher_path = attempt_dir / "launcher.log"
@@ -325,8 +333,8 @@ def validate_attempt(
         return AttemptOutcome("missing_results", "metrics, solution status, or RST is missing",
                               returncode, elapsed_seconds, error_count, 0, {}, None)
     views = [path for path in attempt_dir.glob("*.png") if path.stat().st_size > 0]
-    if len(views) != 9:
-        return AttemptOutcome("missing_results", f"expected 9 non-empty views, found {len(views)}",
+    if len(views) != expected_views:
+        return AttemptOutcome("missing_results", f"expected {expected_views} non-empty views, found {len(views)}",
                               returncode, elapsed_seconds, error_count, len(views), {}, rst_candidates[0])
 
     try:
@@ -386,6 +394,16 @@ def validate_attempt(
         ):
             return AttemptOutcome("invalid_metrics", "inner geometric areas violate angle ordering",
                                   returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
+        if (
+            float(metrics["inner_area_smooth_2deg_m2"]) <= 0
+            or float(metrics["inner_area_smooth_2deg_m2"])
+            > float(metrics["inner_effect_area_m2"])
+            or int(round(float(metrics["inner_smooth_2deg_face_count"]))) <= 0
+        ):
+            return AttemptOutcome(
+                "invalid_metrics", "smoothed inner geometric area is invalid",
+                returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0]
+            )
     return AttemptOutcome("complete", "", returncode, elapsed_seconds, error_count,
                           len(views), metrics, rst_candidates[0])
 
@@ -403,14 +421,19 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
         f"retry_mode={retry_mode}\n"
         f"mesh_size={config.mesh_size_mm / 1000:.12g}\n"
         f"eyelid_thickness={case.eyelid_thickness_mm / 1000:.12g}\n"
-        "*use,param_eye_sweep.mac,xoff,indent,retry_mode,mesh_size,eyelid_thickness\n"
+        f"iop_pa={config.iop_mmhg * 133.322:.12g}\n"
+        f"eyelid_material_scale={config.eyelid_material_scale:.12g}\n"
+        f"cornea_material_scale={config.cornea_material_scale:.12g}\n"
+        "*use,param_eye_sweep.mac,xoff,indent,retry_mode,mesh_size,eyelid_thickness,"
+        "iop_pa,eyelid_material_scale,cornea_material_scale\n"
         f"resume,{case.name},db\n"
         f"/filname,{case.name}\n"
         "*use,post_sweep.mac\n"
     )
     if case.kind == "thickness":
         driver_text += "*use,post_thickness_geometry.mac\n"
-    driver_text += "*use,plot_sweep_views.mac\n"
+    if config.view_policy == "all":
+        driver_text += "*use,plot_sweep_views.mac\n"
     driver.write_text(
         driver_text,
         encoding="ascii",
@@ -437,7 +460,10 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
             (attempt_dir / "thickness_geometry_error.txt").write_text(
                 f"{type(error).__name__}: {error}\n", encoding="utf-8"
             )
-    outcome = validate_attempt(attempt_dir, case, returncode, timed_out, elapsed_seconds)
+    expected_views = 9 if config.view_policy == "all" else 0
+    outcome = validate_attempt(
+        attempt_dir, case, returncode, timed_out, elapsed_seconds, expected_views
+    )
     try:
         prune_stats = prune_attempt(
             attempt_dir,
@@ -504,6 +530,9 @@ def run_case(case: CaseSpec, config: RunConfig) -> dict:
         "eyelid_thickness_mm": case.eyelid_thickness_mm,
         "cornea_thickness_mm": 0.6,
         "mesh_size_mm": config.mesh_size_mm,
+        "iop_mmhg": config.iop_mmhg,
+        "eyelid_material_scale": config.eyelid_material_scale,
+        "cornea_material_scale": config.cornea_material_scale,
         "status": outcome.status,
         "failure_reason": outcome.reason,
         "attempt_count": selected_attempt,
@@ -602,6 +631,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--timeout-seconds", type=float, default=7200)
     parser.add_argument("--retry-count", type=int, choices=(0, 1), default=1)
     parser.add_argument("--mesh-size-mm", type=float, default=0.3)
+    parser.add_argument("--iop-mmhg", type=float, default=20.0)
+    parser.add_argument("--eyelid-material-scale", type=float, default=1.0)
+    parser.add_argument("--cornea-material-scale", type=float, default=1.0)
+    parser.add_argument("--view-policy", choices=("all", "none"), default="all")
     parser.add_argument("--ansys-bin", type=Path, default=os.environ.get("ANSYS_BIN"))
     parser.add_argument("--allow-dirty", action="store_true",
                         help="allow an uncommitted worktree for debugging; never use for formal results")
@@ -611,8 +644,12 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     parser = build_parser()
     cli = parser.parse_args()
-    if cli.workers < 1 or cli.np < 1 or cli.timeout_seconds <= 0 or cli.mesh_size_mm <= 0:
-        parser.error("workers, np, timeout, and mesh size must be positive")
+    if (
+        cli.workers < 1 or cli.np < 1 or cli.timeout_seconds <= 0
+        or cli.mesh_size_mm <= 0 or cli.iop_mmhg <= 0
+        or cli.eyelid_material_scale <= 0 or cli.cornea_material_scale <= 0
+    ):
+        parser.error("workers, np, timeout, mesh size, IOP, and material scales must be positive")
     profile, cases = choose_cases(parser, cli)
     git_commit, git_dirty = git_provenance()
     if git_dirty and not cli.allow_dirty:
@@ -632,8 +669,12 @@ def main() -> int:
     if run_root.exists() and any(run_root.iterdir()):
         parser.error(f"run root must be new or empty: {run_root}")
     run_root.mkdir(parents=True, exist_ok=True)
-    config = RunConfig(run_root, profile, cli.np, cli.timeout_seconds, cli.retry_count,
-                       ansys_bin, cli.mesh_size_mm, git_commit, git_dirty)
+    config = RunConfig(
+        run_root, profile, cli.np, cli.timeout_seconds, cli.retry_count,
+        ansys_bin, cli.mesh_size_mm, git_commit, git_dirty,
+        cli.iop_mmhg, cli.eyelid_material_scale, cli.cornea_material_scale,
+        cli.view_policy,
+    )
     metadata = {
         "run_id": run_id,
         "profile": profile,
@@ -649,12 +690,19 @@ def main() -> int:
         "timeout_seconds": cli.timeout_seconds,
         "retry_count": cli.retry_count,
         "mesh_size_mm": cli.mesh_size_mm,
+        "iop_mmhg": cli.iop_mmhg,
+        "eyelid_material_scale": cli.eyelid_material_scale,
+        "cornea_material_scale": cli.cornea_material_scale,
+        "view_policy": cli.view_policy,
         "started_at_utc": utc_now(),
         "cases": [{
             "offset_mm": case.offset_mm,
             "indent_mm": case.indent_mm,
             "eyelid_thickness_mm": case.eyelid_thickness_mm,
             "cornea_thickness_mm": 0.6,
+            "iop_mmhg": cli.iop_mmhg,
+            "eyelid_material_scale": cli.eyelid_material_scale,
+            "cornea_material_scale": cli.cornea_material_scale,
         } for case in cases],
         "apdl_sha256": {filename: sha256(MODEL_DIR / filename) for filename in APDL_FILES},
         "artifact_retention_policy": ARTIFACT_POLICY,

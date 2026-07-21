@@ -19,6 +19,8 @@ GEOMETRY_FIELDS = (
     "inner_area_2deg_m2",
     "inner_area_3deg_m2",
     "inner_face_count",
+    "inner_area_smooth_2deg_m2",
+    "inner_smooth_2deg_face_count",
 )
 
 
@@ -71,17 +73,56 @@ def read_faces(path: Path) -> dict[int, Face]:
     return faces
 
 
-def _face_geometry(face: Face) -> tuple[float, float]:
+def _face_normal(face: Face) -> tuple[tuple[float, float, float], float]:
     edge1 = _vector(face.points[0], face.points[1])
     edge2 = _vector(face.points[0], face.points[2])
     normal = _cross(edge1, edge2)
     magnitude = math.sqrt(sum(component * component for component in normal))
     if magnitude <= 0:
         raise ValueError(f"element {face.element} has zero deformed area")
-    projected_area = 0.5 * abs(normal[1])
+    if normal[1] < 0:
+        normal = tuple(-component for component in normal)
+    return normal, magnitude
+
+
+def _normal_angle(normal: tuple[float, float, float]) -> float:
+    magnitude = math.sqrt(sum(component * component for component in normal))
+    if magnitude <= 0:
+        raise ValueError("smoothed surface normal has zero magnitude")
     axis_cosine = min(1.0, max(0.0, abs(normal[1]) / magnitude))
-    angle_deg = math.degrees(math.acos(axis_cosine))
-    return projected_area, angle_deg
+    return math.degrees(math.acos(axis_cosine))
+
+
+def _face_geometry(face: Face) -> tuple[float, float]:
+    normal, magnitude = _face_normal(face)
+    projected_area = 0.5 * abs(normal[1])
+    return projected_area, _normal_angle(normal)
+
+
+def _smoothed_face_angles(faces: dict[int, Face]) -> dict[int, float]:
+    node_normals: dict[int, list[float]] = {}
+    for face in faces.values():
+        normal, _ = _face_normal(face)
+        for node in face.nodes:
+            accumulated = node_normals.setdefault(node, [0.0, 0.0, 0.0])
+            for index, component in enumerate(normal):
+                accumulated[index] += component
+
+    unit_node_normals: dict[int, tuple[float, float, float]] = {}
+    for node, normal in node_normals.items():
+        magnitude = math.sqrt(sum(component * component for component in normal))
+        if magnitude <= 0:
+            raise ValueError(f"node {node} has zero smoothed normal")
+        unit_node_normals[node] = tuple(component / magnitude for component in normal)
+
+    angles: dict[int, float] = {}
+    for element, face in faces.items():
+        normal = tuple(
+            sum(unit_node_normals[node][index] for node in face.nodes)
+            for index in range(3)
+        )
+        angles[element] = _normal_angle(normal)
+    return angles
 
 
 def analyze_faces(
@@ -99,7 +140,8 @@ def analyze_faces(
     if not 0 < displacement_fraction < 1:
         raise ValueError("displacement_fraction must be between 0 and 1")
 
-    records: list[tuple[float, float, float]] = []
+    smooth_angles = _smoothed_face_angles(final)
+    records: list[tuple[float, float, float, float]] = []
     for element in sorted(preload):
         before = preload[element]
         after = final[element]
@@ -109,7 +151,7 @@ def analyze_faces(
         final_y = sum(point[1] for point in after.points) / 3.0
         downward = preload_y - final_y
         projected_area, angle_deg = _face_geometry(after)
-        records.append((downward, projected_area, angle_deg))
+        records.append((downward, projected_area, angle_deg, smooth_angles[element]))
 
     max_downward = max(record[0] for record in records)
     if max_downward <= 0:
@@ -127,9 +169,16 @@ def analyze_faces(
     for angle in ANGLE_LIMITS_DEG:
         metrics[f"inner_area_{int(angle)}deg_m2"] = sum(
             projected_area
-            for _, projected_area, angle_deg in affected
+            for _, projected_area, angle_deg, _ in affected
             if angle_deg <= angle
         )
+    smooth_2deg = [
+        projected_area
+        for _, projected_area, _, smooth_angle_deg in affected
+        if smooth_angle_deg <= 2.0
+    ]
+    metrics["inner_area_smooth_2deg_m2"] = sum(smooth_2deg)
+    metrics["inner_smooth_2deg_face_count"] = len(smooth_2deg)
     return metrics
 
 
@@ -154,6 +203,10 @@ def write_results(output_dir: Path, metrics: dict[str, float | int]) -> None:
             "area": "face area projected onto the plane normal to the global Y probe axis",
             "flatness": "absolute face-normal angle to the global Y probe axis",
             "angle_limits_deg": list(ANGLE_LIMITS_DEG),
+            "smoothed_flatness": (
+                "2 degree threshold using area-weighted one-ring vertex normals; "
+                "face orientation is normalized toward the positive global Y probe axis"
+            ),
         },
         "metrics": metrics,
     }

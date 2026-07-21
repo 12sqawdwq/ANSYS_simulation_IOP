@@ -21,6 +21,9 @@ SUMMARY_FIELDS = (
     "cornea_thickness_mm",
     "indent_mm",
     "mesh_size_mm",
+    "iop_mmhg",
+    "eyelid_material_scale",
+    "cornea_material_scale",
     "probe_force_n",
     "force_ratio_to_0p8",
     "force_correction_to_0p8",
@@ -33,9 +36,12 @@ SUMMARY_FIELDS = (
     "inner_area_1deg_mm2",
     "inner_area_2deg_mm2",
     "inner_area_3deg_mm2",
+    "inner_area_smooth_2deg_mm2",
+    "inner_smooth_2deg_face_count",
     "ae_over_ac_1deg",
     "ae_over_ac_2deg",
     "ae_over_ac_3deg",
+    "ae_over_ac_smooth_2deg",
     "max_penetration_mm",
     "cornea_peak_kpa",
     "eyelid_peak_kpa",
@@ -70,12 +76,16 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
         inner1 = value(raw, "inner_area_1deg_m2") * 1e6
         inner2 = value(raw, "inner_area_2deg_m2") * 1e6
         inner3 = value(raw, "inner_area_3deg_m2") * 1e6
+        smooth2 = value(raw, "inner_area_smooth_2deg_m2") * 1e6
         rows.append({
             "case": raw["case"],
             "eyelid_thickness_mm": value(raw, "eyelid_thickness_mm"),
             "cornea_thickness_mm": value(raw, "cornea_thickness_mm"),
             "indent_mm": value(raw, "indent_mm"),
             "mesh_size_mm": value(raw, "mesh_size_mm"),
+            "iop_mmhg": value(raw, "iop_mmhg"),
+            "eyelid_material_scale": value(raw, "eyelid_material_scale"),
+            "cornea_material_scale": value(raw, "cornea_material_scale"),
             "probe_force_n": force,
             "outer_area_mm2": outer,
             "mean_outer_pressure_kpa": force / (outer * 1e-6) / 1e3,
@@ -85,9 +95,12 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
             "inner_area_1deg_mm2": inner1,
             "inner_area_2deg_mm2": inner2,
             "inner_area_3deg_mm2": inner3,
+            "inner_area_smooth_2deg_mm2": smooth2,
+            "inner_smooth_2deg_face_count": int(value(raw, "inner_smooth_2deg_face_count")),
             "ae_over_ac_1deg": outer / inner1,
             "ae_over_ac_2deg": outer / inner2,
             "ae_over_ac_3deg": outer / inner3,
+            "ae_over_ac_smooth_2deg": outer / smooth2,
             "max_penetration_mm": value(raw, "max_penetration_m") * 1e3,
             "cornea_peak_kpa": value(raw, "cornea_peak_pa") / 1e3,
             "eyelid_peak_kpa": value(raw, "eyelid_peak_pa") / 1e3,
@@ -124,6 +137,7 @@ def build_qc(
     manifest: list[dict[str, str]],
     rows: list[dict[str, float | str]],
     expected_cases: list[dict] | None,
+    expected_views: int = 9,
 ) -> dict[str, object]:
     checks: list[dict[str, str]] = []
     expected = {
@@ -142,8 +156,11 @@ def build_qc(
             add_check(checks, "error", "case_not_complete", case,
                       f"status={raw.get('status')} reason={raw.get('failure_reason', '')}")
             continue
-        if int(value(raw, "views_count")) != 9:
-            add_check(checks, "error", "missing_views", case, "expected exactly 9 non-empty views")
+        if int(value(raw, "views_count")) != expected_views:
+            add_check(
+                checks, "error", "missing_views", case,
+                f"expected exactly {expected_views} non-empty views",
+            )
         push = value(raw, "commanded_push_m")
         if abs(value(raw, "probe_uy_m") + push) > max(1e-8, 0.005 * push):
             add_check(checks, "error", "probe_displacement", case, "probe displacement differs from command")
@@ -161,6 +178,11 @@ def build_qc(
         if not (0 < areas[0] <= areas[1] <= areas[2] <= effect_area):
             add_check(checks, "error", "inner_area_order", case,
                       "geometric inner areas do not increase with angle threshold")
+        smooth_area = value(raw, "inner_area_smooth_2deg_m2")
+        smooth_count = value(raw, "inner_smooth_2deg_face_count")
+        if not 0 < smooth_area <= effect_area or smooth_count < 1:
+            add_check(checks, "error", "inner_smooth_area", case,
+                      "smoothed 2 degree area or face count is invalid")
         sensitivity = (areas[2] - areas[0]) / areas[1]
         if sensitivity > 1.0:
             add_check(checks, "warning", "inner_area_threshold_sensitivity", case,
@@ -203,6 +225,9 @@ def plot_curves(run_root: Path, rows: list[dict[str, float | str]]) -> None:
             ("1 DEG", [(x(row), float(row["ae_over_ac_1deg"])) for row in rows]),
             ("2 DEG", [(x(row), float(row["ae_over_ac_2deg"])) for row in rows]),
             ("3 DEG", [(x(row), float(row["ae_over_ac_3deg"])) for row in rows]),
+            ("SMOOTH 2 DEG", [
+                (x(row), float(row["ae_over_ac_smooth_2deg"])) for row in rows
+            ]),
         )),
         ("pressure_vs_thickness.png", "PRESSURE KPA", (
             ("MEAN", [(x(row), float(row["mean_outer_pressure_kpa"])) for row in rows]),
@@ -227,7 +252,8 @@ def main() -> int:
     metadata = json.loads(metadata_path.read_text(encoding="utf-8")) if metadata_path.exists() else {}
     rows = summary_rows(manifest)
     write_csv(cli.run_root / "summary.csv", rows)
-    qc = build_qc(manifest, rows, metadata.get("cases"))
+    expected_views = 9 if metadata.get("view_policy", "all") == "all" else 0
+    qc = build_qc(manifest, rows, metadata.get("cases"), expected_views)
     (cli.run_root / "qc_report.json").write_text(
         json.dumps(qc, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
