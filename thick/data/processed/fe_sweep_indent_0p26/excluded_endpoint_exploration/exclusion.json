@@ -7,7 +7,7 @@
   "published_replacement": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T051323Z_69b0a01_thickness_indent_0p26_state",
   "retained_files": [
     "eyelid_1p60mm_metrics.csv",
-    "eyelid_1p60mm_solve.log",
+    "eyelid_1p60mm_solve_excerpt.txt",
     "eyelid_1p60mm_thickness_geometry.csv",
     "eyelid_1p60mm_thickness_geometry.json",
     "run_manifest.csv",

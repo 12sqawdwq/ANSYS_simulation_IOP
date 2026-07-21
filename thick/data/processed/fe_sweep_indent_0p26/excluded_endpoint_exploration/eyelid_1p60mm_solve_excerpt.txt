@@ -1,0 +1,3443 @@
+
+ Ansys Mechanical Enterprise                       
+
+
+ *------------------------------------------------------------------*
+ |                                                                  |
+ |   W E L C O M E   T O   T H E   A N S Y S (R)  P R O G R A M     |
+ |                                                                  |
+ *------------------------------------------------------------------*
+
+
+
+
+ ***************************************************************
+ *         ANSYS MAPDL 2025 R2          LEGAL NOTICES          *
+ ***************************************************************
+ *                                                             *
+ * Copyright 1971-2025 Ansys, Inc.  All rights reserved.       *
+ * Unauthorized use, distribution or duplication is            *
+ * prohibited.                                                 *
+ *                                                             *
+ * Ansys is a registered trademark of Ansys, Inc. or its       *
+ * subsidiaries in the United States or other countries.       *
+ * See the Ansys, Inc. online documentation or the Ansys, Inc. *
+ * documentation CD or online help for the complete Legal      *
+ * Notice.                                                     *
+ *                                                             *
+ ***************************************************************
+ *                                                             *
+ * THIS ANSYS SOFTWARE PRODUCT AND PROGRAM DOCUMENTATION       *
+ * INCLUDE TRADE SECRETS AND CONFIDENTIAL AND PROPRIETARY      *
+ * PRODUCTS OF ANSYS, INC., ITS SUBSIDIARIES, OR LICENSORS.    *
+ * The software products and documentation are furnished by    *
+ * Ansys, Inc. or its subsidiaries under a software license    *
+ * agreement that contains provisions concerning               *
+ * non-disclosure, copying, length and nature of use,          *
+ * compliance with exporting laws, warranties, disclaimers,    *
+ * limitations of liability, and remedies, and other           *
+ * provisions.  The software products and documentation may be *
+ * used, disclosed, transferred, or copied only in accordance  *
+ * with the terms and conditions of that software license      *
+ * agreement.                                                  *
+ *                                                             *
+ * Ansys, Inc. is a UL registered                              *
+ * ISO 9001:2015 company.                                      *
+ *                                                             *
+ ***************************************************************
+ *                                                             *
+ * This product is subject to U.S. laws governing export and   *
+ * re-export.                                                  *
+ *                                                             *
+ * For U.S. Government users, except as specifically granted   *
+ * by the Ansys, Inc. software license agreement, the use,     *
+ * duplication, or disclosure by the United States Government  *
+ * is subject to restrictions stated in the Ansys, Inc.        *
+ * software license agreement and FAR 12.212 (for non-DOD      *
+ * licenses).                                                  *
+ *                                                             *
+ ***************************************************************
+
+ 2025 R2 
+     
+ Point Releases and Patches installed:   
+     
+ Ansys, Inc. License Manager 2025 R2 
+ Additive 2025 R2
+ Core WB Files 2025 R2   
+ BladeModeler 2025 R2
+ CFX (includes CFD-Post) 2025 R2 
+ CFD-Post only 2025 R2   
+ Chemkin 2025 R2 
+ EnSight 2025 R2 
+ FENSAP-ICE 2025 R2  
+ Fluent (includes CFD-Post) 2025 R2  
+ Polyflow (includes CFD-Post) 2025 R2
+ Forte (includes EnSight) 2025 R2
+ ICEM CFD 2025 R2
+ TurboGrid 2025 R2   
+ Dynamic Reporting 2025 R2   
+ Remote Solve Manager Standalone Services 2025 R2
+ Aqwa 2025 R2
+ Autodyn 2025 R2 
+ Customization Files for User Programmable Features 2025 R2  
+ LS-DYNA 2025 R2 
+ Mechanical Products 2025 R2 
+ Motion 2025 R2  
+ Sherlock 2025 R2
+ ACIS Geometry Interface 2025 R2 
+ AutoCAD Geometry Interface 2025 R2  
+ Catia, Version 4 Geometry Interface 2025 R2 
+ Catia, Version 5 Geometry Interface 2025 R2 
+ Catia, Version 6 Geometry Interface 2025 R2 
+ Creo Parametric Geometry Interface 2025 R2  
+ Inventor Geometry Interface 2025 R2 
+ JTOpen Geometry Interface 2025 R2   
+ NX Geometry Interface 2025 R2   
+ Parasolid Geometry Interface 2025 R2
+ Solid Edge Geometry Interface 2025 R2   
+ SOLIDWORKS Geometry Interface 2025 R2   
+
+
+          *****  MAPDL COMMAND LINE ARGUMENTS  *****
+  INITIAL JOBNAME              = eyelid_1p60mm_indent_0p26mm                                                                                                                                                                                                                             
+  BATCH MODE REQUESTED (-b)    = LIST
+  INPUT FILE COPY MODE (-c)    = COPY
+  INPUT FILE NAME              = /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T015758Z_a847e78f_thickness_indent_0p26/eyelid_1p60mm_indent_0p26mm/attempt_1/driver.dat
+  OUTPUT FILE NAME             = /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T015758Z_a847e78f_thickness_indent_0p26/eyelid_1p60mm_indent_0p26mm/attempt_1/solve.out
+  INITIAL DIRECTORY = /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T015758Z_a847e78f_thickness_indent_0p26/eyelid_1p60mm_indent_0p26mm/attempt_1
+
+ RELEASE= 2025 R2              BUILD= 25.2      UP20250519   VERSION=LINUX x64   
+ CURRENT JOBNAME=eyelid_1p60mm_indent_0p26mm0  09:58:04  JUL 21, 2026 CP=      0.227
+
+     1  xoff=0  
+     2  indent=0.00026  
+     3  retry_mode=0
+     4  mesh_size=0.0003
+     5  eyelid_thickness=0.0016 
+     6  *use,param_eye_sweep.mac,xoff,indent,retry_mode,mesh_size,eyelid_thickness  
+     7  resume,eyelid_1p60mm_indent_0p26mm,db   
+     8  /filname,eyelid_1p60mm_indent_0p26mm
+     9  *use,post_sweep.mac 
+    10  *use,post_thickness_geometry.mac
+    11  *use,plot_sweep_views.mac   
+
+ RUN SETUP PROCEDURE FROM FILE= /ansys_inc/v252/ansys/apdl/start.ans
+
+ /INPUT FILE= /ansys_inc/v252/ansys/apdl/start.ans  LINE=       0
+
+ PARAMETER XOFF =     0.000000000    
+
+ PARAMETER INDENT =    0.2600000000E-03
+
+ PARAMETER RETRY_MODE =     0.000000000    
+
+ PARAMETER MESH_SIZE =    0.3000000000E-03
+
+ PARAMETER EYELID_THICKNESS =    0.1600000000E-02
+
+ USE MACRO FILE  param_eye_sweep.mac
+ ARGS=   0.0000      0.26000E-03   0.0000      0.30000E-03  0.16000E-02
+
+
+ CLEAR DATABASE AND RERUN START.ANS
+
+ RUN SETUP PROCEDURE FROM FILE= /ansys_inc/v252/ansys/apdl/start.ans
+
+ Ansys Mechanical Enterprise                       
+
+ /INPUT FILE= /ansys_inc/v252/ansys/apdl/start.ans  LINE=       0
+
+ *** MAPDL - ENGINEERING ANALYSIS SYSTEM  RELEASE 2025 R2          25.2     ***
+ Ansys Mechanical Enterprise                       
+ 20120530  VERSION=LINUX x64     09:58:04  JUL 21, 2026 CP=      0.457
+
+                                                                               
+
+
+
+          ***** MAPDL ANALYSIS DEFINITION (PREP7) *****
+
+ PARAMETER RC =    0.7800000000E-02
+
+ PARAMETER TC =    0.6000000000E-03
+
+ PARAMETER TE =    0.1600000000E-02
+
+ *IF  te  ( =  0.160000E-02 )  LE  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ *IF  te  ( =  0.160000E-02 )  LT  
+      0.8e-3  ( =  0.800000E-03 )  THEN    
+
+ *ENDIF
+
+ *IF  te  ( =  0.160000E-02 )  GT  
+      2.0e-3  ( =  0.200000E-02 )  THEN    
+
+ *ENDIF
+
+ PARAMETER RPROBE =    0.2160000000E-02
+
+ PARAMETER GAP0 =    0.5000000000E-04
+
+ PARAMETER INDENT =    0.2600000000E-03
+
+ PARAMETER RETRY_MODE =     0.000000000    
+
+ PARAMETER MESH_SIZE =    0.3000000000E-03
+
+ PARAMETER INDENT_LIMIT =    0.8000000000E-03
+
+ *IF  indent  ( =  0.260000E-03 )  LT  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ *IF  indent  ( =  0.260000E-03 )  GT  
+      indent_limit  ( =  0.800000E-03 )  THEN    
+
+ *ENDIF
+
+ *IF  mesh_size  ( =  0.300000E-03 )  LE  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ PARAMETER PUSH =    0.3100000000E-03
+
+ PARAMETER IOP =     2666.400000    
+
+ PARAMETER RMAX =    0.6000000000E-02
+
+ PARAMETER XOFF =     0.000000000    
+
+ ELEMENT TYPE          1 IS SOLID187     3-D 10-NODE STRUCTURAL SOLID
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE          2 IS TARGE170     3-D TARGET SEGMENT          
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE          3 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+   MOONEY-RIVLIN HYPERELASTIC MATERIAL  OPTION FOR MATERIAL 1 
+ DATA FOR  HYPE  TABLE FOR MATERIAL   1 AT TEMPERATURE=  0.0000    
+ LOC=  1 1.10000e+05     2.50000e+04     1.00000e-07    
+
+
+   MOONEY-RIVLIN HYPERELASTIC MATERIAL  OPTION FOR MATERIAL 2 
+ DATA FOR  HYPE  TABLE FOR MATERIAL   2 AT TEMPERATURE=  0.0000    
+ LOC=  1 7.60000e+04     1.00000e+04     1.00000e-07    
+
+
+ MATERIAL          3     EX   =  0.3500000E+10  
+
+ MATERIAL          3     NUXY =  0.3300000      
+
+ ACTIVE COORDINATE SYSTEM SET TO          0  (CARTESIAN)  
+
+ PARAMETER KCEN =   -0.7800000000E-02
+
+ PARAMETER RCI =    0.7200000000E-02
+
+ KEYPOINT        1                  X,Y,Z=   0.00000       0.00000       0.00000      IN CSYS=        0
+
+ KEYPOINT        2                  X,Y,Z=  0.600000E-02 -0.281603E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT        3                  X,Y,Z=   0.00000     -0.600000E-03   0.00000      IN CSYS=        0
+
+ KEYPOINT        4                  X,Y,Z=  0.553846E-02 -0.319941E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT      100                  X,Y,Z=   0.00000     -0.780000E-02   0.00000      IN CSYS=        0
+
+ ARC BETWEEN KEYPOINTS     1 AND     2  ORIENTATION KEYPOINT=   100
+  RADIUS=  0.78000E-02
+  LINE NO.=     1  KP1=      1  TAN1=   -1.0000   0.0000   0.0000
+                   KP2=      2  TAN2=    0.6390  -0.7692   0.0000
+
+ LINE CONNECTS KEYPOINTS      2     4
+  LINE NO.=     2  KP1=      2  TAN1=    0.7692   0.6390   0.0000
+                   KP2=      4  TAN2=   -0.7692  -0.6390   0.0000
+
+ ARC BETWEEN KEYPOINTS     3 AND     4  ORIENTATION KEYPOINT=   100
+  RADIUS=  0.72000E-02
+  LINE NO.=     3  KP1=      3  TAN1=   -1.0000   0.0000   0.0000
+                   KP2=      4  TAN2=    0.6390  -0.7692   0.0000
+
+ LINE CONNECTS KEYPOINTS      1     3
+  LINE NO.=     4  KP1=      1  TAN1=    0.0000   1.0000   0.0000
+                   KP2=      3  TAN2=    0.0000  -1.0000   0.0000
+
+ DEFINE AREA BY LIST OF LINES
+      LINE LIST =     1    2    3    4
+      (TRAVERSED IN SAME DIRECTION AS LINE     1)
+
+     AREA NUMBER =      1
+
+ PARAMETER RCE =    0.9400000000E-02
+
+ KEYPOINT        5                  X,Y,Z=   0.00000      0.160000E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT        6                  X,Y,Z=  0.723077E-02 -0.179367E-02   0.00000      IN CSYS=        0
+
+ ARC BETWEEN KEYPOINTS     5 AND     6  ORIENTATION KEYPOINT=   100
+  RADIUS=  0.94000E-02
+  LINE NO.=     5  KP1=      5  TAN1=   -1.0000  -0.0000   0.0000
+                   KP2=      6  TAN2=    0.6390  -0.7692   0.0000
+
+ LINE CONNECTS KEYPOINTS      6     2
+  LINE NO.=     6  KP1=      6  TAN1=    0.7692   0.6390   0.0000
+                   KP2=      2  TAN2=   -0.7692  -0.6390   0.0000
+
+ LINE CONNECTS KEYPOINTS      1     5
+  LINE NO.=     7  KP1=      1  TAN1=    0.0000  -1.0000   0.0000
+                   KP2=      5  TAN2=    0.0000   1.0000   0.0000
+
+ DEFINE AREA BY LIST OF LINES
+      LINE LIST =     5    6    1    7
+      (TRAVERSED IN SAME DIRECTION AS LINE     5)
+
+     AREA NUMBER =      2
+
+ PARAMETER PY =    0.1650000000E-02
+
+ KEYPOINT       10                  X,Y,Z=   0.00000      0.165000E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT       11                  X,Y,Z=  0.216000E-02  0.165000E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT       12                  X,Y,Z=  0.216000E-02  0.565000E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT       13                  X,Y,Z=   0.00000      0.565000E-02   0.00000      IN CSYS=        0
+
+ LINE CONNECTS KEYPOINTS     10    11
+  LINE NO.=     8  KP1=     10  TAN1=   -1.0000   0.0000   0.0000
+                   KP2=     11  TAN2=    1.0000   0.0000   0.0000
+
+ LINE CONNECTS KEYPOINTS     11    12
+  LINE NO.=     9  KP1=     11  TAN1=    0.0000  -1.0000   0.0000
+                   KP2=     12  TAN2=    0.0000   1.0000   0.0000
+
+ LINE CONNECTS KEYPOINTS     12    13
+  LINE NO.=    10  KP1=     12  TAN1=    1.0000   0.0000   0.0000
+                   KP2=     13  TAN2=   -1.0000   0.0000   0.0000
+
+ LINE CONNECTS KEYPOINTS     13    10
+  LINE NO.=    11  KP1=     13  TAN1=    0.0000   1.0000   0.0000
+                   KP2=     10  TAN2=    0.0000  -1.0000   0.0000
+
+ DEFINE AREA BY LIST OF LINES
+      LINE LIST =     8    9   10   11
+      (TRAVERSED IN SAME DIRECTION AS LINE     8)
+
+     AREA NUMBER =      3
+
+ KEYPOINT      200                  X,Y,Z=   0.00000      -1.00000       0.00000      IN CSYS=        0
+
+ KEYPOINT      201                  X,Y,Z=   0.00000       1.00000       0.00000      IN CSYS=        0
+
+ *** NOTE ***                            CP =       0.488   TIME= 09:58:04
+ There are no VOLUMES defined.  Parameter VOL_BEFORE on the *GET command 
+ will be set to zero.                                                    
+
+ *GET  VOL_BEFORE  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  0.00000000    
+
+ SELECT       FOR ITEM=AREA COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+        1  AREAS (OF        3  DEFINED) SELECTED BY  ASEL  COMMAND.
+
+ ROTATE AREAS 
+        1,
+      ABOUT THE AXIS DEFINED BY KEYPOINTS    200   201
+     DEGREES OF ARC=   360.00   NUMBER OF SEGMENTS=   4
+
+ *GET  VOL_AFTER  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  4.00000000    
+
+ SELECT       FOR ITEM=VOLU COMPONENT=    
+  IN RANGE         1 TO          4 STEP          1
+
+        4  VOLUMES (OF        4  DEFINED) SELECTED BY  VSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = VCORNEA   ENTITY=VOLU
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ *GET  VOL_BEFORE  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  4.00000000    
+
+ SELECT       FOR ITEM=AREA COMPONENT=    
+  IN RANGE         2 TO          2 STEP          1
+
+        1  AREAS (OF       18  DEFINED) SELECTED BY  ASEL  COMMAND.
+
+ ROTATE AREAS 
+        2,
+      ABOUT THE AXIS DEFINED BY KEYPOINTS    200   201
+     DEGREES OF ARC=   360.00   NUMBER OF SEGMENTS=   4
+
+ *GET  VOL_AFTER  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  8.00000000    
+
+ SELECT       FOR ITEM=VOLU COMPONENT=    
+  IN RANGE         5 TO          8 STEP          1
+
+        4  VOLUMES (OF        8  DEFINED) SELECTED BY  VSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = VEYELID   ENTITY=VOLU
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ *GET  VOL_BEFORE  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  8.00000000    
+
+ SELECT       FOR ITEM=AREA COMPONENT=    
+  IN RANGE         3 TO          3 STEP          1
+
+        1  AREAS (OF       33  DEFINED) SELECTED BY  ASEL  COMMAND.
+
+ ROTATE AREAS 
+        3,
+      ABOUT THE AXIS DEFINED BY KEYPOINTS    200   201
+     DEGREES OF ARC=   360.00   NUMBER OF SEGMENTS=   4
+
+ *GET  VOL_AFTER  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  12.0000000    
+
+ SELECT       FOR ITEM=VOLU COMPONENT=    
+  IN RANGE         9 TO         12 STEP          1
+
+        4  VOLUMES (OF       12  DEFINED) SELECTED BY  VSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = VPROBE    ENTITY=VOLU
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT VPROBE                                                                                                                                                                                                                                                          
+
+ MOVE ORIGINAL VOLUMES      
+   SET IS ALL SELECTED VOLUMES      
+   DX,DY,DZ=    0.00        0.00        0.00           CSYS=  0
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ DEFAULT ELEMENT DIVISIONS PER LINE BASED ON ELEMENT SIZE =  0.300E-03
+ PRODUCE ALL TETRAHEDRAL ELEMENTS IN 3D.
+
+ SELECT      COMPONENT VCORNEA                                                                                                                                                                                                                                                         
+
+ SET ATTRIBUTES FOR ALL SELECTED VOLUMES
+      MAT =    1   REAL =       0   TYPE =    1   ESYS =    0   SECT =    0
+
+ ATTRIBUTES SET FOR      4 VOLUMES (OUT OF      4 SELECTED)
+
+ GENERATE NODES AND ELEMENTS   IN  ALL  SELECTED VOLUMES  
+
+ NUMBER OF VOLUMES MESHED   =         4
+ MAXIMUM NODE NUMBER        =     46201
+ MAXIMUM ELEMENT NUMBER     =     28403
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT VEYELID                                                                                                                                                                                                                                                         
+
+ SET ATTRIBUTES FOR ALL SELECTED VOLUMES
+      MAT =    2   REAL =       0   TYPE =    1   ESYS =    0   SECT =    0
+
+ ATTRIBUTES SET FOR      4 VOLUMES (OUT OF      4 SELECTED)
+
+ GENERATE NODES AND ELEMENTS   IN  ALL  SELECTED VOLUMES  
+
+ NUMBER OF VOLUMES MESHED   =         4
+ MAXIMUM NODE NUMBER        =    175799
+ MAXIMUM ELEMENT NUMBER     =    116855
+
+ ------------------------------------------------------------------------------
+            <<<<<<          SHAPE TESTING SUMMARY           >>>>>>
+            <<<<<<       FOR NEW OR MODIFIED ELEMENTS       >>>>>>
+ ------------------------------------------------------------------------------
+                    --------------------------------------
+                    |  Element count     88452 SOLID187  |
+                    --------------------------------------
+
+  Test                Number tested  Warning count  Error count    Warn+Err %
+  ----                -------------  -------------  -----------    ----------
+  Aspect Ratio              88452              0             0         0.00 %
+  Maximum Angle             88452              3             0         0.00 %
+  Jacobian Ratio            88452              0             0         0.00 %
+
+  Any                       88452              3             0         0.00 %
+ ------------------------------------------------------------------------------
+
+ *** WARNING ***                         CP =       2.750   TIME= 09:58:05
+ Shape testing revealed that 3 of the 88452 new or modified elements     
+ violate shape warning limits.  To review test results, please see the   
+ output file or issue the CHECK command.                                 
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT VPROBE                                                                                                                                                                                                                                                          
+
+ SET ATTRIBUTES FOR ALL SELECTED VOLUMES
+      MAT =    3   REAL =       0   TYPE =    1   ESYS =    0   SECT =    0
+
+ ATTRIBUTES SET FOR      4 VOLUMES (OUT OF      4 SELECTED)
+
+ GENERATE NODES AND ELEMENTS   IN  ALL  SELECTED VOLUMES  
+
+ NUMBER OF VOLUMES MESHED   =         4
+ MAXIMUM NODE NUMBER        =    204241
+ MAXIMUM ELEMENT NUMBER     =    136512
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT VPROBE                                                                                                                                                                                                                                                          
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+      28442  NODES (OF     204241  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ DEFINITION OF COMPONENT = PROBE_NODES  ENTITY=NODE
+
+ *GET  PYMAX     FROM  NODE  ITEM=MXLO Y     VALUE= 0.565000000E-002
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Y     BETWEEN 0.50500E-02 AND  0.57500E-02
+   KABS=  0.  TOLERANCE= 0.700000E-11
+
+       4754  NODES (OF     204241  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = PROBE_TOP_NODES  ENTITY=NODE
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ REAL CONSTANT SET          3  ITEMS   1 TO   6
+    0.0000       0.0000       0.0000       0.0000       0.0000       0.0000    
+
+ MODIFY REAL CONSTANTS FOR SET      3  STARTING WITH  3  NEW VALUES ARE
+
+    1.0000       0.0000       0.0000       0.0000    
+
+ MODIFY REAL CONSTANTS FOR SET      3  STARTING WITH  6  NEW VALUES ARE
+
+  -0.50000E-03
+
+ ELEMENT TYPE       3 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE       3 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE       3 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      1      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ COORDINATE SYSTEM         13 DEFINITION.  TYPE= 2  (SPHERICAL)  
+   XC,YC,ZC=  0.0000    -0.78000E-02  0.0000    
+   ANGLES=    0.00    0.00    0.00   PARAMETERS=   1.000   1.000
+   ORIENTATION=  1.00  0.00  0.00   0.00  1.00  0.00   0.00  0.00  1.00
+
+ ACTIVE COORDINATE SYSTEM SET TO        13  (SPHERICAL)  
+
+ ACTIVE COORDINATE SYSTEM SET TO         13  (SPHERICAL)  
+
+ SELECT      COMPONENT VEYELID                                                                                                                                                                                                                                                         
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+     129645  NODES (OF     204241  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=X     BETWEEN 0.91500E-02 AND  0.97000E-02
+   KABS=  0.  TOLERANCE= 0.550000E-11
+
+      27684  NODES (OF     204241  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ ACTIVE COORDINATE SYSTEM SET TO          0  (CARTESIAN)  
+
+ ELEMENT TYPE SET TO         3
+
+ REAL CONSTANT NUMBER=        3
+
+ MATERIAL NUMBER SET TO         2
+
+ GENERATE ELEMENTS ON SURFACE DEFINED BY SELECTED NODES
+  TYPE=        3  REAL=        3  MATERIAL=        2  ESYS=    0
+
+ NUMBER OF ELEMENTS GENERATED=       6052                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT PROBE_NODES                                                                                                                                                                                                                                                     
+
+ *GET  PYMIN     FROM  NODE  ITEM=MNLO Y     VALUE= 0.165000000E-002
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Y     BETWEEN 0.16400E-02 AND  0.22500E-02
+   KABS=  0.  TOLERANCE= 0.610000E-11
+
+       4799  NODES (OF     204241  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ ELEMENT TYPE SET TO         2
+
+ REAL CONSTANT NUMBER=        3
+
+ MATERIAL NUMBER SET TO         3
+
+ GENERATE ELEMENTS ON SURFACE DEFINED BY SELECTED NODES
+  TYPE=        2  REAL=        3  MATERIAL=        3  ESYS=    0
+
+ NUMBER OF ELEMENTS GENERATED=        608                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ ELEMENT TYPE          4 IS TARGE170     3-D TARGET SEGMENT          
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE          5 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ REAL CONSTANT SET          4  ITEMS   1 TO   6
+    0.0000       0.0000       0.0000       0.0000       0.0000       0.0000    
+
+ ELEMENT TYPE       5 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      5
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE       5 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      1      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      5
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ACTIVE COORDINATE SYSTEM SET TO         13  (SPHERICAL)  
+
+ SELECT      COMPONENT VCORNEA                                                                                                                                                                                                                                                         
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+      46201  NODES (OF     204241  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=X     BETWEEN 0.75500E-02 AND  0.80500E-02
+   KABS=  0.  TOLERANCE= 0.500000E-11
+
+      20193  NODES (OF     204241  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ ACTIVE COORDINATE SYSTEM SET TO          0  (CARTESIAN)  
+
+ ELEMENT TYPE SET TO         5
+
+ REAL CONSTANT NUMBER=        4
+
+ MATERIAL NUMBER SET TO         1
+
+ GENERATE ELEMENTS ON SURFACE DEFINED BY SELECTED NODES
+  TYPE=        5  REAL=        4  MATERIAL=        1  ESYS=    0
+
+ NUMBER OF ELEMENTS GENERATED=       4086                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ ACTIVE COORDINATE SYSTEM SET TO         13  (SPHERICAL)  
+
+ SELECT      COMPONENT VEYELID                                                                                                                                                                                                                                                         
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+     129645  NODES (OF     204241  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=X     BETWEEN 0.75500E-02 AND  0.80500E-02
+   KABS=  0.  TOLERANCE= 0.500000E-11
+
+      19162  NODES (OF     204241  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ ACTIVE COORDINATE SYSTEM SET TO          0  (CARTESIAN)  
+
+ ELEMENT TYPE SET TO         4
+
+ REAL CONSTANT NUMBER=        4
+
+ MATERIAL NUMBER SET TO         2
+
+ GENERATE ELEMENTS ON SURFACE DEFINED BY SELECTED NODES
+  TYPE=        4  REAL=        4  MATERIAL=        2  ESYS=    0
+
+ NUMBER OF ELEMENTS GENERATED=       4340                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ PARAMETER EDGE_Y =   -0.2816025682E-02
+
+ SELECT      COMPONENT VCORNEA                                                                                                                                                                                                                                                         
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+      46201  NODES (OF     204241  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Y     BETWEEN-0.33160E-02 AND -0.24160E-02
+   KABS=  0.  TOLERANCE= 0.900000E-11
+
+       7687  NODES (OF     204241  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ SPECIFIED CONSTRAINT UX   FOR SELECTED NODES            1 TO      204241 BY           1
+ REAL=  0.00000000       IMAG=  0.00000000    
+ ADDITIONAL DOFS=  UY    UZ  
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ ACTIVE COORDINATE SYSTEM SET TO         13  (SPHERICAL)  
+
+ SELECT      COMPONENT VCORNEA                                                                                                                                                                                                                                                         
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+      46201  NODES (OF     204241  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=X     BETWEEN 0.70000E-02 AND  0.74000E-02
+   KABS=  0.  TOLERANCE= 0.400000E-11
+
+      17403  NODES (OF     204241  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ GENERATE SURFACE LOAD PRES ON SURFACE DEFINED BY ALL SELECTED NODES
+ VALUES=  2666.40000      0.00000000    
+
+ NUMBER OF PRES ELEMENT FACE LOADS STORED =       3656
+
+ ACTIVE COORDINATE SYSTEM SET TO          0  (CARTESIAN)  
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+
+ ***** ROUTINE COMPLETED *****  CP =         5.107
+
+
+
+ *****  MAPDL SOLUTION ROUTINE  *****
+
+
+ PERFORM A STATIC ANALYSIS
+  THIS WILL BE A NEW ANALYSIS
+
+ LARGE DEFORMATION ANALYSIS
+
+ USE THE FULL NEWTON-RAPHSON OPTION FOR  ALL DEGREES OF FREEDOM
+   AND USE THE DEFAULT ADAPTIVE DESCENT OPTION
+
+ USE A LINE SEARCH FOR  ALL DEGREES OF FREEDOM
+
+ NONLINEAR STABILIZATION CONTROL:
+ KEY=CONS   METHOD=ENER   VALUE= 0.10000E-03   SUBSTPOPT=NO     FORCELIMIT= 0.20000    
+
+
+ WRITE ALL  ITEMS TO THE DATABASE WITH A FREQUENCY OF ALL 
+   FOR ALL APPLICABLE ENTITIES
+
+ *** WARNING ***                         CP =       5.110   TIME= 09:58:06
+ The MINREF field of the CNVTOL command has been assigned a default      
+ value of 1.0 for convergence on f.  Check results carefully.            
+
+ CONVERGENCE ON F    BASED ON THE NORM OF THE N-R LOAD
+   WITH A TOLERANCE OF 0.1000E-01 AND A MINIMUM REFERENCE VALUE OF  1.000    
+   USING THE L2 NORM (CHECK THE SRSS VALUE)
+
+ KEY TO TERMINATE RUN IF NO CONVERGENCE=  1
+ DEGREE OF FREEDOM (DISPLACEMENT) LIMIT=  0.0000    
+ CUMULATIVE ITERATION LIMIT=     0
+ ELAPSED TIME LIMIT (SEC)=  0.0000       (  0 HOURS  0 MIN)
+ CPU TIME LIMIT (SEC)=  0.0000       (  0 HOURS  0 MIN)
+
+ USE AUTOMATIC TIME STEPPING THIS LOAD STEP
+
+ STEP BOUNDARY CONDITION KEY= 0
+
+ SELECT      COMPONENT PROBE_TOP_NODES                                                                                                                                                                                                                                                 
+
+ SPECIFIED CONSTRAINT UX   FOR SELECTED NODES            1 TO      204241 BY           1
+ REAL=  0.00000000       IMAG=  0.00000000    
+
+ SPECIFIED CONSTRAINT UY   FOR SELECTED NODES            1 TO      204241 BY           1
+ REAL=  0.00000000       IMAG=  0.00000000    
+
+ SPECIFIED CONSTRAINT UZ   FOR SELECTED NODES            1 TO      204241 BY           1
+ REAL=  0.00000000       IMAG=  0.00000000    
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ TIME=  1.0000    
+
+ *IF  retry_mode  ( =   0.00000     )  EQ  
+      1  ( =   1.00000     )  THEN    
+
+ *ELSE
+
+ USE      20 SUBSTEPS INITIALLY THIS LOAD STEP FOR ALL  DEGREES OF FREEDOM
+ FOR AUTOMATIC TIME STEPPING:
+   USE    200 SUBSTEPS AS A MAXIMUM
+   USE      5 SUBSTEPS AS A MINIMUM
+
+ *ENDIF
+
+ *** NOTE ***                            CP =       5.442   TIME= 09:58:06
+ The automatic domain decomposition logic has selected the MESH domain   
+ decomposition method with 4 processes per solution.                     
+
+ *****  MAPDL SOLVE    COMMAND  *****
+
+ *** NOTE ***                            CP =       5.907   TIME= 09:58:06
+ There is no title defined for this analysis.                            
+
+ *** WARNING ***                         CP =       6.239   TIME= 09:58:06
+ Previous testing revealed that 3 of the 151598 selected elements        
+ violate shape warning limits.  To review warning messages, please see   
+ the output or error file, or issue the CHECK command.                   
+
+ *** NOTE ***                            CP =       6.240   TIME= 09:58:06
+ The model data was checked and warning messages were found.             
+  Please review output or errors file (                                  
+ /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T015758 
+ Z_a847e78f_thickness_indent_0p26/eyelid_1p60mm_indent_0p26mm/attempt_1/ 
+ /eyelid_1p60mm_indent_0p26mm0.err ) for these warning messages.         
+
+ *** SELECTION OF ELEMENT TECHNOLOGIES FOR APPLICABLE ELEMENTS ***
+                ---GIVE SUGGESTIONS ONLY---
+
+ ELEMENT TYPE         1 IS SOLID187. IT IS NOT ASSOCIATED WITH FULLY INCOMPRESSIBLE
+ HYPERELASTIC MATERIALS. NO SUGGESTION IS AVAILABLE.
+
+
+
+ *** MAPDL - ENGINEERING ANALYSIS SYSTEM  RELEASE 2025 R2          25.2     ***
+ Ansys Mechanical Enterprise                       
+ 20120530  VERSION=LINUX x64     09:58:06  JUL 21, 2026 CP=      6.349
+
+                                                                               
+
+
+
+                       S O L U T I O N   O P T I O N S
+
+   PROBLEM DIMENSIONALITY. . . . . . . . . . . . .3-D                  
+   DEGREES OF FREEDOM. . . . . . UX   UY   UZ  
+   ANALYSIS TYPE . . . . . . . . . . . . . . . . .STATIC (STEADY-STATE)
+   NONLINEAR GEOMETRIC EFFECTS . . . . . . . . . .ON
+   NEWTON-RAPHSON OPTION . . . . . . . . . . . . .FULL             
+   GLOBALLY ASSEMBLED MATRIX . . . . . . . . . . .SYMMETRIC  
+
+ *** NOTE ***                            CP =       6.746   TIME= 09:58:06
+ The conditions for direct assembly have been met.  No .emat or .erot    
+ files will be produced.                                                 
+
+ *** NOTE ***                            CP =       8.650   TIME= 09:58:06
+ Smoothing on certain target nodes (e.g.175821) for pair ID 3 may have   
+ accuracy issue.  Please verify element normal of connected target       
+ elements (e.g.142566 & 142609).                                         
+
+ *** WARNING ***                         CP =       9.863   TIME= 09:58:07
+ Node 153 connects both contact element 143196 and target element        
+ 147415.  Please check the model carefully.                              
+
+ *** NOTE ***                            CP =       9.954   TIME= 09:58:07
+ Deformable-deformable contact pair identified by real constant set 3    
+ and contact element type 3 has been set up.                             
+ Contact algorithm: Penalty method
+ Contact detection at: Gauss integration point
+ Contact stiffness factor FKN                  1.0000    
+ The resulting initial contact stiffness      0.41545E+11
+ Default penetration tolerance factor FTOLN   0.10000    
+ The resulting penetration tolerance          0.24841E-04
+ Frictionless contact pair is defined
+ Update contact stiffness at each iteration
+ Average contact surface length               0.27732E-03
+ Average contact pair depth                   0.24841E-03
+ Average target surface length                0.28637E-03
+ User defined pinball region PINB             0.50000E-03
+
+ *** NOTE ***                            CP =       9.954   TIME= 09:58:07
+ One of the contact searching regions contains at least 85 target        
+ elements.  You may reduce the pinball radius.                           
+ *WARNING*: Initial penetration is included.
+
+ *** NOTE ***                            CP =       9.954   TIME= 09:58:07
+ Min.  Initial gap 5.060815782E-05 was detected between contact element  
+ 139553 and target element 142953.                                       
+ You may move entire target surface by: x= 5.118499092E-07, y=           
+ -5.060490141E-05, z= -2.600022651E-07, to bring it in contact.          
+ ****************************************
+  
+
+ *** NOTE ***                            CP =       9.954   TIME= 09:58:07
+ Deformable-deformable contact pair identified by real constant set 4    
+ and contact element type 5 has been set up.                             
+ Contact algorithm: Penalty method
+ Contact detection at: Gauss integration point
+ *WARNING*: Certain nodes (for example 127) are used in both contact and 
+ target elements.  Please check your model carefully.                    
+ Default contact stiffness factor FKN          1.0000    
+ The resulting initial contact stiffness      0.44206E+11
+ Default penetration tolerance factor FTOLN   0.10000    
+ The resulting penetration tolerance          0.23345E-04
+ Default opening contact stiffness OPSF will be used.
+ Default tangent stiffness factor FKT          1.0000    
+ Default elastic slip factor SLTOL            0.50000E-02
+ The resulting elastic slip tolerance         0.13978E-05
+ Update contact stiffness at each iteration
+ Default Max. friction stress TAUMAX          0.10000E+21
+ Average contact surface length               0.27957E-03
+ Average contact pair depth                   0.23345E-03
+ Average target surface length                0.27895E-03
+ Default pinball region factor PINB           0.25000    
+ The resulting pinball region                 0.58364E-04
+ *WARNING*: Initial penetration/gap is included.
+ Bonded contact (always) is defined.
+ *WARNING*: Initial gap may cause problem, pl. reset KEYOPT(9).
+
+ *** NOTE ***                            CP =       9.955   TIME= 09:58:07
+ Max.  Initial penetration 2.144806752E-10 was detected between contact  
+ element 144616 and target element 148906.                               
+ ****************************************
+  
+
+ *** WARNING ***                         CP =       9.955   TIME= 09:58:07
+ For certain bonded contact pairs (e.g.  Real ID 4), initial             
+ penetration/gap is included.  The program will resolve the initial      
+ offset in the very first substep which may affect solution              
+ convergence.  It is recommended to switch to KEYOPT(9)=1 if possible.   
+  
+  
+
+  
+  
+     D I S T R I B U T E D   D O M A I N   D E C O M P O S E R
+  
+  ...Number of elements: 151598
+  ...Number of nodes:    204241
+  ...Decompose to 4 CPU domains
+  ...Element load balance ratio =     1.094
+
+
+                      L O A D   S T E P   O P T I O N S
+
+   LOAD STEP NUMBER. . . . . . . . . . . . . . . .     1
+   TIME AT END OF THE LOAD STEP. . . . . . . . . .  1.0000    
+   AUTOMATIC TIME STEPPING . . . . . . . . . . . .    ON
+      INITIAL NUMBER OF SUBSTEPS . . . . . . . . .    20
+      MAXIMUM NUMBER OF SUBSTEPS . . . . . . . . .   200
+      MINIMUM NUMBER OF SUBSTEPS . . . . . . . . .     5
+   MAXIMUM NUMBER OF EQUILIBRIUM ITERATIONS. . . .    15
+   NONLINEAR STABILIZATION . . . . . . . . . . . .ON (CONSTANT)
+   STEP CHANGE BOUNDARY CONDITIONS . . . . . . . .    NO
+   STRESS-STIFFENING . . . . . . . . . . . . . . .    ON
+   LINE SEARCH . . . . . . . . . . . . . . . . . .    ON
+   TERMINATE ANALYSIS IF NOT CONVERGED . . . . . .YES (EXIT)  
+   CONVERGENCE CONTROLS
+      LABEL   REFERENCE    TOLERANCE  NORM     MINREF
+       F       0.000       0.1000E-01   2      0.000    
+   PRINT OUTPUT CONTROLS . . . . . . . . . . . . .NO PRINTOUT
+   DATABASE OUTPUT CONTROLS
+      ITEM     FREQUENCY   COMPONENT
+       ALL        ALL               
+
+
+ SOLUTION MONITORING INFO IS WRITTEN TO FILE= eyelid_1p60mm_indent_0p26mm.mntr                                                                                                                                                                                                                                    
+ MAXIMUM NUMBER OF EQUILIBRIUM ITERATIONS HAS BEEN MODIFIED              
+  TO BE, NEQIT = 25, BY SOLUTION CONTROL LOGIC.                          
+
+ *** WARNING ***                         CP =      16.260   TIME= 09:58:10
+ Node 153 connects both contact element 143196 and target element        
+ 147415.  Please check the model carefully.                              
+
+
+ Range of element maximum matrix coefficients in global coordinates
+ Maximum = 2360284.22 at element 127549.                                 
+ Minimum = 20.9100303 at element 144294.                                 
+
+   *** ELEMENT MATRIX FORMULATION TIMES
+     TYPE    NUMBER   ENAME      TOTAL CP  AVE CP
+
+        1    136512  SOLID187      6.940   0.000051
+        2       608  TARGE170      0.002   0.000003
+        3      6052  CONTA174      0.334   0.000055
+        4      4340  TARGE170      0.020   0.000005
+        5      4086  CONTA174      0.430   0.000105
+ Time at end of element matrix formulation CP = 19.3103065.              
+
+ ALL CURRENT MAPDL DATA WRITTEN TO FILE NAME= eyelid_1p60mm_indent_0p26mm.rdb
+  FOR POSSIBLE RESUME FROM THIS POINT
+     FORCE CONVERGENCE VALUE  =  0.1806E-03  CRITERION=  0.1000E-03
+
+ DISTRIBUTED SPARSE MATRIX DIRECT SOLVER.
+  Number of equations =      575400,    Maximum wavefront =    282
+
+ *** NOTE ***                            CP =      24.372   TIME= 09:58:18
+ The initial memory allocation (-m) has been exceeded.                   
+  Supplemental memory allocations are being used.                        
+
+
+  Memory allocated on only this MPI rank (rank     0)
+  -------------------------------------------------------------------
+  Equation solver memory allocated                     =  2143.049 MB
+  Equation solver memory required for in-core mode     =  2046.653 MB
+  Equation solver memory required for out-of-core mode =   424.502 MB
+  Total (solver and non-solver) memory allocated       =  3629.291 MB
+
+
+  Total memory summed across all MPI ranks on this machines
+  -------------------------------------------------------------------
+  Equation solver memory allocated                     =  7706.702 MB
+  Equation solver memory required for in-core mode     =  7361.378 MB
+  Equation solver memory required for out-of-core mode =  1451.463 MB
+  Total (solver and non-solver) memory allocated       = 11539.760 MB
+
+ *** NOTE ***                            CP =      24.373   TIME= 09:58:18
+ The Distributed Sparse Matrix Solver is currently running in the        
+ in-core memory mode.  This memory mode uses the most amount of memory   
+ in order to avoid using the hard drive as much as possible, which most  
+ often results in the fastest solution time.  This mode is recommended   
+ if enough physical memory is present to accommodate all of the solver   
+ data.                                                                   
+ Distributed sparse solver maximum pivot= 5391204.67 at node 192752 UZ.  
+ Distributed sparse solver minimum pivot= 15.1671124 at node 46327 UY.   
+ Distributed sparse solver minimum pivot in absolute value= 15.1671124   
+ at node 46327 UY.                                                       
+     DISP CONVERGENCE VALUE   =  0.2639E-05  CRITERION=  0.1320E-06
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2639E-05
+     DISP CONVERGENCE VALUE   =  0.2639E-05  CRITERION=  0.1320E-06
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.2639E-05
+     FORCE CONVERGENCE VALUE  =  0.2065E-03  CRITERION=  0.1000E-03
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2652E-06
+     DISP CONVERGENCE VALUE   =  0.2652E-06  CRITERION=  0.1451E-06
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.2652E-06
+     FORCE CONVERGENCE VALUE  =  0.5246E-06  CRITERION=  0.1000E-03 <<< CONVERGED
+
+ *** WARNING ***                         CP =     149.124   TIME= 10:00:24
+ A reference force value times the tolerance is used by the              
+ Newton-Raphson method for checking convergence.  The calculated         
+ reference FORCE CONVERGENCE VALUE = 6.499132164E-04 is less than a      
+ threshold.  This threshold is internally calculated.  You can           
+ overwrite it by specifying MINREF on the CNVTOL command.  Check         
+ results carefully.                                                      
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1240E-09
+     DISP CONVERGENCE VALUE   =  0.1240E-09  CRITERION=  0.1451E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1240E-09
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+
+   *** ELEMENT RESULT CALCULATION TIMES
+     TYPE    NUMBER   ENAME      TOTAL CP  AVE CP
+
+        1    136512  SOLID187      9.468   0.000069
+        3      1478  CONTA174      0.177   0.000120
+        5      4086  CONTA174      0.398   0.000097
+
+   *** NODAL LOAD CALCULATION TIMES
+     TYPE    NUMBER   ENAME      TOTAL CP  AVE CP
+
+        1    136512  SOLID187      1.411   0.000010
+        3      1478  CONTA174      0.007   0.000005
+        5      4086  CONTA174      0.045   0.000011
+ *** LOAD STEP     1   SUBSTEP     1  COMPLETED.    CUM ITER =      3
+ *** TIME =  0.500000E-01     TIME INC =  0.500000E-01
+ *** DAMPING FACTOR FOR NONLINEAR STABILIZATION = 0.7386E+08
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.50000E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.2685E-04  CRITERION=  0.1000E-03
+     DISP CONVERGENCE VALUE   =  0.3151E-08  CRITERION=  0.1451E-06 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3151E-08
+     DISP CONVERGENCE VALUE   =  0.3151E-08  CRITERION=  0.1451E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.3151E-08
+     FORCE CONVERGENCE VALUE  =  0.5798E-08  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     2  COMPLETED.    CUM ITER =      4
+ *** TIME =  0.100000         TIME INC =  0.500000E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.75000E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.9559E-04  CRITERION=  0.1000E-03
+     DISP CONVERGENCE VALUE   =  0.1344E-06  CRITERION=  0.2107E-06 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1344E-06
+     DISP CONVERGENCE VALUE   =  0.1344E-06  CRITERION=  0.2107E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1344E-06
+     FORCE CONVERGENCE VALUE  =  0.1440E-05  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     3  COMPLETED.    CUM ITER =      5
+ *** TIME =  0.175000         TIME INC =  0.750000E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.11250      INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.2934E-03  CRITERION=  0.1000E-03
+     DISP CONVERGENCE VALUE   =  0.3183E-06  CRITERION=  0.3007E-06
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3183E-06
+     DISP CONVERGENCE VALUE   =  0.3183E-06  CRITERION=  0.3007E-06
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.3183E-06
+     FORCE CONVERGENCE VALUE  =  0.5533E-05  CRITERION=  0.1000E-03 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.5851E-08
+     DISP CONVERGENCE VALUE   =  0.5766E-08  CRITERION=  0.3007E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.9853     SCALED MAX DOF INC = -0.5766E-08
+     FORCE CONVERGENCE VALUE  =  0.2543E-06  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ *** LOAD STEP     1   SUBSTEP     4  COMPLETED.    CUM ITER =      7
+ *** TIME =  0.287500         TIME INC =  0.112500    
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.16875      INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.3084E-03  CRITERION=  0.1000E-03
+     DISP CONVERGENCE VALUE   =  0.1855E-06  CRITERION=  0.4464E-06 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1855E-06
+     DISP CONVERGENCE VALUE   =  0.1833E-06  CRITERION=  0.4464E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.9883     SCALED MAX DOF INC = -0.1833E-06
+     FORCE CONVERGENCE VALUE  =  0.6450E-05  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     5  COMPLETED.    CUM ITER =      8
+ *** TIME =  0.456250         TIME INC =  0.168750    
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.20000      INCREASED (FACTOR = 1.1852)
+
+     FORCE CONVERGENCE VALUE  =  0.3400E-03  CRITERION=  0.1000E-03
+     DISP CONVERGENCE VALUE   =  0.1167E-06  CRITERION=  0.5262E-06 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1167E-06
+     DISP CONVERGENCE VALUE   =  0.1130E-06  CRITERION=  0.5263E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.9679     SCALED MAX DOF INC = -0.1130E-06
+     FORCE CONVERGENCE VALUE  =  0.1132E-04  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     6  COMPLETED.    CUM ITER =      9
+ *** TIME =  0.656250         TIME INC =  0.200000    
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.20000      UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.3366E-03  CRITERION=  0.1096E-03
+     DISP CONVERGENCE VALUE   =  0.6646E-07  CRITERION=  0.5263E-06 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.6646E-07
+     DISP CONVERGENCE VALUE   =  0.6295E-07  CRITERION=  0.5263E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.9472     SCALED MAX DOF INC = -0.6295E-07
+     FORCE CONVERGENCE VALUE  =  0.1835E-04  CRITERION=  0.1095E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     7  COMPLETED.    CUM ITER =     10
+ *** TIME =  0.856250         TIME INC =  0.200000    
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.14375      DECREASED (FACTOR = 0.7188)
+
+     FORCE CONVERGENCE VALUE  =  0.2087E-03  CRITERION=  0.1278E-03
+     DISP CONVERGENCE VALUE   =  0.3466E-07  CRITERION=  0.5263E-06 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3466E-07
+     DISP CONVERGENCE VALUE   =  0.3367E-07  CRITERION=  0.5263E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.9716     SCALED MAX DOF INC = -0.3367E-07
+     FORCE CONVERGENCE VALUE  =  0.6750E-05  CRITERION=  0.1278E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     8  COMPLETED.    CUM ITER =     11
+ *** TIME =   1.00000         TIME INC =  0.143750    
+
+
+ *** MAPDL BINARY FILE STATISTICS
+  BUFFER SIZE USED= 16384
+      121.250 MB WRITTEN ON ELEMENT SAVED DATA FILE: eyelid_1p60mm_indent_0p26mm0.esav
+       90.312 MB WRITTEN ON ASSEMBLED MATRIX FILE: eyelid_1p60mm_indent_0p26mm0.full
+      227.938 MB WRITTEN ON RESULTS FILE: eyelid_1p60mm_indent_0p26mm0.rst
+
+ *GET  PRELOAD_CNV  FROM  ACTI  ITEM=SOLU CNVG  VALUE=  1.00000000    
+
+ SELECT      COMPONENT PROBE_TOP_NODES                                                                                                                                                                                                                                                 
+
+ SPECIFIED CONSTRAINT UY   FOR SELECTED NODES            1 TO      204241 BY           1
+ REAL=-3.100000000E-04   IMAG=  0.00000000    
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ TIME=  2.0000    
+
+ *IF  retry_mode  ( =   0.00000     )  EQ  
+      1  ( =   1.00000     )  THEN    
+
+ *ELSE
+
+ USE      40 SUBSTEPS INITIALLY THIS LOAD STEP FOR ALL  DEGREES OF FREEDOM
+ FOR AUTOMATIC TIME STEPPING:
+   USE    400 SUBSTEPS AS A MAXIMUM
+   USE     10 SUBSTEPS AS A MINIMUM
+
+ *ENDIF
+
+ *****  MAPDL SOLVE    COMMAND  *****
+
+ *** MAPDL - ENGINEERING ANALYSIS SYSTEM  RELEASE 2025 R2          25.2     ***
+ Ansys Mechanical Enterprise                       
+ 20120530  VERSION=LINUX x64     10:10:17  JUL 21, 2026 CP=    737.026
+
+                                                                               
+
+
+
+                      L O A D   S T E P   O P T I O N S
+
+   LOAD STEP NUMBER. . . . . . . . . . . . . . . .     2
+   TIME AT END OF THE LOAD STEP. . . . . . . . . .  2.0000    
+   AUTOMATIC TIME STEPPING . . . . . . . . . . . .    ON
+      INITIAL NUMBER OF SUBSTEPS . . . . . . . . .    40
+      MAXIMUM NUMBER OF SUBSTEPS . . . . . . . . .   400
+      MINIMUM NUMBER OF SUBSTEPS . . . . . . . . .    10
+   MAXIMUM NUMBER OF EQUILIBRIUM ITERATIONS. . . .    15
+   NONLINEAR STABILIZATION . . . . . . . . . . . .ON (CONSTANT)
+   STEP CHANGE BOUNDARY CONDITIONS . . . . . . . .    NO
+   STRESS-STIFFENING . . . . . . . . . . . . . . .    ON
+   LINE SEARCH . . . . . . . . . . . . . . . . . .    ON
+   TERMINATE ANALYSIS IF NOT CONVERGED . . . . . .YES (EXIT)  
+   CONVERGENCE CONTROLS
+      LABEL   REFERENCE    TOLERANCE  NORM     MINREF
+       F       0.000       0.1000E-01   2      0.000    
+   PRINT OUTPUT CONTROLS . . . . . . . . . . . . .NO PRINTOUT
+   DATABASE OUTPUT CONTROLS
+      ITEM     FREQUENCY   COMPONENT
+       ALL        ALL               
+
+
+ SOLUTION MONITORING INFO IS WRITTEN TO FILE= eyelid_1p60mm_indent_0p26mm.mntr                                                                                                                                                                                                                                    
+ MAXIMUM NUMBER OF EQUILIBRIUM ITERATIONS HAS BEEN MODIFIED              
+  TO BE, NEQIT = 25, BY SOLUTION CONTROL LOGIC.                          
+
+     FORCE CONVERGENCE VALUE  =   227.4      CRITERION=   2.274    
+     DISP CONVERGENCE VALUE   =  0.7750E-05  CRITERION=  0.5263E-06
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.7750E-05
+     DISP CONVERGENCE VALUE   =  0.7750E-05  CRITERION=  0.5263E-06
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.7750E-05
+     FORCE CONVERGENCE VALUE  =  0.4231E-06  CRITERION=  0.1278E-03 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1266E-08
+     DISP CONVERGENCE VALUE   =  0.1116E-08  CRITERION=  0.5263E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.8820     SCALED MAX DOF INC =  0.1116E-08
+     FORCE CONVERGENCE VALUE  =  0.3318E-07  CRITERION=  0.1278E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ *** LOAD STEP     2   SUBSTEP     1  COMPLETED.    CUM ITER =     13
+ *** TIME =   1.02500         TIME INC =  0.250000E-01
+ *** DAMPING FACTOR FOR NONLINEAR STABILIZATION = 0.4187E+15
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.25000E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.5380E-03  CRITERION=  0.1277E-03
+     DISP CONVERGENCE VALUE   =  0.1179E-06  CRITERION=  0.5263E-06 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1179E-06
+     DISP CONVERGENCE VALUE   =  0.1179E-06  CRITERION=  0.5263E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.9997     SCALED MAX DOF INC = -0.1179E-06
+     FORCE CONVERGENCE VALUE  =  0.4954E-06  CRITERION=  0.1278E-03 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1149E-08
+     DISP CONVERGENCE VALUE   =  0.1149E-08  CRITERION=  0.5263E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1149E-08
+     FORCE CONVERGENCE VALUE  =  0.5734E-07  CRITERION=  0.1278E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ *** LOAD STEP     2   SUBSTEP     2  COMPLETED.    CUM ITER =     15
+ *** TIME =   1.05000         TIME INC =  0.250000E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.37500E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.4714E-02  CRITERION=  0.1278E-03
+     DISP CONVERGENCE VALUE   =  0.3244E-06  CRITERION=  0.5813E-06 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3244E-06
+     DISP CONVERGENCE VALUE   =  0.3184E-06  CRITERION=  0.5813E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.9813     SCALED MAX DOF INC = -0.3184E-06
+     FORCE CONVERGENCE VALUE  =  0.1852E-04  CRITERION=  0.1282E-03 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3373E-08
+     DISP CONVERGENCE VALUE   =  0.3373E-08  CRITERION=  0.5813E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.3373E-08
+     FORCE CONVERGENCE VALUE  =  0.4728E-06  CRITERION=  0.1282E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+ *** LOAD STEP     2   SUBSTEP     3  COMPLETED.    CUM ITER =     17
+ *** TIME =   1.08750         TIME INC =  0.375000E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.56250E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.2760E-01  CRITERION=  0.1299E-03
+     DISP CONVERGENCE VALUE   =  0.1314E-05  CRITERION=  0.8719E-06
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1314E-05
+     DISP CONVERGENCE VALUE   =  0.1314E-05  CRITERION=  0.8719E-06
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1314E-05
+     FORCE CONVERGENCE VALUE  =  0.5971E-03  CRITERION=  0.1595E-03
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3223E-07
+     DISP CONVERGENCE VALUE   =  0.3223E-07  CRITERION=  0.8719E-06 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.3223E-07
+     FORCE CONVERGENCE VALUE  =  0.1183E-04  CRITERION=  0.1604E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+        STABILIZATION FORCE NORM = 0.1659E-01  IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM = 0.3914E-01
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP     4  COMPLETED.    CUM ITER =     19
+ *** TIME =   1.14375         TIME INC =  0.562500E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.84375E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.1163      CRITERION=  0.2613E-03
+     DISP CONVERGENCE VALUE   =  0.5175E-05  CRITERION=  0.1308E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.5175E-05
+     DISP CONVERGENCE VALUE   =  0.5175E-05  CRITERION=  0.1308E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.5175E-05
+     FORCE CONVERGENCE VALUE  =  0.4566E-01  CRITERION=  0.6050E-03
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1822E-05
+     DISP CONVERGENCE VALUE   =  0.1822E-05  CRITERION=  0.1308E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1822E-05
+     FORCE CONVERGENCE VALUE  =  0.1303E-01  CRITERION=  0.7397E-03
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.5227E-06
+     DISP CONVERGENCE VALUE   =  0.5227E-06  CRITERION=  0.1308E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.5227E-06
+     FORCE CONVERGENCE VALUE  =  0.3485E-02  CRITERION=  0.7775E-03
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1430E-06
+     DISP CONVERGENCE VALUE   =  0.1430E-06  CRITERION=  0.1308E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1430E-06
+     FORCE CONVERGENCE VALUE  =  0.8927E-03  CRITERION=  0.7876E-03
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3732E-07
+     DISP CONVERGENCE VALUE   =  0.3732E-07  CRITERION=  0.1308E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.3732E-07
+     FORCE CONVERGENCE VALUE  =  0.2263E-03  CRITERION=  0.7901E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   5
+        STABILIZATION FORCE NORM = 0.8938E-01  IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM = 0.2273    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP     5  COMPLETED.    CUM ITER =     24
+ *** TIME =   1.22812         TIME INC =  0.843750E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.84375E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.5456      CRITERION=  0.1468E-02
+     DISP CONVERGENCE VALUE   =  0.1350E-04  CRITERION=  0.1308E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1350E-04
+     DISP CONVERGENCE VALUE   =  0.1350E-04  CRITERION=  0.1308E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1350E-04
+     FORCE CONVERGENCE VALUE  =  0.1670      CRITERION=  0.2962E-02
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3994E-05
+     DISP CONVERGENCE VALUE   =  0.3994E-05  CRITERION=  0.1308E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.3994E-05
+     FORCE CONVERGENCE VALUE  =  0.1213E-01  CRITERION=  0.3388E-02
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1009E-05
+     DISP CONVERGENCE VALUE   =  0.1009E-05  CRITERION=  0.1308E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1009E-05
+     FORCE CONVERGENCE VALUE  =  0.2855E-02  CRITERION=  0.3417E-02 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+        STABILIZATION FORCE NORM = 0.3049      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM = 0.8435    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP     6  COMPLETED.    CUM ITER =     27
+ *** TIME =   1.31250         TIME INC =  0.843750E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.10000      INCREASED (FACTOR = 1.1852)
+
+     FORCE CONVERGENCE VALUE  =   1.055      CRITERION=  0.6540E-02
+     DISP CONVERGENCE VALUE   =  0.3017E-04  CRITERION=  0.1796E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3017E-04
+     DISP CONVERGENCE VALUE   =  0.2990E-04  CRITERION=  0.1796E-05
+     LINE SEARCH PARAMETER =  0.9912     SCALED MAX DOF INC = -0.2990E-04
+     FORCE CONVERGENCE VALUE  =  0.9743E-01  CRITERION=  0.7533E-02
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1150E-04
+     DISP CONVERGENCE VALUE   =  0.7767E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.6754     SCALED MAX DOF INC =  0.7767E-05
+     FORCE CONVERGENCE VALUE  =  0.3412E-01  CRITERION=  0.7587E-02
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1569E-04
+     DISP CONVERGENCE VALUE   =  0.4176E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2661     SCALED MAX DOF INC =  0.4176E-05
+     FORCE CONVERGENCE VALUE  =  0.2502E-01  CRITERION=  0.7580E-02
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1103E-04
+     DISP CONVERGENCE VALUE   =  0.3481E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.3157     SCALED MAX DOF INC = -0.3481E-05
+     FORCE CONVERGENCE VALUE  =  0.2031E-01  CRITERION=  0.7574E-02
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1204E-04
+     DISP CONVERGENCE VALUE   =  0.2790E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2317     SCALED MAX DOF INC =  0.2790E-05
+     FORCE CONVERGENCE VALUE  =  0.1432E-01  CRITERION=  0.7569E-02
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.6341E-05
+     DISP CONVERGENCE VALUE   =  0.2047E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.3229     SCALED MAX DOF INC = -0.2047E-05
+     FORCE CONVERGENCE VALUE  =  0.1395E-01  CRITERION=  0.7565E-02
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.7535E-05
+     DISP CONVERGENCE VALUE   =  0.1710E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2269     SCALED MAX DOF INC =  0.1710E-05
+     FORCE CONVERGENCE VALUE  =  0.8683E-02  CRITERION=  0.7561E-02
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3664E-05
+     DISP CONVERGENCE VALUE   =  0.1164E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.3176     SCALED MAX DOF INC = -0.1164E-05
+     FORCE CONVERGENCE VALUE  =  0.7838E-02  CRITERION=  0.7558E-02
+    EQUIL ITER   9 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4493E-05
+     DISP CONVERGENCE VALUE   =  0.1001E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2227     SCALED MAX DOF INC =  0.1001E-05
+     FORCE CONVERGENCE VALUE  =  0.5028E-02  CRITERION=  0.7556E-02 <<< CONVERGED
+    EQUIL ITER  10 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2114E-05
+     DISP CONVERGENCE VALUE   =  0.2114E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.2114E-05
+     FORCE CONVERGENCE VALUE  =  0.7733E-02  CRITERION=  0.7551E-02
+    EQUIL ITER  11 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1310E-04
+     DISP CONVERGENCE VALUE   =  0.1816E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.1386     SCALED MAX DOF INC =  0.1816E-05
+     FORCE CONVERGENCE VALUE  =  0.1238E-02  CRITERION=  0.7551E-02 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION  11
+        STABILIZATION FORCE NORM = 0.5314      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  1.635    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP     7  COMPLETED.    CUM ITER =     38
+ *** TIME =   1.41250         TIME INC =  0.100000    
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.10000      UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =   1.593      CRITERION=  0.1169E-01
+     DISP CONVERGENCE VALUE   =  0.3725E-04  CRITERION=  0.2308E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3725E-04
+     DISP CONVERGENCE VALUE   =  0.3560E-04  CRITERION=  0.2308E-05
+     LINE SEARCH PARAMETER =  0.9558     SCALED MAX DOF INC = -0.3560E-04
+     FORCE CONVERGENCE VALUE  =  0.2147      CRITERION=  0.1221E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3492E-03
+
+ *** ERROR ***                           CP =    2264.196   TIME= 10:35:55
+ Element 53249 (type = 1, SOLID187) (and maybe other elements) has       
+ become highly distorted.  Excessive distortion of elements is usually   
+ a symptom indicating the need for corrective action elsewhere.  Try     
+ incrementing the load more slowly (increase the number of substeps or   
+ decrease the time step size).  You may need to improve your mesh to     
+ obtain elements with better aspect ratios.  Also consider the behavior  
+ of materials, contact pairs, and/or constraint equations.  Please rule  
+ out other root causes of this failure before attempting rezoning or     
+ nonlinear adaptive solutions.  If this message appears in the first     
+ iteration of first substep, be sure to perform element shape checking.  
+ *** LOAD STEP     2   SUBSTEP     8  NOT COMPLETED.  CUM ITER =     41
+ *** BEGIN BISECTION NUMBER   1    NEW TIME INCREMENT=  0.35000E-01
+
+     FORCE CONVERGENCE VALUE  =  0.3340      CRITERION=  0.8998E-02
+     DISP CONVERGENCE VALUE   =  0.1106E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1106E-04
+     DISP CONVERGENCE VALUE   =  0.1106E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1106E-04
+     FORCE CONVERGENCE VALUE  =  0.6273E-01  CRITERION=  0.9244E-02
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2192E-05
+     DISP CONVERGENCE VALUE   =  0.1886E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.8606     SCALED MAX DOF INC =  0.1886E-05
+     FORCE CONVERGENCE VALUE  =  0.3148E-02  CRITERION=  0.9374E-02 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.8703E-06
+     DISP CONVERGENCE VALUE   =  0.7960E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.9146     SCALED MAX DOF INC = -0.7960E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+        STABILIZATION FORCE NORM = 0.6096      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  1.939    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP     8  COMPLETED.    CUM ITER =     43
+ *** TIME =   1.44750         TIME INC =  0.350000E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.35000E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.2726      CRITERION=  0.1120E-01
+     DISP CONVERGENCE VALUE   =  0.1220E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1220E-04
+     DISP CONVERGENCE VALUE   =  0.1185E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9714     SCALED MAX DOF INC = -0.1185E-04
+     FORCE CONVERGENCE VALUE  =  0.2070E-01  CRITERION=  0.1115E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2724E-05
+     DISP CONVERGENCE VALUE   =  0.2471E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9073     SCALED MAX DOF INC =  0.2471E-05
+     FORCE CONVERGENCE VALUE  =  0.3970E-02  CRITERION=  0.1111E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1189E-05
+     DISP CONVERGENCE VALUE   =  0.5784E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.4865     SCALED MAX DOF INC =  0.5784E-06
+     FORCE CONVERGENCE VALUE  =  0.1880E-02  CRITERION=  0.1111E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.5166E-06
+     DISP CONVERGENCE VALUE   =  0.5166E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.5166E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   4
+        STABILIZATION FORCE NORM = 0.6760      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  2.219    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP     9  COMPLETED.    CUM ITER =     47
+ *** TIME =   1.48250         TIME INC =  0.350000E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.52500E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.5047      CRITERION=  0.1372E-01
+     DISP CONVERGENCE VALUE   =  0.2377E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2377E-04
+     DISP CONVERGENCE VALUE   =  0.2246E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9450     SCALED MAX DOF INC = -0.2246E-04
+     FORCE CONVERGENCE VALUE  =  0.5754E-01  CRITERION=  0.1368E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2845E-04
+     DISP CONVERGENCE VALUE   =  0.8390E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2949     SCALED MAX DOF INC =  0.8390E-05
+     FORCE CONVERGENCE VALUE  =  0.5048E-01  CRITERION=  0.1365E-01
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1263E-04
+     DISP CONVERGENCE VALUE   =  0.5886E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4660     SCALED MAX DOF INC = -0.5886E-05
+     FORCE CONVERGENCE VALUE  =  0.2135E-01  CRITERION=  0.1360E-01
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.8597E-05
+     DISP CONVERGENCE VALUE   =  0.2811E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.3270     SCALED MAX DOF INC = -0.2811E-05
+     FORCE CONVERGENCE VALUE  =  0.1968E-01  CRITERION=  0.1360E-01
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4355E-05
+     DISP CONVERGENCE VALUE   =  0.1761E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.4043     SCALED MAX DOF INC = -0.1761E-05
+     FORCE CONVERGENCE VALUE  =  0.9653E-02  CRITERION=  0.1359E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4186E-05
+     DISP CONVERGENCE VALUE   =  0.4186E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.4186E-05
+     FORCE CONVERGENCE VALUE  =  0.2033E-01  CRITERION=  0.1359E-01
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2093E-04
+     DISP CONVERGENCE VALUE   =  0.3367E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1608     SCALED MAX DOF INC = -0.3367E-05
+     FORCE CONVERGENCE VALUE  =  0.9163E-02  CRITERION=  0.1359E-01 <<< CONVERGED
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2878E-05
+     DISP CONVERGENCE VALUE   =  0.8506E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2956     SCALED MAX DOF INC = -0.8506E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   8
+        STABILIZATION FORCE NORM = 0.7613      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  2.608    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    10  COMPLETED.    CUM ITER =     55
+ *** TIME =   1.53500         TIME INC =  0.525000E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.52500E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.6357      CRITERION=  0.1606E-01
+     DISP CONVERGENCE VALUE   =  0.2522E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2522E-04
+     DISP CONVERGENCE VALUE   =  0.2378E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9429     SCALED MAX DOF INC = -0.2378E-04
+     FORCE CONVERGENCE VALUE  =  0.5799E-01  CRITERION=  0.1618E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1595E-04
+     DISP CONVERGENCE VALUE   =  0.6917E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4338     SCALED MAX DOF INC =  0.6917E-05
+     FORCE CONVERGENCE VALUE  =  0.3509E-01  CRITERION=  0.1614E-01
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3291E-04
+     DISP CONVERGENCE VALUE   =  0.5900E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1793     SCALED MAX DOF INC =  0.5900E-05
+     FORCE CONVERGENCE VALUE  =  0.2871E-01  CRITERION=  0.1613E-01
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.8913E-05
+     DISP CONVERGENCE VALUE   =  0.4323E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4850     SCALED MAX DOF INC = -0.4323E-05
+     FORCE CONVERGENCE VALUE  =  0.1929E-01  CRITERION=  0.1612E-01
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2069E-04
+     DISP CONVERGENCE VALUE   =  0.3193E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1543     SCALED MAX DOF INC = -0.3193E-05
+     FORCE CONVERGENCE VALUE  =  0.1391E-01  CRITERION=  0.1612E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4894E-05
+     DISP CONVERGENCE VALUE   =  0.2343E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4787     SCALED MAX DOF INC =  0.2343E-05
+     FORCE CONVERGENCE VALUE  =  0.9710E-02  CRITERION=  0.1611E-01 <<< CONVERGED
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1026E-04
+     DISP CONVERGENCE VALUE   =  0.1667E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.1625     SCALED MAX DOF INC = -0.1667E-05
+     FORCE CONVERGENCE VALUE  =  0.6634E-02  CRITERION=  0.1611E-01 <<< CONVERGED
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2538E-05
+     DISP CONVERGENCE VALUE   =  0.2538E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.2538E-05
+     FORCE CONVERGENCE VALUE  =  0.7906E-02  CRITERION=  0.1611E-01 <<< CONVERGED
+    EQUIL ITER   9 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2329E-04
+     DISP CONVERGENCE VALUE   =  0.2068E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.8881E-01 SCALED MAX DOF INC = -0.2068E-05
+     FORCE CONVERGENCE VALUE  =  0.2669E-02  CRITERION=  0.1611E-01 <<< CONVERGED
+    EQUIL ITER  10 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1365E-05
+     DISP CONVERGENCE VALUE   =  0.3737E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2738     SCALED MAX DOF INC =  0.3737E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION  10
+        STABILIZATION FORCE NORM = 0.8403      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  2.991    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    11  COMPLETED.    CUM ITER =     65
+ *** TIME =   1.58750         TIME INC =  0.525000E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.52500E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.6537      CRITERION=  0.1864E-01
+     DISP CONVERGENCE VALUE   =  0.2454E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2454E-04
+     DISP CONVERGENCE VALUE   =  0.2334E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9511     SCALED MAX DOF INC = -0.2334E-04
+     FORCE CONVERGENCE VALUE  =  0.6835E-01  CRITERION=  0.1879E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.7172E-04
+
+ *** ERROR ***                           CP =    3341.724   TIME= 10:53:54
+ Element 53249 (type = 1, SOLID187) (and maybe other elements) has       
+ become highly distorted.  Excessive distortion of elements is usually   
+ a symptom indicating the need for corrective action elsewhere.  Try     
+ incrementing the load more slowly (increase the number of substeps or   
+ decrease the time step size).  You may need to improve your mesh to     
+ obtain elements with better aspect ratios.  Also consider the behavior  
+ of materials, contact pairs, and/or constraint equations.  Please rule  
+ out other root causes of this failure before attempting rezoning or     
+ nonlinear adaptive solutions.  If this message appears in the first     
+ iteration of first substep, be sure to perform element shape checking.  
+ *** LOAD STEP     2   SUBSTEP    12  NOT COMPLETED.  CUM ITER =     68
+ *** BEGIN BISECTION NUMBER   1    NEW TIME INCREMENT=  0.18375E-01
+
+     FORCE CONVERGENCE VALUE  =  0.1514      CRITERION=  0.1700E-01
+     DISP CONVERGENCE VALUE   =  0.7292E-05  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.7292E-05
+     DISP CONVERGENCE VALUE   =  0.7242E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9932     SCALED MAX DOF INC = -0.7242E-05
+     FORCE CONVERGENCE VALUE  =  0.7811E-02  CRITERION=  0.1711E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1050E-05
+     DISP CONVERGENCE VALUE   =  0.1026E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.9772     SCALED MAX DOF INC = -0.1026E-05
+     FORCE CONVERGENCE VALUE  =  0.1832E-02  CRITERION=  0.1710E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3655E-06
+     DISP CONVERGENCE VALUE   =  0.3655E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.3655E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+        STABILIZATION FORCE NORM = 0.8696      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  3.136    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    12  COMPLETED.    CUM ITER =     70
+ *** TIME =   1.60587         TIME INC =  0.183750E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.18375E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.1003      CRITERION=  0.1810E-01
+     DISP CONVERGENCE VALUE   =  0.7297E-05  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.7297E-05
+     DISP CONVERGENCE VALUE   =  0.7229E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9907     SCALED MAX DOF INC = -0.7229E-05
+     FORCE CONVERGENCE VALUE  =  0.1414E-01  CRITERION=  0.1810E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1303E-05
+     DISP CONVERGENCE VALUE   =  0.8299E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.6369     SCALED MAX DOF INC =  0.8299E-06
+     FORCE CONVERGENCE VALUE  =  0.3042E-02  CRITERION=  0.1808E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.8203E-06
+     DISP CONVERGENCE VALUE   =  0.8203E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.8203E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+        STABILIZATION FORCE NORM = 0.8983      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  3.278    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    13  COMPLETED.    CUM ITER =     73
+ *** TIME =   1.62425         TIME INC =  0.183750E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.27562E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.2022      CRITERION=  0.1955E-01
+     DISP CONVERGENCE VALUE   =  0.1081E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1081E-04
+     DISP CONVERGENCE VALUE   =  0.1050E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9712     SCALED MAX DOF INC = -0.1050E-04
+     FORCE CONVERGENCE VALUE  =  0.2502E-01  CRITERION=  0.1954E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1115E-04
+     DISP CONVERGENCE VALUE   =  0.3604E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.3233     SCALED MAX DOF INC = -0.3604E-05
+     FORCE CONVERGENCE VALUE  =  0.1782E-01  CRITERION=  0.1953E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1858E-05
+     DISP CONVERGENCE VALUE   =  0.1191E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.6413     SCALED MAX DOF INC =  0.1191E-05
+     FORCE CONVERGENCE VALUE  =  0.5741E-02  CRITERION=  0.1951E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2568E-05
+     DISP CONVERGENCE VALUE   =  0.2568E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.2568E-05
+     FORCE CONVERGENCE VALUE  =  0.1282E-01  CRITERION=  0.1951E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.7175E-05
+     DISP CONVERGENCE VALUE   =  0.1867E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2602     SCALED MAX DOF INC =  0.1867E-05
+     FORCE CONVERGENCE VALUE  =  0.2139E-02  CRITERION=  0.1951E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1092E-05
+     DISP CONVERGENCE VALUE   =  0.3277E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.3000     SCALED MAX DOF INC = -0.3277E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   6
+        STABILIZATION FORCE NORM = 0.9384      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  3.484    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    14  COMPLETED.    CUM ITER =     79
+ *** TIME =   1.65181         TIME INC =  0.275625E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.27562E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.2052      CRITERION=  0.2094E-01
+     DISP CONVERGENCE VALUE   =  0.1049E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1049E-04
+     DISP CONVERGENCE VALUE   =  0.1033E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9853     SCALED MAX DOF INC = -0.1033E-04
+     FORCE CONVERGENCE VALUE  =  0.3109E-01  CRITERION=  0.2098E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4957E-05
+     DISP CONVERGENCE VALUE   =  0.2658E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.5362     SCALED MAX DOF INC =  0.2658E-05
+     FORCE CONVERGENCE VALUE  =  0.8844E-02  CRITERION=  0.2095E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.5966E-05
+     DISP CONVERGENCE VALUE   =  0.1795E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.3009     SCALED MAX DOF INC = -0.1795E-05
+     FORCE CONVERGENCE VALUE  =  0.6675E-02  CRITERION=  0.2095E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2051E-05
+     DISP CONVERGENCE VALUE   =  0.2051E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.2051E-05
+     FORCE CONVERGENCE VALUE  =  0.7238E-02  CRITERION=  0.2094E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.7788E-05
+     DISP CONVERGENCE VALUE   =  0.1630E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2093     SCALED MAX DOF INC =  0.1630E-05
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   5
+        STABILIZATION FORCE NORM = 0.9772      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  3.687    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    15  COMPLETED.    CUM ITER =     84
+ *** TIME =   1.67937         TIME INC =  0.275625E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.41344E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.3667      CRITERION=  0.2308E-01
+     DISP CONVERGENCE VALUE   =  0.1923E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1923E-04
+     DISP CONVERGENCE VALUE   =  0.1892E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9837     SCALED MAX DOF INC = -0.1892E-04
+     FORCE CONVERGENCE VALUE  =  0.5515E-01  CRITERION=  0.2306E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.6550E-04
+     DISP CONVERGENCE VALUE   =  0.4565E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.6970E-01 SCALED MAX DOF INC =  0.4565E-05
+     FORCE CONVERGENCE VALUE  =  0.5051E-01  CRITERION=  0.2305E-01
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4023E-04
+     DISP CONVERGENCE VALUE   =  0.4768E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1185     SCALED MAX DOF INC = -0.4768E-05
+     FORCE CONVERGENCE VALUE  =  0.4177E-01  CRITERION=  0.2304E-01
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2157E-04
+     DISP CONVERGENCE VALUE   =  0.3924E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1819     SCALED MAX DOF INC =  0.3924E-05
+     FORCE CONVERGENCE VALUE  =  0.3356E-01  CRITERION=  0.2303E-01
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2227E-04
+     DISP CONVERGENCE VALUE   =  0.3075E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1381     SCALED MAX DOF INC = -0.3075E-05
+     FORCE CONVERGENCE VALUE  =  0.2834E-01  CRITERION=  0.2302E-01
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1108E-04
+     DISP CONVERGENCE VALUE   =  0.2546E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2298     SCALED MAX DOF INC =  0.2546E-05
+     FORCE CONVERGENCE VALUE  =  0.1892E-01  CRITERION=  0.2301E-01 <<< CONVERGED
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1828E-04
+     DISP CONVERGENCE VALUE   =  0.2130E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1165     SCALED MAX DOF INC = -0.2130E-05
+     FORCE CONVERGENCE VALUE  =  0.1704E-01  CRITERION=  0.2301E-01 <<< CONVERGED
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.6524E-05
+     DISP CONVERGENCE VALUE   =  0.1754E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2689     SCALED MAX DOF INC =  0.1754E-05
+     FORCE CONVERGENCE VALUE  =  0.1174E-01  CRITERION=  0.2300E-01 <<< CONVERGED
+    EQUIL ITER   9 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1525E-04
+     DISP CONVERGENCE VALUE   =  0.1525E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1525E-04
+     FORCE CONVERGENCE VALUE  =  0.1176      CRITERION=  0.2299E-01
+    EQUIL ITER  10 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1473E-03
+
+ *** ERROR ***                           CP =    4461.941   TIME= 11:12:35
+ Element 53249 (type = 1, SOLID187) (and maybe other elements) has       
+ become highly distorted.  Excessive distortion of elements is usually   
+ a symptom indicating the need for corrective action elsewhere.  Try     
+ incrementing the load more slowly (increase the number of substeps or   
+ decrease the time step size).  You may need to improve your mesh to     
+ obtain elements with better aspect ratios.  Also consider the behavior  
+ of materials, contact pairs, and/or constraint equations.  Please rule  
+ out other root causes of this failure before attempting rezoning or     
+ nonlinear adaptive solutions.  If this message appears in the first     
+ iteration of first substep, be sure to perform element shape checking.  
+ *** LOAD STEP     2   SUBSTEP    16  NOT COMPLETED.  CUM ITER =     95
+ *** BEGIN BISECTION NUMBER   1    NEW TIME INCREMENT=  0.14470E-01
+
+     FORCE CONVERGENCE VALUE  =  0.7659E-01  CRITERION=  0.2169E-01
+     DISP CONVERGENCE VALUE   =  0.4014E-05  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4014E-05
+     DISP CONVERGENCE VALUE   =  0.4013E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9997     SCALED MAX DOF INC = -0.4013E-05
+     FORCE CONVERGENCE VALUE  =  0.9118E-02  CRITERION=  0.2172E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.6314E-06
+     DISP CONVERGENCE VALUE   =  0.4953E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.7845     SCALED MAX DOF INC =  0.4953E-06
+     FORCE CONVERGENCE VALUE  =  0.1750E-02  CRITERION=  0.2170E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.6687E-06
+     DISP CONVERGENCE VALUE   =  0.6687E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.6687E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+        STABILIZATION FORCE NORM = 0.9978      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  3.796    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    16  COMPLETED.    CUM ITER =     97
+ *** TIME =   1.69385         TIME INC =  0.144703E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.14470E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.6527E-01  CRITERION=  0.2247E-01
+     DISP CONVERGENCE VALUE   =  0.4450E-05  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4450E-05
+     DISP CONVERGENCE VALUE   =  0.4389E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9863     SCALED MAX DOF INC = -0.4389E-05
+     FORCE CONVERGENCE VALUE  =  0.7728E-02  CRITERION=  0.2247E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3267E-05
+     DISP CONVERGENCE VALUE   =  0.1418E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.4341     SCALED MAX DOF INC = -0.1418E-05
+     FORCE CONVERGENCE VALUE  =  0.4053E-02  CRITERION=  0.2246E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4400E-06
+     DISP CONVERGENCE VALUE   =  0.4400E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.4400E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+        STABILIZATION FORCE NORM =  1.018      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  3.901    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    17  COMPLETED.    CUM ITER =    100
+ *** TIME =   1.70832         TIME INC =  0.144703E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.21705E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.1550      CRITERION=  0.2358E-01
+     DISP CONVERGENCE VALUE   =  0.9013E-05  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.9013E-05
+     DISP CONVERGENCE VALUE   =  0.8858E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9828     SCALED MAX DOF INC = -0.8858E-05
+     FORCE CONVERGENCE VALUE  =  0.2301E-01  CRITERION=  0.2361E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1150E-04
+     DISP CONVERGENCE VALUE   =  0.3315E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2883     SCALED MAX DOF INC =  0.3315E-05
+     FORCE CONVERGENCE VALUE  =  0.1208E-01  CRITERION=  0.2360E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2622E-05
+     DISP CONVERGENCE VALUE   =  0.1521E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.5798     SCALED MAX DOF INC = -0.1521E-05
+     FORCE CONVERGENCE VALUE  =  0.4797E-02  CRITERION=  0.2359E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3403E-05
+     DISP CONVERGENCE VALUE   =  0.3403E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.3403E-05
+     FORCE CONVERGENCE VALUE  =  0.1147E-01  CRITERION=  0.2359E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1214E-04
+     DISP CONVERGENCE VALUE   =  0.2734E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2252     SCALED MAX DOF INC = -0.2734E-05
+     FORCE CONVERGENCE VALUE  =  0.3318E-02  CRITERION=  0.2359E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.8602E-06
+     DISP CONVERGENCE VALUE   =  0.3937E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.4576     SCALED MAX DOF INC = -0.3937E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   6
+        STABILIZATION FORCE NORM =  1.047      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  4.061    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    18  COMPLETED.    CUM ITER =    106
+ *** TIME =   1.73002         TIME INC =  0.217055E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.21705E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.1578      CRITERION=  0.2473E-01
+     DISP CONVERGENCE VALUE   =  0.8097E-05  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.8097E-05
+     DISP CONVERGENCE VALUE   =  0.8081E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9981     SCALED MAX DOF INC = -0.8081E-05
+     FORCE CONVERGENCE VALUE  =  0.1591E-01  CRITERION=  0.2477E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3630E-05
+     DISP CONVERGENCE VALUE   =  0.2014E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.5549     SCALED MAX DOF INC = -0.2014E-05
+     FORCE CONVERGENCE VALUE  =  0.7141E-02  CRITERION=  0.2475E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.5134E-05
+     DISP CONVERGENCE VALUE   =  0.1388E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2703     SCALED MAX DOF INC =  0.1388E-05
+     FORCE CONVERGENCE VALUE  =  0.3555E-02  CRITERION=  0.2475E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1149E-05
+     DISP CONVERGENCE VALUE   =  0.1149E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1149E-05
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   4
+        STABILIZATION FORCE NORM =  1.076      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  4.221    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    19  COMPLETED.    CUM ITER =    110
+ *** TIME =   1.75173         TIME INC =  0.217055E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.32558E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.2082      CRITERION=  0.2648E-01
+     DISP CONVERGENCE VALUE   =  0.3658E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3658E-04
+     DISP CONVERGENCE VALUE   =  0.1970E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.5384     SCALED MAX DOF INC =  0.1970E-04
+     FORCE CONVERGENCE VALUE  =  0.8350      CRITERION=  0.2647E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2177E-03
+
+ *** ERROR ***                           CP =    5182.695   TIME= 11:24:37
+ Element 53249 (type = 1, SOLID187) (and maybe other elements) has       
+ become highly distorted.  Excessive distortion of elements is usually   
+ a symptom indicating the need for corrective action elsewhere.  Try     
+ incrementing the load more slowly (increase the number of substeps or   
+ decrease the time step size).  You may need to improve your mesh to     
+ obtain elements with better aspect ratios.  Also consider the behavior  
+ of materials, contact pairs, and/or constraint equations.  Please rule  
+ out other root causes of this failure before attempting rezoning or     
+ nonlinear adaptive solutions.  If this message appears in the first     
+ iteration of first substep, be sure to perform element shape checking.  
+ *** LOAD STEP     2   SUBSTEP    20  NOT COMPLETED.  CUM ITER =    113
+ *** BEGIN BISECTION NUMBER   1    NEW TIME INCREMENT=  0.11395E-01
+
+     FORCE CONVERGENCE VALUE  =  0.5817E-01  CRITERION=  0.2536E-01
+     DISP CONVERGENCE VALUE   =  0.4142E-05  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4142E-05
+     DISP CONVERGENCE VALUE   =  0.3945E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9524     SCALED MAX DOF INC = -0.3945E-05
+     FORCE CONVERGENCE VALUE  =  0.9689E-02  CRITERION=  0.2538E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3712E-05
+     DISP CONVERGENCE VALUE   =  0.1497E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.4034     SCALED MAX DOF INC = -0.1497E-05
+     FORCE CONVERGENCE VALUE  =  0.3481E-02  CRITERION=  0.2538E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3960E-06
+     DISP CONVERGENCE VALUE   =  0.3960E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.3960E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+        STABILIZATION FORCE NORM =  1.092      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  4.306    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    20  COMPLETED.    CUM ITER =    115
+ *** TIME =   1.76312         TIME INC =  0.113954E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.11395E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.4354E-01  CRITERION=  0.2600E-01
+     DISP CONVERGENCE VALUE   =  0.3287E-05  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3287E-05
+     DISP CONVERGENCE VALUE   =  0.3144E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9563     SCALED MAX DOF INC = -0.3144E-05
+     FORCE CONVERGENCE VALUE  =  0.7500E-02  CRITERION=  0.2599E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2842E-05
+     DISP CONVERGENCE VALUE   =  0.1109E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.3904     SCALED MAX DOF INC =  0.1109E-05
+     FORCE CONVERGENCE VALUE  =  0.3532E-02  CRITERION=  0.2599E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3337E-06
+     DISP CONVERGENCE VALUE   =  0.3337E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.3337E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+        STABILIZATION FORCE NORM =  1.107      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  4.390    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    21  COMPLETED.    CUM ITER =    118
+ *** TIME =   1.77452         TIME INC =  0.113954E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.17093E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.5389E-01  CRITERION=  0.2689E-01
+     DISP CONVERGENCE VALUE   =  0.5335E-05  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.5335E-05
+     DISP CONVERGENCE VALUE   =  0.5217E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9779     SCALED MAX DOF INC =  0.5217E-05
+     FORCE CONVERGENCE VALUE  =  0.1139E-01  CRITERION=  0.2686E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4343E-05
+     DISP CONVERGENCE VALUE   =  0.1284E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2957     SCALED MAX DOF INC = -0.1284E-05
+     FORCE CONVERGENCE VALUE  =  0.6196E-02  CRITERION=  0.2686E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.9479E-06
+     DISP CONVERGENCE VALUE   =  0.9479E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.9479E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+        STABILIZATION FORCE NORM =  1.129      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  4.512    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    22  COMPLETED.    CUM ITER =    121
+ *** TIME =   1.79161         TIME INC =  0.170931E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.25640E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.7190E-01  CRITERION=  0.2814E-01
+     DISP CONVERGENCE VALUE   =  0.1517E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1517E-04
+     DISP CONVERGENCE VALUE   =  0.8793E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.5797     SCALED MAX DOF INC =  0.8793E-05
+     FORCE CONVERGENCE VALUE  =  0.3672E-01  CRITERION=  0.2811E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4233E-04
+     DISP CONVERGENCE VALUE   =  0.6310E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1490     SCALED MAX DOF INC =  0.6310E-05
+     FORCE CONVERGENCE VALUE  =  0.3177E-01  CRITERION=  0.2810E-01
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1307E-04
+     DISP CONVERGENCE VALUE   =  0.5441E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4162     SCALED MAX DOF INC = -0.5441E-05
+     FORCE CONVERGENCE VALUE  =  0.2309E-01  CRITERION=  0.2809E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1321E-04
+     DISP CONVERGENCE VALUE   =  0.3266E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2472     SCALED MAX DOF INC =  0.3266E-05
+     FORCE CONVERGENCE VALUE  =  0.1524E-01  CRITERION=  0.2808E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4831E-05
+     DISP CONVERGENCE VALUE   =  0.1778E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.3681     SCALED MAX DOF INC = -0.1778E-05
+     FORCE CONVERGENCE VALUE  =  0.1097E-01  CRITERION=  0.2807E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.5527E-05
+     DISP CONVERGENCE VALUE   =  0.5527E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.5527E-05
+     FORCE CONVERGENCE VALUE  =  0.2960E-01  CRITERION=  0.2806E-01
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4243E-04
+     DISP CONVERGENCE VALUE   =  0.4954E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1167     SCALED MAX DOF INC = -0.4954E-05
+     FORCE CONVERGENCE VALUE  =  0.1133E-01  CRITERION=  0.2806E-01 <<< CONVERGED
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.7692E-05
+     DISP CONVERGENCE VALUE   =  0.1391E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.1808     SCALED MAX DOF INC = -0.1391E-05
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   8
+        STABILIZATION FORCE NORM =  1.162      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  4.688    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    23  COMPLETED.    CUM ITER =    129
+ *** TIME =   1.81725         TIME INC =  0.256396E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.25640E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.6938E-01  CRITERION=  0.2928E-01
+     DISP CONVERGENCE VALUE   =  0.1426E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1426E-04
+     DISP CONVERGENCE VALUE   =  0.1359E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9529     SCALED MAX DOF INC =  0.1359E-04
+     FORCE CONVERGENCE VALUE  =  0.3213E-01  CRITERION=  0.2925E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1871E-04
+     DISP CONVERGENCE VALUE   =  0.3822E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2043     SCALED MAX DOF INC =  0.3822E-05
+     FORCE CONVERGENCE VALUE  =  0.2499E-01  CRITERION=  0.2924E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1846E-04
+     DISP CONVERGENCE VALUE   =  0.3216E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1742     SCALED MAX DOF INC =  0.3216E-05
+     FORCE CONVERGENCE VALUE  =  0.2016E-01  CRITERION=  0.2923E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1080E-04
+     DISP CONVERGENCE VALUE   =  0.2884E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2670     SCALED MAX DOF INC =  0.2884E-05
+     FORCE CONVERGENCE VALUE  =  0.1580E-01  CRITERION=  0.2923E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1279E-04
+     DISP CONVERGENCE VALUE   =  0.2208E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1727     SCALED MAX DOF INC = -0.2208E-05
+     FORCE CONVERGENCE VALUE  =  0.1238E-01  CRITERION=  0.2922E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.6310E-05
+     DISP CONVERGENCE VALUE   =  0.1806E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2862     SCALED MAX DOF INC =  0.1806E-05
+     FORCE CONVERGENCE VALUE  =  0.9837E-02  CRITERION=  0.2922E-01 <<< CONVERGED
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.8858E-05
+     DISP CONVERGENCE VALUE   =  0.8858E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.8858E-05
+     FORCE CONVERGENCE VALUE  =  0.2571E-01  CRITERION=  0.2921E-01 <<< CONVERGED
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.8249E-04
+     DISP CONVERGENCE VALUE   =  0.7207E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.8737E-01 SCALED MAX DOF INC =  0.7207E-05
+     FORCE CONVERGENCE VALUE  =  0.1935E-01  CRITERION=  0.2921E-01 <<< CONVERGED
+    EQUIL ITER   9 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1860E-04
+     DISP CONVERGENCE VALUE   =  0.4108E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2209     SCALED MAX DOF INC = -0.4108E-05
+     FORCE CONVERGENCE VALUE  =  0.1503E-01  CRITERION=  0.2921E-01 <<< CONVERGED
+    EQUIL ITER  10 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4894E-05
+     DISP CONVERGENCE VALUE   =  0.1915E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.3913     SCALED MAX DOF INC =  0.1915E-05
+     FORCE CONVERGENCE VALUE  =  0.8785E-02  CRITERION=  0.2921E-01 <<< CONVERGED
+    EQUIL ITER  11 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.6017E-05
+     DISP CONVERGENCE VALUE   =  0.1313E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2182     SCALED MAX DOF INC = -0.1313E-05
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION  11
+        STABILIZATION FORCE NORM =  1.193      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  4.857    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    24  COMPLETED.    CUM ITER =    140
+ *** TIME =   1.84289         TIME INC =  0.256396E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.25640E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.9677E-01  CRITERION=  0.3036E-01
+     DISP CONVERGENCE VALUE   =  0.2228E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2228E-04
+     DISP CONVERGENCE VALUE   =  0.1609E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.7222     SCALED MAX DOF INC =  0.1609E-04
+     FORCE CONVERGENCE VALUE  =  0.4529E-01  CRITERION=  0.3031E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1588E-04
+     DISP CONVERGENCE VALUE   =  0.5691E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.3584     SCALED MAX DOF INC = -0.5691E-05
+     FORCE CONVERGENCE VALUE  =  0.2898E-01  CRITERION=  0.3030E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3367E-04
+     DISP CONVERGENCE VALUE   =  0.4883E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1450     SCALED MAX DOF INC =  0.4883E-05
+     FORCE CONVERGENCE VALUE  =  0.2113E-01  CRITERION=  0.3029E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.6380E-05
+     DISP CONVERGENCE VALUE   =  0.3242E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.5081     SCALED MAX DOF INC =  0.3242E-05
+     FORCE CONVERGENCE VALUE  =  0.1870E-01  CRITERION=  0.3028E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2214E-04
+     DISP CONVERGENCE VALUE   =  0.2572E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1162     SCALED MAX DOF INC = -0.2572E-05
+     FORCE CONVERGENCE VALUE  =  0.1299E-01  CRITERION=  0.3028E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4079E-05
+     DISP CONVERGENCE VALUE   =  0.2746E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.6731     SCALED MAX DOF INC = -0.2746E-05
+     FORCE CONVERGENCE VALUE  =  0.1058E-01  CRITERION=  0.3027E-01 <<< CONVERGED
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2359E-04
+     DISP CONVERGENCE VALUE   =  0.2339E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9915E-01 SCALED MAX DOF INC =  0.2339E-05
+     FORCE CONVERGENCE VALUE  =  0.7964E-02  CRITERION=  0.3027E-01 <<< CONVERGED
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4127E-05
+     DISP CONVERGENCE VALUE   =  0.1625E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.3938     SCALED MAX DOF INC =  0.1625E-05
+     FORCE CONVERGENCE VALUE  =  0.7721E-02  CRITERION=  0.3027E-01 <<< CONVERGED
+    EQUIL ITER   9 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1036E-04
+     DISP CONVERGENCE VALUE   =  0.1036E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1036E-04
+     FORCE CONVERGENCE VALUE  =  0.3256E-01  CRITERION=  0.3026E-01
+    EQUIL ITER  10 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2126E-03
+
+ *** ERROR ***                           CP =    6719.648   TIME= 11:50:15
+ Element 53249 (type = 1, SOLID187) (and maybe other elements) has       
+ become highly distorted.  Excessive distortion of elements is usually   
+ a symptom indicating the need for corrective action elsewhere.  Try     
+ incrementing the load more slowly (increase the number of substeps or   
+ decrease the time step size).  You may need to improve your mesh to     
+ obtain elements with better aspect ratios.  Also consider the behavior  
+ of materials, contact pairs, and/or constraint equations.  Please rule  
+ out other root causes of this failure before attempting rezoning or     
+ nonlinear adaptive solutions.  If this message appears in the first     
+ iteration of first substep, be sure to perform element shape checking.  
+ *** LOAD STEP     2   SUBSTEP    25  NOT COMPLETED.  CUM ITER =    151
+ *** BEGIN BISECTION NUMBER   1    NEW TIME INCREMENT=  0.89739E-02
+
+     FORCE CONVERGENCE VALUE  =  0.3960E-01  CRITERION=  0.2962E-01
+     DISP CONVERGENCE VALUE   =  0.1156E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1156E-04
+     DISP CONVERGENCE VALUE   =  0.1034E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.8944     SCALED MAX DOF INC =  0.1034E-04
+     FORCE CONVERGENCE VALUE  =  0.8398E-02  CRITERION=  0.2961E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1867E-05
+     DISP CONVERGENCE VALUE   =  0.1425E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.7633     SCALED MAX DOF INC = -0.1425E-05
+     FORCE CONVERGENCE VALUE  =  0.3823E-02  CRITERION=  0.2961E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3160E-05
+     DISP CONVERGENCE VALUE   =  0.3160E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.3160E-05
+     FORCE CONVERGENCE VALUE  =  0.3063E-02  CRITERION=  0.2961E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1310E-05
+     DISP CONVERGENCE VALUE   =  0.5586E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.4265     SCALED MAX DOF INC = -0.5586E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   4
+        STABILIZATION FORCE NORM =  1.204      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  4.916    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    25  COMPLETED.    CUM ITER =    154
+ *** TIME =   1.85186         TIME INC =  0.897385E-02
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.89739E-02  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.6405E-01  CRITERION=  0.3000E-01
+     DISP CONVERGENCE VALUE   =  0.1175E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1175E-04
+     DISP CONVERGENCE VALUE   =  0.1167E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9930     SCALED MAX DOF INC =  0.1167E-04
+     FORCE CONVERGENCE VALUE  =  0.1210E-01  CRITERION=  0.2998E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1677E-05
+     DISP CONVERGENCE VALUE   =  0.1677E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.1677E-05
+     FORCE CONVERGENCE VALUE  =  0.9883E-02  CRITERION=  0.2996E-01 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+        STABILIZATION FORCE NORM =  1.215      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  4.971    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    26  COMPLETED.    CUM ITER =    156
+ *** TIME =   1.86084         TIME INC =  0.897385E-02
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.13461E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.9461E-01  CRITERION=  0.3050E-01
+     DISP CONVERGENCE VALUE   =  0.1803E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1803E-04
+     DISP CONVERGENCE VALUE   =  0.1279E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.7096     SCALED MAX DOF INC =  0.1279E-04
+     FORCE CONVERGENCE VALUE  =  0.3312E-01  CRITERION=  0.3052E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.7168E-05
+     DISP CONVERGENCE VALUE   =  0.3686E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.5143     SCALED MAX DOF INC =  0.3686E-05
+     FORCE CONVERGENCE VALUE  =  0.1520E-01  CRITERION=  0.3051E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.6234E-05
+     DISP CONVERGENCE VALUE   =  0.2516E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4036     SCALED MAX DOF INC = -0.2516E-05
+     FORCE CONVERGENCE VALUE  =  0.1113E-01  CRITERION=  0.3051E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3278E-05
+     DISP CONVERGENCE VALUE   =  0.1674E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.5106     SCALED MAX DOF INC =  0.1674E-05
+     FORCE CONVERGENCE VALUE  =  0.8128E-02  CRITERION=  0.3051E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3039E-05
+     DISP CONVERGENCE VALUE   =  0.3039E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.3039E-05
+     FORCE CONVERGENCE VALUE  =  0.1126E-01  CRITERION=  0.3051E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1007E-04
+     DISP CONVERGENCE VALUE   =  0.2549E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2532     SCALED MAX DOF INC =  0.2549E-05
+     FORCE CONVERGENCE VALUE  =  0.5409E-02  CRITERION=  0.3051E-01 <<< CONVERGED
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1388E-05
+     DISP CONVERGENCE VALUE   =  0.1388E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.1388E-05
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   7
+        STABILIZATION FORCE NORM =  1.231      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  5.054    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    27  COMPLETED.    CUM ITER =    163
+ *** TIME =   1.87430         TIME INC =  0.134608E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.13461E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.8932E-01  CRITERION=  0.3104E-01
+     DISP CONVERGENCE VALUE   =  0.1701E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1701E-04
+     DISP CONVERGENCE VALUE   =  0.1550E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9107     SCALED MAX DOF INC =  0.1550E-04
+     FORCE CONVERGENCE VALUE  =  0.1836E-01  CRITERION=  0.3103E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.8658E-05
+     DISP CONVERGENCE VALUE   =  0.3703E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4277     SCALED MAX DOF INC = -0.3703E-05
+     FORCE CONVERGENCE VALUE  =  0.1283E-01  CRITERION=  0.3103E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.5011E-05
+     DISP CONVERGENCE VALUE   =  0.2439E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4867     SCALED MAX DOF INC =  0.2439E-05
+     FORCE CONVERGENCE VALUE  =  0.9210E-02  CRITERION=  0.3102E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4193E-05
+     DISP CONVERGENCE VALUE   =  0.1869E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4458     SCALED MAX DOF INC = -0.1869E-05
+     FORCE CONVERGENCE VALUE  =  0.7757E-02  CRITERION=  0.3102E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3419E-05
+     DISP CONVERGENCE VALUE   =  0.1685E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.4929     SCALED MAX DOF INC =  0.1685E-05
+     FORCE CONVERGENCE VALUE  =  0.4665E-02  CRITERION=  0.3101E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2675E-05
+     DISP CONVERGENCE VALUE   =  0.2675E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.2675E-05
+     FORCE CONVERGENCE VALUE  =  0.7431E-02  CRITERION=  0.3101E-01 <<< CONVERGED
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.8818E-05
+     DISP CONVERGENCE VALUE   =  0.2020E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2291     SCALED MAX DOF INC =  0.2020E-05
+     FORCE CONVERGENCE VALUE  =  0.2154E-02  CRITERION=  0.3101E-01 <<< CONVERGED
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4878E-06
+     DISP CONVERGENCE VALUE   =  0.4512E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.9250     SCALED MAX DOF INC =  0.4512E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   8
+        STABILIZATION FORCE NORM =  1.246      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  5.134    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    28  COMPLETED.    CUM ITER =    171
+ *** TIME =   1.88776         TIME INC =  0.134608E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.20191E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.1242      CRITERION=  0.3178E-01
+     DISP CONVERGENCE VALUE   =  0.2688E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2688E-04
+     DISP CONVERGENCE VALUE   =  0.1757E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.6537     SCALED MAX DOF INC =  0.1757E-04
+     FORCE CONVERGENCE VALUE  =  0.5077E-01  CRITERION=  0.3181E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1333E-04
+     DISP CONVERGENCE VALUE   =  0.6015E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4512     SCALED MAX DOF INC =  0.6015E-05
+     FORCE CONVERGENCE VALUE  =  0.2619E-01  CRITERION=  0.3181E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2317E-04
+     DISP CONVERGENCE VALUE   =  0.4807E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2075     SCALED MAX DOF INC = -0.4807E-05
+     FORCE CONVERGENCE VALUE  =  0.2140E-01  CRITERION=  0.3182E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.6406E-05
+     DISP CONVERGENCE VALUE   =  0.3211E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.5012     SCALED MAX DOF INC =  0.3211E-05
+     FORCE CONVERGENCE VALUE  =  0.1466E-01  CRITERION=  0.3182E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1390E-04
+     DISP CONVERGENCE VALUE   =  0.2598E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1869     SCALED MAX DOF INC = -0.2598E-05
+     FORCE CONVERGENCE VALUE  =  0.1274E-01  CRITERION=  0.3182E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3592E-05
+     DISP CONVERGENCE VALUE   =  0.1506E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.4193     SCALED MAX DOF INC = -0.1506E-05
+     FORCE CONVERGENCE VALUE  =  0.9979E-02  CRITERION=  0.3181E-01 <<< CONVERGED
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.8435E-05
+     DISP CONVERGENCE VALUE   =  0.8435E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.8435E-05
+     FORCE CONVERGENCE VALUE  =  0.1165      CRITERION=  0.3181E-01
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.8784E-04
+
+ *** ERROR ***                           CP =    7865.292   TIME= 12:09:22
+ Element 53249 (type = 1, SOLID187) (and maybe other elements) has       
+ become highly distorted.  Excessive distortion of elements is usually   
+ a symptom indicating the need for corrective action elsewhere.  Try     
+ incrementing the load more slowly (increase the number of substeps or   
+ decrease the time step size).  You may need to improve your mesh to     
+ obtain elements with better aspect ratios.  Also consider the behavior  
+ of materials, contact pairs, and/or constraint equations.  Please rule  
+ out other root causes of this failure before attempting rezoning or     
+ nonlinear adaptive solutions.  If this message appears in the first     
+ iteration of first substep, be sure to perform element shape checking.  
+ *** LOAD STEP     2   SUBSTEP    29  NOT COMPLETED.  CUM ITER =    180
+ *** BEGIN BISECTION NUMBER   1    NEW TIME INCREMENT=  0.70669E-02
+
+     FORCE CONVERGENCE VALUE  =  0.4811E-01  CRITERION=  0.3128E-01
+     DISP CONVERGENCE VALUE   =  0.9745E-05  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.9745E-05
+     DISP CONVERGENCE VALUE   =  0.9745E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.9745E-05
+     FORCE CONVERGENCE VALUE  =  0.1110E-01  CRITERION=  0.3131E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2832E-05
+     DISP CONVERGENCE VALUE   =  0.2801E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9891     SCALED MAX DOF INC =  0.2801E-05
+     FORCE CONVERGENCE VALUE  =  0.4611E-02  CRITERION=  0.3129E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.1420E-05
+     DISP CONVERGENCE VALUE   =  0.8541E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.6014     SCALED MAX DOF INC = -0.8541E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+        STABILIZATION FORCE NORM =  1.254      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  5.178    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    29  COMPLETED.    CUM ITER =    182
+ *** TIME =   1.89483         TIME INC =  0.706691E-02
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.70669E-02  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.4334E-01  CRITERION=  0.3158E-01
+     DISP CONVERGENCE VALUE   =  0.8370E-05  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.8370E-05
+     DISP CONVERGENCE VALUE   =  0.6452E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.7709     SCALED MAX DOF INC =  0.6452E-05
+     FORCE CONVERGENCE VALUE  =  0.1496E-01  CRITERION=  0.3159E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2800E-05
+     DISP CONVERGENCE VALUE   =  0.2800E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.2800E-05
+     FORCE CONVERGENCE VALUE  =  0.7134E-02  CRITERION=  0.3159E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2079E-05
+     DISP CONVERGENCE VALUE   =  0.1858E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.8941     SCALED MAX DOF INC =  0.1858E-05
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   3
+        STABILIZATION FORCE NORM =  1.263      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  5.221    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    30  COMPLETED.    CUM ITER =    185
+ *** TIME =   1.90189         TIME INC =  0.706691E-02
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.10600E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.5680E-01  CRITERION=  0.3202E-01
+     DISP CONVERGENCE VALUE   =  0.1310E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1310E-04
+     DISP CONVERGENCE VALUE   =  0.9107E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.6952     SCALED MAX DOF INC =  0.9107E-05
+     FORCE CONVERGENCE VALUE  =  0.2474E-01  CRITERION=  0.3201E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.6877E-05
+     DISP CONVERGENCE VALUE   =  0.3798E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.5522     SCALED MAX DOF INC =  0.3798E-05
+     FORCE CONVERGENCE VALUE  =  0.1648E-01  CRITERION=  0.3200E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4756E-05
+     DISP CONVERGENCE VALUE   =  0.2967E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.6238     SCALED MAX DOF INC = -0.2967E-05
+     FORCE CONVERGENCE VALUE  =  0.1276E-01  CRITERION=  0.3199E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4570E-05
+     DISP CONVERGENCE VALUE   =  0.2245E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4913     SCALED MAX DOF INC =  0.2245E-05
+     FORCE CONVERGENCE VALUE  =  0.1008E-01  CRITERION=  0.3199E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2729E-05
+     DISP CONVERGENCE VALUE   =  0.1768E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.6480     SCALED MAX DOF INC = -0.1768E-05
+     FORCE CONVERGENCE VALUE  =  0.7880E-02  CRITERION=  0.3198E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2970E-05
+     DISP CONVERGENCE VALUE   =  0.2970E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.2970E-05
+     FORCE CONVERGENCE VALUE  =  0.9337E-02  CRITERION=  0.3198E-01 <<< CONVERGED
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.6221E-05
+     DISP CONVERGENCE VALUE   =  0.2082E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.3346     SCALED MAX DOF INC = -0.2082E-05
+     FORCE CONVERGENCE VALUE  =  0.4073E-02  CRITERION=  0.3198E-01 <<< CONVERGED
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.6532E-06
+     DISP CONVERGENCE VALUE   =  0.6532E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.6532E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   8
+        STABILIZATION FORCE NORM =  1.275      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  5.283    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    31  COMPLETED.    CUM ITER =    193
+ *** TIME =   1.91249         TIME INC =  0.106004E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.10600E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.8010E-01  CRITERION=  0.3237E-01
+     DISP CONVERGENCE VALUE   =  0.1747E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1747E-04
+     DISP CONVERGENCE VALUE   =  0.1166E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.6672     SCALED MAX DOF INC =  0.1166E-04
+     FORCE CONVERGENCE VALUE  =  0.3189E-01  CRITERION=  0.3237E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3612E-05
+     DISP CONVERGENCE VALUE   =  0.3612E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.3612E-05
+     FORCE CONVERGENCE VALUE  =  0.2027E-01  CRITERION=  0.3237E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4096E-05
+     DISP CONVERGENCE VALUE   =  0.3778E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9224     SCALED MAX DOF INC =  0.3778E-05
+     FORCE CONVERGENCE VALUE  =  0.1269E-01  CRITERION=  0.3236E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4806E-05
+     DISP CONVERGENCE VALUE   =  0.2331E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4850     SCALED MAX DOF INC =  0.2331E-05
+     FORCE CONVERGENCE VALUE  =  0.9398E-02  CRITERION=  0.3236E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3197E-05
+     DISP CONVERGENCE VALUE   =  0.1563E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.4890     SCALED MAX DOF INC =  0.1563E-05
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   5
+        STABILIZATION FORCE NORM =  1.286      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  5.343    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    32  COMPLETED.    CUM ITER =    198
+ *** TIME =   1.92309         TIME INC =  0.106004E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.15901E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.9965E-01  CRITERION=  0.3292E-01
+     DISP CONVERGENCE VALUE   =  0.2014E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2014E-04
+     DISP CONVERGENCE VALUE   =  0.1553E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.7710     SCALED MAX DOF INC =  0.1553E-04
+     FORCE CONVERGENCE VALUE  =  0.3694E-01  CRITERION=  0.3294E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3406E-04
+     DISP CONVERGENCE VALUE   =  0.5829E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1711     SCALED MAX DOF INC =  0.5829E-05
+     FORCE CONVERGENCE VALUE  =  0.2998E-01  CRITERION=  0.3294E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.5547E-05
+     DISP CONVERGENCE VALUE   =  0.5547E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.5547E-05
+     FORCE CONVERGENCE VALUE  =  0.2922E-01  CRITERION=  0.3293E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2738E-04
+     DISP CONVERGENCE VALUE   =  0.4952E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1809     SCALED MAX DOF INC =  0.4952E-05
+     FORCE CONVERGENCE VALUE  =  0.2586E-01  CRITERION=  0.3293E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1118E-04
+     DISP CONVERGENCE VALUE   =  0.8772E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.7846     SCALED MAX DOF INC =  0.8772E-05
+     FORCE CONVERGENCE VALUE  =  0.1940E-01  CRITERION=  0.3292E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2037E-04
+     DISP CONVERGENCE VALUE   =  0.3785E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1858     SCALED MAX DOF INC = -0.3785E-05
+     FORCE CONVERGENCE VALUE  =  0.1478E-01  CRITERION=  0.3292E-01 <<< CONVERGED
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1034E-04
+     DISP CONVERGENCE VALUE   =  0.7724E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.7472     SCALED MAX DOF INC =  0.7724E-05
+     FORCE CONVERGENCE VALUE  =  0.1028E-01  CRITERION=  0.3292E-01 <<< CONVERGED
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.9768E-05
+     DISP CONVERGENCE VALUE   =  0.2199E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2251     SCALED MAX DOF INC =  0.2199E-05
+     FORCE CONVERGENCE VALUE  =  0.7979E-02  CRITERION=  0.3291E-01 <<< CONVERGED
+    EQUIL ITER   9 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3240E-05
+     DISP CONVERGENCE VALUE   =  0.2560E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.7901     SCALED MAX DOF INC =  0.2560E-05
+     FORCE CONVERGENCE VALUE  =  0.7521E-02  CRITERION=  0.3291E-01 <<< CONVERGED
+    EQUIL ITER  10 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.6663E-05
+     DISP CONVERGENCE VALUE   =  0.1373E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2061     SCALED MAX DOF INC =  0.1373E-05
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION  10
+        STABILIZATION FORCE NORM =  1.303      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  5.433    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    33  COMPLETED.    CUM ITER =    208
+ *** TIME =   1.93899         TIME INC =  0.159005E-01
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.15901E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.1044      CRITERION=  0.3347E-01
+     DISP CONVERGENCE VALUE   =  0.1887E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1887E-04
+     DISP CONVERGENCE VALUE   =  0.1806E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9571     SCALED MAX DOF INC =  0.1806E-04
+     FORCE CONVERGENCE VALUE  =  0.2463E-01  CRITERION=  0.3353E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4711E-05
+     DISP CONVERGENCE VALUE   =  0.3558E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.7553     SCALED MAX DOF INC = -0.3558E-05
+     FORCE CONVERGENCE VALUE  =  0.2130E-01  CRITERION=  0.3351E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1392E-04
+     DISP CONVERGENCE VALUE   =  0.4178E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.3002     SCALED MAX DOF INC =  0.4178E-05
+     FORCE CONVERGENCE VALUE  =  0.1740E-01  CRITERION=  0.3351E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.6566E-05
+     DISP CONVERGENCE VALUE   =  0.3019E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.4598     SCALED MAX DOF INC = -0.3019E-05
+     FORCE CONVERGENCE VALUE  =  0.1529E-01  CRITERION=  0.3351E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.7457E-05
+     DISP CONVERGENCE VALUE   =  0.2330E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.3125     SCALED MAX DOF INC =  0.2330E-05
+     FORCE CONVERGENCE VALUE  =  0.1361E-01  CRITERION=  0.3351E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4042E-05
+     DISP CONVERGENCE VALUE   =  0.1746E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.4320     SCALED MAX DOF INC = -0.1746E-05
+     FORCE CONVERGENCE VALUE  =  0.1104E-01  CRITERION=  0.3350E-01 <<< CONVERGED
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.5266E-05
+     DISP CONVERGENCE VALUE   =  0.5266E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.5266E-05
+     FORCE CONVERGENCE VALUE  =  0.2030E-01  CRITERION=  0.3350E-01 <<< CONVERGED
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4857E-04
+     DISP CONVERGENCE VALUE   =  0.5129E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1056     SCALED MAX DOF INC = -0.5129E-05
+     FORCE CONVERGENCE VALUE  =  0.1093E-01  CRITERION=  0.3350E-01 <<< CONVERGED
+    EQUIL ITER   9 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4793E-05
+     DISP CONVERGENCE VALUE   =  0.1777E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.3709     SCALED MAX DOF INC = -0.1777E-05
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   9
+        STABILIZATION FORCE NORM =  1.321      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  5.524    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    34  COMPLETED.    CUM ITER =    217
+ *** TIME =   1.95489         TIME INC =  0.159005E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.23851E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.1402      CRITERION=  0.3438E-01
+     DISP CONVERGENCE VALUE   =  0.2953E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2953E-04
+     DISP CONVERGENCE VALUE   =  0.2095E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.7096     SCALED MAX DOF INC =  0.2095E-04
+     FORCE CONVERGENCE VALUE  =  0.1771      CRITERION=  0.3438E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3790E-03
+
+ *** ERROR ***                           CP =    9510.559   TIME= 12:36:49
+ Element 53249 (type = 1, SOLID187) (and maybe other elements) has       
+ become highly distorted.  Excessive distortion of elements is usually   
+ a symptom indicating the need for corrective action elsewhere.  Try     
+ incrementing the load more slowly (increase the number of substeps or   
+ decrease the time step size).  You may need to improve your mesh to     
+ obtain elements with better aspect ratios.  Also consider the behavior  
+ of materials, contact pairs, and/or constraint equations.  Please rule  
+ out other root causes of this failure before attempting rezoning or     
+ nonlinear adaptive solutions.  If this message appears in the first     
+ iteration of first substep, be sure to perform element shape checking.  
+ *** LOAD STEP     2   SUBSTEP    35  NOT COMPLETED.  CUM ITER =    220
+ *** BEGIN BISECTION NUMBER   1    NEW TIME INCREMENT=  0.83478E-02
+
+     FORCE CONVERGENCE VALUE  =  0.6158E-01  CRITERION=  0.3381E-01
+     DISP CONVERGENCE VALUE   =  0.1620E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1620E-04
+     DISP CONVERGENCE VALUE   =  0.9666E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.5965     SCALED MAX DOF INC =  0.9666E-05
+     FORCE CONVERGENCE VALUE  =  0.2429E-01  CRITERION=  0.3381E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2778E-05
+     DISP CONVERGENCE VALUE   =  0.2609E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9394     SCALED MAX DOF INC =  0.2609E-05
+     FORCE CONVERGENCE VALUE  =  0.1292E-01  CRITERION=  0.3381E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2192E-05
+     DISP CONVERGENCE VALUE   =  0.1760E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.8028     SCALED MAX DOF INC =  0.1760E-05
+     FORCE CONVERGENCE VALUE  =  0.7966E-02  CRITERION=  0.3381E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3115E-05
+     DISP CONVERGENCE VALUE   =  0.3115E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.3115E-05
+     FORCE CONVERGENCE VALUE  =  0.9544E-02  CRITERION=  0.3380E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.7067E-05
+     DISP CONVERGENCE VALUE   =  0.2104E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2978     SCALED MAX DOF INC =  0.2104E-05
+     FORCE CONVERGENCE VALUE  =  0.4426E-02  CRITERION=  0.3380E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.9968E-06
+     DISP CONVERGENCE VALUE   =  0.9968E-06  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.9968E-06
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   6
+        STABILIZATION FORCE NORM =  1.330      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  5.572    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    35  COMPLETED.    CUM ITER =    225
+ *** TIME =   1.96324         TIME INC =  0.834779E-02
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.83478E-02  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.4829E-01  CRITERION=  0.3410E-01
+     DISP CONVERGENCE VALUE   =  0.1328E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1328E-04
+     DISP CONVERGENCE VALUE   =  0.1311E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.9873     SCALED MAX DOF INC =  0.1311E-04
+     FORCE CONVERGENCE VALUE  =  0.1013E-01  CRITERION=  0.3408E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3938E-05
+     DISP CONVERGENCE VALUE   =  0.2338E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.5937     SCALED MAX DOF INC = -0.2338E-05
+     FORCE CONVERGENCE VALUE  =  0.7404E-02  CRITERION=  0.3409E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2958E-05
+     DISP CONVERGENCE VALUE   =  0.1963E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.6636     SCALED MAX DOF INC =  0.1963E-05
+     FORCE CONVERGENCE VALUE  =  0.5826E-02  CRITERION=  0.3408E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.2968E-05
+     DISP CONVERGENCE VALUE   =  0.1617E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.5446     SCALED MAX DOF INC = -0.1617E-05
+     FORCE CONVERGENCE VALUE  =  0.4407E-02  CRITERION=  0.3408E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1924E-05
+     DISP CONVERGENCE VALUE   =  0.1924E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.1924E-05
+     FORCE CONVERGENCE VALUE  =  0.4235E-02  CRITERION=  0.3408E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3918E-05
+     DISP CONVERGENCE VALUE   =  0.1394E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.3558     SCALED MAX DOF INC = -0.1394E-05
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   6
+        STABILIZATION FORCE NORM =  1.339      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  5.616    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    36  COMPLETED.    CUM ITER =    231
+ *** TIME =   1.97159         TIME INC =  0.834779E-02
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.12522E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.8487E-01  CRITERION=  0.3451E-01
+     DISP CONVERGENCE VALUE   =  0.1569E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1569E-04
+     DISP CONVERGENCE VALUE   =  0.1187E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.7568     SCALED MAX DOF INC =  0.1187E-04
+     FORCE CONVERGENCE VALUE  =  0.2356E-01  CRITERION=  0.3455E-01 <<< CONVERGED
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.5249E-05
+     DISP CONVERGENCE VALUE   =  0.5249E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.5249E-05
+     FORCE CONVERGENCE VALUE  =  0.1776E-01  CRITERION=  0.3455E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4848E-05
+     DISP CONVERGENCE VALUE   =  0.3483E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.7184     SCALED MAX DOF INC =  0.3483E-05
+     FORCE CONVERGENCE VALUE  =  0.1084E-01  CRITERION=  0.3454E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.8489E-05
+     DISP CONVERGENCE VALUE   =  0.1894E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2231     SCALED MAX DOF INC =  0.1894E-05
+     FORCE CONVERGENCE VALUE  =  0.8341E-02  CRITERION=  0.3454E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2591E-05
+     DISP CONVERGENCE VALUE   =  0.1949E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.7523     SCALED MAX DOF INC =  0.1949E-05
+     FORCE CONVERGENCE VALUE  =  0.6813E-02  CRITERION=  0.3454E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4148E-05
+     DISP CONVERGENCE VALUE   =  0.1032E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2487     SCALED MAX DOF INC =  0.1032E-05
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   6
+        STABILIZATION FORCE NORM =  1.352      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  5.688    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    37  COMPLETED.    CUM ITER =    237
+ *** TIME =   1.98411         TIME INC =  0.125217E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.15888E-01  INCREASED (FACTOR = 1.2689)
+
+     FORCE CONVERGENCE VALUE  =  0.9399E-01  CRITERION=  0.3512E-01
+     DISP CONVERGENCE VALUE   =  0.1694E-04  CRITERION=  0.1865E-05
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1694E-04
+     DISP CONVERGENCE VALUE   =  0.1092E-04  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.6448     SCALED MAX DOF INC =  0.1092E-04
+     FORCE CONVERGENCE VALUE  =  0.4121E-01  CRITERION=  0.3513E-01
+    EQUIL ITER   2 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1721E-04
+     DISP CONVERGENCE VALUE   =  0.3226E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1875     SCALED MAX DOF INC =  0.3226E-05
+     FORCE CONVERGENCE VALUE  =  0.3214E-01  CRITERION=  0.3513E-01 <<< CONVERGED
+    EQUIL ITER   3 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.8975E-05
+     DISP CONVERGENCE VALUE   =  0.2792E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.3111     SCALED MAX DOF INC = -0.2792E-05
+     FORCE CONVERGENCE VALUE  =  0.2198E-01  CRITERION=  0.3513E-01 <<< CONVERGED
+    EQUIL ITER   4 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1132E-04
+     DISP CONVERGENCE VALUE   =  0.2309E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.2040     SCALED MAX DOF INC =  0.2309E-05
+     FORCE CONVERGENCE VALUE  =  0.1813E-01  CRITERION=  0.3513E-01 <<< CONVERGED
+    EQUIL ITER   5 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.5617E-05
+     DISP CONVERGENCE VALUE   =  0.1899E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.3381     SCALED MAX DOF INC = -0.1899E-05
+     FORCE CONVERGENCE VALUE  =  0.1382E-01  CRITERION=  0.3513E-01 <<< CONVERGED
+    EQUIL ITER   6 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.8195E-05
+     DISP CONVERGENCE VALUE   =  0.1630E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.1989     SCALED MAX DOF INC =  0.1630E-05
+     FORCE CONVERGENCE VALUE  =  0.1217E-01  CRITERION=  0.3513E-01 <<< CONVERGED
+    EQUIL ITER   7 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.4175E-05
+     DISP CONVERGENCE VALUE   =  0.4175E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.4175E-05
+     FORCE CONVERGENCE VALUE  =  0.1511E-01  CRITERION=  0.3513E-01 <<< CONVERGED
+    EQUIL ITER   8 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2638E-04
+     DISP CONVERGENCE VALUE   =  0.3197E-05  CRITERION=  0.1865E-05
+     LINE SEARCH PARAMETER =  0.1212     SCALED MAX DOF INC =  0.3197E-05
+     FORCE CONVERGENCE VALUE  =  0.8678E-02  CRITERION=  0.3513E-01 <<< CONVERGED
+    EQUIL ITER   9 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.6999E-05
+     DISP CONVERGENCE VALUE   =  0.1743E-05  CRITERION=  0.1865E-05 <<< CONVERGED
+     LINE SEARCH PARAMETER =  0.2490     SCALED MAX DOF INC = -0.1743E-05
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   9
+        STABILIZATION FORCE NORM =  1.369      IS LARGE COMPARED TO THE INTERNAL
+        FORCE NORM =  5.777    
+        PLEASE CHECK RESULTS CAREFULLY.
+ *** LOAD STEP     2   SUBSTEP    38  COMPLETED.    CUM ITER =    246
+ *** TIME =   2.00000         TIME INC =  0.158883E-01
+
+ *GET  INDENT_CNV  FROM  ACTI  ITEM=SOLU CNVG  VALUE=  1.00000000    
+
+ OPENED FILE= solution_status.csv FOR COMMAND FILE DATA 
+
+
+  COMMAND FILE CLOSED 
+
+
+ ALL CURRENT MAPDL DATA WRITTEN TO FILE NAME= eyelid_1p60mm_indent_0p26mm.db
+  FOR POSSIBLE RESUME FROM THIS POINT
+
+ FINISH SOLUTION PROCESSING
+
+
+ ***** ROUTINE COMPLETED *****  CP =     10612.632
+
+
+
+ RESUME ANSYS DATA FROM FILE NAME=eyelid_1p60mm_indent_0p26mm.db                                                                                                                                                                                                                                      
+
+ *** MAPDL GLOBAL STATUS *** 
+
+ TITLE =                                                                       
+ ANALYSIS TYPE =  STATIC (STEADY-STATE)
+        31 KEYPOINTS DEFINED     MAX KEYPOINT NUMBER =            201
+        62 LINES DEFINED         MAX LINE NUMBER =                 62
+        48 AREAS DEFINED         MAX AREA NUMBER =                 48
+        12 VOLUMES DEFINED       MAX VOLUME NUMBER =               12
+         5 ELEM TYPES DEFINED    MAX ELEM TYPE NUMBER =             5
+    151598 ELEMENTS DEFINED      MAX ELEMENT NUMBER =          151598
+    204241 NODES DEFINED         MAX NODE NUMBER =             204241
+         3 MATERIALS DEFINED     MAX MATERIAL NUMBER =              3
+         2 REAL CONSTS DEFINED   MAX REAL CONST NUMBER =            4
+         0 SECTIONS DEFINED      MAX SECTION NUMBER =               0
+         1 COORD SYS DEFINED     MAX COORD SYS NUMBER =            13
+ 
+ ACTIVE COORDINATE SYSTEM             =          0  (CARTESIAN)
+ NUMBER OF DEFINED NODAL CONSTRAINTS  =      37323
+ NUMBER OF DEFINED NODAL LOADS        =          0
+ NUMBER OF DEFINED COMPONENTS         =          5
+ NUMBER OF DEFINED ELEM SURFACE LOADS =       3656
+ NUMBER OF DEFINED ELEM BODY LOADS    =          0
+ NUMBER OF DEFINED NODE BODY FORCES   =          0
+ CURRENT LOAD CASE =      0 OF      0
+ LOAD SET   =       2
+ SUBSTEP    =      38
+ TIME/FREQ  =    2.0000    
+
+ INITIAL JOBNAME = eyelid_1p60mm_indent_0p26mm
+ CURRENT JOBNAME = eyelid_1p60mm_indent_0p26mm
+
+ CURRENT JOBNAME REDEFINED AS eyelid_1p60mm_indent_0p26mm
+
+ USE MACRO FILE  post_sweep.mac
+
+ *** MAPDL - ENGINEERING ANALYSIS SYSTEM  RELEASE 2025 R2          25.2     ***
+ Ansys Mechanical Enterprise                       
+ 20120530  VERSION=LINUX x64     12:55:12  JUL 21, 2026 CP=  10613.496
+
+                                                                               
+
+
+
+          ***** MAPDL RESULTS INTERPRETATION (POST1) *****
+
+ *** NOTE ***                            CP =   10613.497   TIME= 12:55:12
+ Reading results into the database (SET command) will update the current 
+ displacement and force boundary conditions in the database with the     
+ values from the results file for that load set.  Note that any          
+ subsequent solutions will use these values unless action is taken to    
+ either SAVE the current values or not overwrite them (/EXIT,NOSAVE).    
+
+
+ USE LAST SUBSTEP ON RESULT FILE  FOR LOAD CASE 0 
+
+ SET COMMAND GOT LOAD STEP=     2  SUBSTEP=    38  CUMULATIVE ITERATION=   246
+   TIME/FREQUENCY=  2.0000    
+ TITLE=                                                                         
+
+ *GET  RESULT_LSTEP  FROM  ACTI  ITEM=SET  LSTP  VALUE=  2.00000000    
+
+ *GET  RESULT_TIME  FROM  ACTI  ITEM=SET  TIME  VALUE=  2.00000000    
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT PROBE_TOP_NODES                                                                                                                                                                                                                                                 
+
+ *GET  PROBE_NODE_COUNT  FROM  NODE  ITEM=COUN       VALUE=  4754.00000     
+
+ PARAMETER PROBE_FX =     0.000000000    
+
+ PARAMETER PROBE_FY =     0.000000000    
+
+ *GET  PROBE_NODE  FROM  NODE  ITEM=NUM  MIN   VALUE=  176033.000     
+
+ *DO LOOP ON PARAMETER= PROBE_INDEX FROM  1.0000     TO  4754.0     BY  1.0000    
+
+ *GET  NODE_FX   FROM  NODE    176033  ITEM=RF   FX    VALUE=-0.524150387E-015
+
+ *GET  NODE_FY   FROM  NODE    176033  ITEM=RF   FY    VALUE=-0.145898798E-010
+
+ PARAMETER PROBE_FX =   -0.5241503871E-15
+
+ PARAMETER PROBE_FY =   -0.1458987984E-10
+
+ PARAMETER PROBE_NODE =     176057.0000    
+
+ *ENDDO  INDEX= PROBE_INDEX                     
+
+ SORT ON ITEM=U     COMPONENT=Y     ORDER= 0  KABS= 0  NMAX=  204241
+
+ SORT COMPLETED FOR    4754 VALUES.
+
+ *GET  PROBE_UY_MIN  FROM  SORT  ITEM=MIN        VALUE=-0.310000000E-03
+
+ *GET  PROBE_UY_MAX  FROM  SORT  ITEM=MAX        VALUE=-0.310000000E-03
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ ALL ELEMENT TABLE ITEMS ERASED
+
+ SELECT       FOR ITEM=REAL COMPONENT=    
+  IN RANGE         3 TO          3 STEP          1
+
+       6660  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=ENAM COMPONENT=    
+  IN RANGE       174 TO        174 STEP          1
+
+       6052  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ STORE OPRES    FROM ITEM=CONT COMP=PRES  FOR ALL SELECTED ELEMENTS
+
+ STORE OPENE    FROM ITEM=CONT COMP=PENE  FOR ALL SELECTED ELEMENTS
+
+ STORE OSTAT    FROM ITEM=CONT COMP=STAT  FOR ALL SELECTED ELEMENTS
+
+ RESELECT     FOR ITEM=ETAB COMPONENT=OSTA  BETWEEN  2.0000     AND   3.0000    
+   KABS=  0.  TOLERANCE=  0.00000    
+
+        724  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ *GET  N_OUTER   FROM  ELEM  ITEM=COUN           VALUE=  724.000000    
+
+ PARAMETER CONTACT_AREA =     0.000000000    
+
+ PARAMETER CONTACT_X_CENTER =     0.000000000    
+
+ PARAMETER PMAX =     0.000000000    
+
+ PARAMETER MAX_PENETRATION =     0.000000000    
+
+ *IF  n_outer  ( =   724.000     )  GT  
+      0  ( =   0.00000     )  THEN    
+
+ STORE CAREA    FROM ITEM=VOLU  FOR ALL SELECTED ELEMENTS
+
+ STORE CENTX    FROM ITEM=CENT COMP=X     FOR ALL SELECTED ELEMENTS
+
+ OPERATION SMUL  RESULT= AXPROD    OPERAND1= CAREA     OPERAND2= CENTX   
+  FACTOR1=  1.0000       FACTOR2=  1.0000       CONSTANT=  0.0000    
+
+ SUM ALL THE ACTIVE ENTRIES IN THE ELEMENT TABLE 
+
+ TABLE LABEL     TOTAL
+ OPRES     0.391287E+10
+ OPENE     0.970409E-02
+ OSTAT      1448.00    
+ CAREA     0.141170E-04
+ CENTX    -0.265040E-01
+ AXPROD    0.579802E-10
+
+ *GET  CONTACT_AREA  FROM  SSUM  ITEM=ITEM CAREA     VALUE= 0.141169738E-04
+
+ *GET  AREA_X_SUM  FROM  SSUM  ITEM=ITEM AXPROD    VALUE= 0.579801965E-10
+
+ *IF  contact_area  ( =  0.141170E-04 )  GT  
+      0  ( =   0.00000     )  THEN    
+
+ PARAMETER CONTACT_X_CENTER =    0.4107126457E-05
+
+ *ENDIF
+
+ SORT ON ITEM=ETAB  COMPONENT=OPRE  ORDER= 0  KABS= 0  NMAX=  151598
+
+ SORT COMPLETED FOR     724 VALUES.
+
+ *GET  PMAX      FROM  SORT  ITEM=MAX        VALUE=  10903189.7    
+
+ ELEMENT SORT REMOVED
+
+ SORT ON ITEM=ETAB  COMPONENT=OPEN  ORDER= 0  KABS= 0  NMAX=  151598
+
+ SORT COMPLETED FOR     724 VALUES.
+
+ *GET  MAX_PENETRATION  FROM  SORT  ITEM=MAX        VALUE= 0.270403713E-04
+
+ ELEMENT SORT REMOVED
+
+ *ENDIF
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=TYPE COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+     136512  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=MAT  COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+      28403  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ SELECT      ALL NODES HAVING ANY ELEMENT IN ELEMENT SET.
+
+      46201 NODES (OF     204241  DEFINED) SELECTED FROM
+    28403 SELECTED ELEMENTS BY NSLE COMMAND.
+
+ SORT ON ITEM=S     COMPONENT=EQV   ORDER= 0  KABS= 0  NMAX=  204241
+
+ SORT COMPLETED FOR    6843 VALUES.
+
+ *GET  CORNEA_S  FROM  SORT  ITEM=MAX        VALUE=  14992.3564    
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=TYPE COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+     136512  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=MAT  COMPONENT=    
+  IN RANGE         2 TO          2 STEP          1
+
+      88452  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ SELECT      ALL NODES HAVING ANY ELEMENT IN ELEMENT SET.
+
+     129645 NODES (OF     204241  DEFINED) SELECTED FROM
+    88452 SELECTED ELEMENTS BY NSLE COMMAND.
+
+ SORT ON ITEM=S     COMPONENT=EQV   ORDER= 0  KABS= 0  NMAX=  204241
+
+ SORT COMPLETED FOR   17644 VALUES.
+
+ *GET  EYELID_S  FROM  SORT  ITEM=MAX        VALUE=  545818.381    
+
+ OPENED FILE= metrics.csv FOR COMMAND FILE DATA 
+
+
+  COMMAND FILE CLOSED 
+
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ EXIT THE MAPDL POST1 DATABASE PROCESSOR
+
+
+ ***** ROUTINE COMPLETED *****  CP =     10617.396
+
+
+
+ USE MACRO FILE  post_thickness_geometry.mac
+
+ *** MAPDL - ENGINEERING ANALYSIS SYSTEM  RELEASE 2025 R2          25.2     ***
+ Ansys Mechanical Enterprise                       
+ 20120530  VERSION=LINUX x64     12:55:14  JUL 21, 2026 CP=  10617.427
+
+                                                                               
+
+
+
+          ***** MAPDL RESULTS INTERPRETATION (POST1) *****
+
+ RSYS KEY SET TO   0
+
+ USE THE GLOBAL COORDINATE SYSTEM FOR SOLUTION RESULTS
+
+
+ USE LOAD STEP     1  SUBSTEP  LAST    FOR LOAD CASE 0 
+
+ SET COMMAND GOT LOAD STEP=     1  SUBSTEP=     8  CUMULATIVE ITERATION=    11
+   TIME/FREQUENCY=  1.0000    
+ TITLE=                                                                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=REAL COMPONENT=    
+  IN RANGE         4 TO          4 STEP          1
+
+       8426  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=ENAM COMPONENT=    
+  IN RANGE       174 TO        174 STEP          1
+
+       4086  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ *GET  INNER_FACE_COUNT  FROM  ELEM  ITEM=COUN           VALUE=  4086.00000    
+
+ OPENED FILE= inner_preload_faces.csv FOR COMMAND FILE DATA 
+
+
+ PARAMETER INNER_ELEM =     143173.0000    
+
+ *DO LOOP ON PARAMETER= INNER_INDEX FROM  1.0000     TO  4086.0     BY  1.0000    
+
+ PARAMETER INNER_N1 =     1698.000000    
+
+ PARAMETER INNER_N2 =     1831.000000    
+
+ PARAMETER INNER_N3 =     1768.000000    
+
+ *GET  INNER_X1  FROM  NODE      1698  ITEM=LOC  X     VALUE= 0.114261361E-003
+
+ *GET  INNER_Y1  FROM  NODE      1698  ITEM=LOC  Y     VALUE=-0.113600110E-003
+
+ *GET  INNER_Z1  FROM  NODE      1698  ITEM=LOC  Z     VALUE=-0.132143902E-002
+
+ *GET  INNER_UX1  FROM  NODE   1698  ITEM=U    X     VALUE= 0.379121822E-06
+
+ *GET  INNER_UY1  FROM  NODE   1698  ITEM=U    Y     VALUE= 0.469001338E-04
+
+ *GET  INNER_UZ1  FROM  NODE   1698  ITEM=U    Z     VALUE=-0.399591854E-05
+
+ *GET  INNER_X2  FROM  NODE      1831  ITEM=LOC  X     VALUE= 0.244158423E-003
+
+ *GET  INNER_Y2  FROM  NODE      1831  ITEM=LOC  Y     VALUE=-0.112215058E-003
+
+ *GET  INNER_Z2  FROM  NODE      1831  ITEM=LOC  Z     VALUE=-0.129551123E-002
+
+ *GET  INNER_UX2  FROM  NODE   1831  ITEM=U    X     VALUE= 0.771093150E-06
+
+ *GET  INNER_UY2  FROM  NODE   1831  ITEM=U    Y     VALUE= 0.469462927E-04
+
+ *GET  INNER_UZ2  FROM  NODE   1831  ITEM=U    Z     VALUE=-0.392144670E-05
+
+ *GET  INNER_X3  FROM  NODE      1768  ITEM=LOC  X     VALUE= 0.191478259E-003
+
+ *GET  INNER_Y3  FROM  NODE      1768  ITEM=LOC  Y     VALUE=-0.139042293E-003
+
+ *GET  INNER_Z3  FROM  NODE      1768  ITEM=LOC  Z     VALUE=-0.145363788E-002
+
+ *GET  INNER_UX3  FROM  NODE   1768  ITEM=U    X     VALUE= 0.601064825E-06
+
+ *GET  INNER_UY3  FROM  NODE   1768  ITEM=U    Y     VALUE= 0.461243158E-04
+
+ *GET  INNER_UZ3  FROM  NODE   1768  ITEM=U    Z     VALUE=-0.432609895E-05
+
+ PARAMETER INNER_DX1 =    0.1146404830E-03
+
+ PARAMETER INNER_DY1 =   -0.6669997614E-04
+
+ PARAMETER INNER_DZ1 =   -0.1325434934E-02
+
+ PARAMETER INNER_DX2 =    0.2449295165E-03
+
+ PARAMETER INNER_DY2 =   -0.6526876542E-04
+
+ PARAMETER INNER_DZ2 =   -0.1299432679E-02
+
+ PARAMETER INNER_DX3 =    0.1920793233E-03
+
+ PARAMETER INNER_DY3 =   -0.9291797741E-04
+
+ PARAMETER INNER_DZ3 =   -0.1457963981E-02
+
+ PARAMETER INNER_ELEM =     143174.0000    
+
+ *ENDDO  INDEX= INNER_INDEX                     
+
+  COMMAND FILE CLOSED 
+
+
+
+ USE LAST SUBSTEP ON RESULT FILE  FOR LOAD CASE 0 
+
+ SET COMMAND GOT LOAD STEP=     2  SUBSTEP=    38  CUMULATIVE ITERATION=   246
+   TIME/FREQUENCY=  2.0000    
+ TITLE=                                                                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=REAL COMPONENT=    
+  IN RANGE         4 TO          4 STEP          1
+
+       8426  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=ENAM COMPONENT=    
+  IN RANGE       174 TO        174 STEP          1
+
+       4086  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ OPENED FILE= inner_final_faces.csv FOR COMMAND FILE DATA 
+
+
+ PARAMETER INNER_ELEM =     143173.0000    
+
+ *DO LOOP ON PARAMETER= INNER_INDEX FROM  1.0000     TO  4086.0     BY  1.0000    
+
+ PARAMETER INNER_N1 =     1698.000000    
+
+ PARAMETER INNER_N2 =     1831.000000    
+
+ PARAMETER INNER_N3 =     1768.000000    
+
+ *GET  INNER_X1  FROM  NODE      1698  ITEM=LOC  X     VALUE= 0.114261361E-003
+
+ *GET  INNER_Y1  FROM  NODE      1698  ITEM=LOC  Y     VALUE=-0.113600110E-003
+
+ *GET  INNER_Z1  FROM  NODE      1698  ITEM=LOC  Z     VALUE=-0.132143902E-002
+
+ *GET  INNER_UX1  FROM  NODE   1698  ITEM=U    X     VALUE= 0.379480995E-06
+
+ *GET  INNER_UY1  FROM  NODE   1698  ITEM=U    Y     VALUE= 0.468984799E-04
+
+ *GET  INNER_UZ1  FROM  NODE   1698  ITEM=U    Z     VALUE=-0.399526521E-05
+
+ *GET  INNER_X2  FROM  NODE      1831  ITEM=LOC  X     VALUE= 0.244158423E-003
+
+ *GET  INNER_Y2  FROM  NODE      1831  ITEM=LOC  Y     VALUE=-0.112215058E-003
+
+ *GET  INNER_Z2  FROM  NODE      1831  ITEM=LOC  Z     VALUE=-0.129551123E-002
+
+ *GET  INNER_UX2  FROM  NODE   1831  ITEM=U    X     VALUE= 0.770841781E-06
+
+ *GET  INNER_UY2  FROM  NODE   1831  ITEM=U    Y     VALUE= 0.469448203E-04
+
+ *GET  INNER_UZ2  FROM  NODE   1831  ITEM=U    Z     VALUE=-0.391934860E-05
+
+ *GET  INNER_X3  FROM  NODE      1768  ITEM=LOC  X     VALUE= 0.191478259E-003
+
+ *GET  INNER_Y3  FROM  NODE      1768  ITEM=LOC  Y     VALUE=-0.139042293E-003
+
+ *GET  INNER_Z3  FROM  NODE      1768  ITEM=LOC  Z     VALUE=-0.145363788E-002
+
+ *GET  INNER_UX3  FROM  NODE   1768  ITEM=U    X     VALUE= 0.599767631E-06
+
+ *GET  INNER_UY3  FROM  NODE   1768  ITEM=U    Y     VALUE= 0.461212681E-04
+
+ *GET  INNER_UZ3  FROM  NODE   1768  ITEM=U    Z     VALUE=-0.432725323E-05
+
+ PARAMETER INNER_DX1 =    0.1146408422E-03
+
+ PARAMETER INNER_DY1 =   -0.6670163004E-04
+
+ PARAMETER INNER_DZ1 =   -0.1325434281E-02
+
+ PARAMETER INNER_DX2 =    0.2449292651E-03
+
+ PARAMETER INNER_DY2 =   -0.6527023782E-04
+
+ PARAMETER INNER_DZ2 =   -0.1299430581E-02
+
+ PARAMETER INNER_DX3 =    0.1920780261E-03
+
+ PARAMETER INNER_DY3 =   -0.9292102510E-04
+
+ PARAMETER INNER_DZ3 =   -0.1457965135E-02
+
+ PARAMETER INNER_ELEM =     143174.0000    
+
+ *ENDDO  INDEX= INNER_INDEX                     
+
+  COMMAND FILE CLOSED 
+
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ EXIT THE MAPDL POST1 DATABASE PROCESSOR
+
+
+ ***** ROUTINE COMPLETED *****  CP =     10623.429
+
+
+
+ USE MACRO FILE  plot_sweep_views.mac
+
+ *** MAPDL - ENGINEERING ANALYSIS SYSTEM  RELEASE 2025 R2          25.2     ***
+ Ansys Mechanical Enterprise                       
+ 20120530  VERSION=LINUX x64     12:55:18  JUL 21, 2026 CP=  10623.431
+
+                                                                               
+
+
+
+          ***** MAPDL RESULTS INTERPRETATION (POST1) *****
+
+
+ USE LAST SUBSTEP ON RESULT FILE  FOR LOAD CASE 0 
+
+ SET COMMAND GOT LOAD STEP=     2  SUBSTEP=    38  CUMULATIVE ITERATION=   246
+   TIME/FREQUENCY=  2.0000    
+ TITLE=                                                                         
+
+ /SHOW SWITCH PLOTS TO  PNG         - RASTER MODE.
+
+ GRAPHICS FILE PIXEL RESOLUTION =   1200
+ INFO LEGEND DISPLAY = 3   
+ CONTOUR LEGEND HEADER DISPLAY = 0   
+ DATE/TIME DISPLAY = 0
+ JOBNAME DISPLAY = 0
+
+ NUMBER KEY SET TO  0  -1=NONE  0=BOTH  1=COLOR  2=NUMBER
+
+ NO DISTORTION SCALING IN WINDOW 1
+
+ view point for window  1    1.0000     0.30000     0.50000    
+
+ MAT  NUMBERING KEY =  1
+
+ TITLE= 
+ GEOMETRY - material IDs                                                       
+
+
+ PRODUCE ELEMENT PLOT IN DSYS =   0
+
+ CUMULATIVE DISPLAY NUMBER   1 WRITTEN TO FILE eyelid_1p60mm_ind - RASTER MODE.
+ DISPLAY TITLE= 
+ GEOMETRY - material IDs                                                 
+
+ MAT  NUMBERING KEY =  0
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=REAL COMPONENT=    
+  IN RANGE         3 TO          3 STEP          1
+
+       6660  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=ENAM COMPONENT=    
+  IN RANGE       174 TO        174 STEP          1
+
+       6052  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ view point for window  1    0.0000      1.0000      0.0000    
+
+ TITLE= 
+ OUTER CONTACT PRESSURE - top                                                  
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=CONT  COMP=PRES              
+
+ *** NOTE ***
+
+  libpng version 1.0.8 - July 24, 2000
+    Copyright (c) 1998-2000 Glenn Randers-Pehrson
+    Copyright (c) 1996, 1997 Andreas Dilger
+    Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.
+
+ ZLIB Version 1.2.13 Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler
+
+ CUMULATIVE DISPLAY NUMBER   2 WRITTEN TO FILE eyelid_1p60mm_ind - RASTER MODE.
+ DISPLAY TITLE= 
+ OUTER CONTACT PRESSURE - top                                            
+
+ view point for window  1    0.0000      0.0000      1.0000    
+
+ TITLE= 
+ OUTER CONTACT PRESSURE - front                                                
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=CONT  COMP=PRES              
+
+ CUMULATIVE DISPLAY NUMBER   3 WRITTEN TO FILE eyelid_1p60mm_ind - RASTER MODE.
+ DISPLAY TITLE= 
+ OUTER CONTACT PRESSURE - front                                          
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=TYPE COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+     136512  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=MAT  COMPONENT=    
+  IN RANGE         2 TO          2 STEP          1
+
+      88452  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ view point for window  1    0.0000      0.0000      1.0000    
+
+ TITLE= 
+ EYELID VON MISES STRESS                                                       
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=S     COMP=EQV               
+
+ CUMULATIVE DISPLAY NUMBER   4 WRITTEN TO FILE eyelid_1p60mm_ind - RASTER MODE.
+ DISPLAY TITLE= 
+ EYELID VON MISES STRESS                                                 
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=TYPE COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+     136512  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=MAT  COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+      28403  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ view point for window  1    0.0000      0.0000      1.0000    
+
+ TITLE= 
+ CORNEA VON MISES STRESS                                                       
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=S     COMP=EQV               
+
+ CUMULATIVE DISPLAY NUMBER   5 WRITTEN TO FILE eyelid_1p60mm_ind - RASTER MODE.
+ DISPLAY TITLE= 
+ CORNEA VON MISES STRESS                                                 
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=TYPE COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+     136512  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=MAT  COMPONENT=    
+  IN RANGE         3 TO          3 STEP          1
+
+      19657  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ view point for window  1    0.0000      0.0000      1.0000    
+
+ TITLE= 
+ PROBE VON MISES STRESS                                                        
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=S     COMP=EQV               
+
+ CUMULATIVE DISPLAY NUMBER   6 WRITTEN TO FILE eyelid_1p60mm_ind - RASTER MODE.
+ DISPLAY TITLE= 
+ PROBE VON MISES STRESS                                                  
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ CREATE WORKING PLANE AT LOCAL SYSTEM      0
+
+ CUTTING PLANE SET TO THE WORKING PLANE
+
+ CAPPED HIDDEN DISPLAY (Z-BUFFER) IN WINDOW  1
+
+ view point for window  1    0.0000      0.0000      1.0000    
+
+ TITLE= 
+ CENTRAL SECTION - stress                                                      
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=S     COMP=EQV               
+
+ CUMULATIVE DISPLAY NUMBER   7 WRITTEN TO FILE eyelid_1p60mm_ind - RASTER MODE.
+ DISPLAY TITLE= 
+ CENTRAL SECTION - stress                                                
+
+ HIDDEN DISPLAY (Z-BUFFER) IN WINDOW  1
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ CREATE WORKING PLANE AT LOCAL SYSTEM      0
+
+ CUTTING PLANE SET TO THE WORKING PLANE
+
+ CAPPED HIDDEN DISPLAY (Z-BUFFER) IN WINDOW  1
+
+ DISTORTION SCALE FOR WINDOW 1    1.0000    
+
+ view point for window  1    0.0000      0.0000      1.0000    
+
+ TITLE= 
+ DEFORMED CENTRAL SECTION - actual scale                                       
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=S     COMP=EQV               
+
+ CUMULATIVE DISPLAY NUMBER   8 WRITTEN TO FILE eyelid_1p60mm_ind - RASTER MODE.
+ DISPLAY TITLE= 
+ DEFORMED CENTRAL SECTION - actual scale                                 
+
+ HIDDEN DISPLAY (Z-BUFFER) IN WINDOW  1
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=REAL COMPONENT=    
+  IN RANGE         3 TO          3 STEP          1
+
+       6660  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=ENAM COMPONENT=    
+  IN RANGE       174 TO        174 STEP          1
+
+       6052  ELEMENTS (OF     151598  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ view point for window  1    0.0000      1.0000      0.0000    
+
+ TITLE= 
+ OUTER CONTACT PENETRATION - top                                               
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=CONT  COMP=PENE              
+
+ CUMULATIVE DISPLAY NUMBER   9 WRITTEN TO FILE eyelid_1p60mm_ind - RASTER MODE.
+ DISPLAY TITLE= 
+ OUTER CONTACT PENETRATION - top                                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ EXIT THE MAPDL POST1 DATABASE PROCESSOR
+
+
+ ***** ROUTINE COMPLETED *****  CP =     10641.657
+
+
+
+ ***** END OF INPUT ENCOUNTERED *****
+
+ PURGE ALL SOLUTION AND POST DATA
+ SAVE ALL MODEL DATA
+
+ ALL CURRENT MAPDL DATA WRITTEN TO FILE NAME= eyelid_1p60mm_indent_0p26mm.db
+  FOR POSSIBLE RESUME FROM THIS POINT
+
+
+ NUMBER OF WARNING MESSAGES ENCOUNTERED=          7
+ NUMBER OF ERROR   MESSAGES ENCOUNTERED=          7
+
+ *** NOTE ***                            CP =   10642.213   TIME= 12:55:26
+ The solution for the current simulation was performed using 4 cores.    
+ The parallel performance of this simulation on this hardware indicates  
+ that this simulation would benefit from using additional CPU cores.     
+ Consider using more CPU cores, which may require additional HPC         
+ licenses, when running this simulation again on the same hardware.      
+
++--------------------- M A P D L   S T A T I S T I C S ------------------------+
+
+Release: 2025 R2            Build: 25.2       Update: UP20250519   Platform: LINUX x64   
+Date Run: 07/21/2026   Time: 12:55     Process ID: 3927480
+Operating System: Ubuntu 24.04.3 LTS
+
+Processor Model: AMD Ryzen 9 9950X 16-Core Processor
+
+Compiler: Intel(R) Fortran Compiler Classic Version 2021.9  (Build: 20230302)
+          Intel(R) C/C++ Compiler Classic Version 2021.9  (Build: 20230302)
+          AOCL-BLAS 5.0.1 Build 20250320
+
+Number of machines requested            :    1
+Total number of cores available         :   32
+Number of physical cores available      :   16
+Number of processes requested           :    4
+Number of threads per process requested :    1
+Total number of cores requested         :    4 (Distributed Memory Parallel)               
+MPI Type: OPENMPI 
+MPI Version: Open MPI v4.0.5
+
+GPU Acceleration: Not Requested
+
+Job Name: eyelid_1p60mm_indent_0p26mm0
+Input File: /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T015758Z_a847e78f_thickness_indent_0p26/eyelid_1p60mm_indent_0p26mm/attempt_1/driver.dat
+
+  Core                Machine Name   Working Directory
+ -----------------------------------------------------
+     0                      xuanyu   /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T015758Z_a847e78f_thickness_indent_0p26/eyelid_1p60mm_indent_0p26mm/attempt_1
+     1                      xuanyu   /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T015758Z_a847e78f_thickness_indent_0p26/eyelid_1p60mm_indent_0p26mm/attempt_1
+     2                      xuanyu   /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T015758Z_a847e78f_thickness_indent_0p26/eyelid_1p60mm_indent_0p26mm/attempt_1
+     3                      xuanyu   /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T015758Z_a847e78f_thickness_indent_0p26/eyelid_1p60mm_indent_0p26mm/attempt_1
+ 
+Latency time from master to core     1 =    0.712 microseconds
+Latency time from master to core     2 =    0.674 microseconds
+Latency time from master to core     3 =    1.764 microseconds
+ 
+Communication speed from master to core     1 = 12097.77 MB/sec
+Communication speed from master to core     2 =  7442.48 MB/sec
+Communication speed from master to core     3 =  3419.46 MB/sec
+
+Total CPU time for main thread                    :    10177.3 seconds
+Total CPU time summed for all threads             :    10642.2 seconds
+
+Elapsed time spent obtaining a license            :        1.3 seconds
+Elapsed time spent pre-processing model (/PREP7)  :        1.7 seconds
+Elapsed time spent solution - preprocessing       :        4.7 seconds
+Elapsed time spent computing solution             :    10589.9 seconds
+Elapsed time spent solution - postprocessing      :       11.4 seconds
+Elapsed time spent post-processing model (/POST1) :       13.1 seconds
+ 
+Equation solver used                              :            Sparse (symmetric)
+Equation solver computational rate                :      109.7 Gflops
+Equation solver effective I/O rate                :     1914.6 GB/sec
+
+Sum of disk space used on all processes           :    10977.5 MB
+
+Sum of memory used on all processes               :    11248.0 MB
+Sum of memory allocated on all processes          :    15143.0 MB
+Physical memory available                         :        123 GB
+Total amount of I/O written to disk               :      205.4 GB
+Total amount of I/O read from disk                :      956.1 GB
+
++------------------ E N D   M A P D L   S T A T I S T I C S -------------------+
+
+
+ *-----------------------------------------------------------------------------*
+ |                                                                             |
+ |                               RUN COMPLETED                                 |
+ |                                                                             |
+ |-----------------------------------------------------------------------------|
+ |                                                                             |
+ |  Ansys MAPDL 2025 R2         Build 25.2         UP20250519    LINUX x64     |
+ |                                                                             |
+ |-----------------------------------------------------------------------------|
+ |                                                                             |
+ |  Database Requested(-db)     1024 MB     Scratch Memory Requested   1024 MB |
+ |  Max Database Used(Master)    586 MB     Max Scratch Used(Master)   2742 MB |
+ |  Max Database Used(Workers)     1 MB     Max Scratch Used(Workers)  2744 MB |
+ |  Sum Database Used(All)       589 MB     Sum Scratch Used(All)     10659 MB |
+ |                                                                             |
+ |-----------------------------------------------------------------------------|
+ |                                                                             |
+ |        CP Time      (sec) =      10642.213       Time  =  12:55:26          |
+ |        Elapsed Time (sec) =      10645.000       Date  =  07/21/2026        |
+ |                                                                             |
+ *-----------------------------------------------------------------------------*
