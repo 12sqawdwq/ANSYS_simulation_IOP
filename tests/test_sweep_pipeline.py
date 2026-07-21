@@ -48,6 +48,16 @@ class APDLContractTests(unittest.TestCase):
             self.assertIn("set,,,,,post_time", macro)
             self.assertIn("set,last", macro)
 
+    def test_eyelid_strain_view_is_scoped_and_uses_hencky_strain(self) -> None:
+        macro = (
+            runner.MODEL_DIR / "plot_thickness_eyelid_strain_007.mac"
+        ).read_text().lower()
+        self.assertIn("esel,r,mat,,2", macro)
+        self.assertIn("/dscale,1,1", macro)
+        self.assertIn("/type,1,7", macro)
+        self.assertIn("plnsol,epel,eqv", macro)
+        self.assertEqual(macro.count("plnsol"), 1)
+
 
 class ThicknessStateExtractionTests(unittest.TestCase):
     def test_maps_nominal_indent_to_second_load_step_time(self) -> None:

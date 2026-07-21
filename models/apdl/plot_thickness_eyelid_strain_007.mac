@@ -1,0 +1,30 @@
+! Eyelid-only equivalent Hencky strain on the actual-scale central section.
+/post1
+post_time = arg1
+*if,post_time,gt,0,then
+set,,,,,post_time
+*else
+set,last
+*endif
+/show,png
+/gfile,1200
+/plopts,info,3
+/plopts,leg1,0
+/plopts,date,0
+/plopts,file,0
+/number,0
+
+allsel
+esel,s,type,,1
+esel,r,mat,,2
+wpcsys,-1,0
+/cplane,1
+/type,1,7
+/dscale,1,1
+/view,1,0,0,1
+/title,EYELID EQUIVALENT HENCKY STRAIN - actual scale
+plnsol,epel,eqv
+/show,close
+/type,1,6
+allsel
+finish
