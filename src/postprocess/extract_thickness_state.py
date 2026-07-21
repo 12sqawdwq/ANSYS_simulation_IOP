@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import concurrent.futures
 import csv
-import errno
 import json
 import math
 import os
@@ -89,15 +88,6 @@ def write_manifest(path: Path, rows: list[dict]) -> None:
     temporary.replace(path)
 
 
-def link_result(source: Path, destination: Path) -> None:
-    try:
-        os.link(source, destination)
-    except OSError as error:
-        if error.errno != errno.EXDEV:
-            raise
-        destination.symlink_to(source)
-
-
 def target_case_name(thickness_mm: float, target_indent_mm: float) -> str:
     return f"eyelid_{label(thickness_mm)}mm_indent_{label(target_indent_mm)}mm"
 
@@ -179,8 +169,10 @@ def extract_case(
             raise ValueError("source case is not complete")
         if not source_db.is_file() or not source_rst.is_file():
             raise FileNotFoundError("source DB or RST is missing")
-        link_result(source_db, linked_db)
-        link_result(source_rst, linked_rst)
+        # MAPDL can truncate the active database name when it exits. Use a real
+        # disposable DB copy and expose the large, read-only result through a symlink.
+        shutil.copy2(source_db, linked_db)
+        linked_rst.symlink_to(source_rst)
         driver = attempt / "driver.dat"
         driver.write_text(
             f"resume,{source_case},db\n"
