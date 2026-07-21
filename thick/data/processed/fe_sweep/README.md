@@ -8,6 +8,7 @@
 | `manifest.csv` | 每个算例的状态、收敛、指标、结果路径和 Git 来源 |
 | `metadata.json` | 主机、ANSYS、并行参数、APDL SHA256 和算例矩阵 |
 | `qc.json` | 完整性、位移、接触和面积判据质检 |
+| `database_recovery.json` | 后处理数据库恢复方法、原结果文件状态及逐指标一致性校验 |
 
 原始主 `.db/.rst` 位于 5090d：
 

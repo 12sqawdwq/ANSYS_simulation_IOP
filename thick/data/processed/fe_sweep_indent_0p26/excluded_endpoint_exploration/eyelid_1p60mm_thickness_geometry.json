@@ -1,0 +1,22 @@
+{
+  "definition": {
+    "reference_state": "end of IOP preload (load step 1)",
+    "final_state": "end of probe indentation (load step 2)",
+    "effect_region": "face centroid downward displacement is at least 5% of the maximum indentation-induced downward displacement",
+    "area": "face area projected onto the plane normal to the global Y probe axis",
+    "flatness": "absolute face-normal angle to the global Y probe axis",
+    "angle_limits_deg": [
+      1.0,
+      2.0,
+      3.0
+    ]
+  },
+  "metrics": {
+    "inner_max_downward_m": 2.0340057272569843e-07,
+    "inner_effect_area_m2": 4.8161376294745e-06,
+    "inner_face_count": 4086,
+    "inner_area_1deg_m2": 0,
+    "inner_area_2deg_m2": 3.738287609289145e-07,
+    "inner_area_3deg_m2": 5.757032880305809e-07
+  }
+}

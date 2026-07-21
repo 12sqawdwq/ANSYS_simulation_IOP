@@ -1,0 +1,18 @@
+{
+  "metric": "Ae/Ac(2deg)",
+  "indent_mm": 0.26,
+  "points": 7,
+  "endpoint_change_percent": 567.2624820167562,
+  "linear_fit": {
+    "slope_per_mm": 6.305919771188688,
+    "intercept": -4.6574833930656565,
+    "r_squared": 0.9157624461318156
+  },
+  "exponential_fit": {
+    "coefficient": 0.3481686080727905,
+    "exponent_per_mm": 1.626127050265288,
+    "r_squared_on_original_scale": 0.9934593702553991,
+    "factor_per_0p2mm": 1.3843426555658227
+  },
+  "use_limit": "descriptive fit only; not a calibration equation"
+}

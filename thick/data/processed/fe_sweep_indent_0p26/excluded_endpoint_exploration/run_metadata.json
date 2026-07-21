@@ -1,0 +1,92 @@
+{
+  "run_id": "20260721T015758Z_a847e78f_thickness",
+  "profile": "thickness",
+  "run_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T015758Z_a847e78f_thickness_indent_0p26",
+  "host": "xuanyu",
+  "git_commit": "a847e78faf78b9373df3f7da94e708f2c53dd298",
+  "git_dirty": false,
+  "ansys_executable": "/ansys_inc/v252/ansys/bin/ansys252",
+  "ansys_version": "Mechanical APDL 2025 R2                    Build 25.2 Update: 20250519\n Copyright 1971-2025 ANSYS, Inc.\n Platform: LINUX x64   \n Using 2025.2.0 (20250506) for linx64.  Updated at Ansys Release 2025 R2.\n Customer Number: 20120530",
+  "invocation": [
+    "/home/xuanyu/miniconda3/envs/grs-pilot/bin/python",
+    "/home/xuanyu/PROJECT/ziyu/blueknow/simulation/src/runners/run_indentation_sweep.py",
+    "--profile",
+    "thickness",
+    "--thickness-indent-mm",
+    "0.26",
+    "--workers",
+    "7",
+    "--np",
+    "4"
+  ],
+  "workers": 7,
+  "np": 4,
+  "timeout_seconds": 7200,
+  "retry_count": 1,
+  "mesh_size_mm": 0.3,
+  "started_at_utc": "2026-07-21T01:58:01+00:00",
+  "cases": [
+    {
+      "offset_mm": 0.0,
+      "indent_mm": 0.26,
+      "eyelid_thickness_mm": 0.8,
+      "cornea_thickness_mm": 0.6
+    },
+    {
+      "offset_mm": 0.0,
+      "indent_mm": 0.26,
+      "eyelid_thickness_mm": 1.0,
+      "cornea_thickness_mm": 0.6
+    },
+    {
+      "offset_mm": 0.0,
+      "indent_mm": 0.26,
+      "eyelid_thickness_mm": 1.2,
+      "cornea_thickness_mm": 0.6
+    },
+    {
+      "offset_mm": 0.0,
+      "indent_mm": 0.26,
+      "eyelid_thickness_mm": 1.4,
+      "cornea_thickness_mm": 0.6
+    },
+    {
+      "offset_mm": 0.0,
+      "indent_mm": 0.26,
+      "eyelid_thickness_mm": 1.6,
+      "cornea_thickness_mm": 0.6
+    },
+    {
+      "offset_mm": 0.0,
+      "indent_mm": 0.26,
+      "eyelid_thickness_mm": 1.8,
+      "cornea_thickness_mm": 0.6
+    },
+    {
+      "offset_mm": 0.0,
+      "indent_mm": 0.26,
+      "eyelid_thickness_mm": 2.0,
+      "cornea_thickness_mm": 0.6
+    }
+  ],
+  "apdl_sha256": {
+    "param_eye_sweep.mac": "a1ba9c4e15abd853fc5daed11e3492e5de2b4135795b56397b429072a720088f",
+    "post_sweep.mac": "4b268cb93e1a856b5b5ff494ebae9dceed048246001d01fece8ce7afe85cd0d7",
+    "post_thickness_geometry.mac": "e4304e1d9b5396f03bb4a3b57ffe0e1e59f502eac533a79dc7eadf6e2266df92",
+    "plot_sweep_views.mac": "c88a9db4487a465834b4ba88e484303ec765e8e8175381bbd7c9ae09a8516ab8"
+  },
+  "artifact_retention_policy": "mapdl-auditable-results",
+  "ended_at_utc": "2026-07-21T04:59:46+00:00",
+  "completed_cases": 3,
+  "failed_cases": 4,
+  "recovery": {
+    "reason": "supervisor stopped before timeout while MAPDL children continued",
+    "recovered_cases": [],
+    "incomplete_cases": [
+      "eyelid_1p40mm_indent_0p26mm",
+      "eyelid_1p60mm_indent_0p26mm",
+      "eyelid_1p80mm_indent_0p26mm",
+      "eyelid_2p00mm_indent_0p26mm"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "generated_at_utc": "2026-07-21T05:19:47+00:00",
+  "reason": "restore databases truncated by an unsafe hard-link postprocessing attempt",
+  "method": "deterministic preprocessing rebuild from each archived param_eye_sweep.mac; original RST files were not rewritten",
+  "validation": {
+    "case": "eyelid_0p80mm_indent_0p80mm",
+    "comparison": "13 post_sweep metrics read from rebuilt DB plus original RST versus archived metrics.csv",
+    "maximum_absolute_difference": 0.0,
+    "all_metrics_exactly_equal": true
+  },
+  "cases": [
+    {
+      "case": "eyelid_0p80mm_indent_0p80mm",
+      "db_bytes": 72417280,
+      "rst_bytes": 1657798656,
+      "rst_mtime": "2026-07-20T15:48:22.080498+00:00"
+    },
+    {
+      "case": "eyelid_1p00mm_indent_0p80mm",
+      "db_bytes": 80216064,
+      "rst_bytes": 1939931136,
+      "rst_mtime": "2026-07-20T15:55:01.814981+00:00"
+    },
+    {
+      "case": "eyelid_1p20mm_indent_0p80mm",
+      "db_bytes": 85721088,
+      "rst_bytes": 1987051520,
+      "rst_mtime": "2026-07-20T15:55:11.252981+00:00"
+    },
+    {
+      "case": "eyelid_1p40mm_indent_0p80mm",
+      "db_bytes": 92405760,
+      "rst_bytes": 2170748928,
+      "rst_mtime": "2026-07-20T15:59:12.007872+00:00"
+    },
+    {
+      "case": "eyelid_1p60mm_indent_0p80mm",
+      "db_bytes": 102039552,
+      "rst_bytes": 2416181248,
+      "rst_mtime": "2026-07-20T16:21:14.017227+00:00"
+    },
+    {
+      "case": "eyelid_1p80mm_indent_0p80mm",
+      "db_bytes": 111673344,
+      "rst_bytes": 2669412352,
+      "rst_mtime": "2026-07-20T16:35:36.629544+00:00"
+    },
+    {
+      "case": "eyelid_2p00mm_indent_0p80mm",
+      "db_bytes": 119275520,
+      "rst_bytes": 2870542336,
+      "rst_mtime": "2026-07-20T16:42:26.342878+00:00"
+    }
+  ]
+}

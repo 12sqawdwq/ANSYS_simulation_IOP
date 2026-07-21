@@ -1,0 +1,16 @@
+{
+  "status": "excluded_from_published_trend",
+  "reason": "independent endpoint sweep entered a high-distortion stabilization branch",
+  "observed_probe_force_n": 79.782390477985,
+  "ansys_error_count": 7,
+  "affected_case": "eyelid_1p60mm_indent_0p26mm",
+  "published_replacement": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T051323Z_69b0a01_thickness_indent_0p26_state",
+  "retained_files": [
+    "eyelid_1p60mm_metrics.csv",
+    "eyelid_1p60mm_solve.out",
+    "eyelid_1p60mm_thickness_geometry.csv",
+    "eyelid_1p60mm_thickness_geometry.json",
+    "run_manifest.csv",
+    "run_metadata.json"
+  ]
+}

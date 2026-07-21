@@ -1,0 +1,79 @@
+{
+  "run_id": "20260721T051323Z_69b0a01_thickness_indent_0p26_state",
+  "profile": "thickness_state",
+  "run_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T051323Z_69b0a01_thickness_indent_0p26_state",
+  "source_run": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260720T153013Z_2ecc954_thickness",
+  "source_indent_mm": 0.8,
+  "target_indent_mm": 0.26,
+  "target_result_time": 1.3647058823529412,
+  "extraction_method": "same_load_path_time_interpolation",
+  "host": "xuanyu",
+  "git_commit": "69b0a012457e28b85e40d890ce1961b06dc44a43",
+  "git_dirty": false,
+  "ansys_executable": "/ansys_inc/v252/ansys/bin/ansys252",
+  "ansys_version": "Mechanical APDL 2025 R2                    Build 25.2 Update: 20250519\n Copyright 1971-2025 ANSYS, Inc.\n Platform: LINUX x64   \n Using 2025.2.0 (20250506) for linx64.  Updated at Ansys Release 2025 R2.\n Customer Number: 20120530",
+  "invocation": [
+    "/home/xuanyu/miniconda3/envs/grs-pilot/bin/python",
+    "src/postprocess/extract_thickness_state.py",
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260720T153013Z_2ecc954_thickness",
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T051323Z_69b0a01_thickness_indent_0p26_state",
+    "--target-indent-mm",
+    "0.26",
+    "--workers",
+    "7",
+    "--np",
+    "1",
+    "--timeout-seconds",
+    "600"
+  ],
+  "workers": 7,
+  "np": 1,
+  "timeout_seconds": 600.0,
+  "started_at_utc": "2026-07-21T05:13:33+00:00",
+  "cases": [
+    {
+      "eyelid_thickness_mm": 0.8,
+      "cornea_thickness_mm": 0.6,
+      "indent_mm": 0.26
+    },
+    {
+      "eyelid_thickness_mm": 1.0,
+      "cornea_thickness_mm": 0.6,
+      "indent_mm": 0.26
+    },
+    {
+      "eyelid_thickness_mm": 1.2,
+      "cornea_thickness_mm": 0.6,
+      "indent_mm": 0.26
+    },
+    {
+      "eyelid_thickness_mm": 1.4,
+      "cornea_thickness_mm": 0.6,
+      "indent_mm": 0.26
+    },
+    {
+      "eyelid_thickness_mm": 1.6,
+      "cornea_thickness_mm": 0.6,
+      "indent_mm": 0.26
+    },
+    {
+      "eyelid_thickness_mm": 1.8,
+      "cornea_thickness_mm": 0.6,
+      "indent_mm": 0.26
+    },
+    {
+      "eyelid_thickness_mm": 2.0,
+      "cornea_thickness_mm": 0.6,
+      "indent_mm": 0.26
+    }
+  ],
+  "apdl_sha256": {
+    "post_sweep.mac": "a919b13edce5644eddf17579f334a559da0deb406105f01ce4e7c03e54fa9f8e",
+    "post_thickness_geometry.mac": "5098a4fa9e16280e172a9d350fa8d852de8e820546734e0db70a151d839dd6bd",
+    "plot_sweep_views.mac": "f3b6074851d76a23117d35d8db716bc73d32480ff82d45c8c82e62218cf9b6f4"
+  },
+  "ended_at_utc": "2026-07-21T05:13:49+00:00",
+  "completed_cases": 7,
+  "failed_cases": 0,
+  "qc_passed": true
+}
