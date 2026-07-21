@@ -224,7 +224,9 @@ def extract_case(
             parse_numeric_csv(attempt / "thickness_geometry.csv", len(GEOMETRY_FIELDS)),
         ))
         push_m = GAP_M + target_indent_mm / 1000.0
-        if round(metrics["result_load_step"]) != 2 or not math.isclose(
+        # MAPDL labels a time-interpolated result as load step zero; the selected
+        # result time and imposed probe displacement are the authoritative checks.
+        if round(metrics["result_load_step"]) not in (0, 2) or not math.isclose(
             metrics["result_time"], target_time, rel_tol=0.0, abs_tol=1e-6
         ):
             raise ValueError("MAPDL did not select the requested load-step time")

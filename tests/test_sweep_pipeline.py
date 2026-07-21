@@ -52,6 +52,7 @@ class ThicknessStateExtractionTests(unittest.TestCase):
     def test_maps_nominal_indent_to_second_load_step_time(self) -> None:
         result_time = extract_thickness_state.result_time_for_indent(0.26, 0.8)
         self.assertAlmostEqual(result_time, 1.0 + 0.31 / 0.85)
+        self.assertAlmostEqual(result_time, 1.3647058823529412)
 
     def test_rejects_target_beyond_source_load_path(self) -> None:
         with self.assertRaises(ValueError):
