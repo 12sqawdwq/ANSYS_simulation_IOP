@@ -10,4 +10,4 @@
 
 7 个状态已全部完成并通过 QC。报告见 [眼睑厚度有限元实验报告](docs/眼睑厚度有限元实验报告.md)，机器可读结果见 [fe_sweep 数据](data/processed/fe_sweep/README.md)，每个状态的 9 张图片见 [完整视图索引](figures/fe_sweep/views/README.md)。
 
-在不覆盖上述 `0.80 mm` 结果的前提下，仓库另保存从相同加载路径提取的 `0.26 mm` 推进状态。补充分析见 [Ae/Ac(2°) 0.26 mm 推进报告](docs/眼睑厚度Ae_Ac推进0.26mm补充报告.md)，数据见 [fe_sweep_indent_0p26](data/processed/fe_sweep_indent_0p26/README.md)，63 张图片见 [0.26 mm 视图索引](figures/fe_sweep_indent_0p26/views/README.md)。
+在不覆盖上述 `0.80 mm` 基准结果的前提下，仓库另保存校准材料下从相同加载路径提取的 `0.26 mm` 九点推进状态。补充分析见 [Ae/Ac(2°) 0.26 mm 推进报告](docs/眼睑厚度Ae_Ac推进0.26mm补充报告.md)，数据见 [fe_sweep_indent_0p26](data/processed/fe_sweep_indent_0p26/README.md)；本地 7 个既有厚度的 63 张图片见 [0.26 mm 视图索引](figures/fe_sweep_indent_0p26/views/README.md)，新增的 `1.25、1.50 mm` 视图保留在 5090d 数据区。

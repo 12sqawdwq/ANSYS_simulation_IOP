@@ -1,18 +1,21 @@
 {
-  "metric": "Ae/Ac(2deg)",
+  "metric": "Ae/Ac smooth(2deg)",
   "indent_mm": 0.26,
-  "points": 7,
-  "endpoint_change_percent": 567.2624820167562,
+  "points": 9,
+  "eyelid_material_scale": 1.0,
+  "cornea_material_scale": 0.75,
+  "iop_mmhg": 20.0,
+  "endpoint_change_percent": 473.96198755848,
   "linear_fit": {
-    "slope_per_mm": 6.305919771188688,
-    "intercept": -4.6574833930656565,
-    "r_squared": 0.9157624461318156
+    "slope_per_mm": 4.69820005322693,
+    "intercept": -3.14113775060456,
+    "r_squared": 0.906662325616275
   },
   "exponential_fit": {
-    "coefficient": 0.3481686080727905,
-    "exponent_per_mm": 1.626127050265288,
-    "r_squared_on_original_scale": 0.9934593702553991,
-    "factor_per_0p2mm": 1.3843426555658227
+    "coefficient": 0.431039340031158,
+    "exponent_per_mm": 1.39338137221803,
+    "r_squared_on_original_scale": 0.989777187850592,
+    "factor_per_0p2mm": 1.32137951030577
   },
-  "use_limit": "descriptive fit only; not a calibration equation"
+  "use_limit": "descriptive fit only; coarse mesh validation incomplete; not a calibration equation"
 }

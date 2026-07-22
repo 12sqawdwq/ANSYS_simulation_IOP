@@ -1,70 +1,110 @@
 {
-  "run_id": "20260721T051323Z_69b0a01_thickness_indent_0p26_state",
+  "run_id": "full_state_0p26",
   "profile": "thickness_state",
-  "run_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T051323Z_69b0a01_thickness_indent_0p26_state",
-  "source_run": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260720T153013Z_2ecc954_thickness",
+  "run_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/full_state_0p26",
+  "source_run": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/full_source",
   "source_indent_mm": 0.8,
   "target_indent_mm": 0.26,
   "target_result_time": 1.3647058823529412,
   "extraction_method": "same_load_path_time_interpolation",
   "host": "xuanyu",
-  "git_commit": "69b0a012457e28b85e40d890ce1961b06dc44a43",
+  "git_commit": "6a75cde2c7e953c2210c17e21caf279eade4291d",
   "git_dirty": false,
   "ansys_executable": "/ansys_inc/v252/ansys/bin/ansys252",
   "ansys_version": "Mechanical APDL 2025 R2                    Build 25.2 Update: 20250519\n Copyright 1971-2025 ANSYS, Inc.\n Platform: LINUX x64   \n Using 2025.2.0 (20250506) for linx64.  Updated at Ansys Release 2025 R2.\n Customer Number: 20120530",
   "invocation": [
     "/home/xuanyu/miniconda3/envs/grs-pilot/bin/python",
-    "src/postprocess/extract_thickness_state.py",
-    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260720T153013Z_2ecc954_thickness",
-    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260721T051323Z_69b0a01_thickness_indent_0p26_state",
+    "/home/xuanyu/PROJECT/ziyu/blueknow/simulation/src/postprocess/extract_thickness_state.py",
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/full_source",
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/full_state_0p26",
     "--target-indent-mm",
     "0.26",
+    "--source-indent-mm",
+    "0.8",
     "--workers",
-    "7",
+    "4",
     "--np",
     "1",
-    "--timeout-seconds",
-    "600"
+    "--view-policy",
+    "all"
   ],
-  "workers": 7,
+  "workers": 4,
   "np": 1,
-  "timeout_seconds": 600.0,
-  "started_at_utc": "2026-07-21T05:13:33+00:00",
+  "timeout_seconds": 900,
+  "view_policy": "all",
+  "started_at_utc": "2026-07-21T17:52:23+00:00",
   "cases": [
     {
       "eyelid_thickness_mm": 0.8,
       "cornea_thickness_mm": 0.6,
-      "indent_mm": 0.26
+      "indent_mm": 0.26,
+      "iop_mmhg": 20.0,
+      "eyelid_material_scale": 1.0,
+      "cornea_material_scale": 0.75
     },
     {
       "eyelid_thickness_mm": 1.0,
       "cornea_thickness_mm": 0.6,
-      "indent_mm": 0.26
+      "indent_mm": 0.26,
+      "iop_mmhg": 20.0,
+      "eyelid_material_scale": 1.0,
+      "cornea_material_scale": 0.75
     },
     {
       "eyelid_thickness_mm": 1.2,
       "cornea_thickness_mm": 0.6,
-      "indent_mm": 0.26
+      "indent_mm": 0.26,
+      "iop_mmhg": 20.0,
+      "eyelid_material_scale": 1.0,
+      "cornea_material_scale": 0.75
+    },
+    {
+      "eyelid_thickness_mm": 1.25,
+      "cornea_thickness_mm": 0.6,
+      "indent_mm": 0.26,
+      "iop_mmhg": 20.0,
+      "eyelid_material_scale": 1.0,
+      "cornea_material_scale": 0.75
     },
     {
       "eyelid_thickness_mm": 1.4,
       "cornea_thickness_mm": 0.6,
-      "indent_mm": 0.26
+      "indent_mm": 0.26,
+      "iop_mmhg": 20.0,
+      "eyelid_material_scale": 1.0,
+      "cornea_material_scale": 0.75
+    },
+    {
+      "eyelid_thickness_mm": 1.5,
+      "cornea_thickness_mm": 0.6,
+      "indent_mm": 0.26,
+      "iop_mmhg": 20.0,
+      "eyelid_material_scale": 1.0,
+      "cornea_material_scale": 0.75
     },
     {
       "eyelid_thickness_mm": 1.6,
       "cornea_thickness_mm": 0.6,
-      "indent_mm": 0.26
+      "indent_mm": 0.26,
+      "iop_mmhg": 20.0,
+      "eyelid_material_scale": 1.0,
+      "cornea_material_scale": 0.75
     },
     {
       "eyelid_thickness_mm": 1.8,
       "cornea_thickness_mm": 0.6,
-      "indent_mm": 0.26
+      "indent_mm": 0.26,
+      "iop_mmhg": 20.0,
+      "eyelid_material_scale": 1.0,
+      "cornea_material_scale": 0.75
     },
     {
       "eyelid_thickness_mm": 2.0,
       "cornea_thickness_mm": 0.6,
-      "indent_mm": 0.26
+      "indent_mm": 0.26,
+      "iop_mmhg": 20.0,
+      "eyelid_material_scale": 1.0,
+      "cornea_material_scale": 0.75
     }
   ],
   "apdl_sha256": {
@@ -72,8 +112,8 @@
     "post_thickness_geometry.mac": "5098a4fa9e16280e172a9d350fa8d852de8e820546734e0db70a151d839dd6bd",
     "plot_sweep_views.mac": "f3b6074851d76a23117d35d8db716bc73d32480ff82d45c8c82e62218cf9b6f4"
   },
-  "ended_at_utc": "2026-07-21T05:13:49+00:00",
-  "completed_cases": 7,
+  "ended_at_utc": "2026-07-21T17:53:06+00:00",
+  "completed_cases": 9,
   "failed_cases": 0,
   "qc_passed": true
 }
