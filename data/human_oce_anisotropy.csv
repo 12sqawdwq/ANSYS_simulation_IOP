@@ -1,0 +1,7 @@
+﻿source_id,subject,age_year,sex,spherical_diopter,cct_mm,out_of_plane_shear_g_kpa,out_of_plane_shear_sd_kpa,in_plane_tensile_e_kpa,in_plane_tensile_sd_kpa,reported_e_over_4g,calculated_e_over_4g,ratio_consistency_flag
+HUMAN_OCE_2024,1,31,M,-3,0.558,81,3,3730,570,11.5,11.512346,consistent_with_rounded_moduli
+HUMAN_OCE_2024,2,34,F,-1.5,0.509,93,12,3060,270,8.3,8.2258065,consistent_with_rounded_moduli
+HUMAN_OCE_2024,3,33,M,-2.5,0.559,99,7,3510,460,8.9,8.8636364,consistent_with_rounded_moduli
+HUMAN_OCE_2024,4,34,M,-7.75,0.601,130,10,3980,500,7.7,7.6538462,consistent_with_rounded_moduli
+HUMAN_OCE_2024,5,62,M,-3,0.557,70,3,3400,140,12,12.142857,consistent_with_rounded_moduli
+HUMAN_OCE_2024,6,53,M,-5.75,0.578,89,2,6060,870,22.4,17.022472,reported_ratio_inconsistent_with_displayed_moduli

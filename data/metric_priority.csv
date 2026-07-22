@@ -1,0 +1,11 @@
+﻿priority,metric,symbol,minimum_protocol,identifies,implementation_note
+1,full force-displacement curve,F(delta),all converged substeps,material scale plus nonlinearity,"Fit curve, not only endpoint or peak"
+2,contact area-displacement curve,Ae(delta),same states as force,contact/boundary response,Separates similar force curves with different pressure footprints
+3,multi-IOP response,"F(delta,IOP)",at least 10/15/20/25 mmHg,prestress versus material,Required before interpreting force as IOP
+4,internal flattened area,"Ac(delta,theta)",1/2/3 degree plus smooth/raw,eyelid transmission,Keep threshold sensitivity and face count
+5,full-field surface deformation,"u(r,delta)",apex plus radial profile,geometry/boundary/anisotropy,More identifiable than apex displacement alone
+6,pressure-weighted contact centroid,xp(delta),surface pressure integration,offset and alignment,Needed for eccentric cases
+7,loading-unloading hysteresis,H,matched-rate unload cycle,viscoelastic loss,Do not fit with hyperelastic parameters
+8,hold relaxation,F(t)|delta,fixed indentation hold,time constants,Only needed when adding viscoelasticity
+9,independent shear/tensile modulus,G and E_in_plane,OCE or mechanical test,anisotropy/model choice,Do not force both into one isotropic modulus
+10,geometry and covariates,CCT/R/age/hydration,per specimen,nuisance control,Fit material only after geometry is fixed

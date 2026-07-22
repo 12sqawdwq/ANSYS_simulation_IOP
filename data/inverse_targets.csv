@@ -1,0 +1,12 @@
+﻿source_id,species_or_system,cohort_or_condition,metric,value,sd_or_half_width,unit,inverse_role,protocol_or_limit
+CID_2021,human,healthy,tangent_modulus,0.614,0.138,MPa,primary_scale_check,0.3-0.6 mm slope-derived
+CID_2021,human,healthy,indentation_stiffness,0.076,0.013,N/mm,primary_indentation_target,2 mm flat punch; 1 mm at 12 mm/s
+CID_2021,human,OHT,tangent_modulus,0.671,0.154,MPa,primary_scale_check,0.3-0.6 mm slope-derived
+CID_2021,human,OHT,indentation_stiffness,0.087,0.016,N/mm,primary_indentation_target,2 mm flat punch; 1 mm at 12 mm/s
+CID_2021,human,POAG,tangent_modulus,0.641,0.148,MPa,primary_scale_check,0.3-0.6 mm slope-derived
+CID_2021,human,POAG,indentation_stiffness,0.08,0.018,N/mm,primary_indentation_target,2 mm flat punch; 1 mm at 12 mm/s
+PORCINE_INFLATION_2020,porcine,control_PBS,apex_displacement_at_27p25mmhg,0.437,0.063,mm,pipeline_validation,Species-specific; do not fit as human absolute target
+PORCINE_INFLATION_2020,porcine,control_PBS,tangent_modulus_at_0p03mpa,1.73,0.4,MPa,nonlinearity_validation,Inflation-derived Ogden response
+PROJECT_EXPERIMENT,eye_with_eyelid,eyelid_0p8_to_1p25mm,ae_over_ac_2deg,1.75,0.25,ratio_range_midpoint_and_half_width,primary_project_acceptance,Internal experimental range 1.5-2.0; allow 20% error
+PROJECT_EXPERIMENT,eye_with_eyelid,eyelid_1p5mm,ae_over_ac_2deg,2.5,,ratio,secondary_project_acceptance,Internal approximate reference
+PROJECT_EXPERIMENT,eye_with_eyelid,eyelid_2p0mm,ae_over_ac_2deg,5,,ratio_lower_bound,secondary_project_acceptance,Internal observation: above 5 and below 9

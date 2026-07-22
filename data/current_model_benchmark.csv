@@ -1,0 +1,2 @@
+﻿model,c10_base_mpa,c01_base_mpa,material_scale,c10_mpa,c01_mpa,d1_pa_inverse,small_strain_e_mpa,comparison_note
+current_cornea_mooney_rivlin,0.11,0.025,0.75,0.0825,0.01875,1e-07,0.6075,Near-incompressible small-strain linearization; not identical to CID tangent-modulus extraction
