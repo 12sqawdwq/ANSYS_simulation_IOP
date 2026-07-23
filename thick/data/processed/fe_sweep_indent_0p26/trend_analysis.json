@@ -1,33 +1,31 @@
 {
-  "metric": "ae_over_ac_surface",
-  "definition": "ratio of deformed outer and inner curved-surface integrals inside their center-connected radial breakpoints",
+  "metric": "ae_over_ac_gat",
+  "definition": "GAT planar geometric footprint from spherical curvature divided by the inner projected breakpoint area",
   "indent_mm": 0.26,
   "points": 9,
-  "eyelid_material_scale": 1.0,
-  "cornea_material_scale": 0.75,
-  "iop_mmhg": 20.0,
+  "geometry": {
+    "cornea_outer_radius_mm": 7.8,
+    "probe_radius_mm": 2.16,
+    "probe_area_mm2": 14.65741468458854,
+    "full_contact_indent_range_mm": [0.24100423684579653, 0.27567420147433275],
+    "gat_ae_fill_fraction_range": [0.9440157750342932, 1.0]
+  },
   "endpoint": {
-    "thickness_0p8": 1.1302547054251617,
-    "thickness_2p0": 1.538837936300808,
-    "relative_increase_percent": 36.14965999853161
+    "thickness_0p8": 2.1547029439062624,
+    "thickness_2p0": 2.662596153979778,
+    "relative_increase_percent": 23.571379595962117
   },
   "linear_fit": {
-    "slope_per_mm": 0.3090944672458133,
-    "intercept": 0.8396863743042602,
-    "r_squared": 0.8944602603689606
+    "slope_per_mm": 0.366757155,
+    "intercept": 1.862397861,
+    "r_squared": 0.93464138
   },
-  "nominal_probe_diagnostic": {
-    "metric": "probe_over_ac_surface",
-    "definition": "4.32 mm nominal probe area divided by inner curved-surface applanation area; not the actual Ae/Ac at partial contact",
-    "thickness_0p8": 2.281045778426568,
-    "thickness_2p0": 2.65612007808596,
-    "relative_increase_percent": 16.44308582933942,
-    "linear_fit_r_squared": 0.8184595396777928
+  "descriptive_95ci": {
+    "mean": 2.37382,
+    "lower": 2.263153,
+    "upper": 2.484487
   },
-  "surface_projection_max_relative_difference_percent": 0.21721998055144255,
-  "contact_fill_fraction_range": [
-    0.348429448247644,
-    0.4630389973558234
-  ],
-  "use_limit": "descriptive fit only; 0.26 mm is a partial-contact state and local mesh independence remains incomplete"
+  "legacy_breakpoint_ratio_range": [1.130536749162939, 1.5421806109639398],
+  "contact_fill_fraction_range": [0.348429448247644, 0.4630389973558234],
+  "use_limit": "GAT Ae is geometry constrained; Ac remains breakpoint and local-mesh sensitive, especially at the thick end"
 }

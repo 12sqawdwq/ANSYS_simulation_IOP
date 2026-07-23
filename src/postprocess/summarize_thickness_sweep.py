@@ -15,6 +15,11 @@ except ImportError:  # Direct script execution.
     from raster_plot import plot_lines
 
 
+CORNEA_OUTER_RADIUS_MM = 7.8
+PROBE_RADIUS_MM = 2.16
+PROBE_AREA_MM2 = math.pi * PROBE_RADIUS_MM**2
+
+
 SUMMARY_FIELDS = (
     "case",
     "eyelid_thickness_mm",
@@ -28,6 +33,10 @@ SUMMARY_FIELDS = (
     "force_ratio_to_0p8",
     "force_correction_to_0p8",
     "probe_area_mm2",
+    "geometric_full_contact_indent_mm",
+    "gat_ae_radius_mm",
+    "gat_ae_area_mm2",
+    "gat_ae_fill_fraction",
     "outer_contact_area_mm2",
     "contact_fill_fraction",
     "outer_area_mm2",
@@ -55,6 +64,8 @@ SUMMARY_FIELDS = (
     "inner_breakpoint_method",
     "inner_area_sensitivity_fraction",
     "inner_diameter_sensitivity_mm",
+    "ae_over_ac_gat",
+    "ae_over_ac_gat_surface_diagnostic",
     "ae_over_ac_surface",
     "ae_over_ac_projected",
     "probe_over_ac_surface",
@@ -94,12 +105,42 @@ def breakpoint_method(code: float) -> str:
     )
 
 
+def gat_outer_geometry(
+    eyelid_thickness_mm: float, indent_mm: float
+) -> dict[str, float]:
+    """Return the centered GAT footprint from the model's spherical geometry."""
+    if eyelid_thickness_mm < 0 or indent_mm < 0:
+        raise ValueError("eyelid thickness and indentation must be non-negative")
+    surface_radius = CORNEA_OUTER_RADIUS_MM + eyelid_thickness_mm
+    if surface_radius <= PROBE_RADIUS_MM:
+        raise ValueError("outer surface radius must exceed the probe radius")
+    full_contact_indent = surface_radius - math.sqrt(
+        surface_radius**2 - PROBE_RADIUS_MM**2
+    )
+    if indent_mm >= full_contact_indent - 1e-12:
+        footprint_radius = PROBE_RADIUS_MM
+    else:
+        footprint_radius = math.sqrt(max(
+            0.0, 2.0 * surface_radius * indent_mm - indent_mm**2
+        ))
+    footprint_area = math.pi * footprint_radius**2
+    return {
+        "geometric_full_contact_indent_mm": full_contact_indent,
+        "gat_ae_radius_mm": footprint_radius,
+        "gat_ae_area_mm2": footprint_area,
+        "gat_ae_fill_fraction": footprint_area / PROBE_AREA_MM2,
+    }
+
+
 def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]:
     rows: list[dict[str, float | str]] = []
     for raw in manifest:
         if raw.get("status") != "complete":
             continue
         force = abs(value(raw, "probe_fy_n"))
+        eyelid_thickness = value(raw, "eyelid_thickness_mm")
+        indent = value(raw, "indent_mm")
+        gat_geometry = gat_outer_geometry(eyelid_thickness, indent)
         outer_contact = value(raw, "contact_area_m2") * 1e6
         outer_surface = value(raw, "outer_surface_area_m2") * 1e6
         outer_projected = value(raw, "outer_projected_area_m2") * 1e6
@@ -111,17 +152,18 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
         smooth2 = value(raw, "inner_area_smooth_2deg_m2") * 1e6
         rows.append({
             "case": raw["case"],
-            "eyelid_thickness_mm": value(raw, "eyelid_thickness_mm"),
+            "eyelid_thickness_mm": eyelid_thickness,
             "cornea_thickness_mm": value(raw, "cornea_thickness_mm"),
-            "indent_mm": value(raw, "indent_mm"),
+            "indent_mm": indent,
             "mesh_size_mm": value(raw, "mesh_size_mm"),
             "iop_mmhg": value(raw, "iop_mmhg"),
             "eyelid_material_scale": value(raw, "eyelid_material_scale"),
             "cornea_material_scale": value(raw, "cornea_material_scale"),
             "probe_force_n": force,
-            "probe_area_mm2": math.pi * 2.16**2,
+            "probe_area_mm2": PROBE_AREA_MM2,
+            **gat_geometry,
             "outer_contact_area_mm2": outer_contact,
-            "contact_fill_fraction": outer_contact / (math.pi * 2.16**2),
+            "contact_fill_fraction": outer_contact / PROBE_AREA_MM2,
             "outer_area_mm2": outer_contact,
             "outer_surface_area_mm2": outer_surface,
             "outer_projected_area_mm2": outer_projected,
@@ -146,10 +188,14 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
             "inner_breakpoint_method": breakpoint_method(value(raw, "inner_break_method_code")),
             "inner_area_sensitivity_fraction": value(raw, "inner_area_sensitivity_fraction"),
             "inner_diameter_sensitivity_mm": value(raw, "inner_diameter_sensitivity_m") * 1e3,
+            "ae_over_ac_gat": gat_geometry["gat_ae_area_mm2"] / inner_projected,
+            "ae_over_ac_gat_surface_diagnostic": (
+                gat_geometry["gat_ae_area_mm2"] / inner_surface
+            ),
             "ae_over_ac_surface": outer_surface / inner_surface,
             "ae_over_ac_projected": outer_projected / inner_projected,
-            "probe_over_ac_surface": (math.pi * 2.16**2) / inner_surface,
-            "probe_over_ac_projected": (math.pi * 2.16**2) / inner_projected,
+            "probe_over_ac_surface": PROBE_AREA_MM2 / inner_surface,
+            "probe_over_ac_projected": PROBE_AREA_MM2 / inner_projected,
             "breakpoint_qc": (
                 "warning_scale_sensitive"
                 if max(
@@ -306,9 +352,9 @@ def plot_curves(run_root: Path, rows: list[dict[str, float | str]]) -> None:
             ("FORCE", [(x(row), float(row["probe_force_n"])) for row in rows]),
         )),
         ("outer_area_vs_thickness.png", "OUTER AREA MM2", (
+            ("GAT AE", [(x(row), float(row["gat_ae_area_mm2"])) for row in rows]),
             ("CONTACT", [(x(row), float(row["outer_contact_area_mm2"])) for row in rows]),
             ("SURFACE", [(x(row), float(row["outer_surface_area_mm2"])) for row in rows]),
-            ("PROJECTED", [(x(row), float(row["outer_projected_area_mm2"])) for row in rows]),
         )),
         ("inner_area_vs_thickness.png", "INNER GEOMETRIC AREA MM2", (
             ("SURFACE", [(x(row), float(row["inner_surface_area_mm2"])) for row in rows]),
@@ -318,11 +364,12 @@ def plot_curves(run_root: Path, rows: list[dict[str, float | str]]) -> None:
             ]),
         )),
         ("area_ratio_vs_thickness.png", "AE OVER AC", (
-            ("SURFACE", [(x(row), float(row["ae_over_ac_surface"])) for row in rows]),
-            ("PROJECTED", [(x(row), float(row["ae_over_ac_projected"])) for row in rows]),
+            ("GAT", [(x(row), float(row["ae_over_ac_gat"])) for row in rows]),
+            ("BREAKPOINT", [(x(row), float(row["ae_over_ac_projected"])) for row in rows]),
         )),
         ("equivalent_diameter_vs_thickness.png", "EQUIVALENT DIAMETER MM", (
-            ("OUTER", [(x(row), float(row["outer_equivalent_diameter_mm"])) for row in rows]),
+            ("GAT OUTER", [(x(row), 2.0 * float(row["gat_ae_radius_mm"])) for row in rows]),
+            ("BREAK OUTER", [(x(row), float(row["outer_equivalent_diameter_mm"])) for row in rows]),
             ("INNER", [(x(row), float(row["inner_equivalent_diameter_mm"])) for row in rows]),
         )),
         ("pressure_vs_thickness.png", "PRESSURE KPA", (

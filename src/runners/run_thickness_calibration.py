@@ -25,6 +25,7 @@ FINAL_THICKNESSES = (0.8, 1.0, 1.2, 1.25, 1.4, 1.5, 1.6, 1.8, 2.0)
 MESH_VALIDATION_THICKNESSES = (0.8, 1.2, 2.0)
 PRIMARY_RANGE = (1.5, 2.0)
 SECONDARY_RANGES = {1.5: (2.0, 3.0), 2.0: (4.0, 8.0)}
+PRIMARY_RATIO_FIELD = "ae_over_ac_gat"
 SCORE_FIELDS = (
     "variant", "eyelid_material_scale", "cornea_material_scale", "stage",
     "complete_primary", "primary_pass_count", "primary_mean_error",
@@ -75,6 +76,13 @@ def rows_by_thickness(rows: list[dict[str, str]]) -> dict[float, dict[str, str]]
     return {round(float(row["eyelid_thickness_mm"]), 6): row for row in rows}
 
 
+def area_ratio(row: dict[str, str]) -> float:
+    value = row.get(PRIMARY_RATIO_FIELD)
+    if value not in (None, ""):
+        return float(value)
+    return float(row["ae_over_ac_surface"])
+
+
 def primary_metrics(rows: list[dict[str, str]]) -> tuple[int, float, float]:
     indexed = rows_by_thickness(rows)
     errors: list[float] = []
@@ -82,7 +90,7 @@ def primary_metrics(rows: list[dict[str, str]]) -> tuple[int, float, float]:
         row = indexed.get(thickness)
         if row is None:
             return 0, math.inf, math.inf
-        ratio = float(row["ae_over_ac_surface"])
+        ratio = area_ratio(row)
         errors.append(interval_error(ratio, *PRIMARY_RANGE))
     return sum(error <= 0.2 + 1e-12 for error in errors), sum(errors) / len(errors), (
         sum(error * error for error in errors) / len(errors)
@@ -98,11 +106,11 @@ def secondary_metrics(
         row = indexed.get(thickness)
         if row is None:
             return math.inf, math.inf
-        errors.append(interval_error(float(row["ae_over_ac_surface"]), *target))
+        errors.append(interval_error(area_ratio(row), *target))
     secondary_score = sum(error * error for error in errors) / len(errors)
-    k_125 = float(indexed[1.25]["ae_over_ac_surface"])
-    k_15 = float(indexed[1.5]["ae_over_ac_surface"])
-    k_20 = float(indexed[2.0]["ae_over_ac_surface"])
+    k_125 = area_ratio(indexed[1.25])
+    k_15 = area_ratio(indexed[1.5])
+    k_20 = area_ratio(indexed[2.0])
     trend_penalty = 0.0 if k_20 >= k_125 and k_15 >= 0.9 * k_125 else 1.0
     return secondary_score, trend_penalty
 
@@ -293,8 +301,8 @@ def run_final(root: Path, best: dict, cli: argparse.Namespace) -> None:
     coarse_index = rows_by_thickness(rows)
     mesh_validation = []
     for thickness in MESH_VALIDATION_THICKNESSES:
-        coarse = float(coarse_index[thickness]["ae_over_ac_surface"])
-        fine = float(mesh_index[thickness]["ae_over_ac_surface"])
+        coarse = area_ratio(coarse_index[thickness])
+        fine = area_ratio(mesh_index[thickness])
         mesh_validation.append({
             "eyelid_thickness_mm": thickness,
             "coarse_ratio": coarse,
@@ -316,7 +324,7 @@ def run_final(root: Path, best: dict, cli: argparse.Namespace) -> None:
         "mesh_validation_passed": all(item["passed"] for item in mesh_validation),
         "source_indent_mm": cli.source_indent_mm,
         "target_indent_mm": cli.target_indent_mm,
-        "area_metric": "ae_over_ac_surface",
+        "area_metric": PRIMARY_RATIO_FIELD,
         "candidate_data_root": str(original_candidates),
     })
     report_lines = [
@@ -328,18 +336,19 @@ def run_final(root: Path, best: dict, cli: argparse.Namespace) -> None:
         f"- 眼睑材料倍率：{variant.eyelid_scale:.6g}",
         f"- 角膜材料倍率：{variant.cornea_scale:.6g}",
         f"- 校准状态：沿 {cli.source_indent_mm:g} mm 加载路径提取 {cli.target_indent_mm:g} mm",
-        "- 主指标：中心形变拐点内的曲面面积比 Ae/Ac",
+        "- 主指标：GAT 平面几何 Ae / 内侧折点投影 Ac",
         "",
         "## 完整厚度结果",
         "",
-        "| 厚度 (mm) | 曲面 Ae/Ac | 投影 Ae/Ac | 反力 (N) |",
-        "|---:|---:|---:|---:|",
+        "| 厚度 (mm) | GAT Ae/Ac | GAT Ae (mm²) | Ac投影 (mm²) | 反力 (N) |",
+        "|---:|---:|---:|---:|---:|",
     ]
     for row in sorted(rows, key=lambda item: float(item["eyelid_thickness_mm"])):
         report_lines.append(
             f"| {float(row['eyelid_thickness_mm']):.2f} | "
-            f"{float(row['ae_over_ac_surface']):.3f} | "
-            f"{float(row['ae_over_ac_projected']):.3f} | "
+            f"{area_ratio(row):.3f} | "
+            f"{float(row['gat_ae_area_mm2']):.3f} | "
+            f"{float(row['inner_projected_area_mm2']):.3f} | "
             f"{float(row['probe_force_n']):.4f} |"
         )
     report_lines.extend([
@@ -358,7 +367,7 @@ def run_final(root: Path, best: dict, cli: argparse.Namespace) -> None:
     report_lines.extend([
         "",
         "主区间要求为0.8-1.25 mm四个点中至少三个相对实验区间误差不超过20%。",
-        "旧1°/2°/3°面片结果仅保留用于追溯，材料选择使用曲面拐点面积比。",
+        "旧1°/2°/3°面片和外侧折点结果仅保留用于追溯，材料选择使用 GAT 几何面积比。",
         "",
     ])
     (root / "calibration_report.md").write_text(
