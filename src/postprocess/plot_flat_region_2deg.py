@@ -206,6 +206,96 @@ def _render_3d_panel(
     return image
 
 
+def _section_segment(
+    points: tuple[tuple[float, float, float], ...]
+) -> tuple[tuple[float, float], tuple[float, float]] | None:
+    intersections: list[tuple[float, float]] = []
+    for start, end in zip(points, (*points[1:], points[0])):
+        z1, z2 = start[2], end[2]
+        if z1 == 0 and z2 == 0:
+            intersections.extend(((start[0], start[1]), (end[0], end[1])))
+        elif z1 == 0:
+            intersections.append((start[0], start[1]))
+        elif z2 == 0:
+            intersections.append((end[0], end[1]))
+        elif z1 * z2 < 0:
+            fraction = -z1 / (z2 - z1)
+            intersections.append((
+                start[0] + fraction * (end[0] - start[0]),
+                start[1] + fraction * (end[1] - start[1]),
+            ))
+    unique: list[tuple[float, float]] = []
+    for point in intersections:
+        if not any(math.hypot(point[0] - other[0], point[1] - other[1]) < 1e-9
+                   for other in unique):
+            unique.append(point)
+    if len(unique) < 2:
+        return None
+    return max(
+        ((first, second) for index, first in enumerate(unique) for second in unique[index + 1:]),
+        key=lambda pair: math.hypot(pair[0][0] - pair[1][0], pair[0][1] - pair[1][1]),
+    )
+
+
+def _render_section_panel(
+    outer_faces: dict[int, Face],
+    outer_selected: set[int],
+    inner_faces: dict[int, Face],
+    inner_selected: set[int],
+    probe_bottom_y_mm: float,
+) -> Image.Image:
+    width, height = 680, 520
+    margin = 28
+    image = Image.new("RGB", (width, height), "white")
+    draw = ImageDraw.Draw(image)
+    draw.text((margin, 12), "CENTRAL Z=0 SECTION - OUTER/INNER", fill=INK, font=font(20))
+    segments: list[tuple[tuple[float, float], tuple[float, float], tuple[int, int, int]]] = []
+    for faces, selected in ((outer_faces, outer_selected), (inner_faces, inner_selected)):
+        for element, face in faces.items():
+            points_mm = tuple(tuple(value * 1e3 for value in point) for point in face.points)
+            segment = _section_segment(points_mm)
+            if segment is not None:
+                segments.append((*segment, RED if element in selected else BLUE))
+    radius_mm = PROBE_RADIUS_M * 1e3
+    probe_points = (
+        (-radius_mm, probe_bottom_y_mm),
+        (radius_mm, probe_bottom_y_mm),
+        (radius_mm, probe_bottom_y_mm + 2.6),
+        (-radius_mm, probe_bottom_y_mm + 2.6),
+    )
+    all_points = [point for start, end, _ in segments for point in (start, end)]
+    all_points.extend(probe_points)
+    min_x = min(point[0] for point in all_points)
+    max_x = max(point[0] for point in all_points)
+    min_y = min(point[1] for point in all_points)
+    max_y = max(point[1] for point in all_points)
+    available_width = width - 2 * margin
+    available_height = height - 82
+    scale = min(
+        available_width / max(max_x - min_x, 1e-9),
+        available_height / max(max_y - min_y, 1e-9),
+    )
+    offset_x = margin + (available_width - (max_x - min_x) * scale) / 2 - min_x * scale
+    offset_y = 50 + (available_height - (max_y - min_y) * scale) / 2 + max_y * scale
+
+    def pixel(point: tuple[float, float]) -> tuple[int, int]:
+        return round(offset_x + point[0] * scale), round(offset_y - point[1] * scale)
+
+    for color in (BLUE, RED):
+        for start, end, segment_color in segments:
+            if segment_color == color:
+                draw.line((pixel(start), pixel(end)), fill=color, width=4 if color == RED else 2)
+    closed_probe = (*probe_points, probe_points[0])
+    draw.line([pixel(point) for point in closed_probe], fill=PROBE, width=3)
+    draw.rectangle((margin, height - 26, margin + 18, height - 10), fill=RED)
+    draw.text((margin + 24, height - 28), "effective", fill=INK, font=font(13))
+    draw.rectangle((margin + 116, height - 26, margin + 134, height - 10), fill=BLUE)
+    draw.text((margin + 140, height - 28), "not included", fill=INK, font=font(13))
+    draw.line((margin + 258, height - 18, margin + 286, height - 18), fill=PROBE, width=3)
+    draw.text((margin + 294, height - 28), "probe", fill=INK, font=font(13))
+    return image
+
+
 def render_multiview(
     output: Path,
     case: str,
@@ -238,12 +328,8 @@ def render_multiview(
             ],
             (1.25, 0.65, 1.0), probe_bottom,
         ),
-        _render_3d_panel(
-            "CENTRAL SECTION - OUTER/INNER", [
-                (outer_faces, outer_selected, "all"),
-                (inner_faces, inner_selected, "all"),
-            ],
-            (0.0, 0.08, 1.0), probe_bottom, section_band_mm=0.18,
+        _render_section_panel(
+            outer_faces, outer_selected, inner_faces, inner_selected, probe_bottom
         ),
     )
     canvas = Image.new("RGB", (1380, 1110), (242, 244, 247))
