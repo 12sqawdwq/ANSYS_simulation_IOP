@@ -18,7 +18,7 @@ fi
 
 commit=$(git -C "$repo" rev-parse --short=8 HEAD)
 timestamp=$(date -u +%Y%m%dT%H%M%SZ)
-run_root=${BLUEKNOW_RUN_ROOT:-/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/${timestamp}_${commit}_calibration_0p26}
+run_root=${BLUEKNOW_RUN_ROOT:-/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/${timestamp}_${commit}_calibration_0p28}
 
 if [[ -d "$run_root" ]] && [[ -n "$(find "$run_root" -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
     printf 'Run root is not empty: %s\n' "$run_root" >&2

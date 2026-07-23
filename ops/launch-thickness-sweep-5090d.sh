@@ -3,7 +3,7 @@ set -euo pipefail
 
 repo=/home/xuanyu/PROJECT/ziyu/blueknow/simulation
 python_bin=${BLUEKNOW_PYTHON:-/home/xuanyu/miniconda3/envs/grs-pilot/bin/python}
-indent_mm=${BLUEKNOW_THICKNESS_INDENT_MM:-0.8}
+indent_mm=${BLUEKNOW_THICKNESS_INDENT_MM:-0.28}
 workers=${BLUEKNOW_SWEEP_WORKERS:-4}
 np=${BLUEKNOW_CASE_NP:-4}
 
@@ -19,7 +19,7 @@ fi
 
 commit=$(git -C "$repo" rev-parse --short=8 HEAD)
 timestamp=$(date -u +%Y%m%dT%H%M%SZ)
-run_root=${BLUEKNOW_RUN_ROOT:-/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/${timestamp}_${commit}_thickness}
+run_root=${BLUEKNOW_RUN_ROOT:-/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/${timestamp}_${commit}_thickness_0p28}
 
 if [[ -d "$run_root" ]] && [[ -n "$(find "$run_root" -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
     printf 'run root is not empty: %s\n' "$run_root" >&2

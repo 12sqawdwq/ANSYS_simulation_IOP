@@ -167,6 +167,18 @@ class AttemptValidationTests(unittest.TestCase):
                 "inner_face_count": 1000,
                 "inner_area_smooth_2deg_m2": 9e-6,
                 "inner_smooth_2deg_face_count": 100,
+                "outer_flat_projected_area_1deg_m2": 5e-6,
+                "outer_flat_projected_area_2deg_m2": 7e-6,
+                "outer_flat_projected_area_3deg_m2": 9e-6,
+                "outer_flat_surface_area_2deg_m2": 7.01e-6,
+                "outer_flat_face_count_2deg": 80,
+                "outer_flat_displacement_threshold_m": 5e-6,
+                "inner_flat_projected_area_1deg_m2": 3e-6,
+                "inner_flat_projected_area_2deg_m2": 4e-6,
+                "inner_flat_projected_area_3deg_m2": 5e-6,
+                "inner_flat_surface_area_2deg_m2": 4.01e-6,
+                "inner_flat_face_count_2deg": 50,
+                "inner_flat_displacement_threshold_m": 4e-6,
                 "outer_local_max_downward_m": 8e-4,
                 "outer_surface_area_m2": 7e-6,
                 "outer_projected_area_m2": 6.9e-6,
@@ -269,7 +281,7 @@ class RunnerBehaviorTests(unittest.TestCase):
         self.assertEqual(profile, "thickness")
         self.assertEqual([case.eyelid_thickness_mm for case in cases],
                          [0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0])
-        self.assertTrue(all(case.indent_mm == 0.8 and case.kind == "thickness" for case in cases))
+        self.assertTrue(all(case.indent_mm == 0.28 and case.kind == "thickness" for case in cases))
 
         profile, cases = runner.choose_cases(
             parser,
@@ -478,6 +490,18 @@ class ThicknessSummaryTests(unittest.TestCase):
             "inner_face_count": "1000",
             "inner_area_smooth_2deg_m2": "1e-5",
             "inner_smooth_2deg_face_count": "120",
+            "outer_flat_projected_area_1deg_m2": "6e-6",
+            "outer_flat_projected_area_2deg_m2": "8e-6",
+            "outer_flat_projected_area_3deg_m2": "10e-6",
+            "outer_flat_surface_area_2deg_m2": "8.01e-6",
+            "outer_flat_face_count_2deg": "90",
+            "outer_flat_displacement_threshold_m": "5e-6",
+            "inner_flat_projected_area_1deg_m2": "3e-6",
+            "inner_flat_projected_area_2deg_m2": "4e-6",
+            "inner_flat_projected_area_3deg_m2": "5e-6",
+            "inner_flat_surface_area_2deg_m2": "4.01e-6",
+            "inner_flat_face_count_2deg": "45",
+            "inner_flat_displacement_threshold_m": "4e-6",
             "outer_local_max_downward_m": "0.0008",
             "outer_surface_area_m2": "7.1e-6",
             "outer_projected_area_m2": "7e-6",
@@ -507,6 +531,8 @@ class ThicknessSummaryTests(unittest.TestCase):
         rows = thickness_summary.summary_rows([self.row(0.8), self.row(1.0)])
         self.assertAlmostEqual(float(rows[0]["ae_over_ac_2deg"]), 14.0 / 9.0)
         self.assertAlmostEqual(float(rows[0]["ae_over_ac_surface"]), 7.1 / 4.5)
+        self.assertAlmostEqual(float(rows[0]["ae_over_ac_flat_2deg"]), 8.0 / 4.0)
+        self.assertAlmostEqual(float(rows[0]["outer_flat_coverage_fraction"]), 8.0 / (math.pi * 2.16**2))
         self.assertAlmostEqual(float(rows[0]["gat_ae_area_mm2"]), math.pi * 2.16**2)
         self.assertAlmostEqual(float(rows[0]["ae_over_ac_gat"]), math.pi * 2.16**2 / 4.4)
         self.assertAlmostEqual(
@@ -583,6 +609,35 @@ class ThicknessGeometryTests(unittest.TestCase):
         self.assertEqual(int(metrics["inner_smooth_2deg_face_count"]), 2)
         self.assertEqual(metrics["inner_face_count"], 2)
 
+    def test_objective_flat_area_uses_central_component_without_probe_forcing(self) -> None:
+        mm = 1e-3
+        preload = {
+            1: self.face(1, ((-0.25*mm, 0, -0.25*mm), (0.25*mm, 0, -0.25*mm),
+                            (0.25*mm, 0, 0.25*mm)), (1, 2, 3)),
+            2: self.face(2, ((-0.25*mm, 0, -0.25*mm), (0.25*mm, 0, 0.25*mm),
+                            (-0.25*mm, 0, 0.25*mm)), (1, 3, 4)),
+            3: self.face(3, ((1.2*mm, 0, 0), (1.5*mm, 0, 0), (1.2*mm, 0, 0.3*mm)),
+                         (10, 11, 12)),
+            4: self.face(4, ((3.0*mm, 0, 0), (3.2*mm, 0, 0), (3.0*mm, 0, 0.2*mm)),
+                         (20, 21, 22)),
+            5: self.face(5, ((0, 0, 3.0*mm), (0.2*mm, 0, 3.0*mm), (0, 0, 3.2*mm)),
+                         (30, 31, 32)),
+            6: self.face(6, ((-3.0*mm, 0, 0), (-3.2*mm, 0, 0), (-3.0*mm, 0, 0.2*mm)),
+                         (40, 41, 42)),
+        }
+        final = dict(preload)
+        for element in (1, 2, 3):
+            face = preload[element]
+            final[element] = self.face(
+                element,
+                tuple((x, y - 0.28*mm, z) for x, y, z in face.points),
+                face.nodes,
+            )
+        result = thickness_geometry.analyze_flat_surface(preload, final)
+        self.assertEqual(result.face_count, 2)
+        self.assertAlmostEqual(result.projected_area, (0.5*mm) ** 2)
+        self.assertLess(result.projected_area, thickness_geometry.PROBE_AREA_M2)
+
     def test_preload_and_final_element_sets_must_match(self) -> None:
         face = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))
         with self.assertRaises(ValueError):
@@ -650,7 +705,10 @@ class ThicknessCalibrationTests(unittest.TestCase):
         self.assertAlmostEqual(calibration.interval_error(1.2, 1.5, 2.0), 0.2)
         self.assertAlmostEqual(calibration.interval_error(2.4, 1.5, 2.0), 0.2)
 
-    def test_calibration_prefers_gat_ratio_and_supports_historical_rows(self) -> None:
+    def test_calibration_prefers_objective_ratio_and_supports_historical_rows(self) -> None:
+        self.assertEqual(calibration.area_ratio({
+            "ae_over_ac_flat_2deg": "1.8", "ae_over_ac_gat": "2.2"
+        }), 1.8)
         self.assertEqual(calibration.area_ratio({
             "ae_over_ac_gat": "2.2", "ae_over_ac_surface": "1.1"
         }), 2.2)
@@ -661,7 +719,7 @@ class ThicknessCalibrationTests(unittest.TestCase):
         rows = [
             {
                 "eyelid_thickness_mm": str(thickness),
-                "ae_over_ac_gat": str(ratio),
+                "ae_over_ac_flat_2deg": str(ratio),
             }
             for thickness, ratio in values.items()
         ]
@@ -673,11 +731,11 @@ class ThicknessCalibrationTests(unittest.TestCase):
     def test_secondary_trend_penalizes_a_falling_thick_end(self) -> None:
         primary = [{
             "eyelid_thickness_mm": str(thickness),
-            "ae_over_ac_gat": "1.8",
+            "ae_over_ac_flat_2deg": "1.8",
         } for thickness in calibration.PRIMARY_THICKNESSES]
         secondary = [
-            {"eyelid_thickness_mm": "1.5", "ae_over_ac_gat": "2.5"},
-            {"eyelid_thickness_mm": "2.0", "ae_over_ac_gat": "1.7"},
+            {"eyelid_thickness_mm": "1.5", "ae_over_ac_flat_2deg": "2.5"},
+            {"eyelid_thickness_mm": "2.0", "ae_over_ac_flat_2deg": "1.7"},
         ]
         _, penalty = calibration.secondary_metrics(primary, secondary)
         self.assertEqual(penalty, 1.0)

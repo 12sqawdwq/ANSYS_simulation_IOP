@@ -87,7 +87,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("views_root", type=Path)
     parser.add_argument("output", type=Path)
-    parser.add_argument("--indent-mm", type=float, default=0.26)
+    parser.add_argument("--indent-mm", type=float, default=0.28)
     parser.add_argument("--suffix", type=int, default=7)
     parser.add_argument("--columns", type=int, default=4)
     parser.add_argument("--image-width", type=int, default=800)

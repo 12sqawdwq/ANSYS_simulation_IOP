@@ -245,6 +245,18 @@ def extract_case(
         if not (0 <= areas[0] <= areas[1] <= areas[2] <= metrics["inner_effect_area_m2"]):
             raise ValueError("inner geometric areas violate angle ordering")
         for prefix in ("outer", "inner"):
+            flat_areas = [
+                metrics[f"{prefix}_flat_projected_area_{angle}deg_m2"]
+                for angle in (1, 2, 3)
+            ]
+            if (
+                not (0 <= flat_areas[0] <= flat_areas[1] <= flat_areas[2])
+                or flat_areas[1] <= 0
+                or metrics[f"{prefix}_flat_surface_area_2deg_m2"] < flat_areas[1]
+                or metrics[f"{prefix}_flat_face_count_2deg"] <= 0
+            ):
+                raise ValueError(f"{prefix} objective flat-region area is invalid")
+        for prefix in ("outer", "inner"):
             if (
                 metrics[f"{prefix}_surface_area_m2"] <= 0
                 or metrics[f"{prefix}_projected_area_m2"] <= 0

@@ -403,6 +403,26 @@ def validate_attempt(
                 returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0]
             )
         for prefix in ("outer", "inner"):
+            flat_areas = [
+                float(metrics[f"{prefix}_flat_projected_area_{angle}deg_m2"])
+                for angle in (1, 2, 3)
+            ]
+            flat_surface = float(metrics[f"{prefix}_flat_surface_area_2deg_m2"])
+            flat_faces = int(round(float(metrics[f"{prefix}_flat_face_count_2deg"])))
+            if (
+                not (0 <= flat_areas[0] <= flat_areas[1] <= flat_areas[2])
+                or flat_areas[2] > math.pi * (2.16e-3) ** 2 * 1.01
+                or flat_areas[1] <= 0
+                or flat_surface < flat_areas[1]
+                or flat_faces <= 0
+                or float(metrics[f"{prefix}_flat_displacement_threshold_m"]) <= 0
+            ):
+                return AttemptOutcome(
+                    "invalid_metrics", f"{prefix} objective flat-region metrics are invalid",
+                    returncode, elapsed_seconds, error_count, len(views), metrics,
+                    rst_candidates[0]
+                )
+        for prefix in ("outer", "inner"):
             surface_area = float(metrics[f"{prefix}_surface_area_m2"])
             projected_area = float(metrics[f"{prefix}_projected_area_m2"])
             break_radius = float(metrics[f"{prefix}_break_radius_m"])
@@ -652,7 +672,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--offsets", type=float, nargs="+")
     parser.add_argument("--indents", type=float, nargs="+")
     parser.add_argument("--eyelid-thicknesses", type=float, nargs="+")
-    parser.add_argument("--thickness-indent-mm", type=float, default=0.8)
+    parser.add_argument("--thickness-indent-mm", type=float, default=0.28)
     parser.add_argument("--run-root", type=Path)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--np", type=int, default=4)

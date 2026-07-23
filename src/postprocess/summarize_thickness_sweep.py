@@ -37,6 +37,21 @@ SUMMARY_FIELDS = (
     "gat_ae_radius_mm",
     "gat_ae_area_mm2",
     "gat_ae_fill_fraction",
+    "outer_flat_area_1deg_mm2",
+    "outer_flat_area_2deg_mm2",
+    "outer_flat_area_3deg_mm2",
+    "outer_flat_surface_area_2deg_mm2",
+    "outer_flat_coverage_fraction",
+    "outer_flat_face_count_2deg",
+    "inner_flat_area_1deg_mm2",
+    "inner_flat_area_2deg_mm2",
+    "inner_flat_area_3deg_mm2",
+    "inner_flat_surface_area_2deg_mm2",
+    "inner_flat_face_count_2deg",
+    "ae_over_ac_flat_1deg",
+    "ae_over_ac_flat_2deg",
+    "ae_over_ac_flat_3deg",
+    "flatness_qc",
     "outer_contact_area_mm2",
     "contact_fill_fraction",
     "outer_area_mm2",
@@ -99,6 +114,16 @@ def value(row: dict[str, str], field: str) -> float:
     return parsed
 
 
+def optional_value(row: dict[str, str], field: str, fallback: float) -> float:
+    raw = row.get(field)
+    if raw in (None, ""):
+        return fallback
+    parsed = float(raw)
+    if not math.isfinite(parsed):
+        raise ValueError(f"non-finite {field} in {row.get('case', 'unknown case')}")
+    return parsed
+
+
 def breakpoint_method(code: float) -> str:
     return {1: "inflection", 2: "segmented_fit", 3: "probe_edge"}.get(
         int(round(code)), "unknown"
@@ -150,6 +175,38 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
         inner2 = value(raw, "inner_area_2deg_m2") * 1e6
         inner3 = value(raw, "inner_area_3deg_m2") * 1e6
         smooth2 = value(raw, "inner_area_smooth_2deg_m2") * 1e6
+        outer_flat1 = optional_value(
+            raw, "outer_flat_projected_area_1deg_m2", value(raw, "contact_area_m2")
+        ) * 1e6
+        outer_flat2 = optional_value(
+            raw, "outer_flat_projected_area_2deg_m2", value(raw, "contact_area_m2")
+        ) * 1e6
+        outer_flat3 = optional_value(
+            raw, "outer_flat_projected_area_3deg_m2", value(raw, "contact_area_m2")
+        ) * 1e6
+        outer_flat_surface2 = optional_value(
+            raw, "outer_flat_surface_area_2deg_m2", outer_flat2 * 1e-6
+        ) * 1e6
+        inner_flat1 = optional_value(
+            raw, "inner_flat_projected_area_1deg_m2", value(raw, "inner_area_1deg_m2")
+        ) * 1e6
+        inner_flat2 = optional_value(
+            raw, "inner_flat_projected_area_2deg_m2", value(raw, "inner_area_smooth_2deg_m2")
+        ) * 1e6
+        inner_flat3 = optional_value(
+            raw, "inner_flat_projected_area_3deg_m2", value(raw, "inner_area_3deg_m2")
+        ) * 1e6
+        inner_flat_surface2 = optional_value(
+            raw, "inner_flat_surface_area_2deg_m2", inner_flat2 * 1e-6
+        ) * 1e6
+        flat_ratios = (
+            outer_flat1 / inner_flat1 if inner_flat1 > 0 else "",
+            outer_flat2 / inner_flat2 if inner_flat2 > 0 else "",
+            outer_flat3 / inner_flat3 if inner_flat3 > 0 else "",
+        )
+        flat_spread = (
+            (outer_flat3 - outer_flat1) / outer_flat2 if outer_flat2 > 0 else math.inf
+        )
         rows.append({
             "case": raw["case"],
             "eyelid_thickness_mm": eyelid_thickness,
@@ -162,6 +219,25 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
             "probe_force_n": force,
             "probe_area_mm2": PROBE_AREA_MM2,
             **gat_geometry,
+            "outer_flat_area_1deg_mm2": outer_flat1,
+            "outer_flat_area_2deg_mm2": outer_flat2,
+            "outer_flat_area_3deg_mm2": outer_flat3,
+            "outer_flat_surface_area_2deg_mm2": outer_flat_surface2,
+            "outer_flat_coverage_fraction": outer_flat2 / PROBE_AREA_MM2,
+            "outer_flat_face_count_2deg": int(optional_value(
+                raw, "outer_flat_face_count_2deg", float(raw.get("n_outer") or 0)
+            )),
+            "inner_flat_area_1deg_mm2": inner_flat1,
+            "inner_flat_area_2deg_mm2": inner_flat2,
+            "inner_flat_area_3deg_mm2": inner_flat3,
+            "inner_flat_surface_area_2deg_mm2": inner_flat_surface2,
+            "inner_flat_face_count_2deg": int(optional_value(
+                raw, "inner_flat_face_count_2deg", value(raw, "inner_smooth_2deg_face_count")
+            )),
+            "ae_over_ac_flat_1deg": flat_ratios[0],
+            "ae_over_ac_flat_2deg": flat_ratios[1],
+            "ae_over_ac_flat_3deg": flat_ratios[2],
+            "flatness_qc": "warning_angle_sensitive" if flat_spread > 0.35 else "pass",
             "outer_contact_area_mm2": outer_contact,
             "contact_fill_fraction": outer_contact / PROBE_AREA_MM2,
             "outer_area_mm2": outer_contact,
@@ -304,6 +380,24 @@ def build_qc(
             add_check(checks, "error", "contact_exceeds_probe", case,
                       "closed contact area exceeds the 4.32 mm probe face")
         for prefix in ("outer", "inner"):
+            flat_fields = [
+                f"{prefix}_flat_projected_area_{angle}deg_m2" for angle in (1, 2, 3)
+            ]
+            if all(raw.get(field) not in (None, "") for field in flat_fields):
+                flat_areas = [value(raw, field) for field in flat_fields]
+                flat_surface = value(raw, f"{prefix}_flat_surface_area_2deg_m2")
+                if (
+                    not (0 <= flat_areas[0] <= flat_areas[1] <= flat_areas[2])
+                    or flat_areas[2] > probe_area * 1.01
+                    or flat_areas[1] <= 0
+                    or flat_surface < flat_areas[1]
+                ):
+                    add_check(checks, "error", "objective_flat_area", case,
+                              f"{prefix} objective flat-region areas are invalid")
+                elif (flat_areas[2] - flat_areas[0]) / flat_areas[1] > 0.35:
+                    add_check(checks, "warning", "objective_flat_angle_sensitivity", case,
+                              f"{prefix} 1-3 degree spread exceeds 35% of the 2 degree area")
+        for prefix in ("outer", "inner"):
             surface = value(raw, f"{prefix}_surface_area_m2")
             projected = value(raw, f"{prefix}_projected_area_m2")
             area_sensitivity = value(raw, f"{prefix}_area_sensitivity_fraction")
@@ -352,25 +446,38 @@ def plot_curves(run_root: Path, rows: list[dict[str, float | str]]) -> None:
             ("FORCE", [(x(row), float(row["probe_force_n"])) for row in rows]),
         )),
         ("outer_area_vs_thickness.png", "OUTER AREA MM2", (
-            ("GAT AE", [(x(row), float(row["gat_ae_area_mm2"])) for row in rows]),
+            ("OBJECTIVE FLAT 2 DEG", [
+                (x(row), float(row["outer_flat_area_2deg_mm2"])) for row in rows
+            ]),
             ("CONTACT", [(x(row), float(row["outer_contact_area_mm2"])) for row in rows]),
-            ("SURFACE", [(x(row), float(row["outer_surface_area_mm2"])) for row in rows]),
+            ("BREAKPOINT", [(x(row), float(row["outer_projected_area_mm2"])) for row in rows]),
+            ("GEOMETRY REFERENCE", [(x(row), float(row["gat_ae_area_mm2"])) for row in rows]),
         )),
         ("inner_area_vs_thickness.png", "INNER GEOMETRIC AREA MM2", (
+            ("OBJECTIVE FLAT 2 DEG", [
+                (x(row), float(row["inner_flat_area_2deg_mm2"])) for row in rows
+            ]),
             ("SURFACE", [(x(row), float(row["inner_surface_area_mm2"])) for row in rows]),
             ("PROJECTED", [(x(row), float(row["inner_projected_area_mm2"])) for row in rows]),
-            ("LEGACY SMOOTH 2 DEG", [
-                (x(row), float(row["inner_area_smooth_2deg_mm2"])) for row in rows
-            ]),
         )),
         ("area_ratio_vs_thickness.png", "AE OVER AC", (
-            ("GAT", [(x(row), float(row["ae_over_ac_gat"])) for row in rows]),
+            ("OBJECTIVE FLAT 2 DEG", [
+                (x(row), float(row["ae_over_ac_flat_2deg"])) for row in rows
+            ]),
             ("BREAKPOINT", [(x(row), float(row["ae_over_ac_projected"])) for row in rows]),
+            ("GEOMETRY REFERENCE", [(x(row), float(row["ae_over_ac_gat"])) for row in rows]),
         )),
         ("equivalent_diameter_vs_thickness.png", "EQUIVALENT DIAMETER MM", (
-            ("GAT OUTER", [(x(row), 2.0 * float(row["gat_ae_radius_mm"])) for row in rows]),
+            ("OBJECTIVE OUTER", [
+                (x(row), 2.0 * math.sqrt(float(row["outer_flat_area_2deg_mm2"]) / math.pi))
+                for row in rows
+            ]),
+            ("OBJECTIVE INNER", [
+                (x(row), 2.0 * math.sqrt(float(row["inner_flat_area_2deg_mm2"]) / math.pi))
+                for row in rows
+            ]),
             ("BREAK OUTER", [(x(row), float(row["outer_equivalent_diameter_mm"])) for row in rows]),
-            ("INNER", [(x(row), float(row["inner_equivalent_diameter_mm"])) for row in rows]),
+            ("PROBE", [(x(row), 2.0 * PROBE_RADIUS_MM) for row in rows]),
         )),
         ("pressure_vs_thickness.png", "PRESSURE KPA", (
             ("MEAN", [(x(row), float(row["mean_outer_pressure_kpa"])) for row in rows]),

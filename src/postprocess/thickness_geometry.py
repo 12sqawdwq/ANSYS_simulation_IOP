@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compute legacy and breakpoint-based applanation areas from interface faces."""
+"""Compute objective flat-region and diagnostic applanation areas."""
 from __future__ import annotations
 
 import argparse
@@ -33,6 +33,20 @@ GEOMETRY_FIELDS = (
     "inner_face_count",
     "inner_area_smooth_2deg_m2",
     "inner_smooth_2deg_face_count",
+    # Objective central connected flat regions. The 2 degree result is primary;
+    # 1 and 3 degree results quantify threshold sensitivity.
+    "outer_flat_projected_area_1deg_m2",
+    "outer_flat_projected_area_2deg_m2",
+    "outer_flat_projected_area_3deg_m2",
+    "outer_flat_surface_area_2deg_m2",
+    "outer_flat_face_count_2deg",
+    "outer_flat_displacement_threshold_m",
+    "inner_flat_projected_area_1deg_m2",
+    "inner_flat_projected_area_2deg_m2",
+    "inner_flat_projected_area_3deg_m2",
+    "inner_flat_surface_area_2deg_m2",
+    "inner_flat_face_count_2deg",
+    "inner_flat_displacement_threshold_m",
     # Breakpoint-based outer and inner surface metrics.
     "outer_local_max_downward_m",
     "outer_surface_area_m2",
@@ -79,6 +93,14 @@ class BreakpointResult:
     local_max: float
     surface_area: float
     projected_area: float
+
+
+@dataclass(frozen=True)
+class FlatAreaResult:
+    projected_area: float
+    surface_area: float
+    face_count: int
+    displacement_threshold: float
 
 
 def _vector(
@@ -482,6 +504,137 @@ def _integrate_disk(records: list[SurfaceRecord], radius: float) -> tuple[float,
     return surface_area, projected_area
 
 
+def _central_connected_elements(
+    faces: dict[int, Face], candidates: set[int]
+) -> set[int]:
+    """Return the candidate component nearest the probe axis."""
+    if not candidates:
+        return set()
+    edge_owners: dict[tuple[int, int], list[int]] = {}
+    for element in candidates:
+        nodes = faces[element].nodes
+        for first, second in ((nodes[0], nodes[1]), (nodes[1], nodes[2]), (nodes[2], nodes[0])):
+            edge_owners.setdefault(tuple(sorted((first, second))), []).append(element)
+    adjacency = {element: set() for element in candidates}
+    for owners in edge_owners.values():
+        if len(owners) < 2:
+            continue
+        for element in owners:
+            adjacency[element].update(owner for owner in owners if owner != element)
+
+    def center_radius(element: int) -> float:
+        face = faces[element]
+        x = sum(point[0] for point in face.points) / 3.0
+        z = sum(point[2] for point in face.points) / 3.0
+        return math.hypot(x, z)
+
+    seed = min(candidates, key=center_radius)
+    connected = {seed}
+    pending = [seed]
+    while pending:
+        element = pending.pop()
+        for neighbor in adjacency[element] - connected:
+            connected.add(neighbor)
+            pending.append(neighbor)
+    return connected
+
+
+def analyze_flat_surface(
+    preload: dict[int, Face],
+    final: dict[int, Face],
+    *,
+    angle_limit_deg: float = 2.0,
+    maximum_radius: float = PROBE_RADIUS_M,
+    displacement_fraction: float = DISPLACEMENT_FRACTION,
+) -> FlatAreaResult:
+    """Integrate the central, displaced and near-planar deformed surface region."""
+    _validate_face_sets(preload, final)
+    if angle_limit_deg <= 0 or maximum_radius <= 0:
+        raise ValueError("flatness angle and maximum radius must be positive")
+    if not 0 < displacement_fraction < 1:
+        raise ValueError("displacement_fraction must be between zero and one")
+
+    records = _surface_records(preload, final)
+    radii = np.asarray([record.radius for record in records], dtype=float)
+    downward = np.asarray([record.downward for record in records], dtype=float)
+    outer_mask = radii >= 0.8 * float(np.max(radii))
+    if int(np.count_nonzero(outer_mask)) < 3:
+        outer_mask = radii >= float(np.quantile(radii, 0.8))
+    baseline = float(np.median(downward[outer_mask]))
+    outer_residual = downward[outer_mask] - baseline
+    noise_sigma = 1.4826 * float(np.median(np.abs(
+        outer_residual - np.median(outer_residual)
+    )))
+    local_downward = {
+        record.face.element: max(record.downward - baseline, 0.0) for record in records
+    }
+    local_max = max(local_downward.values())
+    if local_max <= 0:
+        raise ValueError("surface has no positive local indentation displacement")
+    displacement_threshold = max(
+        3.0 * noise_sigma,
+        displacement_fraction * local_max,
+        ABSOLUTE_NOISE_M,
+    )
+
+    smooth_angles = _smoothed_face_angles(final)
+    candidates: set[int] = set()
+    clipped_projected: dict[int, float] = {}
+    records_by_element = {record.face.element: record for record in records}
+    for record in records:
+        element = record.face.element
+        if (
+            local_downward[element] < displacement_threshold
+            or smooth_angles[element] > angle_limit_deg
+        ):
+            continue
+        points = tuple((point[0], point[2]) for point in record.face.points)
+        area = _projected_area_inside_circle(points, maximum_radius)
+        if area > 0:
+            candidates.add(element)
+            clipped_projected[element] = area
+
+    connected = _central_connected_elements(final, candidates)
+    projected_area = 0.0
+    surface_area = 0.0
+    for element in connected:
+        record = records_by_element[element]
+        total_projected = record.projected_area
+        if total_projected <= 0:
+            continue
+        projected = clipped_projected[element]
+        fraction = min(1.0, max(0.0, projected / total_projected))
+        projected_area += projected
+        surface_area += fraction * record.surface_area
+    return FlatAreaResult(
+        projected_area=projected_area,
+        surface_area=surface_area,
+        face_count=len(connected),
+        displacement_threshold=displacement_threshold,
+    )
+
+
+def _flat_surface_metrics(
+    prefix: str, preload: dict[int, Face], final: dict[int, Face]
+) -> dict[str, float | int]:
+    results = {
+        int(angle): analyze_flat_surface(
+            preload, final, angle_limit_deg=angle, maximum_radius=PROBE_RADIUS_M
+        )
+        for angle in ANGLE_LIMITS_DEG
+    }
+    primary = results[2]
+    return {
+        **{
+            f"{prefix}_flat_projected_area_{angle}deg_m2": results[angle].projected_area
+            for angle in (1, 2, 3)
+        },
+        f"{prefix}_flat_surface_area_2deg_m2": primary.surface_area,
+        f"{prefix}_flat_face_count_2deg": primary.face_count,
+        f"{prefix}_flat_displacement_threshold_m": primary.displacement_threshold,
+    }
+
+
 def analyze_breakpoint_surface(
     preload: dict[int, Face],
     final: dict[int, Face],
@@ -572,6 +725,7 @@ def analyze_files(
     inner_preload = read_faces(inner_preload_path)
     inner_final = read_faces(inner_final_path)
     metrics = analyze_faces(inner_preload, inner_final)
+    metrics.update(_flat_surface_metrics("inner", inner_preload, inner_final))
     metrics.update(_surface_metrics(
         "inner", inner_preload, inner_final, PROBE_RADIUS_M
     ))
@@ -579,6 +733,7 @@ def analyze_files(
         raise ValueError("outer preload and final face files are required")
     outer_preload = read_faces(outer_preload_path)
     outer_final = read_faces(outer_final_path)
+    metrics.update(_flat_surface_metrics("outer", outer_preload, outer_final))
     metrics.update(_surface_metrics(
         "outer", outer_preload, outer_final, PROBE_RADIUS_M
     ))
@@ -665,12 +820,14 @@ def write_results(output_dir: Path, metrics: dict[str, float | int]) -> None:
             "reference_state": "end of IOP preload (load step 1)",
             "final_state": "requested probe-indentation state",
             "primary_boundary": (
-                "area-weighted continuous breakpoint between the central near-planar segment and "
-                "the outer curved segment; radial indentation support is guarded by an outer-annulus "
-                "noise floor and limited by the probe radius"
+                "central edge-connected deformed faces within the probe radius, with smoothed face "
+                "normal at most 2 degrees from the probe axis and indentation displacement above an "
+                "outer-annulus noise floor"
             ),
-            "primary_area": "deformed surface integral inside the circular breakpoint",
-            "diagnostic_area": "projection onto the plane normal to the global Y probe axis",
+            "primary_area": "projected integral of the objective 2 degree flat region",
+            "primary_area_is_forced_to_probe": False,
+            "flatness_sensitivity_deg": list(ANGLE_LIMITS_DEG),
+            "diagnostic_area": "contact-status and radial-breakpoint areas are independent checks",
             "radial_bin_m": RADIAL_BIN_M,
             "relative_noise": RELATIVE_NOISE,
             "absolute_noise_m": ABSOLUTE_NOISE_M,

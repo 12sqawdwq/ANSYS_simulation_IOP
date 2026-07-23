@@ -25,7 +25,7 @@ FINAL_THICKNESSES = (0.8, 1.0, 1.2, 1.25, 1.4, 1.5, 1.6, 1.8, 2.0)
 MESH_VALIDATION_THICKNESSES = (0.8, 1.2, 2.0)
 PRIMARY_RANGE = (1.5, 2.0)
 SECONDARY_RANGES = {1.5: (2.0, 3.0), 2.0: (4.0, 8.0)}
-PRIMARY_RATIO_FIELD = "ae_over_ac_gat"
+PRIMARY_RATIO_FIELD = "ae_over_ac_flat_2deg"
 SCORE_FIELDS = (
     "variant", "eyelid_material_scale", "cornea_material_scale", "stage",
     "complete_primary", "primary_pass_count", "primary_mean_error",
@@ -80,6 +80,9 @@ def area_ratio(row: dict[str, str]) -> float:
     value = row.get(PRIMARY_RATIO_FIELD)
     if value not in (None, ""):
         return float(value)
+    historical = row.get("ae_over_ac_gat")
+    if historical not in (None, ""):
+        return float(historical)
     return float(row["ae_over_ac_surface"])
 
 
@@ -127,7 +130,9 @@ def run_command(command: list[str], *, allow_failure: bool = True) -> int:
     return completed.returncode
 
 
-def prune_primary_results(source: Path, keep_thicknesses: set[float]) -> None:
+def prune_primary_results(
+    source: Path, keep_thicknesses: set[float], target_indent_mm: float
+) -> None:
     removed: list[dict[str, int | str]] = []
     for row in read_csv(source / "run_manifest.csv"):
         if row.get("status") != "complete":
@@ -145,7 +150,9 @@ def prune_primary_results(source: Path, keep_thicknesses: set[float]) -> None:
                 path.unlink()
                 removed.append({"path": str(path.relative_to(source)), "bytes": size})
     atomic_json(source / "calibration_artifact_cleanup.json", {
-        "policy": "remove screening DB/RST after successful 0.26 mm extraction",
+        "policy": (
+            f"remove screening DB/RST after successful {target_indent_mm:g} mm extraction"
+        ),
         "kept_thicknesses_mm": sorted(keep_thicknesses),
         "removed_files": removed,
         "removed_bytes": sum(int(item["bytes"]) for item in removed),
@@ -165,7 +172,7 @@ def run_variant_phase(
 ) -> list[dict[str, str]]:
     variant_root = root / "candidates" / variant.name
     source = variant_root / f"{phase}_source"
-    state = variant_root / f"{phase}_state_0p26"
+    state = variant_root / f"{phase}_state_{label(cli.target_indent_mm)}"
     summary = state / "summary.csv"
     if summary.is_file():
         return read_csv(summary)
@@ -191,7 +198,9 @@ def run_variant_phase(
     run_command(extractor)
     rows = read_csv(summary)
     if rows:
-        prune_primary_results(source, keep_primary_thicknesses or set())
+        prune_primary_results(
+            source, keep_primary_thicknesses or set(), cli.target_indent_mm
+        )
     return rows
 
 
@@ -336,19 +345,19 @@ def run_final(root: Path, best: dict, cli: argparse.Namespace) -> None:
         f"- 眼睑材料倍率：{variant.eyelid_scale:.6g}",
         f"- 角膜材料倍率：{variant.cornea_scale:.6g}",
         f"- 校准状态：沿 {cli.source_indent_mm:g} mm 加载路径提取 {cli.target_indent_mm:g} mm",
-        "- 主指标：GAT 平面几何 Ae / 内侧折点投影 Ac",
+        "- 主指标：外侧/内侧中央连续 2° 客观平坦区投影面积比",
         "",
         "## 完整厚度结果",
         "",
-        "| 厚度 (mm) | GAT Ae/Ac | GAT Ae (mm²) | Ac投影 (mm²) | 反力 (N) |",
+        "| 厚度 (mm) | 客观 Ae/Ac | Ae平坦区 (mm²) | Ac平坦区 (mm²) | 反力 (N) |",
         "|---:|---:|---:|---:|---:|",
     ]
     for row in sorted(rows, key=lambda item: float(item["eyelid_thickness_mm"])):
         report_lines.append(
             f"| {float(row['eyelid_thickness_mm']):.2f} | "
             f"{area_ratio(row):.3f} | "
-            f"{float(row['gat_ae_area_mm2']):.3f} | "
-            f"{float(row['inner_projected_area_mm2']):.3f} | "
+            f"{float(row['outer_flat_area_2deg_mm2']):.3f} | "
+            f"{float(row['inner_flat_area_2deg_mm2']):.3f} | "
             f"{float(row['probe_force_n']):.4f} |"
         )
     report_lines.extend([
@@ -367,7 +376,7 @@ def run_final(root: Path, best: dict, cli: argparse.Namespace) -> None:
     report_lines.extend([
         "",
         "主区间要求为0.8-1.25 mm四个点中至少三个相对实验区间误差不超过20%。",
-        "旧1°/2°/3°面片和外侧折点结果仅保留用于追溯，材料选择使用 GAT 几何面积比。",
+        "1°/3°结果用于阈值灵敏度；接触、折点和几何面积仅作独立诊断，不强制 Ae 等于探头面积。",
         "",
     ])
     (root / "calibration_report.md").write_text(
@@ -382,7 +391,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--np", type=int, default=4)
     parser.add_argument("--timeout-seconds", type=float, default=7200)
     parser.add_argument("--source-indent-mm", type=float, default=0.8)
-    parser.add_argument("--target-indent-mm", type=float, default=0.26)
+    parser.add_argument("--target-indent-mm", type=float, default=0.28)
     parser.add_argument("--skip-final", action="store_true")
     return parser
 

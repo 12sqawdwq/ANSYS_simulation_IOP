@@ -154,7 +154,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("source_run", type=Path)
     parser.add_argument("output_run", type=Path)
-    parser.add_argument("--target-indent-mm", type=float, default=0.26)
+    parser.add_argument("--target-indent-mm", type=float, default=0.28)
     parser.add_argument("--source-indent-mm", type=float, default=0.8)
     parser.add_argument("--workers", type=int, default=7)
     parser.add_argument("--np", type=int, default=1)
