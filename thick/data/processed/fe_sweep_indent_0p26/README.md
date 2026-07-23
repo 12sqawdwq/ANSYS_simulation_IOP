@@ -10,6 +10,7 @@
 | `qc.json` | 完整性、位移、视图、接触和面积判据检查 |
 | `indent_comparison.csv` | 旧 `Ae/Ac(2°)` 在 `0.26 mm` 与 `0.80 mm` 推进下的历史对照，不进入新口径结论 |
 | `trend_analysis.json` | 曲面积分 `Ae/Ac` 和探头名义面积诊断量的描述性趋势参数 |
+| `contact_endpoint_scan.csv` | 代表厚度在 `0.35-0.80 mm` 推进下的接触填充率、外侧压平直径、反力和压力，用于定位完全接触点 |
 | `strain_007_manifest.csv` / `strain_007_metadata.json` | 校准前参数的仅眼睑 `EPEL,EQV` 后处理归档，不进入当前数值结论 |
 | `strain_probe_007_manifest.csv` / `strain_probe_007_metadata.json` | 校准前参数的眼睑与探头 `EPEL,EQV` 后处理归档，不进入当前数值结论 |
 | `excluded_endpoint_exploration/` | 被排除的独立终点试算清单、异常日志与排除依据，不进入发布趋势 |
@@ -33,3 +34,13 @@
 | `probe_area_mm2=14.6574` | 直径 4.32 mm 探头的名义全表面面积 |
 
 9/9 状态完成。最终 QC 为 `0 error、36 warning、1 info`，`passed=true`。warning 来自折点拟合窗口尺度敏感、几何折点与闭合接触边界差异，以及历史角度阈值敏感；不表示 MAPDL 求解失败或结果缺失。报告见 [0.26 mm 补充报告](../../../docs/眼睑厚度Ae_Ac推进0.26mm补充报告.md)，图片见 [视图索引](../../../figures/fe_sweep_indent_0p26/views/README.md)。
+
+完全接触快速扫描复用 `full_source` 中保留完整 `.db/.rst` 的 `0.80、1.20、2.00 mm` 三个代表厚度，只执行结果状态提取。`0.70 mm` 时三组接触填充率均超过 `93%`，`0.75 mm` 时达到 `94.1%-95.0%`；继续推进到 `0.80 mm` 后接触面积变化不足 `0.6%`。因此 `0.70 mm` 视为完全接触开始，正式统一采样使用保守值 `0.75 mm`。扫描未生成逐状态 MAPDL 视图，只保留轻量指标和趋势图。
+
+5090d 扫描目录：
+
+```text
+/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/contact_endpoint_scan
+```
+
+状态提取代码来源为 Git 提交 `9fc940534c51968dd32edf1c4aee6fff1f89ede5`，远程轻量后处理目录共约 `52 MB`，没有复制源 `.db/.rst`。源清理策略只保留上述三个厚度的完整结果；远程各次提取清单中其余六个厚度显示为 `invalid_metrics`，原因是源 `.db/.rst` 已删除。它们未进入 `contact_endpoint_scan.csv`，不属于本轮三个有效状态的求解或后处理失败。
