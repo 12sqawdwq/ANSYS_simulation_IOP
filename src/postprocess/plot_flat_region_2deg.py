@@ -32,6 +32,14 @@ INK = (28, 31, 35)
 PROBE = (78, 82, 88)
 
 
+def angle_text(angle_deg: float) -> str:
+    return f"{angle_deg:g}"
+
+
+def angle_slug(angle_deg: float) -> str:
+    return angle_text(angle_deg).replace(".", "p")
+
+
 def font(size: int) -> ImageFont.ImageFont:
     for path in (
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
@@ -50,6 +58,7 @@ def panel(
     faces: dict[int, Face],
     selected: set[int],
     result: FlatAreaResult,
+    angle_deg: float,
 ) -> Image.Image:
     width, height = 650, 650
     margin, plot_size = 44, 550
@@ -88,7 +97,7 @@ def panel(
     area_mm2 = result.projected_area * 1e6
     draw.text(
         (margin, 610),
-        f"2 deg area={area_mm2:.3f} mm2   faces={result.face_count}",
+        f"{angle_text(angle_deg)} deg area={area_mm2:.3f} mm2   faces={result.face_count}",
         fill=INK,
         font=font(16),
     )
@@ -305,12 +314,20 @@ def render_multiview(
     outer_selected: set[int],
     inner_faces: dict[int, Face],
     inner_selected: set[int],
+    angle_deg: float,
 ) -> None:
     selected_y = [
         point[1] * 1e3
         for element in outer_selected
         for point in outer_faces[element].points
     ]
+    if not selected_y:
+        selected_y = [
+            point[1] * 1e3
+            for face in outer_faces.values()
+            for point in face.points
+            if math.hypot(point[0], point[2]) <= PROBE_RADIUS_M
+        ]
     probe_bottom = statistics.median(selected_y)
     panels = (
         _render_3d_panel(
@@ -336,7 +353,8 @@ def render_multiview(
     draw = ImageDraw.Draw(canvas)
     draw.text(
         (24, 14),
-        f"2 DEG OBJECTIVE FLAT REGION MULTIVIEW   t={thickness_mm:.2f} mm   indent={indent_mm:.2f} mm",
+        f"{angle_text(angle_deg)} DEG OBJECTIVE FLAT REGION MULTIVIEW   "
+        f"t={thickness_mm:.2f} mm   indent={indent_mm:.2f} mm",
         fill=INK,
         font=font(25),
     )
@@ -352,30 +370,33 @@ def render_case(
     case: str,
     thickness_mm: float,
     indent_mm: float,
+    angle_deg: float,
 ) -> dict[str, str | float | int]:
     inner_preload = read_faces(attempt / "inner_preload_faces.csv")
     inner_final = read_faces(attempt / "inner_final_faces.csv")
     outer_preload = read_faces(attempt / "outer_preload_faces.csv")
     outer_final = read_faces(attempt / "outer_final_faces.csv")
     outer, outer_selected = select_flat_surface(
-        outer_preload, outer_final, angle_limit_deg=2.0
+        outer_preload, outer_final, angle_limit_deg=angle_deg
     )
     inner, inner_selected = select_flat_surface(
-        inner_preload, inner_final, angle_limit_deg=2.0
+        inner_preload, inner_final, angle_limit_deg=angle_deg
     )
 
     canvas = Image.new("RGB", (1320, 735), (246, 247, 249))
     draw = ImageDraw.Draw(canvas)
     draw.text(
         (24, 12),
-        f"2 DEG OBJECTIVE FLAT REGION   t={thickness_mm:.2f} mm   indent={indent_mm:.2f} mm",
+        f"{angle_text(angle_deg)} DEG OBJECTIVE FLAT REGION   "
+        f"t={thickness_mm:.2f} mm   indent={indent_mm:.2f} mm",
         fill=INK,
         font=font(24),
     )
-    canvas.paste(panel("OUTER AE", outer_final, outer_selected, outer), (10, 52))
-    canvas.paste(panel("INNER AC", inner_final, inner_selected, inner), (660, 52))
+    canvas.paste(panel("OUTER AE", outer_final, outer_selected, outer, angle_deg), (10, 52))
+    canvas.paste(panel("INNER AC", inner_final, inner_selected, inner, angle_deg), (660, 52))
     draw.rectangle((32, 707, 54, 727), fill=RED)
-    draw.text((62, 707), "effective: displaced, central-connected, normal angle <= 2 deg",
+    draw.text((62, 707),
+              f"effective: displaced, central-connected, normal angle <= {angle_text(angle_deg)} deg",
               fill=INK, font=font(14))
     draw.rectangle((760, 707, 782, 727), fill=BLUE)
     draw.text((790, 707), "not included", fill=INK, font=font(14))
@@ -391,17 +412,19 @@ def render_case(
         outer_selected,
         inner_final,
         inner_selected,
+        angle_deg,
     )
     return {
         "case": case,
         "eyelid_thickness_mm": thickness_mm,
         "indent_mm": indent_mm,
-        "outer_flat_area_2deg_mm2": outer.projected_area * 1e6,
+        "angle_deg": angle_deg,
+        "outer_flat_area_mm2": outer.projected_area * 1e6,
         "outer_coverage_fraction": outer.projected_area / PROBE_AREA_M2,
         "outer_selected_faces": outer.face_count,
-        "inner_flat_area_2deg_mm2": inner.projected_area * 1e6,
+        "inner_flat_area_mm2": inner.projected_area * 1e6,
         "inner_selected_faces": inner.face_count,
-        "ae_over_ac_flat_2deg": (
+        "ae_over_ac": (
             outer.projected_area / inner.projected_area if inner.projected_area > 0 else ""
         ),
         "image": str(output),
@@ -448,51 +471,56 @@ def main() -> int:
     parser.add_argument("run_root", type=Path)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--angles", type=float, nargs="+", default=(0.5, 1.0, 2.0, 3.0))
     cli = parser.parse_args()
-    if cli.workers < 1:
-        parser.error("workers must be positive")
+    if cli.workers < 1 or any(angle <= 0 for angle in cli.angles):
+        parser.error("workers and flatness angles must be positive")
     root = cli.run_root.expanduser().resolve()
-    output_dir = (
+    output_base = (
         cli.output_dir.expanduser().resolve()
-        if cli.output_dir else root / "figures" / "flat_region_2deg"
+        if cli.output_dir else root / "figures"
     )
     with (root / "run_manifest.csv").open(newline="", encoding="utf-8") as handle:
         manifest = [row for row in csv.DictReader(handle) if row.get("status") == "complete"]
-    jobs = []
+    jobs: list[tuple[Path, dict[str, str]]] = []
     for row in manifest:
         attempt = root / row["attempt_dir"]
         required = tuple(attempt / f"{name}_{state}_faces.csv" for name in ("inner", "outer")
                          for state in ("preload", "final"))
         if all(path.is_file() for path in required):
-            jobs.append((attempt, output_dir / f"{row['case']}_flat_region_2deg.png", row))
+            jobs.append((attempt, row))
     if not jobs:
         print("no complete cases with surface face data", file=sys.stderr)
         return 1
 
-    rows: list[dict[str, str | float | int]] = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=cli.workers) as pool:
-        futures = [
-            pool.submit(
-                render_case,
-                attempt,
-                output,
-                row["case"],
-                float(row["eyelid_thickness_mm"]),
-                float(row["indent_mm"]),
-            )
-            for attempt, output, row in jobs
-        ]
-        for future in concurrent.futures.as_completed(futures):
-            rows.append(future.result())
-    rows.sort(key=lambda row: float(row["eyelid_thickness_mm"]))
-    write_manifest(output_dir / "flat_region_2deg_manifest.csv", rows)
-    write_matrix(output_dir.parent / "flat_region_2deg_matrix.png", rows)
-    write_matrix(
-        output_dir.parent / "flat_region_2deg_multiview_matrix.png",
-        rows,
-        image_field="multiview_image",
-    )
-    print(f"rendered={len(rows)} output={output_dir}")
+    for angle_deg in dict.fromkeys(cli.angles):
+        slug = angle_slug(angle_deg)
+        output_dir = output_base / f"flat_region_{slug}deg"
+        rows: list[dict[str, str | float | int]] = []
+        with concurrent.futures.ThreadPoolExecutor(max_workers=cli.workers) as pool:
+            futures = [
+                pool.submit(
+                    render_case,
+                    attempt,
+                    output_dir / f"{row['case']}_flat_region_{slug}deg.png",
+                    row["case"],
+                    float(row["eyelid_thickness_mm"]),
+                    float(row["indent_mm"]),
+                    angle_deg,
+                )
+                for attempt, row in jobs
+            ]
+            for future in concurrent.futures.as_completed(futures):
+                rows.append(future.result())
+        rows.sort(key=lambda row: float(row["eyelid_thickness_mm"]))
+        write_manifest(output_dir / f"flat_region_{slug}deg_manifest.csv", rows)
+        write_matrix(output_base / f"flat_region_{slug}deg_matrix.png", rows)
+        write_matrix(
+            output_base / f"flat_region_{slug}deg_multiview_matrix.png",
+            rows,
+            image_field="multiview_image",
+        )
+        print(f"angle={angle_text(angle_deg)} rendered={len(rows)} output={output_dir}")
     return 0
 
 
