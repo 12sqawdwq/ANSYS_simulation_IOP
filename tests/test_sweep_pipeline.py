@@ -93,6 +93,10 @@ class ThicknessStateExtractionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             extract_thickness_state.result_time_for_indent(0.81, 0.8)
 
+    def test_postprocessing_job_name_stays_short(self) -> None:
+        self.assertEqual(extract_thickness_state.post_job_name(1.25), "post_1p25")
+        self.assertLess(len(extract_thickness_state.post_job_name(1.25)), 16)
+
 
 class ThicknessViewMatrixTests(unittest.TestCase):
     def test_builds_matrix_without_cropping_source_aspect_ratio(self) -> None:

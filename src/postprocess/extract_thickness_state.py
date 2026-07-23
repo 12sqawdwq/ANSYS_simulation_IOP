@@ -92,6 +92,10 @@ def target_case_name(thickness_mm: float, target_indent_mm: float) -> str:
     return f"eyelid_{label(thickness_mm)}mm_indent_{label(target_indent_mm)}mm"
 
 
+def post_job_name(thickness_mm: float) -> str:
+    return f"post_{label(thickness_mm)}"
+
+
 def _rename_views(attempt: Path, source_case: str, target_case: str) -> int:
     views = sorted(attempt.glob(f"{source_case}[0-9][0-9][0-9].png"))
     for index, source in enumerate(views):
@@ -192,7 +196,8 @@ def extract_case(
         )
         command = [
             str(ansys_bin), "-b", "-np", str(np), "-dir", str(attempt),
-            "-i", str(driver), "-o", str(attempt / "solve.out"), "-j", f"post_{target_case}",
+            "-i", str(driver), "-o", str(attempt / "solve.out"),
+            "-j", post_job_name(thickness_mm),
         ]
         env = os.environ.copy()
         env.update({"ANSYSLMD_LICENSE_FILE": "1055@localhost", "ANSYS_LOCK": "OFF"})
