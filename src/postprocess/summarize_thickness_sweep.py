@@ -89,7 +89,9 @@ def value(row: dict[str, str], field: str) -> float:
 
 
 def breakpoint_method(code: float) -> str:
-    return {1: "inflection", 2: "segmented_fit"}.get(int(round(code)), "unknown")
+    return {1: "inflection", 2: "segmented_fit", 3: "probe_edge"}.get(
+        int(round(code)), "unknown"
+    )
 
 
 def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]:

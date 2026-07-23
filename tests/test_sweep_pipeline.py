@@ -315,6 +315,16 @@ class RunnerBehaviorTests(unittest.TestCase):
             outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
             self.assertEqual(outcome.status, "invalid_metrics")
 
+    def test_no_view_policy_ignores_boundary_qc_plot(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            case = runner.CaseSpec(0.0, 0.8, 0, 1.0, "thickness")
+            attempt = AttemptValidationTests().make_attempt(Path(directory), case)
+            for path in attempt.glob(f"{case.name}[0-9][0-9][0-9].png"):
+                path.unlink()
+            (attempt / "applanation_boundary_qc.png").write_bytes(b"png")
+            outcome = runner.validate_attempt(attempt, case, 0, False, 1.0, 0)
+            self.assertEqual(outcome.status, "complete")
+
 
 class ArtifactRetentionTests(unittest.TestCase):
     def populate_attempt(self, root: Path, job: str) -> Path:
@@ -592,7 +602,7 @@ class ThicknessGeometryTests(unittest.TestCase):
         self.assertEqual(method, "segmented_fit")
         self.assertLess(abs(radius - transition), 0.03e-3)
 
-    def test_surface_without_flat_to_curved_transition_is_rejected(self) -> None:
+    def test_surface_without_internal_transition_uses_probe_edge(self) -> None:
         dummy = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))
         records = [
             thickness_geometry.SurfaceRecord(
@@ -605,10 +615,12 @@ class ThicknessGeometryTests(unittest.TestCase):
             )
             for radius in (index * 0.025e-3 for index in range(1, 121))
         ]
-        with self.assertRaisesRegex(ValueError, "distinct central flat-to-curved"):
-            thickness_geometry._break_radius(
-                records, 0.1e-3, 0.02, thickness_geometry.PROBE_RADIUS_M
-            )
+        radius, method, _, _ = thickness_geometry._break_radius(
+            records, 0.1e-3, 0.02, thickness_geometry.PROBE_RADIUS_M
+        )
+        self.assertEqual(method, "probe_edge")
+        self.assertLessEqual(radius, thickness_geometry.PROBE_RADIUS_M)
+        self.assertGreater(radius, thickness_geometry.PROBE_RADIUS_M - 0.2e-3)
 
 
 class ThicknessCalibrationTests(unittest.TestCase):

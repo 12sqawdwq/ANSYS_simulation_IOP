@@ -22,7 +22,7 @@ RADIAL_BIN_M = 0.15e-3
 ABSOLUTE_NOISE_M = 1.0e-6
 RELATIVE_NOISE = 0.02
 FIT_WINDOW_SCALES = (0.90, 0.95, 1.00)
-BREAK_METHOD_CODES = {"inflection": 1, "segmented_fit": 2}
+BREAK_METHOD_CODES = {"inflection": 1, "segmented_fit": 2, "probe_edge": 3}
 GEOMETRY_FIELDS = (
     # Legacy angle-threshold fields retained for traceability.
     "inner_max_downward_m",
@@ -380,8 +380,18 @@ def _break_radius(
     )
     if fitting_radius < 0.75e-3:
         raise ValueError("too few radial bins to identify an applanation breakpoint")
-    radius = _segmented_surface_break(records, fitting_radius)
-    method = "segmented_fit"
+    try:
+        radius = _segmented_surface_break(records, fitting_radius)
+        if radius >= fitting_radius - 0.27e-3:
+            radius = fitting_radius
+            method = "probe_edge"
+        else:
+            method = "segmented_fit"
+    except ValueError as error:
+        if "distinct central flat-to-curved transition" not in str(error):
+            raise
+        radius = fitting_radius
+        method = "probe_edge"
     if radius <= 0:
         raise ValueError("computed applanation breakpoint is non-positive")
     return radius, method, threshold, local_max
@@ -599,7 +609,7 @@ def write_boundary_qc_plot(
     draw = ImageDraw.Draw(image)
     title_font = _plot_font(22)
     label_font = _plot_font(15)
-    draw.text((30, 18), "0.26 mm applanation breakpoint QC", fill=(25, 25, 25), font=title_font)
+    draw.text((30, 18), "Applanation breakpoint QC", fill=(25, 25, 25), font=title_font)
 
     for panel, (prefix, faces) in enumerate((
         ("outer", outer_faces), ("inner", inner_faces)
@@ -629,7 +639,7 @@ def write_boundary_qc_plot(
              center_x + circle_radius, center_y + circle_radius),
             outline=(220, 70, 54), width=3,
         )
-        method = {1: "inflection", 2: "segmented fit"}.get(
+        method = {1: "inflection", 2: "segmented fit", 3: "probe edge"}.get(
             int(round(float(metrics[f"{prefix}_break_method_code"]))), "unknown"
         )
         diameter = 2.0 * math.sqrt(

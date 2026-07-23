@@ -9,7 +9,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 
-THICKNESSES_MM = (0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0)
+THICKNESSES_MM = (0.8, 1.0, 1.2, 1.25, 1.4, 1.5, 1.6, 1.8, 2.0)
 
 
 def label(value: float) -> str:

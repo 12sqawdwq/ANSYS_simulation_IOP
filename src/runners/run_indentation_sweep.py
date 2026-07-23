@@ -327,7 +327,10 @@ def validate_attempt(
     if not metrics_path.is_file() or not solution_status_path.is_file() or not rst_candidates:
         return AttemptOutcome("missing_results", "metrics, solution status, or RST is missing",
                               returncode, elapsed_seconds, error_count, 0, {}, None)
-    views = [path for path in attempt_dir.glob("*.png") if path.stat().st_size > 0]
+    views = [
+        path for path in attempt_dir.glob(f"{case.name}[0-9][0-9][0-9].png")
+        if path.stat().st_size > 0
+    ]
     if len(views) != expected_views:
         return AttemptOutcome("missing_results", f"expected {expected_views} non-empty views, found {len(views)}",
                               returncode, elapsed_seconds, error_count, len(views), {}, rst_candidates[0])
@@ -409,19 +412,20 @@ def validate_attempt(
                 or projected_area <= 0
                 or projected_area > surface_area * (1.0 + 1e-9)
                 or break_radius <= 0
-                or method_code not in (1, 2)
+                or method_code not in (1, 2, 3)
             ):
                 return AttemptOutcome(
                     "invalid_metrics", f"{prefix} breakpoint area is invalid",
                     returncode, elapsed_seconds, error_count, len(views), metrics,
                     rst_candidates[0]
                 )
-        if float(metrics["outer_break_radius_m"]) > 2.16e-3 * (1.0 + 1e-9):
-            return AttemptOutcome(
-                "invalid_metrics", "outer breakpoint exceeds the probe radius",
-                returncode, elapsed_seconds, error_count, len(views), metrics,
-                rst_candidates[0]
-            )
+        for prefix in ("outer", "inner"):
+            if float(metrics[f"{prefix}_break_radius_m"]) > 2.16e-3 * (1.0 + 1e-9):
+                return AttemptOutcome(
+                    "invalid_metrics", f"{prefix} breakpoint exceeds the probe radius",
+                    returncode, elapsed_seconds, error_count, len(views), metrics,
+                    rst_candidates[0]
+                )
     return AttemptOutcome("complete", "", returncode, elapsed_seconds, error_count,
                           len(views), metrics, rst_candidates[0])
 
@@ -485,14 +489,18 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
         attempt_dir, case, returncode, timed_out, elapsed_seconds, expected_views
     )
     try:
+        retain_primary_results = (
+            outcome.status == "complete"
+            or (returncode == 0 and not timed_out and outcome.rst_path is not None)
+        )
         prune_stats = prune_attempt(
             attempt_dir,
             case.name,
-            keep_primary_results=outcome.status == "complete",
+            keep_primary_results=retain_primary_results,
         )
         outcome.artifact_pruned_files = prune_stats.files_selected
         outcome.artifact_pruned_bytes = prune_stats.bytes_selected
-        if outcome.status != "complete":
+        if outcome.status != "complete" and not retain_primary_results:
             outcome.rst_path = None
     except OSError as error:
         outcome.artifact_prune_error = str(error)
