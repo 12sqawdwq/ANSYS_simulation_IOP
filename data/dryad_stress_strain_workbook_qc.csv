@@ -1,0 +1,15 @@
+﻿source_id,pair_id,treatment,source_file,official_ogden_mu_mpa,official_ogden_alpha,workbook_ogden_mu_mpa,workbook_ogden_alpha,mu_difference_percent,alpha_difference_percent,curve_points,curve_nrmse_span_percent,qc_status
+PORCINE_DRYAD_2020,1,control_PBS,eye1_stressvsstrain.xlsx,0.0102,96.07,0.0102,96.0751,0,0.0053086291,26,1.5407707,verified_against_table2
+PORCINE_DRYAD_2020,1,CXL,eye1_stressvsstrain.xlsx,0.0403,112.54,0.0403,112.5431,0,0.0027545762,26,1.4690799,verified_against_table2
+PORCINE_DRYAD_2020,2,control_PBS,eye2_stressvsstrain.xlsx,0.01,57.3,0.01,57.305,0,0.0087260035,36,2.2043658,verified_against_table2
+PORCINE_DRYAD_2020,2,CXL,eye2_stressvsstrain.xlsx,0.0139,73.31,0.0139,73.3101,0,0.00013640704,36,2.04248,verified_against_table2
+PORCINE_DRYAD_2020,3,control_PBS,eye3_stressvsstrain.xlsx,0.0091,64.69,0.091,64.69,900,0,36,300.41828,workbook_parameter_mismatch
+PORCINE_DRYAD_2020,3,CXL,eye3_stressvsstrain.xlsx,0.0126,80.93,0.126,80.93,900,0,36,272.94949,workbook_parameter_mismatch
+PORCINE_DRYAD_2020,4,control_PBS,eye4_stressvsstrain.xlsx,0.0144,75.52,0.0144,75.5215,0,0.0019862288,43,2.2311685,verified_against_table2
+PORCINE_DRYAD_2020,4,CXL,eye4_stressvsstrain.xlsx,0.0112,151.22,0.0112,151.2199,0,-6.6128819e-05,43,1.7533265,verified_against_table2
+PORCINE_DRYAD_2020,5,control_PBS,eye5_stressvsstrain.xlsx,0.0082,57.65,0.0082,57.6521,0,0.0036426713,44,2.4820378,verified_against_table2
+PORCINE_DRYAD_2020,5,CXL,eye5_stressvsstrain.xlsx,0.0088,90.42,0.0088,90.4244,0,0.00486618,44,2.1138471,verified_against_table2
+PORCINE_DRYAD_2020,6,control_PBS,eye6_stressvsstrain.xlsx,0.0096,53.1,0.0102,96.0751,6.25,80.932392,26,122.08559,workbook_parameter_mismatch
+PORCINE_DRYAD_2020,6,CXL,eye6_stressvsstrain.xlsx,0.0085,84.4,0.0403,112.5431,374.11765,33.344905,26,408.49571,workbook_parameter_mismatch
+PORCINE_DRYAD_2020,7,control_PBS,eye7_stressvsstrain.xlsx,0.0133,51.36,0.0133,51.3617,0,0.0033099688,43,2.5465356,verified_against_table2
+PORCINE_DRYAD_2020,7,CXL,eye7_stressvsstrain.xlsx,0.0288,67.62,0.0288,67.6205,0,0.00073942621,43,2.3213169,verified_against_table2

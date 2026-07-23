@@ -57,9 +57,46 @@ Chang 等公开了 7 对猪眼的压力-顶点位移、应力-应变和切线模
 
 ![猪眼 Ogden 反演参数](figures/porcine_ogden_pairs.png)
 
-Dryad 的 15 个原始工作簿为 CC0 数据。当前网络访问下载端点时触发 AWS 人机验证，未将不完整响应写入仓库；文件 ID、大小和 SHA-256 已保存在 [`dryad_file_manifest.csv`](dryad_file_manifest.csv)。通过浏览器下载后放入 `raw/dryad_z8w9ghx9f/`，重新运行构建脚本会自动验证完整性。
+Dryad 的 15 个原始工作簿为 CC0 数据，现已全部放入 `raw/dryad_z8w9ghx9f/`，文件大小和 SHA-256 与官方清单 `15/15` 一致。提取后的 154 个实验压力-顶点位移点见 [`dryad_pressure_displacement.csv`](dryad_pressure_displacement.csv)。
 
-### 2.4 人眼 OCE 说明单一各向同性模量只代表等效响应
+![Dryad 压力位移曲线](figures/dryad_pressure_displacement.png)
+
+原始文件还包含以下质量问题，处理时不能直接盲读：
+
+- 论文 FE 曲线中 11/14 条可用，与实验顶点位移的 NRMSE 为 `0.70%-8.07%`；eye3 CXL 和 eye6 两条曲线标记为 `Missing`。
+- `eye3_stressvsstrain.xlsx` 将表 2 的 `mu=0.0091/0.0126 MPa` 写成 `0.091/0.126 MPa`，生成曲线整体放大约 10 倍。
+- `eye6_stressvsstrain.xlsx` 的参数和曲线内容与 eye1 相同，不是 eye6 表 2 参数对应的曲线。
+- 其余应力-应变工作簿与表 2 参数曲线相差约 `1.5%-2.5%`，来自工作簿内部参数精度高于论文表格保留位数。
+
+因此本目录将论文表 2 的逐眼 `mu/alpha` 作为权威输入，再按来源采用的 Ogden 公式重新生成目标曲线。完整检查见 [`dryad_stress_strain_workbook_qc.csv`](dryad_stress_strain_workbook_qc.csv)。
+
+### 2.4 从 Dryad Ogden 曲线拟合当前 Mooney-Rivlin 模型
+
+使用不可压缩单轴 Cauchy 应力，在 `0-3%` 应变段固定当前 `C01/C10=0.025/0.11` 后，得到：
+
+| 组别 | `C10` (MPa) | `C01` (MPa) | 小应变 `E0` (MPa) | NRMSE |
+|---|---:|---:|---:|---:|
+| PBS control | 0.00796，95% CI [0.00606, 0.00986] | 0.00181，[0.00138, 0.00224] | 0.0586 | 7.57% |
+| CXL | 0.02114，[0.00798, 0.03430] | 0.00480，[0.00181, 0.00780] | 0.1557 | 10.53% |
+
+这组参数只能作为猪角膜 `0-3%` 应变段的 MR 近似。自由非负拟合会使全部 14 条曲线的 `C01=0`，说明两个 MR 参数在该数据和模型形式下不能独立识别。允许负 `C01` 虽能把误差降到约 `1%-5%`，但多组参数出现负初始刚度或近似正负抵消，不能用于稳定有限元求解。
+
+将拟合范围改成 `0-0.03 MPa` 生理应力段后，PBS control 固定比例参数变成 `C10=0.02991 MPa`、`C01=0.00680 MPa`，平均 NRMSE 增至约 `14.75%`。参数随拟合区间变化约 3.8 倍，证明正系数两参数 MR 无法稳定代表该批数据的强应变硬化。
+
+![Mooney-Rivlin 反演曲线](figures/mooney_rivlin_inverse_fits.png)
+
+实际使用建议：
+
+1. 复现这批猪眼充气实验时，优先直接使用来源的一阶 Ogden 参数：PBS control 平均 `mu=0.01069 MPa、alpha=65.10`，CXL 平均 `mu=0.01773 MPa、alpha=94.35`。
+2. 必须保持当前 MR 模型时，只使用 `0-3%` 固定比例结果做有界敏感性扫描，不作为人角膜最终参数。
+3. 当前人眼模型 `C10=0.0825 MPa、C01=0.01875 MPa` 比猪眼 `0-3%` MR 近似约高 10.4 倍；该差异同时包含物种、试验模式和预应力差异，不能据此直接下调现有人眼参数。
+4. 下一步人眼材料反演仍应联合 CID 力-位移、多个 IOP 和接触面积数据；Dryad 数据主要用于检验本构形式和反演代码。
+
+全部逐眼策略、稳定性标志和误差见 [`mooney_rivlin_inverse_parameters.csv`](mooney_rivlin_inverse_parameters.csv)，分组 95% CI 见 [`mooney_rivlin_inverse_summary.csv`](mooney_rivlin_inverse_summary.csv)。
+
+![Dryad 数据与反演 QC](figures/dryad_inverse_qc.png)
+
+### 2.5 人眼 OCE 说明单一各向同性模量只代表等效响应
 
 6 名受试者的 OCE 数据显示，面内拉伸模量约 `3.06-6.06 MPa`，厚度方向剪切模量约 `70-130 kPa`，论文报告的 `E/(4G)` 为 `7.7-22.4`。原文受试者 6 同一行的 `E=6060 kPa`、`G=89 kPa` 实际重算比例为 `17.0`，与报告值 `22.4` 不一致；CSV 同时保留两者并标记异常，图表使用可复算的 `E` 与 `G`。两种响应仍明显不在同一量级，不能把 CID 模量、充气模量和剪切模量无条件互换。
 
@@ -117,6 +154,11 @@ J = wF * RMSE(F/Fref)
 | `porcine_ogden_parameters.csv` | 7 对猪眼的逐眼 `mu/alpha` |
 | `porcine_inflation_summary.csv` | 猪眼充气汇总及 95% CI |
 | `dryad_file_manifest.csv` | 15 个公开原始工作簿的校验清单 |
+| `dryad_pressure_displacement.csv` | 7 对猪眼实验及来源 FE 压力-顶点位移长表 |
+| `dryad_pressure_displacement_validation.csv` | 来源 FE 曲线对实验曲线的复现误差 |
+| `dryad_stress_strain_workbook_qc.csv` | 应力-应变工作簿与论文表 2 的逐眼质量检查 |
+| `mooney_rivlin_inverse_parameters.csv` | 逐眼、逐区间、逐策略 MR 反演参数和稳定性标志 |
+| `mooney_rivlin_inverse_summary.csv` | MR 反演分组均值、SD 和 95% CI |
 
 95% CI 均由论文提供的 `mean ± SD` 和样本量按 `mean ± 1.96 SD/sqrt(n)` 计算，是组均值区间，不是个体正常范围。
 

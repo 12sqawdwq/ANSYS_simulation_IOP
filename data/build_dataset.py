@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import math
+import re
 from pathlib import Path
 
 import matplotlib
@@ -16,6 +17,8 @@ import pandas as pd
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+from scipy.optimize import brentq, nnls
 
 
 ROOT = Path(__file__).resolve().parent
@@ -428,6 +431,272 @@ def build_dryad_manifest() -> pd.DataFrame:
     )
 
 
+def ogden_cauchy_stress(strain: np.ndarray, mu_mpa: float, alpha: float) -> np.ndarray:
+    """Uniaxial Cauchy stress for the first-order Ogden convention used by the source."""
+    stretch = 1.0 + np.asarray(strain, dtype=float)
+    return 2.0 * mu_mpa / alpha * (stretch**alpha - stretch ** (-alpha / 2.0))
+
+
+def mooney_rivlin_basis(strain: np.ndarray) -> np.ndarray:
+    """Linear basis for incompressible two-parameter MR uniaxial Cauchy stress."""
+    stretch = 1.0 + np.asarray(strain, dtype=float)
+    return np.column_stack(
+        [
+            2.0 * (stretch**2 - stretch**-1),
+            2.0 * (stretch - stretch**-2),
+        ]
+    )
+
+
+def build_dryad_pressure_curves() -> tuple[pd.DataFrame, pd.DataFrame]:
+    curve_rows = []
+    validation_rows = []
+    condition_map = {"CTL": "control_PBS", "CXL": "CXL"}
+    for path in sorted(DRYAD_RAW.glob("EYE*_target*.xlsx")):
+        match = re.search(r"EYE(\d+)", path.name, flags=re.IGNORECASE)
+        if not match:
+            continue
+        pair_id = int(match.group(1))
+        data = pd.read_excel(path, header=None)
+        experimental_headers = [
+            index for index, value in data[4].items() if str(value).strip() in condition_map
+        ]
+        simulation_headers = [
+            index for index, value in data[8].items() if str(value).strip().startswith("Simulation_")
+        ]
+        for header in experimental_headers:
+            source_label = str(data.loc[header, 4]).strip()
+            treatment = condition_map[source_label]
+            end = min([index for index in experimental_headers if index > header] + [len(data)])
+            experimental = data.loc[header + 1 : end - 1, [2, 4]].apply(pd.to_numeric, errors="coerce").dropna()
+            for pressure, displacement in experimental.itertuples(index=False, name=None):
+                curve_rows.append(
+                    (pair_id, treatment, "experimental", pressure, displacement, path.name)
+                )
+
+            simulation_name = f"Simulation_{source_label}"
+            matching_simulation = [
+                index for index in simulation_headers if str(data.loc[index, 8]).strip() == simulation_name
+            ]
+            if not matching_simulation:
+                validation_rows.append(
+                    (pair_id, treatment, len(experimental), 0, "missing_simulation_header", np.nan, np.nan, np.nan)
+                )
+                continue
+            simulation_header = matching_simulation[0]
+            simulation_end = min(
+                [index for index in simulation_headers if index > simulation_header] + [len(data)]
+            )
+            simulation = data.loc[simulation_header + 1 : simulation_end - 1, [6, 8]].apply(
+                pd.to_numeric, errors="coerce"
+            ).dropna()
+            if len(simulation) < 2:
+                validation_rows.append(
+                    (pair_id, treatment, len(experimental), len(simulation), "missing_simulation_values", np.nan, np.nan, np.nan)
+                )
+                continue
+            for pressure, displacement in simulation.itertuples(index=False, name=None):
+                curve_rows.append(
+                    (pair_id, treatment, "source_FE_simulation", pressure, displacement, path.name)
+                )
+            predicted = np.interp(
+                experimental.iloc[:, 0].to_numpy(float),
+                simulation.iloc[:, 0].to_numpy(float),
+                simulation.iloc[:, 1].to_numpy(float),
+            )
+            observed = experimental.iloc[:, 1].to_numpy(float)
+            residual = predicted - observed
+            rmse = float(np.sqrt(np.mean(residual**2)))
+            span = float(observed.max() - observed.min())
+            validation_rows.append(
+                (
+                    pair_id,
+                    treatment,
+                    len(experimental),
+                    len(simulation),
+                    "available",
+                    rmse,
+                    100.0 * rmse / span,
+                    float(predicted[-1] - observed[-1]),
+                )
+            )
+    curves = pd.DataFrame(
+        curve_rows,
+        columns=["pair_id", "treatment", "curve_type", "pressure_mmhg", "apex_displacement_mm", "source_file"],
+    )
+    curves.insert(0, "source_id", "PORCINE_DRYAD_2020")
+    validation = pd.DataFrame(
+        validation_rows,
+        columns=[
+            "pair_id", "treatment", "experimental_points", "simulation_points", "simulation_status",
+            "apex_rmse_mm", "apex_nrmse_span_percent", "endpoint_error_mm",
+        ],
+    )
+    validation.insert(0, "source_id", "PORCINE_DRYAD_2020")
+    return curves, validation
+
+
+def build_stress_workbook_qc(ogden: pd.DataFrame) -> pd.DataFrame:
+    rows = []
+    expected = ogden.set_index(["pair_id", "treatment"])
+    for path in sorted(DRYAD_RAW.glob("eye*_stressvsstrain.xlsx")):
+        pair_id = int(re.search(r"eye(\d+)", path.name, flags=re.IGNORECASE).group(1))
+        data = pd.read_excel(path, header=None)
+        mu_row = next(index for index, row in data.iterrows() if any(str(value).strip() == "Mu1" for value in row))
+        alpha_row = next(index for index, row in data.iterrows() if any(str(value).strip() == "Alpha1" for value in row))
+        header_row = next(
+            index for index, row in data.iterrows() if any("Stress" in str(value) and "MPa" in str(value) for value in row)
+        )
+        header_first = str(data.loc[header_row, 0]).strip().lower()
+        if header_first.startswith("strain"):
+            strain = pd.to_numeric(data.loc[header_row + 1 :, 0], errors="coerce").to_numpy(float)
+            stress_columns = {"control_PBS": 2, "CXL": 3}
+        elif any(str(value).strip().lower().startswith("stretch") for value in data.loc[header_row]):
+            stretch_column = next(
+                column for column, value in data.loc[header_row].items()
+                if str(value).strip().lower().startswith("stretch")
+            )
+            strain = pd.to_numeric(data.loc[header_row + 1 :, stretch_column], errors="coerce").to_numpy(float) - 1.0
+            stress_columns = {"control_PBS": stretch_column + 1, "CXL": stretch_column + 2}
+        else:
+            raise ValueError(f"Unsupported stress/strain layout in {path.name}")
+
+        for treatment, column in stress_columns.items():
+            parameter_column = 2 if treatment == "control_PBS" else 3
+            workbook_mu = float(data.loc[mu_row, parameter_column])
+            workbook_alpha = float(data.loc[alpha_row, parameter_column])
+            official_mu = float(expected.loc[(pair_id, treatment), "ogden_mu_mpa"])
+            official_alpha = float(expected.loc[(pair_id, treatment), "ogden_alpha"])
+            workbook_stress = pd.to_numeric(data.loc[header_row + 1 :, column], errors="coerce").to_numpy(float)
+            mask = np.isfinite(strain) & np.isfinite(workbook_stress)
+            target = ogden_cauchy_stress(strain[mask], official_mu, official_alpha)
+            residual = workbook_stress[mask] - target
+            span = float(target.max() - target.min()) if len(target) else np.nan
+            curve_nrmse = float(100.0 * np.sqrt(np.mean(residual**2)) / span) if span > 0 else np.nan
+            mu_difference = 100.0 * (workbook_mu - official_mu) / official_mu
+            alpha_difference = 100.0 * (workbook_alpha - official_alpha) / official_alpha
+            if abs(mu_difference) > 5.0 or abs(alpha_difference) > 1.0:
+                status = "workbook_parameter_mismatch"
+            elif curve_nrmse > 5.0:
+                status = "workbook_curve_mismatch"
+            else:
+                status = "verified_against_table2"
+            rows.append(
+                (
+                    pair_id, treatment, path.name, official_mu, official_alpha, workbook_mu, workbook_alpha,
+                    mu_difference, alpha_difference, int(mask.sum()), curve_nrmse, status,
+                )
+            )
+    frame = pd.DataFrame(
+        rows,
+        columns=[
+            "pair_id", "treatment", "source_file", "official_ogden_mu_mpa", "official_ogden_alpha",
+            "workbook_ogden_mu_mpa", "workbook_ogden_alpha", "mu_difference_percent",
+            "alpha_difference_percent", "curve_points", "curve_nrmse_span_percent", "qc_status",
+        ],
+    )
+    frame.insert(0, "source_id", "PORCINE_DRYAD_2020")
+    return frame
+
+
+def inverse_fit_metrics(basis: np.ndarray, target: np.ndarray, parameters: np.ndarray) -> tuple[float, float, float, float]:
+    prediction = basis @ parameters
+    residual = prediction - target
+    rmse = float(np.sqrt(np.mean(residual**2)))
+    span = float(target.max() - target.min())
+    nrmse = 100.0 * rmse / span
+    denominator = float(np.sum((target - target.mean()) ** 2))
+    r_squared = 1.0 - float(np.sum(residual**2)) / denominator if denominator > 0 else np.nan
+    return rmse, nrmse, r_squared, float(np.max(np.abs(residual)))
+
+
+def classify_mr_parameters(c10: float, c01: float) -> str:
+    tolerance = 1e-10
+    if c10 < -tolerance or c10 + c01 <= tolerance:
+        return "invalid_negative_initial_stiffness"
+    if c01 < -tolerance:
+        return "conditional_negative_c01"
+    if abs(c01) <= tolerance:
+        return "boundary_c01_zero"
+    return "positive_coefficients"
+
+
+def build_mooney_rivlin_inverse(ogden: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    current_ratio = 0.025 / 0.11
+    rows = []
+    for item in ogden.itertuples(index=False):
+        mu = float(item.ogden_mu_mpa)
+        alpha = float(item.ogden_alpha)
+        stress_limit_strain = brentq(
+            lambda value: float(ogden_cauchy_stress(np.array([value]), mu, alpha)[0] - 0.03),
+            1e-12,
+            0.5,
+        )
+        ranges = {
+            "strain_0_to_0p03": 0.03,
+            "stress_0_to_0p03mpa": stress_limit_strain,
+        }
+        for fit_range, end_strain in ranges.items():
+            strain = np.linspace(0.0, end_strain, 301)
+            target = ogden_cauchy_stress(strain, mu, alpha)
+            basis = mooney_rivlin_basis(strain)
+            free_nonnegative, _ = nnls(basis, target)
+            free_nonnegative[np.abs(free_nonnegative) < 1e-12] = 0.0
+            unconstrained = np.linalg.lstsq(basis, target, rcond=None)[0]
+            fixed_basis = basis[:, 0] + current_ratio * basis[:, 1]
+            fixed_c10 = max(0.0, float(np.dot(fixed_basis, target) / np.dot(fixed_basis, fixed_basis)))
+            small_strain_c10 = mu / (2.0 * (1.0 + current_ratio))
+            strategies = {
+                "mr_free_nonnegative": (free_nonnegative, "diagnostic_boundary_solution"),
+                "mr_fixed_current_ratio": (np.array([fixed_c10, current_ratio * fixed_c10]), "bounded_screening_approximation"),
+                "mr_small_strain_conversion": (np.array([small_strain_c10, current_ratio * small_strain_c10]), "initial_tangent_only"),
+                "mr_free_unconstrained": (unconstrained, "reject_if_not_positive_stable"),
+            }
+            for strategy, (parameters, parameter_use) in strategies.items():
+                c10, c01 = map(float, parameters)
+                rmse, nrmse, r_squared, max_error = inverse_fit_metrics(basis, target, parameters)
+                rows.append(
+                    (
+                        item.pair_id, item.treatment, mu, alpha, fit_range, end_strain, strategy,
+                        c10, c01, c01 / c10 if c10 else np.nan, c10 / 0.0825, c10 / 0.11,
+                        6.0 * (c10 + c01), 3.0 * mu,
+                        rmse, nrmse, r_squared, max_error, classify_mr_parameters(c10, c01), parameter_use,
+                    )
+                )
+    frame = pd.DataFrame(
+        rows,
+        columns=[
+            "pair_id", "treatment", "source_ogden_mu_mpa", "source_ogden_alpha", "fit_range",
+            "fit_end_strain", "strategy", "c10_mpa", "c01_mpa", "c01_over_c10",
+            "c10_over_current_model", "equivalent_base_material_scale", "mr_small_strain_e_mpa",
+            "ogden_small_strain_e_mpa", "rmse_mpa", "nrmse_span_percent",
+            "r_squared", "max_abs_error_mpa", "stability_flag", "parameter_use",
+        ],
+    )
+    frame.insert(0, "source_id", "PORCINE_DRYAD_2020")
+
+    summary_rows = []
+    metrics = [
+        "c10_mpa", "c01_mpa", "c10_over_current_model", "equivalent_base_material_scale",
+        "mr_small_strain_e_mpa", "nrmse_span_percent", "fit_end_strain",
+    ]
+    for keys, group in frame.groupby(["treatment", "fit_range", "strategy"], sort=False):
+        treatment, fit_range, strategy = keys
+        for metric in metrics:
+            mean = float(group[metric].mean())
+            sd = float(group[metric].std(ddof=1))
+            half_width = ci95_half_width(sd, len(group))
+            summary_rows.append(
+                (treatment, fit_range, strategy, metric, len(group), mean, sd, mean - half_width, mean + half_width)
+            )
+    summary = pd.DataFrame(
+        summary_rows,
+        columns=["treatment", "fit_range", "strategy", "metric", "n", "mean", "sd", "ci95_low", "ci95_high"],
+    )
+    summary.insert(0, "source_id", "PORCINE_DRYAD_2020")
+    return frame, summary
+
+
 def plot_cid(cid: pd.DataFrame, model: pd.DataFrame) -> None:
     groups = cid[cid.group != "overall"].copy()
     labels = groups.group.tolist()
@@ -510,12 +779,117 @@ def plot_oce(oce: pd.DataFrame) -> None:
     plt.close(fig)
 
 
+def plot_dryad_pressure_curves(curves: pd.DataFrame) -> None:
+    experimental = curves[curves.curve_type == "experimental"]
+    treatments = [("control_PBS", "PBS control"), ("CXL", "CXL")]
+    colors = plt.cm.tab10(np.linspace(0.0, 0.9, 7))
+    fig, axes = plt.subplots(1, 2, figsize=(10.5, 4.4), sharey=True, constrained_layout=True)
+    for axis, (treatment, title) in zip(axes, treatments):
+        subset = experimental[experimental.treatment == treatment]
+        for color, (pair_id, group) in zip(colors, subset.groupby("pair_id")):
+            axis.plot(group.pressure_mmhg, group.apex_displacement_mm, marker="o", markersize=2.5, linewidth=1.1, color=color, alpha=0.72, label=f"Eye {pair_id}")
+        mean = subset.groupby("pressure_mmhg").apex_displacement_mm.mean()
+        axis.plot(mean.index, mean.values, color="#202020", linewidth=2.5, label="Mean")
+        axis.set_xlabel("IOP (mmHg)")
+        axis.set_title(title)
+    axes[0].set_ylabel("Corneal apex displacement (mm)")
+    axes[1].legend(frameon=False, ncol=2, fontsize=7.5)
+    fig.suptitle("Dryad paired porcine inflation measurements", fontsize=13)
+    fig.savefig(FIGURES / "dryad_pressure_displacement.png", dpi=180)
+    plt.close(fig)
+
+
+def plot_mr_inverse_fits(ogden: pd.DataFrame, inverse: pd.DataFrame, model: pd.DataFrame) -> None:
+    strain = np.linspace(0.0, 0.03, 301)
+    basis = mooney_rivlin_basis(strain)
+    current_parameters = np.array([float(model.c10_mpa.iloc[0]), float(model.c01_mpa.iloc[0])])
+    treatments = [("control_PBS", "PBS control"), ("CXL", "CXL")]
+    colors = {"ogden": "#457b9d", "mr": "#e76f51", "current": "#6a4c93"}
+    fig, axes = plt.subplots(1, 2, figsize=(10.8, 4.5), sharey=True, constrained_layout=True)
+    for axis, (treatment, title) in zip(axes, treatments):
+        source_group = ogden[ogden.treatment == treatment]
+        target_curves = np.vstack(
+            [ogden_cauchy_stress(strain, row.ogden_mu_mpa, row.ogden_alpha) for row in source_group.itertuples(index=False)]
+        )
+        fitted_rows = inverse[
+            (inverse.treatment == treatment)
+            & (inverse.fit_range == "strain_0_to_0p03")
+            & (inverse.strategy == "mr_fixed_current_ratio")
+        ]
+        fitted_curves = np.vstack(
+            [basis @ np.array([row.c10_mpa, row.c01_mpa]) for row in fitted_rows.itertuples(index=False)]
+        )
+        for curve in target_curves:
+            axis.plot(strain * 100.0, curve, color=colors["ogden"], alpha=0.14, linewidth=0.8)
+        axis.plot(strain * 100.0, target_curves.mean(axis=0), color=colors["ogden"], linewidth=2.4, label="Ogden source mean")
+        axis.plot(strain * 100.0, fitted_curves.mean(axis=0), color=colors["mr"], linestyle="--", linewidth=2.4, label="MR fixed-ratio fit")
+        axis.plot(strain * 100.0, basis @ current_parameters, color=colors["current"], linestyle=":", linewidth=2.2, label="Current human MR")
+        axis.set_xlabel("Uniaxial strain (%)")
+        axis.set_title(title)
+    axes[0].set_ylabel("Cauchy stress (MPa)")
+    axes[1].legend(frameon=False, fontsize=8)
+    fig.suptitle("Mooney-Rivlin approximation over 0-3% strain", fontsize=13)
+    fig.savefig(FIGURES / "mooney_rivlin_inverse_fits.png", dpi=180)
+    plt.close(fig)
+
+
+def plot_dryad_inverse_qc(
+    pressure_validation: pd.DataFrame,
+    stress_qc: pd.DataFrame,
+    inverse: pd.DataFrame,
+) -> None:
+    fig, axes = plt.subplots(1, 3, figsize=(14.0, 4.5), constrained_layout=True)
+
+    pressure = pressure_validation[pressure_validation.simulation_status == "available"].copy()
+    pressure["label"] = pressure.apply(lambda row: f"{int(row.pair_id)}-{row.treatment.replace('control_PBS', 'CTL')}", axis=1)
+    axes[0].bar(np.arange(len(pressure)), pressure.apex_nrmse_span_percent, color=np.where(pressure.treatment == "CXL", "#e76f51", "#457b9d"))
+    axes[0].set_xticks(np.arange(len(pressure)), pressure.label, rotation=60, ha="right", fontsize=7)
+    axes[0].set_ylabel("NRMSE (% of displacement span)")
+    axes[0].set_title("Source FE vs experiment")
+    missing = int((pressure_validation.simulation_status != "available").sum())
+    axes[0].text(0.02, 0.96, f"Missing curves: {missing}", transform=axes[0].transAxes, va="top", fontsize=8)
+
+    stress = stress_qc.copy()
+    stress["label"] = stress.apply(lambda row: f"{int(row.pair_id)}-{row.treatment.replace('control_PBS', 'CTL')}", axis=1)
+    colors = np.where(stress.qc_status == "verified_against_table2", "#2a9d8f", "#e76f51")
+    axes[1].bar(np.arange(len(stress)), np.maximum(stress.curve_nrmse_span_percent, 1e-4), color=colors)
+    axes[1].set_yscale("log")
+    axes[1].set_xticks(np.arange(len(stress)), stress.label, rotation=60, ha="right", fontsize=7)
+    axes[1].set_ylabel("NRMSE (%) logarithmic")
+    axes[1].set_title("Workbook curves vs Table 2")
+    axes[1].legend(
+        handles=[Patch(color="#2a9d8f", label="Consistent"), Patch(color="#e76f51", label="Parameter mismatch")],
+        frameon=False,
+        fontsize=7,
+    )
+
+    fit = inverse[
+        inverse.strategy.isin(["mr_free_nonnegative", "mr_fixed_current_ratio"])
+    ].groupby(["fit_range", "strategy", "treatment"], as_index=False).nrmse_span_percent.mean()
+    labels = [
+        f"{'3% strain' if row.fit_range == 'strain_0_to_0p03' else '0.03 MPa'}\n{'free+' if row.strategy == 'mr_free_nonnegative' else 'fixed'}\n{'CTL' if row.treatment == 'control_PBS' else 'CXL'}"
+        for row in fit.itertuples(index=False)
+    ]
+    axes[2].bar(np.arange(len(fit)), fit.nrmse_span_percent, color=np.where(fit.treatment == "CXL", "#e76f51", "#457b9d"))
+    axes[2].set_xticks(np.arange(len(fit)), labels, rotation=45, ha="right", fontsize=7)
+    axes[2].set_ylabel("Mean NRMSE (%)")
+    axes[2].set_title("MR model-form error")
+    fig.suptitle("Dryad data and inverse-fit quality control", fontsize=13)
+    fig.savefig(FIGURES / "dryad_inverse_qc.png", dpi=180)
+    plt.close(fig)
+
+
 def validate(
     cid: pd.DataFrame,
     model: pd.DataFrame,
     age_reference: pd.DataFrame,
     oce: pd.DataFrame,
     ogden: pd.DataFrame,
+    dryad_manifest: pd.DataFrame,
+    pressure_curves: pd.DataFrame,
+    pressure_validation: pd.DataFrame,
+    stress_qc: pd.DataFrame,
+    mr_inverse: pd.DataFrame,
 ) -> None:
     healthy = cid[cid.group == "healthy"].iloc[0]
     assert abs(float(model.small_strain_e_mpa.iloc[0]) - 0.6075) < 1e-12
@@ -530,6 +904,18 @@ def validate(
     cxl = ogden[ogden.treatment == "CXL"]
     assert abs(control.ogden_mu_mpa.mean() - 0.0107) < 0.0002
     assert abs(cxl.ogden_alpha.mean() - 94.3) < 0.1
+    assert len(dryad_manifest) == 15
+    assert (dryad_manifest.local_status == "verified").all()
+    assert len(pressure_curves[pressure_curves.curve_type == "experimental"]) == 154
+    assert (pressure_validation.simulation_status == "available").sum() == 11
+    assert len(stress_qc) == 14
+    assert (stress_qc.qc_status == "workbook_parameter_mismatch").sum() == 4
+    assert len(mr_inverse) == 112
+    nonnegative = mr_inverse[mr_inverse.strategy == "mr_free_nonnegative"]
+    assert (nonnegative.c01_mpa == 0.0).all()
+    fixed = mr_inverse[mr_inverse.strategy == "mr_fixed_current_ratio"]
+    assert np.allclose(fixed.c01_over_c10, 0.025 / 0.11)
+    assert (mr_inverse.stability_flag == "invalid_negative_initial_stiffness").any()
 
 
 def main() -> None:
@@ -549,8 +935,14 @@ def main() -> None:
     targets = build_inverse_targets(cid)
     priorities = build_metric_priority()
     dryad_manifest = build_dryad_manifest()
+    pressure_curves, pressure_validation = build_dryad_pressure_curves()
+    stress_qc = build_stress_workbook_qc(ogden)
+    mr_inverse, mr_summary = build_mooney_rivlin_inverse(ogden)
 
-    validate(cid, model, age_reference, oce, ogden)
+    validate(
+        cid, model, age_reference, oce, ogden, dryad_manifest, pressure_curves,
+        pressure_validation, stress_qc, mr_inverse,
+    )
     for frame, name in [
         (sources, "sources.csv"),
         (cid, "cid_group_metrics.csv"),
@@ -564,6 +956,11 @@ def main() -> None:
         (targets, "inverse_targets.csv"),
         (priorities, "metric_priority.csv"),
         (dryad_manifest, "dryad_file_manifest.csv"),
+        (pressure_curves, "dryad_pressure_displacement.csv"),
+        (pressure_validation, "dryad_pressure_displacement_validation.csv"),
+        (stress_qc, "dryad_stress_strain_workbook_qc.csv"),
+        (mr_inverse, "mooney_rivlin_inverse_parameters.csv"),
+        (mr_summary, "mooney_rivlin_inverse_summary.csv"),
     ]:
         write_csv(frame, name)
 
@@ -571,8 +968,11 @@ def main() -> None:
     plot_age_curves(age_curves)
     plot_porcine_ogden(ogden)
     plot_oce(oce)
+    plot_dryad_pressure_curves(pressure_curves)
+    plot_mr_inverse_fits(ogden, mr_inverse, model)
+    plot_dryad_inverse_qc(pressure_validation, stress_qc, mr_inverse)
     verified = int((dryad_manifest.local_status == "verified").sum())
-    print(f"Built 12 tables and 4 figures; Dryad files verified: {verified}/15")
+    print(f"Built 17 tables and 7 figures; Dryad files verified: {verified}/15")
 
 
 if __name__ == "__main__":
