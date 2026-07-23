@@ -1,38 +1,42 @@
 {
-  "run_id": "full_state_0p26",
+  "run_id": "applanation_breakpoint",
   "profile": "thickness_state",
-  "run_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/full_state_0p26",
+  "run_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/applanation_breakpoint",
   "source_run": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/full_source",
   "source_indent_mm": 0.8,
   "target_indent_mm": 0.26,
   "target_result_time": 1.3647058823529412,
   "extraction_method": "same_load_path_time_interpolation",
   "host": "xuanyu",
-  "git_commit": "6a75cde2c7e953c2210c17e21caf279eade4291d",
+  "git_commit": "bf30a9930337f3e96e11dc6798a50ed160c097f2",
   "git_dirty": false,
-  "ansys_executable": "/ansys_inc/v252/ansys/bin/ansys252",
+  "ansys_executable": "/home/xuanyu/PROJECT/ziyu/SOFTWARE/ansys_inc/v252/ansys/bin/mapdl",
   "ansys_version": "Mechanical APDL 2025 R2                    Build 25.2 Update: 20250519\n Copyright 1971-2025 ANSYS, Inc.\n Platform: LINUX x64   \n Using 2025.2.0 (20250506) for linx64.  Updated at Ansys Release 2025 R2.\n Customer Number: 20120530",
   "invocation": [
     "/home/xuanyu/miniconda3/envs/grs-pilot/bin/python",
-    "/home/xuanyu/PROJECT/ziyu/blueknow/simulation/src/postprocess/extract_thickness_state.py",
+    "src/postprocess/extract_thickness_state.py",
     "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/full_source",
-    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/full_state_0p26",
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/applanation_breakpoint",
     "--target-indent-mm",
     "0.26",
     "--source-indent-mm",
     "0.8",
     "--workers",
-    "4",
+    "3",
     "--np",
     "1",
+    "--timeout-seconds",
+    "300",
+    "--ansys-bin",
+    "/ansys_inc/v252/ansys/bin/ansys252",
     "--view-policy",
-    "all"
+    "none"
   ],
-  "workers": 4,
+  "workers": 3,
   "np": 1,
-  "timeout_seconds": 900,
-  "view_policy": "all",
-  "started_at_utc": "2026-07-21T17:52:23+00:00",
+  "timeout_seconds": 300.0,
+  "view_policy": "none",
+  "started_at_utc": "2026-07-23T07:45:37+00:00",
   "cases": [
     {
       "eyelid_thickness_mm": 0.8,
@@ -109,11 +113,22 @@
   ],
   "apdl_sha256": {
     "post_sweep.mac": "a919b13edce5644eddf17579f334a559da0deb406105f01ce4e7c03e54fa9f8e",
-    "post_thickness_geometry.mac": "5098a4fa9e16280e172a9d350fa8d852de8e820546734e0db70a151d839dd6bd",
+    "post_thickness_geometry.mac": "537590a68833b94837d02d6f352e29091a2dfc3e2d89da998640fc886de2e553",
     "plot_sweep_views.mac": "f3b6074851d76a23117d35d8db716bc73d32480ff82d45c8c82e62218cf9b6f4"
   },
-  "ended_at_utc": "2026-07-21T17:53:06+00:00",
+  "ended_at_utc": "2026-07-23T07:46:02+00:00",
   "completed_cases": 9,
   "failed_cases": 0,
-  "qc_passed": true
+  "qc_passed": true,
+  "qc_summary": {
+    "error": 0,
+    "warning": 36,
+    "info": 1
+  },
+  "result_scope": "nine-point breakpoint surface reprocessing",
+  "source_runs": [
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/full_source",
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/applanation_source"
+  ],
+  "recovered_state_run": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/applanation_state_missing"
 }

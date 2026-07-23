@@ -1,21 +1,33 @@
 {
-  "metric": "Ae/Ac smooth(2deg)",
+  "metric": "ae_over_ac_surface",
+  "definition": "ratio of deformed outer and inner curved-surface integrals inside their center-connected radial breakpoints",
   "indent_mm": 0.26,
   "points": 9,
   "eyelid_material_scale": 1.0,
   "cornea_material_scale": 0.75,
   "iop_mmhg": 20.0,
-  "endpoint_change_percent": 473.96198755848,
+  "endpoint": {
+    "thickness_0p8": 1.1302547054251617,
+    "thickness_2p0": 1.538837936300808,
+    "relative_increase_percent": 36.14965999853161
+  },
   "linear_fit": {
-    "slope_per_mm": 4.69820005322693,
-    "intercept": -3.14113775060456,
-    "r_squared": 0.906662325616275
+    "slope_per_mm": 0.3090944672458133,
+    "intercept": 0.8396863743042602,
+    "r_squared": 0.8944602603689606
   },
-  "exponential_fit": {
-    "coefficient": 0.431039340031158,
-    "exponent_per_mm": 1.39338137221803,
-    "r_squared_on_original_scale": 0.989777187850592,
-    "factor_per_0p2mm": 1.32137951030577
+  "nominal_probe_diagnostic": {
+    "metric": "probe_over_ac_surface",
+    "definition": "4.32 mm nominal probe area divided by inner curved-surface applanation area; not the actual Ae/Ac at partial contact",
+    "thickness_0p8": 2.281045778426568,
+    "thickness_2p0": 2.65612007808596,
+    "relative_increase_percent": 16.44308582933942,
+    "linear_fit_r_squared": 0.8184595396777928
   },
-  "use_limit": "descriptive fit only; coarse mesh validation incomplete; not a calibration equation"
+  "surface_projection_max_relative_difference_percent": 0.21721998055144255,
+  "contact_fill_fraction_range": [
+    0.348429448247644,
+    0.4630389973558234
+  ],
+  "use_limit": "descriptive fit only; 0.26 mm is a partial-contact state and local mesh independence remains incomplete"
 }

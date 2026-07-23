@@ -69,7 +69,7 @@ def build_matrix(
                 (image_width, image_height), Image.Resampling.LANCZOS
             )
         canvas.paste(image, (x, y + label_height))
-        text = f"{thickness:.1f} mm"
+        text = f"{thickness:.2f}".rstrip("0").rstrip(".") + " mm"
         left, top, right, bottom = draw.textbbox((0, 0), text, font=font)
         draw.text(
             (x + (image_width - (right - left)) / 2, y + (label_height - (bottom - top)) / 2 - top),
