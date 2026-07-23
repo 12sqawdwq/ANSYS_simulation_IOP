@@ -25,7 +25,11 @@ FINAL_THICKNESSES = (0.8, 1.0, 1.2, 1.25, 1.4, 1.5, 1.6, 1.8, 2.0)
 MESH_VALIDATION_THICKNESSES = (0.8, 1.2, 2.0)
 PRIMARY_RANGE = (1.5, 2.0)
 SECONDARY_RANGES = {1.5: (2.0, 3.0), 2.0: (4.0, 8.0)}
-PRIMARY_RATIO_FIELD = "ae_over_ac_flat_2deg"
+APPROVED_RATIO_FIELD = "approved_ae_over_ac"
+CALIBRATION_DISABLED_REASON = (
+    "material calibration is disabled until an approved deformation-based "
+    "Ae/Ac metric is implemented"
+)
 SCORE_FIELDS = (
     "variant", "eyelid_material_scale", "cornea_material_scale", "stage",
     "complete_primary", "primary_pass_count", "primary_mean_error",
@@ -77,13 +81,13 @@ def rows_by_thickness(rows: list[dict[str, str]]) -> dict[float, dict[str, str]]
 
 
 def area_ratio(row: dict[str, str]) -> float:
-    value = row.get(PRIMARY_RATIO_FIELD)
-    if value not in (None, ""):
-        return float(value)
-    historical = row.get("ae_over_ac_gat")
-    if historical not in (None, ""):
-        return float(historical)
-    return float(row["ae_over_ac_surface"])
+    raw = row.get(APPROVED_RATIO_FIELD)
+    if raw in (None, ""):
+        raise ValueError(f"missing {APPROVED_RATIO_FIELD}")
+    ratio = float(raw)
+    if not math.isfinite(ratio) or ratio <= 0:
+        raise ValueError(f"invalid {APPROVED_RATIO_FIELD}")
+    return ratio
 
 
 def primary_metrics(rows: list[dict[str, str]]) -> tuple[int, float, float]:
@@ -93,7 +97,10 @@ def primary_metrics(rows: list[dict[str, str]]) -> tuple[int, float, float]:
         row = indexed.get(thickness)
         if row is None:
             return 0, math.inf, math.inf
-        ratio = area_ratio(row)
+        try:
+            ratio = area_ratio(row)
+        except (TypeError, ValueError):
+            return 0, math.inf, math.inf
         errors.append(interval_error(ratio, *PRIMARY_RANGE))
     return sum(error <= 0.2 + 1e-12 for error in errors), sum(errors) / len(errors), (
         sum(error * error for error in errors) / len(errors)
@@ -109,7 +116,10 @@ def secondary_metrics(
         row = indexed.get(thickness)
         if row is None:
             return math.inf, math.inf
-        errors.append(interval_error(area_ratio(row), *target))
+        try:
+            errors.append(interval_error(area_ratio(row), *target))
+        except (TypeError, ValueError):
+            return math.inf, math.inf
     secondary_score = sum(error * error for error in errors) / len(errors)
     k_125 = area_ratio(indexed[1.25])
     k_15 = area_ratio(indexed[1.5])
@@ -245,7 +255,10 @@ def evaluate_primary(root: Path, variants: list[Variant], cli: argparse.Namespac
             "trend_penalty": "",
             "total_score": score,
             "eligible": math.isfinite(score),
-            "failure_reason": "" if math.isfinite(score) else "missing primary results",
+            "failure_reason": (
+                "" if math.isfinite(score)
+                else f"missing approved metric {APPROVED_RATIO_FIELD}"
+            ),
             "_variant": variant,
             "_primary_rows": rows,
         })
@@ -398,6 +411,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     cli = build_parser().parse_args()
+    raise SystemExit(CALIBRATION_DISABLED_REASON)
     if cli.workers < 1 or cli.np < 1 or cli.timeout_seconds <= 0:
         raise SystemExit("workers, np, and timeout must be positive")
     root = cli.run_root.expanduser().resolve()

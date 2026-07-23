@@ -22,6 +22,14 @@ from src.runners import run_thickness_calibration as calibration
 
 
 class APDLContractTests(unittest.TestCase):
+    def test_material_calibration_launcher_is_disabled_before_creating_runs(self) -> None:
+        launcher = (
+            runner.REPO_ROOT / "ops" / "start-thickness-calibration-5090d.sh"
+        ).read_text(encoding="utf-8")
+        self.assertIn("calibration is disabled", launcher.lower())
+        self.assertNotIn("mkdir -p", launcher)
+        self.assertNotIn("nohup", launcher)
+
     def test_model_uses_preload_then_indentation(self) -> None:
         model = (runner.MODEL_DIR / "param_eye_sweep.mac").read_text().lower()
         self.assertIn("cm,probe_top_nodes,node", model)
@@ -533,27 +541,23 @@ class ThicknessSummaryTests(unittest.TestCase):
         self.assertAlmostEqual(float(rows[0]["ae_over_ac_surface"]), 7.1 / 4.5)
         self.assertAlmostEqual(float(rows[0]["ae_over_ac_flat_2deg"]), 8.0 / 4.0)
         self.assertAlmostEqual(float(rows[0]["outer_flat_coverage_fraction"]), 8.0 / (math.pi * 2.16**2))
-        self.assertAlmostEqual(float(rows[0]["gat_ae_area_mm2"]), math.pi * 2.16**2)
-        self.assertAlmostEqual(float(rows[0]["ae_over_ac_gat"]), math.pi * 2.16**2 / 4.4)
+        self.assertNotIn("gat_ae_area_mm2", rows[0])
+        self.assertNotIn("ae_over_ac_gat", rows[0])
         self.assertAlmostEqual(
             float(rows[0]["probe_over_ac_surface"]), math.pi * 2.16**2 / 4.5
         )
         self.assertAlmostEqual(float(rows[1]["force_ratio_to_0p8"]), 1.0)
 
-    def test_gat_area_reaches_probe_at_geometric_flattening(self) -> None:
+    def test_initial_surface_sagitta_is_not_reported_as_area(self) -> None:
         surface_radius = 7.8 + 1.25
         sagitta = surface_radius - math.sqrt(surface_radius**2 - 2.16**2)
-        geometry = thickness_summary.gat_outer_geometry(1.25, sagitta)
         self.assertAlmostEqual(
-            geometry["geometric_full_contact_indent_mm"], 0.261547, places=5
+            thickness_summary.initial_surface_probe_edge_sagitta_mm(1.25),
+            sagitta,
+            places=12,
         )
-        self.assertAlmostEqual(geometry["gat_ae_radius_mm"], 2.16)
-        self.assertAlmostEqual(geometry["gat_ae_area_mm2"], math.pi * 2.16**2)
-
-    def test_gat_area_is_near_probe_at_0p26_mm(self) -> None:
-        geometry = thickness_summary.gat_outer_geometry(1.25, 0.26)
-        self.assertGreater(geometry["gat_ae_fill_fraction"], 0.99)
-        self.assertLess(geometry["gat_ae_fill_fraction"], 1.0)
+        self.assertNotIn("gat_ae_area_mm2", thickness_summary.SUMMARY_FIELDS)
+        self.assertNotIn("ae_over_ac_gat", thickness_summary.SUMMARY_FIELDS)
 
     def test_complete_thickness_grid_passes_qc(self) -> None:
         manifest = [self.row(0.8), self.row(1.0)]
@@ -700,26 +704,38 @@ class ThicknessGeometryTests(unittest.TestCase):
 
 
 class ThicknessCalibrationTests(unittest.TestCase):
+    def test_calibration_entrypoint_is_disabled_without_approved_metric(self) -> None:
+        with mock.patch.object(sys, "argv", [
+            "run_thickness_calibration.py", "--run-root", "unused"
+        ]):
+            with self.assertRaisesRegex(SystemExit, "approved deformation-based"):
+                calibration.main()
+
     def test_interval_error_is_zero_inside_and_relative_outside(self) -> None:
         self.assertEqual(calibration.interval_error(1.75, 1.5, 2.0), 0.0)
         self.assertAlmostEqual(calibration.interval_error(1.2, 1.5, 2.0), 0.2)
         self.assertAlmostEqual(calibration.interval_error(2.4, 1.5, 2.0), 0.2)
 
-    def test_calibration_prefers_objective_ratio_and_supports_historical_rows(self) -> None:
+    def test_calibration_requires_an_explicitly_approved_ratio(self) -> None:
         self.assertEqual(calibration.area_ratio({
-            "ae_over_ac_flat_2deg": "1.8", "ae_over_ac_gat": "2.2"
+            "approved_ae_over_ac": "1.8",
+            "ae_over_ac_flat_2deg": "2.0",
+            "ae_over_ac_gat": "2.2",
         }), 1.8)
-        self.assertEqual(calibration.area_ratio({
-            "ae_over_ac_gat": "2.2", "ae_over_ac_surface": "1.1"
-        }), 2.2)
-        self.assertEqual(calibration.area_ratio({"ae_over_ac_surface": "1.1"}), 1.1)
+        for historical in (
+            {"ae_over_ac_flat_2deg": "2.0"},
+            {"ae_over_ac_gat": "2.2"},
+            {"ae_over_ac_surface": "1.1"},
+        ):
+            with self.assertRaisesRegex(ValueError, "missing approved_ae_over_ac"):
+                calibration.area_ratio(historical)
 
     def test_primary_acceptance_counts_points_within_twenty_percent(self) -> None:
         values = {0.8: 1.2, 1.0: 1.7, 1.2: 2.0, 1.25: 2.4}
         rows = [
             {
                 "eyelid_thickness_mm": str(thickness),
-                "ae_over_ac_flat_2deg": str(ratio),
+                "approved_ae_over_ac": str(ratio),
             }
             for thickness, ratio in values.items()
         ]
@@ -731,11 +747,11 @@ class ThicknessCalibrationTests(unittest.TestCase):
     def test_secondary_trend_penalizes_a_falling_thick_end(self) -> None:
         primary = [{
             "eyelid_thickness_mm": str(thickness),
-            "ae_over_ac_flat_2deg": "1.8",
+            "approved_ae_over_ac": "1.8",
         } for thickness in calibration.PRIMARY_THICKNESSES]
         secondary = [
-            {"eyelid_thickness_mm": "1.5", "ae_over_ac_flat_2deg": "2.5"},
-            {"eyelid_thickness_mm": "2.0", "ae_over_ac_flat_2deg": "1.7"},
+            {"eyelid_thickness_mm": "1.5", "approved_ae_over_ac": "2.5"},
+            {"eyelid_thickness_mm": "2.0", "approved_ae_over_ac": "1.7"},
         ]
         _, penalty = calibration.secondary_metrics(primary, secondary)
         self.assertEqual(penalty, 1.0)

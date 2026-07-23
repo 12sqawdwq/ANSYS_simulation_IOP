@@ -33,10 +33,7 @@ SUMMARY_FIELDS = (
     "force_ratio_to_0p8",
     "force_correction_to_0p8",
     "probe_area_mm2",
-    "geometric_full_contact_indent_mm",
-    "gat_ae_radius_mm",
-    "gat_ae_area_mm2",
-    "gat_ae_fill_fraction",
+    "initial_surface_probe_edge_sagitta_mm",
     "outer_flat_area_1deg_mm2",
     "outer_flat_area_2deg_mm2",
     "outer_flat_area_3deg_mm2",
@@ -79,8 +76,6 @@ SUMMARY_FIELDS = (
     "inner_breakpoint_method",
     "inner_area_sensitivity_fraction",
     "inner_diameter_sensitivity_mm",
-    "ae_over_ac_gat",
-    "ae_over_ac_gat_surface_diagnostic",
     "ae_over_ac_surface",
     "ae_over_ac_projected",
     "probe_over_ac_surface",
@@ -130,31 +125,16 @@ def breakpoint_method(code: float) -> str:
     )
 
 
-def gat_outer_geometry(
-    eyelid_thickness_mm: float, indent_mm: float
-) -> dict[str, float]:
-    """Return the centered GAT footprint from the model's spherical geometry."""
-    if eyelid_thickness_mm < 0 or indent_mm < 0:
-        raise ValueError("eyelid thickness and indentation must be non-negative")
+def initial_surface_probe_edge_sagitta_mm(eyelid_thickness_mm: float) -> float:
+    """Return an initial-geometry height scale, never an applanation area."""
+    if eyelid_thickness_mm < 0:
+        raise ValueError("eyelid thickness must be non-negative")
     surface_radius = CORNEA_OUTER_RADIUS_MM + eyelid_thickness_mm
     if surface_radius <= PROBE_RADIUS_MM:
         raise ValueError("outer surface radius must exceed the probe radius")
-    full_contact_indent = surface_radius - math.sqrt(
+    return surface_radius - math.sqrt(
         surface_radius**2 - PROBE_RADIUS_MM**2
     )
-    if indent_mm >= full_contact_indent - 1e-12:
-        footprint_radius = PROBE_RADIUS_MM
-    else:
-        footprint_radius = math.sqrt(max(
-            0.0, 2.0 * surface_radius * indent_mm - indent_mm**2
-        ))
-    footprint_area = math.pi * footprint_radius**2
-    return {
-        "geometric_full_contact_indent_mm": full_contact_indent,
-        "gat_ae_radius_mm": footprint_radius,
-        "gat_ae_area_mm2": footprint_area,
-        "gat_ae_fill_fraction": footprint_area / PROBE_AREA_MM2,
-    }
 
 
 def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]:
@@ -165,7 +145,7 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
         force = abs(value(raw, "probe_fy_n"))
         eyelid_thickness = value(raw, "eyelid_thickness_mm")
         indent = value(raw, "indent_mm")
-        gat_geometry = gat_outer_geometry(eyelid_thickness, indent)
+        edge_sagitta = initial_surface_probe_edge_sagitta_mm(eyelid_thickness)
         outer_contact = value(raw, "contact_area_m2") * 1e6
         outer_surface = value(raw, "outer_surface_area_m2") * 1e6
         outer_projected = value(raw, "outer_projected_area_m2") * 1e6
@@ -218,7 +198,7 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
             "cornea_material_scale": value(raw, "cornea_material_scale"),
             "probe_force_n": force,
             "probe_area_mm2": PROBE_AREA_MM2,
-            **gat_geometry,
+            "initial_surface_probe_edge_sagitta_mm": edge_sagitta,
             "outer_flat_area_1deg_mm2": outer_flat1,
             "outer_flat_area_2deg_mm2": outer_flat2,
             "outer_flat_area_3deg_mm2": outer_flat3,
@@ -264,10 +244,6 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
             "inner_breakpoint_method": breakpoint_method(value(raw, "inner_break_method_code")),
             "inner_area_sensitivity_fraction": value(raw, "inner_area_sensitivity_fraction"),
             "inner_diameter_sensitivity_mm": value(raw, "inner_diameter_sensitivity_m") * 1e3,
-            "ae_over_ac_gat": gat_geometry["gat_ae_area_mm2"] / inner_projected,
-            "ae_over_ac_gat_surface_diagnostic": (
-                gat_geometry["gat_ae_area_mm2"] / inner_surface
-            ),
             "ae_over_ac_surface": outer_surface / inner_surface,
             "ae_over_ac_projected": outer_projected / inner_projected,
             "probe_over_ac_surface": PROBE_AREA_MM2 / inner_surface,
@@ -364,7 +340,7 @@ def build_qc(
         effect_area = value(raw, "inner_effect_area_m2")
         if not (0 <= areas[0] <= areas[1] <= areas[2] <= effect_area):
             add_check(checks, "error", "inner_area_order", case,
-                      "geometric inner areas do not increase with angle threshold")
+                      "angle-threshold inner areas do not increase with threshold")
         smooth_area = value(raw, "inner_area_smooth_2deg_m2")
         smooth_count = value(raw, "inner_smooth_2deg_face_count")
         if not 0 <= smooth_area <= effect_area or smooth_count < 0:
@@ -445,34 +421,32 @@ def plot_curves(run_root: Path, rows: list[dict[str, float | str]]) -> None:
         ("force_vs_thickness.png", "PROBE FORCE N", (
             ("FORCE", [(x(row), float(row["probe_force_n"])) for row in rows]),
         )),
-        ("outer_area_vs_thickness.png", "OUTER AREA MM2", (
-            ("OBJECTIVE FLAT 2 DEG", [
+        ("outer_area_vs_thickness.png", "DIAGNOSTIC OUTER AREA MM2", (
+            ("ANGLE THRESHOLD 2 DEG", [
                 (x(row), float(row["outer_flat_area_2deg_mm2"])) for row in rows
             ]),
             ("CONTACT", [(x(row), float(row["outer_contact_area_mm2"])) for row in rows]),
             ("BREAKPOINT", [(x(row), float(row["outer_projected_area_mm2"])) for row in rows]),
-            ("GEOMETRY REFERENCE", [(x(row), float(row["gat_ae_area_mm2"])) for row in rows]),
         )),
-        ("inner_area_vs_thickness.png", "INNER GEOMETRIC AREA MM2", (
-            ("OBJECTIVE FLAT 2 DEG", [
+        ("inner_area_vs_thickness.png", "DIAGNOSTIC INNER AREA MM2", (
+            ("ANGLE THRESHOLD 2 DEG", [
                 (x(row), float(row["inner_flat_area_2deg_mm2"])) for row in rows
             ]),
             ("SURFACE", [(x(row), float(row["inner_surface_area_mm2"])) for row in rows]),
             ("PROJECTED", [(x(row), float(row["inner_projected_area_mm2"])) for row in rows]),
         )),
-        ("area_ratio_vs_thickness.png", "AE OVER AC", (
-            ("OBJECTIVE FLAT 2 DEG", [
+        ("area_ratio_vs_thickness.png", "DIAGNOSTIC OUTER OVER INNER AREA", (
+            ("ANGLE THRESHOLD 2 DEG", [
                 (x(row), float(row["ae_over_ac_flat_2deg"])) for row in rows
             ]),
             ("BREAKPOINT", [(x(row), float(row["ae_over_ac_projected"])) for row in rows]),
-            ("GEOMETRY REFERENCE", [(x(row), float(row["ae_over_ac_gat"])) for row in rows]),
         )),
         ("equivalent_diameter_vs_thickness.png", "EQUIVALENT DIAMETER MM", (
-            ("OBJECTIVE OUTER", [
+            ("ANGLE THRESHOLD OUTER", [
                 (x(row), 2.0 * math.sqrt(float(row["outer_flat_area_2deg_mm2"]) / math.pi))
                 for row in rows
             ]),
-            ("OBJECTIVE INNER", [
+            ("ANGLE THRESHOLD INNER", [
                 (x(row), 2.0 * math.sqrt(float(row["inner_flat_area_2deg_mm2"]) / math.pi))
                 for row in rows
             ]),

@@ -1,6 +1,7 @@
 {
-  "metric": "ae_over_ac_gat",
-  "definition": "GAT planar geometric footprint from spherical curvature divided by the inner projected breakpoint area",
+  "status": "invalidated",
+  "metric": "invalidated_ae_over_ac_gat",
+  "definition": "Historical sphere-plane intersection area divided by an unrelated inner breakpoint area; not an applanation metric",
   "indent_mm": 0.26,
   "points": 9,
   "geometry": {
@@ -27,5 +28,5 @@
   },
   "legacy_breakpoint_ratio_range": [1.130536749162939, 1.5421806109639398],
   "contact_fill_fraction_range": [0.348429448247644, 0.4630389973558234],
-  "use_limit": "GAT Ae is geometry constrained; Ac remains breakpoint and local-mesh sensitive, especially at the thick end"
+  "use_limit": "Do not use for material scoring, experimental comparison, reporting, or patent conclusions; retained only for provenance"
 }
