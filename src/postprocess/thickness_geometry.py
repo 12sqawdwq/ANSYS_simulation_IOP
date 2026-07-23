@@ -21,6 +21,7 @@ PROBE_AREA_M2 = math.pi * PROBE_RADIUS_M**2
 RADIAL_BIN_M = 0.15e-3
 ABSOLUTE_NOISE_M = 1.0e-6
 RELATIVE_NOISE = 0.02
+FIT_WINDOW_SCALES = (0.90, 0.95, 1.00)
 BREAK_METHOD_CODES = {"inflection": 1, "segmented_fit": 2}
 GEOMETRY_FIELDS = (
     # Legacy angle-threshold fields retained for traceability.
@@ -480,6 +481,21 @@ def analyze_breakpoint_surface(
     relative_noise: float = RELATIVE_NOISE,
 ) -> BreakpointResult:
     records = _surface_records(preload, final)
+    return _analyze_breakpoint_records(
+        records,
+        maximum_radius=maximum_radius,
+        bin_width=bin_width,
+        relative_noise=relative_noise,
+    )
+
+
+def _analyze_breakpoint_records(
+    records: list[SurfaceRecord],
+    *,
+    maximum_radius: float | None,
+    bin_width: float,
+    relative_noise: float,
+) -> BreakpointResult:
     radius, method, threshold, local_max = _break_radius(
         records, bin_width, relative_noise, maximum_radius
     )
@@ -497,22 +513,32 @@ def _surface_metrics(
     final: dict[int, Face],
     maximum_radius: float | None,
 ) -> dict[str, float | int]:
-    primary = analyze_breakpoint_surface(
-        preload, final, maximum_radius=maximum_radius
+    records = _surface_records(preload, final)
+    primary = _analyze_breakpoint_records(
+        records,
+        maximum_radius=maximum_radius,
+        bin_width=RADIAL_BIN_M,
+        relative_noise=RELATIVE_NOISE,
     )
-    variants = [
-        analyze_breakpoint_surface(
-            preload,
-            final,
-            maximum_radius=maximum_radius,
-            bin_width=bin_width,
-            relative_noise=relative_noise,
-        )
+    variant_radii = [
+        _break_radius(
+            records,
+            bin_width,
+            relative_noise,
+            maximum_radius=maximum_radius * fit_window_scale,
+        )[0]
+        for fit_window_scale in FIT_WINDOW_SCALES
         for bin_width in (0.10e-3, 0.15e-3, 0.20e-3)
         for relative_noise in (0.01, 0.02, 0.03)
     ]
-    areas = [result.surface_area for result in variants]
-    diameters = [2.0 * math.sqrt(result.projected_area / math.pi) for result in variants]
+    integrations = {
+        radius: _integrate_disk(records, radius) for radius in set(variant_radii)
+    }
+    areas = [integrations[radius][0] for radius in variant_radii]
+    diameters = [
+        2.0 * math.sqrt(integrations[radius][1] / math.pi)
+        for radius in variant_radii
+    ]
     return {
         f"{prefix}_local_max_downward_m": primary.local_max,
         f"{prefix}_surface_area_m2": primary.surface_area,
@@ -639,6 +665,7 @@ def write_results(output_dir: Path, metrics: dict[str, float | int]) -> None:
             "relative_noise": RELATIVE_NOISE,
             "absolute_noise_m": ABSOLUTE_NOISE_M,
             "probe_radius_m": PROBE_RADIUS_M,
+            "fit_window_scales": list(FIT_WINDOW_SCALES),
             "legacy_definition": (
                 "5% displacement effect region filtered by 1, 2, and 3 degree face-normal limits"
             ),

@@ -493,6 +493,9 @@ class ThicknessSummaryTests(unittest.TestCase):
         rows = thickness_summary.summary_rows([self.row(0.8), self.row(1.0)])
         self.assertAlmostEqual(float(rows[0]["ae_over_ac_2deg"]), 14.0 / 9.0)
         self.assertAlmostEqual(float(rows[0]["ae_over_ac_surface"]), 7.1 / 4.5)
+        self.assertAlmostEqual(
+            float(rows[0]["probe_over_ac_surface"]), math.pi * 2.16**2 / 4.5
+        )
         self.assertAlmostEqual(float(rows[1]["force_ratio_to_0p8"]), 1.0)
 
     def test_complete_thickness_grid_passes_qc(self) -> None:

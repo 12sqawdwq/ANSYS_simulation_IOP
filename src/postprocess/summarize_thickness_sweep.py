@@ -57,6 +57,8 @@ SUMMARY_FIELDS = (
     "inner_diameter_sensitivity_mm",
     "ae_over_ac_surface",
     "ae_over_ac_projected",
+    "probe_over_ac_surface",
+    "probe_over_ac_projected",
     "breakpoint_qc",
     "ae_over_ac_1deg",
     "ae_over_ac_2deg",
@@ -144,6 +146,8 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
             "inner_diameter_sensitivity_mm": value(raw, "inner_diameter_sensitivity_m") * 1e3,
             "ae_over_ac_surface": outer_surface / inner_surface,
             "ae_over_ac_projected": outer_projected / inner_projected,
+            "probe_over_ac_surface": (math.pi * 2.16**2) / inner_surface,
+            "probe_over_ac_projected": (math.pi * 2.16**2) / inner_projected,
             "breakpoint_qc": (
                 "warning_scale_sensitive"
                 if max(
