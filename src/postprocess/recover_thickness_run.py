@@ -122,6 +122,8 @@ def recover(run_root: Path) -> tuple[int, int]:
         geometry = analyze_files(
             attempt / "inner_preload_faces.csv",
             attempt / "inner_final_faces.csv",
+            attempt / "outer_preload_faces.csv",
+            attempt / "outer_final_faces.csv",
         )
         write_geometry_results(attempt, geometry)
         elapsed = elapsed_seconds(attempt)

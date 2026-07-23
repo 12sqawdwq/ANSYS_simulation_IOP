@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 import io
+import math
 import os
 import sys
 import tempfile
@@ -53,6 +54,20 @@ class APDLContractTests(unittest.TestCase):
             self.assertIn("post_time = arg1", macro)
             self.assertIn("set,,,,,post_time", macro)
             self.assertIn("set,last", macro)
+
+    def test_thickness_geometry_exports_both_interface_surfaces(self) -> None:
+        macro = (
+            runner.MODEL_DIR / "post_thickness_geometry.mac"
+        ).read_text().lower()
+        for filename in (
+            "outer_preload_faces",
+            "outer_final_faces",
+            "inner_preload_faces",
+            "inner_final_faces",
+        ):
+            self.assertIn(f"*cfopen,{filename},csv", macro)
+        self.assertEqual(macro.count("esel,s,real,,3"), 2)
+        self.assertEqual(macro.count("esel,s,real,,4"), 2)
 
     def test_eyelid_strain_view_is_scoped_and_uses_hencky_strain(self) -> None:
         macro = (
@@ -139,8 +154,36 @@ class AttemptValidationTests(unittest.TestCase):
         for index in range(9):
             (attempt / f"{case.name}{index:03d}.png").write_bytes(b"png")
         if case.kind == "thickness":
+            geometry = {
+                "inner_max_downward_m": 8e-4,
+                "inner_effect_area_m2": 2e-5,
+                "inner_area_1deg_m2": 5e-6,
+                "inner_area_2deg_m2": 8e-6,
+                "inner_area_3deg_m2": 1.2e-5,
+                "inner_face_count": 1000,
+                "inner_area_smooth_2deg_m2": 9e-6,
+                "inner_smooth_2deg_face_count": 100,
+                "outer_local_max_downward_m": 8e-4,
+                "outer_surface_area_m2": 7e-6,
+                "outer_projected_area_m2": 6.9e-6,
+                "outer_break_radius_m": 1.48e-3,
+                "outer_break_method_code": 1,
+                "outer_threshold_m": 5e-6,
+                "outer_area_sensitivity_fraction": 0.05,
+                "outer_diameter_sensitivity_m": 0.1e-3,
+                "outer_face_count": 500,
+                "inner_local_max_downward_m": 5e-4,
+                "inner_surface_area_m2": 4e-6,
+                "inner_projected_area_m2": 3.9e-6,
+                "inner_break_radius_m": 1.1e-3,
+                "inner_break_method_code": 1,
+                "inner_threshold_m": 4e-6,
+                "inner_area_sensitivity_fraction": 0.05,
+                "inner_diameter_sensitivity_m": 0.1e-3,
+            }
             (attempt / "thickness_geometry.csv").write_text(
-                "0.0008,2e-5,5e-6,8e-6,1.2e-5,1000,9e-6,100,\n"
+                ",".join(str(geometry[field]) for field in thickness_geometry.GEOMETRY_FIELDS)
+                + ",\n"
             )
         return attempt
 
@@ -255,8 +298,19 @@ class RunnerBehaviorTests(unittest.TestCase):
             attempt = AttemptValidationTests().make_attempt(Path(directory), case)
             outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
             self.assertEqual(outcome.status, "complete")
-            (attempt / "thickness_geometry.csv").write_text(
-                "0.0008,2e-5,8e-6,7e-6,6e-6,1000,9e-6,100,\n"
+            path = attempt / "thickness_geometry.csv"
+            geometry = dict(zip(
+                thickness_geometry.GEOMETRY_FIELDS,
+                [float(item) for item in path.read_text().strip("\n,").split(",")],
+            ))
+            geometry.update({
+                "inner_area_1deg_m2": 8e-6,
+                "inner_area_2deg_m2": 7e-6,
+                "inner_area_3deg_m2": 6e-6,
+            })
+            path.write_text(
+                ",".join(str(geometry[field]) for field in thickness_geometry.GEOMETRY_FIELDS)
+                + ",\n"
             )
             outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
             self.assertEqual(outcome.status, "invalid_metrics")
@@ -410,6 +464,23 @@ class ThicknessSummaryTests(unittest.TestCase):
             "inner_face_count": "1000",
             "inner_area_smooth_2deg_m2": "1e-5",
             "inner_smooth_2deg_face_count": "120",
+            "outer_local_max_downward_m": "0.0008",
+            "outer_surface_area_m2": "7.1e-6",
+            "outer_projected_area_m2": "7e-6",
+            "outer_break_radius_m": "0.0015",
+            "outer_break_method_code": "1",
+            "outer_threshold_m": "5e-6",
+            "outer_area_sensitivity_fraction": "0.05",
+            "outer_diameter_sensitivity_m": "0.0001",
+            "outer_face_count": "500",
+            "inner_local_max_downward_m": "0.0005",
+            "inner_surface_area_m2": "4.5e-6",
+            "inner_projected_area_m2": "4.4e-6",
+            "inner_break_radius_m": "0.0012",
+            "inner_break_method_code": "1",
+            "inner_threshold_m": "4e-6",
+            "inner_area_sensitivity_fraction": "0.05",
+            "inner_diameter_sensitivity_m": "0.0001",
             "cornea_peak_pa": "120000",
             "eyelid_peak_pa": "100000",
             "probe_uy_m": "-0.00085",
@@ -421,6 +492,7 @@ class ThicknessSummaryTests(unittest.TestCase):
     def test_summary_computes_area_ratios(self) -> None:
         rows = thickness_summary.summary_rows([self.row(0.8), self.row(1.0)])
         self.assertAlmostEqual(float(rows[0]["ae_over_ac_2deg"]), 14.0 / 9.0)
+        self.assertAlmostEqual(float(rows[0]["ae_over_ac_surface"]), 7.1 / 4.5)
         self.assertAlmostEqual(float(rows[1]["force_ratio_to_0p8"]), 1.0)
 
     def test_complete_thickness_grid_passes_qc(self) -> None:
@@ -482,6 +554,59 @@ class ThicknessGeometryTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             thickness_geometry.analyze_faces({1: face}, {})
 
+    def test_circle_clipping_integrates_partial_triangles(self) -> None:
+        total = 0.0
+        step = 0.2
+        for x_index in range(-10, 10):
+            for z_index in range(-10, 10):
+                x0, x1 = x_index * step, (x_index + 1) * step
+                z0, z1 = z_index * step, (z_index + 1) * step
+                total += thickness_geometry._projected_area_inside_circle(
+                    ((x0, z0), (x1, z0), (x1, z1)), 1.0
+                )
+                total += thickness_geometry._projected_area_inside_circle(
+                    ((x0, z0), (x1, z1), (x0, z1)), 1.0
+                )
+        self.assertLess(abs(total - math.pi) / math.pi, 0.01)
+
+    def test_segmented_surface_fit_recovers_known_transition(self) -> None:
+        dummy = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))
+        transition = 1.4e-3
+        records = [
+            thickness_geometry.SurfaceRecord(
+                radius,
+                max(0.0, 1e-3 - 0.25 * radius),
+                -0.02 * radius - 0.18 * max(0.0, radius - transition),
+                1.0,
+                1.0,
+                dummy,
+            )
+            for radius in (index * 0.025e-3 for index in range(1, 121))
+        ]
+        radius, method, _, _ = thickness_geometry._break_radius(
+            records, 0.1e-3, 0.02, thickness_geometry.PROBE_RADIUS_M
+        )
+        self.assertEqual(method, "segmented_fit")
+        self.assertLess(abs(radius - transition), 0.03e-3)
+
+    def test_surface_without_flat_to_curved_transition_is_rejected(self) -> None:
+        dummy = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))
+        records = [
+            thickness_geometry.SurfaceRecord(
+                radius,
+                1e-3 - 0.25 * radius,
+                -0.1 * radius,
+                1.0,
+                1.0,
+                dummy,
+            )
+            for radius in (index * 0.025e-3 for index in range(1, 121))
+        ]
+        with self.assertRaisesRegex(ValueError, "distinct central flat-to-curved"):
+            thickness_geometry._break_radius(
+                records, 0.1e-3, 0.02, thickness_geometry.PROBE_RADIUS_M
+            )
+
 
 class ThicknessCalibrationTests(unittest.TestCase):
     def test_interval_error_is_zero_inside_and_relative_outside(self) -> None:
@@ -494,7 +619,7 @@ class ThicknessCalibrationTests(unittest.TestCase):
         rows = [
             {
                 "eyelid_thickness_mm": str(thickness),
-                "ae_over_ac_smooth_2deg": str(ratio),
+                "ae_over_ac_surface": str(ratio),
             }
             for thickness, ratio in values.items()
         ]
@@ -506,11 +631,11 @@ class ThicknessCalibrationTests(unittest.TestCase):
     def test_secondary_trend_penalizes_a_falling_thick_end(self) -> None:
         primary = [{
             "eyelid_thickness_mm": str(thickness),
-            "ae_over_ac_smooth_2deg": "1.8",
+            "ae_over_ac_surface": "1.8",
         } for thickness in calibration.PRIMARY_THICKNESSES]
         secondary = [
-            {"eyelid_thickness_mm": "1.5", "ae_over_ac_smooth_2deg": "2.5"},
-            {"eyelid_thickness_mm": "2.0", "ae_over_ac_smooth_2deg": "1.7"},
+            {"eyelid_thickness_mm": "1.5", "ae_over_ac_surface": "2.5"},
+            {"eyelid_thickness_mm": "2.0", "ae_over_ac_surface": "1.7"},
         ]
         _, penalty = calibration.secondary_metrics(primary, secondary)
         self.assertEqual(penalty, 1.0)

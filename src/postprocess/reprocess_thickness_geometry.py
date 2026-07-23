@@ -64,6 +64,8 @@ def main() -> int:
     metrics = analyze_files(
         attempt / "inner_preload_faces.csv",
         attempt / "inner_final_faces.csv",
+        attempt / "outer_preload_faces.csv",
+        attempt / "outer_final_faces.csv",
     )
     write_results(attempt, metrics)
     print(attempt / "thickness_geometry.json")

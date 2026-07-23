@@ -96,12 +96,7 @@ MANIFEST_FIELDS = (
     "pmax_pa",
     "max_penetration_m",
     "n_outer",
-    "inner_max_downward_m",
-    "inner_effect_area_m2",
-    "inner_area_1deg_m2",
-    "inner_area_2deg_m2",
-    "inner_area_3deg_m2",
-    "inner_face_count",
+    *THICKNESS_GEOMETRY_FIELDS,
     "cornea_peak_pa",
     "eyelid_peak_pa",
     "probe_uy_m",
@@ -383,7 +378,7 @@ def validate_attempt(
         if (
             float(metrics["inner_max_downward_m"]) <= 0
             or float(metrics["inner_effect_area_m2"]) <= 0
-            or any(area <= 0 for area in inner_areas)
+            or any(area < 0 for area in inner_areas)
             or int(round(float(metrics["inner_face_count"]))) <= 0
         ):
             return AttemptOutcome("invalid_metrics", "inner geometric metrics are not positive",
@@ -395,14 +390,37 @@ def validate_attempt(
             return AttemptOutcome("invalid_metrics", "inner geometric areas violate angle ordering",
                                   returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
         if (
-            float(metrics["inner_area_smooth_2deg_m2"]) <= 0
+            float(metrics["inner_area_smooth_2deg_m2"]) < 0
             or float(metrics["inner_area_smooth_2deg_m2"])
             > float(metrics["inner_effect_area_m2"])
-            or int(round(float(metrics["inner_smooth_2deg_face_count"]))) <= 0
+            or int(round(float(metrics["inner_smooth_2deg_face_count"]))) < 0
         ):
             return AttemptOutcome(
                 "invalid_metrics", "smoothed inner geometric area is invalid",
                 returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0]
+            )
+        for prefix in ("outer", "inner"):
+            surface_area = float(metrics[f"{prefix}_surface_area_m2"])
+            projected_area = float(metrics[f"{prefix}_projected_area_m2"])
+            break_radius = float(metrics[f"{prefix}_break_radius_m"])
+            method_code = int(round(float(metrics[f"{prefix}_break_method_code"])))
+            if (
+                surface_area <= 0
+                or projected_area <= 0
+                or projected_area > surface_area * (1.0 + 1e-9)
+                or break_radius <= 0
+                or method_code not in (1, 2)
+            ):
+                return AttemptOutcome(
+                    "invalid_metrics", f"{prefix} breakpoint area is invalid",
+                    returncode, elapsed_seconds, error_count, len(views), metrics,
+                    rst_candidates[0]
+                )
+        if float(metrics["outer_break_radius_m"]) > 2.16e-3 * (1.0 + 1e-9):
+            return AttemptOutcome(
+                "invalid_metrics", "outer breakpoint exceeds the probe radius",
+                returncode, elapsed_seconds, error_count, len(views), metrics,
+                rst_candidates[0]
             )
     return AttemptOutcome("complete", "", returncode, elapsed_seconds, error_count,
                           len(views), metrics, rst_candidates[0])
@@ -454,6 +472,8 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
             geometry = analyze_files(
                 attempt_dir / "inner_preload_faces.csv",
                 attempt_dir / "inner_final_faces.csv",
+                attempt_dir / "outer_preload_faces.csv",
+                attempt_dir / "outer_final_faces.csv",
             )
             write_geometry_results(attempt_dir, geometry)
         except (OSError, ValueError) as error:

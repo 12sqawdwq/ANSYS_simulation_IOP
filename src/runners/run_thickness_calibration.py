@@ -82,7 +82,7 @@ def primary_metrics(rows: list[dict[str, str]]) -> tuple[int, float, float]:
         row = indexed.get(thickness)
         if row is None:
             return 0, math.inf, math.inf
-        ratio = float(row["ae_over_ac_smooth_2deg"])
+        ratio = float(row["ae_over_ac_surface"])
         errors.append(interval_error(ratio, *PRIMARY_RANGE))
     return sum(error <= 0.2 + 1e-12 for error in errors), sum(errors) / len(errors), (
         sum(error * error for error in errors) / len(errors)
@@ -98,11 +98,11 @@ def secondary_metrics(
         row = indexed.get(thickness)
         if row is None:
             return math.inf, math.inf
-        errors.append(interval_error(float(row["ae_over_ac_smooth_2deg"]), *target))
+        errors.append(interval_error(float(row["ae_over_ac_surface"]), *target))
     secondary_score = sum(error * error for error in errors) / len(errors)
-    k_125 = float(indexed[1.25]["ae_over_ac_smooth_2deg"])
-    k_15 = float(indexed[1.5]["ae_over_ac_smooth_2deg"])
-    k_20 = float(indexed[2.0]["ae_over_ac_smooth_2deg"])
+    k_125 = float(indexed[1.25]["ae_over_ac_surface"])
+    k_15 = float(indexed[1.5]["ae_over_ac_surface"])
+    k_20 = float(indexed[2.0]["ae_over_ac_surface"])
     trend_penalty = 0.0 if k_20 >= k_125 and k_15 >= 0.9 * k_125 else 1.0
     return secondary_score, trend_penalty
 
@@ -293,8 +293,8 @@ def run_final(root: Path, best: dict, cli: argparse.Namespace) -> None:
     coarse_index = rows_by_thickness(rows)
     mesh_validation = []
     for thickness in MESH_VALIDATION_THICKNESSES:
-        coarse = float(coarse_index[thickness]["ae_over_ac_smooth_2deg"])
-        fine = float(mesh_index[thickness]["ae_over_ac_smooth_2deg"])
+        coarse = float(coarse_index[thickness]["ae_over_ac_surface"])
+        fine = float(mesh_index[thickness]["ae_over_ac_surface"])
         mesh_validation.append({
             "eyelid_thickness_mm": thickness,
             "coarse_ratio": coarse,
@@ -316,7 +316,7 @@ def run_final(root: Path, best: dict, cli: argparse.Namespace) -> None:
         "mesh_validation_passed": all(item["passed"] for item in mesh_validation),
         "source_indent_mm": cli.source_indent_mm,
         "target_indent_mm": cli.target_indent_mm,
-        "area_metric": "ae_over_ac_smooth_2deg",
+        "area_metric": "ae_over_ac_surface",
         "candidate_data_root": str(original_candidates),
     })
     report_lines = [
@@ -328,18 +328,18 @@ def run_final(root: Path, best: dict, cli: argparse.Namespace) -> None:
         f"- 眼睑材料倍率：{variant.eyelid_scale:.6g}",
         f"- 角膜材料倍率：{variant.cornea_scale:.6g}",
         f"- 校准状态：沿 {cli.source_indent_mm:g} mm 加载路径提取 {cli.target_indent_mm:g} mm",
-        "- 主指标：平滑法向 Ae/Ac(2°)",
+        "- 主指标：中心形变拐点内的曲面面积比 Ae/Ac",
         "",
         "## 完整厚度结果",
         "",
-        "| 厚度 (mm) | 平滑 Ae/Ac(2°) | 原始 Ae/Ac(2°) | 反力 (N) |",
+        "| 厚度 (mm) | 曲面 Ae/Ac | 投影 Ae/Ac | 反力 (N) |",
         "|---:|---:|---:|---:|",
     ]
     for row in sorted(rows, key=lambda item: float(item["eyelid_thickness_mm"])):
         report_lines.append(
             f"| {float(row['eyelid_thickness_mm']):.2f} | "
-            f"{float(row['ae_over_ac_smooth_2deg']):.3f} | "
-            f"{float(row['ae_over_ac_2deg']):.3f} | "
+            f"{float(row['ae_over_ac_surface']):.3f} | "
+            f"{float(row['ae_over_ac_projected']):.3f} | "
             f"{float(row['probe_force_n']):.4f} |"
         )
     report_lines.extend([
@@ -358,7 +358,7 @@ def run_final(root: Path, best: dict, cli: argparse.Namespace) -> None:
     report_lines.extend([
         "",
         "主区间要求为0.8-1.25 mm四个点中至少三个相对实验区间误差不超过20%。",
-        "原始面片2°结果保留用于追溯，材料选择只使用平滑2°结果。",
+        "旧1°/2°/3°面片结果仅保留用于追溯，材料选择使用曲面拐点面积比。",
         "",
     ])
     (root / "calibration_report.md").write_text(

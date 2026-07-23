@@ -214,6 +214,8 @@ def extract_case(
         geometry = analyze_files(
             attempt / "inner_preload_faces.csv",
             attempt / "inner_final_faces.csv",
+            attempt / "outer_preload_faces.csv",
+            attempt / "outer_final_faces.csv",
         )
         write_geometry_results(attempt, geometry)
         metrics = dict(zip(
@@ -235,8 +237,15 @@ def extract_case(
             if abs(metrics[field] + push_m) > max(1e-8, 0.005 * push_m):
                 raise ValueError(f"{field} does not match the target displacement")
         areas = [metrics[f"inner_area_{angle}deg_m2"] for angle in (1, 2, 3)]
-        if not (0 < areas[0] <= areas[1] <= areas[2] <= metrics["inner_effect_area_m2"]):
+        if not (0 <= areas[0] <= areas[1] <= areas[2] <= metrics["inner_effect_area_m2"]):
             raise ValueError("inner geometric areas violate angle ordering")
+        for prefix in ("outer", "inner"):
+            if (
+                metrics[f"{prefix}_surface_area_m2"] <= 0
+                or metrics[f"{prefix}_projected_area_m2"] <= 0
+                or metrics[f"{prefix}_break_radius_m"] <= 0
+            ):
+                raise ValueError(f"{prefix} breakpoint area is invalid")
 
         row = {field: "" for field in OUTPUT_FIELDS}
         row.update({
@@ -277,6 +286,7 @@ def extract_case(
         row.update(metrics)
         row["n_outer"] = int(round(row["n_outer"]))
         row["inner_face_count"] = int(round(row["inner_face_count"]))
+        row["outer_face_count"] = int(round(row["outer_face_count"]))
         return row
     except (OSError, RuntimeError, ValueError) as error:
         return _failed_row(

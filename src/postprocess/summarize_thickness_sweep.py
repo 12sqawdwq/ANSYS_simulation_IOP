@@ -27,8 +27,18 @@ SUMMARY_FIELDS = (
     "probe_force_n",
     "force_ratio_to_0p8",
     "force_correction_to_0p8",
+    "probe_area_mm2",
+    "outer_contact_area_mm2",
+    "contact_fill_fraction",
     "outer_area_mm2",
     "outer_area_ratio_to_0p8",
+    "outer_surface_area_mm2",
+    "outer_projected_area_mm2",
+    "outer_equivalent_diameter_mm",
+    "outer_break_radius_mm",
+    "outer_breakpoint_method",
+    "outer_area_sensitivity_fraction",
+    "outer_diameter_sensitivity_mm",
     "mean_outer_pressure_kpa",
     "pmax_kpa",
     "inner_max_downward_mm",
@@ -38,6 +48,16 @@ SUMMARY_FIELDS = (
     "inner_area_3deg_mm2",
     "inner_area_smooth_2deg_mm2",
     "inner_smooth_2deg_face_count",
+    "inner_surface_area_mm2",
+    "inner_projected_area_mm2",
+    "inner_equivalent_diameter_mm",
+    "inner_break_radius_mm",
+    "inner_breakpoint_method",
+    "inner_area_sensitivity_fraction",
+    "inner_diameter_sensitivity_mm",
+    "ae_over_ac_surface",
+    "ae_over_ac_projected",
+    "breakpoint_qc",
     "ae_over_ac_1deg",
     "ae_over_ac_2deg",
     "ae_over_ac_3deg",
@@ -66,13 +86,21 @@ def value(row: dict[str, str], field: str) -> float:
     return parsed
 
 
+def breakpoint_method(code: float) -> str:
+    return {1: "inflection", 2: "segmented_fit"}.get(int(round(code)), "unknown")
+
+
 def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]:
     rows: list[dict[str, float | str]] = []
     for raw in manifest:
         if raw.get("status") != "complete":
             continue
         force = abs(value(raw, "probe_fy_n"))
-        outer = value(raw, "contact_area_m2") * 1e6
+        outer_contact = value(raw, "contact_area_m2") * 1e6
+        outer_surface = value(raw, "outer_surface_area_m2") * 1e6
+        outer_projected = value(raw, "outer_projected_area_m2") * 1e6
+        inner_surface = value(raw, "inner_surface_area_m2") * 1e6
+        inner_projected = value(raw, "inner_projected_area_m2") * 1e6
         inner1 = value(raw, "inner_area_1deg_m2") * 1e6
         inner2 = value(raw, "inner_area_2deg_m2") * 1e6
         inner3 = value(raw, "inner_area_3deg_m2") * 1e6
@@ -87,8 +115,18 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
             "eyelid_material_scale": value(raw, "eyelid_material_scale"),
             "cornea_material_scale": value(raw, "cornea_material_scale"),
             "probe_force_n": force,
-            "outer_area_mm2": outer,
-            "mean_outer_pressure_kpa": force / (outer * 1e-6) / 1e3,
+            "probe_area_mm2": math.pi * 2.16**2,
+            "outer_contact_area_mm2": outer_contact,
+            "contact_fill_fraction": outer_contact / (math.pi * 2.16**2),
+            "outer_area_mm2": outer_contact,
+            "outer_surface_area_mm2": outer_surface,
+            "outer_projected_area_mm2": outer_projected,
+            "outer_equivalent_diameter_mm": 2.0 * math.sqrt(outer_projected / math.pi),
+            "outer_break_radius_mm": value(raw, "outer_break_radius_m") * 1e3,
+            "outer_breakpoint_method": breakpoint_method(value(raw, "outer_break_method_code")),
+            "outer_area_sensitivity_fraction": value(raw, "outer_area_sensitivity_fraction"),
+            "outer_diameter_sensitivity_mm": value(raw, "outer_diameter_sensitivity_m") * 1e3,
+            "mean_outer_pressure_kpa": force / (outer_contact * 1e-6) / 1e3,
             "pmax_kpa": value(raw, "pmax_pa") / 1e3,
             "inner_max_downward_mm": value(raw, "inner_max_downward_m") * 1e3,
             "inner_effect_area_mm2": value(raw, "inner_effect_area_m2") * 1e6,
@@ -97,10 +135,31 @@ def summary_rows(manifest: list[dict[str, str]]) -> list[dict[str, float | str]]
             "inner_area_3deg_mm2": inner3,
             "inner_area_smooth_2deg_mm2": smooth2,
             "inner_smooth_2deg_face_count": int(value(raw, "inner_smooth_2deg_face_count")),
-            "ae_over_ac_1deg": outer / inner1,
-            "ae_over_ac_2deg": outer / inner2,
-            "ae_over_ac_3deg": outer / inner3,
-            "ae_over_ac_smooth_2deg": outer / smooth2,
+            "inner_surface_area_mm2": inner_surface,
+            "inner_projected_area_mm2": inner_projected,
+            "inner_equivalent_diameter_mm": 2.0 * math.sqrt(inner_projected / math.pi),
+            "inner_break_radius_mm": value(raw, "inner_break_radius_m") * 1e3,
+            "inner_breakpoint_method": breakpoint_method(value(raw, "inner_break_method_code")),
+            "inner_area_sensitivity_fraction": value(raw, "inner_area_sensitivity_fraction"),
+            "inner_diameter_sensitivity_mm": value(raw, "inner_diameter_sensitivity_m") * 1e3,
+            "ae_over_ac_surface": outer_surface / inner_surface,
+            "ae_over_ac_projected": outer_projected / inner_projected,
+            "breakpoint_qc": (
+                "warning_scale_sensitive"
+                if max(
+                    value(raw, "outer_area_sensitivity_fraction"),
+                    value(raw, "inner_area_sensitivity_fraction"),
+                ) > 0.10
+                or max(
+                    value(raw, "outer_diameter_sensitivity_m"),
+                    value(raw, "inner_diameter_sensitivity_m"),
+                ) > 0.15e-3
+                else "pass"
+            ),
+            "ae_over_ac_1deg": outer_contact / inner1 if inner1 > 0 else "",
+            "ae_over_ac_2deg": outer_contact / inner2 if inner2 > 0 else "",
+            "ae_over_ac_3deg": outer_contact / inner3 if inner3 > 0 else "",
+            "ae_over_ac_smooth_2deg": outer_contact / smooth2 if smooth2 > 0 else "",
             "max_penetration_mm": value(raw, "max_penetration_m") * 1e3,
             "cornea_peak_kpa": value(raw, "cornea_peak_pa") / 1e3,
             "eyelid_peak_kpa": value(raw, "eyelid_peak_pa") / 1e3,
@@ -175,18 +234,45 @@ def build_qc(
             "inner_area_1deg_m2", "inner_area_2deg_m2", "inner_area_3deg_m2"
         )]
         effect_area = value(raw, "inner_effect_area_m2")
-        if not (0 < areas[0] <= areas[1] <= areas[2] <= effect_area):
+        if not (0 <= areas[0] <= areas[1] <= areas[2] <= effect_area):
             add_check(checks, "error", "inner_area_order", case,
                       "geometric inner areas do not increase with angle threshold")
         smooth_area = value(raw, "inner_area_smooth_2deg_m2")
         smooth_count = value(raw, "inner_smooth_2deg_face_count")
-        if not 0 < smooth_area <= effect_area or smooth_count < 1:
+        if not 0 <= smooth_area <= effect_area or smooth_count < 0:
             add_check(checks, "error", "inner_smooth_area", case,
                       "smoothed 2 degree area or face count is invalid")
-        sensitivity = (areas[2] - areas[0]) / areas[1]
-        if sensitivity > 1.0:
-            add_check(checks, "warning", "inner_area_threshold_sensitivity", case,
-                      f"1-3 degree inner-area spread is {sensitivity * 100:.1f}% of the 2 degree area")
+        if areas[1] > 0:
+            sensitivity = (areas[2] - areas[0]) / areas[1]
+            if sensitivity > 1.0:
+                add_check(checks, "warning", "legacy_inner_area_threshold_sensitivity", case,
+                          f"legacy 1-3 degree spread is {sensitivity * 100:.1f}% of the 2 degree area")
+        probe_area = math.pi * (2.16e-3) ** 2
+        if value(raw, "contact_area_m2") > probe_area * 1.01:
+            add_check(checks, "error", "contact_exceeds_probe", case,
+                      "closed contact area exceeds the 4.32 mm probe face")
+        for prefix in ("outer", "inner"):
+            surface = value(raw, f"{prefix}_surface_area_m2")
+            projected = value(raw, f"{prefix}_projected_area_m2")
+            area_sensitivity = value(raw, f"{prefix}_area_sensitivity_fraction")
+            diameter_sensitivity = value(raw, f"{prefix}_diameter_sensitivity_m")
+            if surface <= 0 or projected <= 0 or projected > surface * (1.0 + 1e-9):
+                add_check(checks, "error", "breakpoint_area", case,
+                          f"{prefix} surface/projected breakpoint area is invalid")
+            if area_sensitivity > 0.10 or diameter_sensitivity > 0.15e-3:
+                add_check(
+                    checks, "warning", "breakpoint_scale_sensitivity", case,
+                    f"{prefix} scale sensitivity is {area_sensitivity * 100:.1f}% area and "
+                    f"{diameter_sensitivity * 1e3:.3f} mm diameter",
+                )
+        outer_diameter = 2.0 * math.sqrt(value(raw, "outer_projected_area_m2") / math.pi)
+        contact_diameter = 2.0 * math.sqrt(value(raw, "contact_area_m2") / math.pi)
+        if not 2.5e-3 <= outer_diameter <= 3.1e-3:
+            add_check(checks, "warning", "outer_applanation_scale", case,
+                      f"outer equivalent diameter is {outer_diameter * 1e3:.3f} mm")
+        if abs(outer_diameter - contact_diameter) > 0.15e-3:
+            add_check(checks, "warning", "outer_contact_boundary_mismatch", case,
+                      "breakpoint and contact equivalent diameters differ by more than 0.15 mm")
     if rows:
         add_check(checks, "info", "trend_span", "",
                   f"force ratio at maximum thickness is {float(rows[-1]['force_ratio_to_0p8']):.3f}")
@@ -214,20 +300,24 @@ def plot_curves(run_root: Path, rows: list[dict[str, float | str]]) -> None:
             ("FORCE", [(x(row), float(row["probe_force_n"])) for row in rows]),
         )),
         ("outer_area_vs_thickness.png", "OUTER AREA MM2", (
-            ("AE", [(x(row), float(row["outer_area_mm2"])) for row in rows]),
+            ("CONTACT", [(x(row), float(row["outer_contact_area_mm2"])) for row in rows]),
+            ("SURFACE", [(x(row), float(row["outer_surface_area_mm2"])) for row in rows]),
+            ("PROJECTED", [(x(row), float(row["outer_projected_area_mm2"])) for row in rows]),
         )),
         ("inner_area_vs_thickness.png", "INNER GEOMETRIC AREA MM2", (
-            ("1 DEG", [(x(row), float(row["inner_area_1deg_mm2"])) for row in rows]),
-            ("2 DEG", [(x(row), float(row["inner_area_2deg_mm2"])) for row in rows]),
-            ("3 DEG", [(x(row), float(row["inner_area_3deg_mm2"])) for row in rows]),
+            ("SURFACE", [(x(row), float(row["inner_surface_area_mm2"])) for row in rows]),
+            ("PROJECTED", [(x(row), float(row["inner_projected_area_mm2"])) for row in rows]),
+            ("LEGACY SMOOTH 2 DEG", [
+                (x(row), float(row["inner_area_smooth_2deg_mm2"])) for row in rows
+            ]),
         )),
         ("area_ratio_vs_thickness.png", "AE OVER AC", (
-            ("1 DEG", [(x(row), float(row["ae_over_ac_1deg"])) for row in rows]),
-            ("2 DEG", [(x(row), float(row["ae_over_ac_2deg"])) for row in rows]),
-            ("3 DEG", [(x(row), float(row["ae_over_ac_3deg"])) for row in rows]),
-            ("SMOOTH 2 DEG", [
-                (x(row), float(row["ae_over_ac_smooth_2deg"])) for row in rows
-            ]),
+            ("SURFACE", [(x(row), float(row["ae_over_ac_surface"])) for row in rows]),
+            ("PROJECTED", [(x(row), float(row["ae_over_ac_projected"])) for row in rows]),
+        )),
+        ("equivalent_diameter_vs_thickness.png", "EQUIVALENT DIAMETER MM", (
+            ("OUTER", [(x(row), float(row["outer_equivalent_diameter_mm"])) for row in rows]),
+            ("INNER", [(x(row), float(row["inner_equivalent_diameter_mm"])) for row in rows]),
         )),
         ("pressure_vs_thickness.png", "PRESSURE KPA", (
             ("MEAN", [(x(row), float(row["mean_outer_pressure_kpa"])) for row in rows]),

@@ -1,9 +1,52 @@
-! Export the bonded cornea-side interface faces at preload and final indentation.
-! Python computes projected applanation areas from these deformed coordinates.
+! Export probe-facing eyelid and bonded cornea-side faces at preload and indentation.
+! Python computes breakpoint-based surface and projected applanation areas.
 /post1
 rsys,0
 
 set,1,last
+allsel
+esel,s,real,,3
+esel,r,ename,,174
+*get,outer_face_count,elem,0,count
+*cfopen,outer_preload_faces,csv
+outer_elem = elnext(0)
+*do,outer_index,1,outer_face_count
+outer_n1 = nelem(outer_elem,1)
+outer_n2 = nelem(outer_elem,2)
+outer_n3 = nelem(outer_elem,3)
+*get,outer_x1,node,outer_n1,loc,x
+*get,outer_y1,node,outer_n1,loc,y
+*get,outer_z1,node,outer_n1,loc,z
+*get,outer_ux1,node,outer_n1,u,x
+*get,outer_uy1,node,outer_n1,u,y
+*get,outer_uz1,node,outer_n1,u,z
+*get,outer_x2,node,outer_n2,loc,x
+*get,outer_y2,node,outer_n2,loc,y
+*get,outer_z2,node,outer_n2,loc,z
+*get,outer_ux2,node,outer_n2,u,x
+*get,outer_uy2,node,outer_n2,u,y
+*get,outer_uz2,node,outer_n2,u,z
+*get,outer_x3,node,outer_n3,loc,x
+*get,outer_y3,node,outer_n3,loc,y
+*get,outer_z3,node,outer_n3,loc,z
+*get,outer_ux3,node,outer_n3,u,x
+*get,outer_uy3,node,outer_n3,u,y
+*get,outer_uz3,node,outer_n3,u,z
+outer_dx1 = outer_x1 + outer_ux1
+outer_dy1 = outer_y1 + outer_uy1
+outer_dz1 = outer_z1 + outer_uz1
+outer_dx2 = outer_x2 + outer_ux2
+outer_dy2 = outer_y2 + outer_uy2
+outer_dz2 = outer_z2 + outer_uz2
+outer_dx3 = outer_x3 + outer_ux3
+outer_dy3 = outer_y3 + outer_uy3
+outer_dz3 = outer_z3 + outer_uz3
+*vwrite,outer_elem,outer_n1,outer_n2,outer_n3,outer_dx1,outer_dy1,outer_dz1,outer_dx2,outer_dy2,outer_dz2,outer_dx3,outer_dy3,outer_dz3
+(13(E22.14,','))
+outer_elem = elnext(outer_elem)
+*enddo
+*cfclos
+
 allsel
 esel,s,real,,4
 esel,r,ename,,174
@@ -53,6 +96,48 @@ set,,,,,post_time
 *else
 set,last
 *endif
+allsel
+esel,s,real,,3
+esel,r,ename,,174
+*cfopen,outer_final_faces,csv
+outer_elem = elnext(0)
+*do,outer_index,1,outer_face_count
+outer_n1 = nelem(outer_elem,1)
+outer_n2 = nelem(outer_elem,2)
+outer_n3 = nelem(outer_elem,3)
+*get,outer_x1,node,outer_n1,loc,x
+*get,outer_y1,node,outer_n1,loc,y
+*get,outer_z1,node,outer_n1,loc,z
+*get,outer_ux1,node,outer_n1,u,x
+*get,outer_uy1,node,outer_n1,u,y
+*get,outer_uz1,node,outer_n1,u,z
+*get,outer_x2,node,outer_n2,loc,x
+*get,outer_y2,node,outer_n2,loc,y
+*get,outer_z2,node,outer_n2,loc,z
+*get,outer_ux2,node,outer_n2,u,x
+*get,outer_uy2,node,outer_n2,u,y
+*get,outer_uz2,node,outer_n2,u,z
+*get,outer_x3,node,outer_n3,loc,x
+*get,outer_y3,node,outer_n3,loc,y
+*get,outer_z3,node,outer_n3,loc,z
+*get,outer_ux3,node,outer_n3,u,x
+*get,outer_uy3,node,outer_n3,u,y
+*get,outer_uz3,node,outer_n3,u,z
+outer_dx1 = outer_x1 + outer_ux1
+outer_dy1 = outer_y1 + outer_uy1
+outer_dz1 = outer_z1 + outer_uz1
+outer_dx2 = outer_x2 + outer_ux2
+outer_dy2 = outer_y2 + outer_uy2
+outer_dz2 = outer_z2 + outer_uz2
+outer_dx3 = outer_x3 + outer_ux3
+outer_dy3 = outer_y3 + outer_uy3
+outer_dz3 = outer_z3 + outer_uz3
+*vwrite,outer_elem,outer_n1,outer_n2,outer_n3,outer_dx1,outer_dy1,outer_dz1,outer_dx2,outer_dy2,outer_dz2,outer_dx3,outer_dy3,outer_dz3
+(13(E22.14,','))
+outer_elem = elnext(outer_elem)
+*enddo
+*cfclos
+
 allsel
 esel,s,real,,4
 esel,r,ename,,174
