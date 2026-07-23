@@ -40,6 +40,18 @@ python src/postprocess/check_calibration_run.py "$RUN_ROOT" \
 算例或至少三个收敛进度标记时，`healthy_to_leave_unattended` 为 `true`。达到该状态后
 不需要持续轮询。
 
+## 2°有效形变分布
+
+正式结果完成后生成外侧和内侧二值网格图：
+
+```bash
+python src/postprocess/plot_flat_region_2deg.py "$RUN_ROOT" --workers 4
+```
+
+红色表示满足位移阈值、中央边连通且平滑面法向夹角不超过 `2°` 的有效平坦网格；
+蓝色表示未计入网格。输出包括各厚度单图、面积与覆盖率 CSV，以及三列汇总矩阵。
+这里的红色不是 `θ>2°`：大于 `2°` 的网格属于曲面过渡区，按正式面积定义应显示为蓝色。
+
 ## 校准判据
 
 - 正式位移固定为 `0.28 mm`，总探头位移为 `0.33 mm`，其中包含 `0.05 mm` 初始间隙闭合。

@@ -539,15 +539,15 @@ def _central_connected_elements(
     return connected
 
 
-def analyze_flat_surface(
+def select_flat_surface(
     preload: dict[int, Face],
     final: dict[int, Face],
     *,
     angle_limit_deg: float = 2.0,
     maximum_radius: float = PROBE_RADIUS_M,
     displacement_fraction: float = DISPLACEMENT_FRACTION,
-) -> FlatAreaResult:
-    """Integrate the central, displaced and near-planar deformed surface region."""
+) -> tuple[FlatAreaResult, set[int]]:
+    """Return objective flat-area metrics and the selected deformed face IDs."""
     _validate_face_sets(preload, final)
     if angle_limit_deg <= 0 or maximum_radius <= 0:
         raise ValueError("flatness angle and maximum radius must be positive")
@@ -606,12 +606,32 @@ def analyze_flat_surface(
         fraction = min(1.0, max(0.0, projected / total_projected))
         projected_area += projected
         surface_area += fraction * record.surface_area
-    return FlatAreaResult(
+    result = FlatAreaResult(
         projected_area=projected_area,
         surface_area=surface_area,
         face_count=len(connected),
         displacement_threshold=displacement_threshold,
     )
+    return result, connected
+
+
+def analyze_flat_surface(
+    preload: dict[int, Face],
+    final: dict[int, Face],
+    *,
+    angle_limit_deg: float = 2.0,
+    maximum_radius: float = PROBE_RADIUS_M,
+    displacement_fraction: float = DISPLACEMENT_FRACTION,
+) -> FlatAreaResult:
+    """Integrate the central, displaced and near-planar deformed surface region."""
+    result, _ = select_flat_surface(
+        preload,
+        final,
+        angle_limit_deg=angle_limit_deg,
+        maximum_radius=maximum_radius,
+        displacement_fraction=displacement_fraction,
+    )
+    return result
 
 
 def _flat_surface_metrics(
