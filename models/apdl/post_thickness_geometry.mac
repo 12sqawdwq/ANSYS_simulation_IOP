@@ -179,5 +179,26 @@ inner_dz3 = inner_z3 + inner_uz3
 inner_elem = elnext(inner_elem)
 *enddo
 *cfclos
+
+! Final probe-eyelid contact state for flat-plane residual calibration.
+allsel
+etable,eras
+esel,s,real,,3
+esel,r,ename,,174
+etable,outer_pres,cont,pres
+etable,outer_stat,cont,stat
+etable,outer_area,volu
+*get,outer_state_count,elem,0,count
+*cfopen,outer_contact_state,csv
+outer_state_elem = elnext(0)
+*do,outer_state_index,1,outer_state_count
+*get,outer_state_pres,elem,outer_state_elem,etab,outer_pres
+*get,outer_state_stat,elem,outer_state_elem,etab,outer_stat
+*get,outer_state_area,elem,outer_state_elem,etab,outer_area
+*vwrite,outer_state_elem,outer_state_stat,outer_state_pres,outer_state_area
+(4(E22.14,','))
+outer_state_elem = elnext(outer_state_elem)
+*enddo
+*cfclos
 allsel
 finish

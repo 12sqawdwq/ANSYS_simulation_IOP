@@ -87,10 +87,13 @@ class APDLContractTests(unittest.TestCase):
             "inner_final_faces",
         ):
             self.assertIn(f"*cfopen,{filename},csv", macro)
-        self.assertEqual(macro.count("esel,s,real,,3"), 2)
+        self.assertEqual(macro.count("esel,s,real,,3"), 3)
         self.assertEqual(macro.count("esel,s,real,,4"), 2)
         self.assertEqual(macro.count("esel,r,ename,,170"), 2)
-        self.assertEqual(macro.count("esel,r,ename,,174"), 2)
+        self.assertEqual(macro.count("esel,r,ename,,174"), 3)
+        self.assertIn("*cfopen,outer_contact_state,csv", macro)
+        self.assertIn("etable,outer_stat,cont,stat", macro)
+        self.assertIn("etable,outer_pres,cont,pres", macro)
 
     def test_eyelid_strain_view_is_scoped_and_uses_hencky_strain(self) -> None:
         macro = (
