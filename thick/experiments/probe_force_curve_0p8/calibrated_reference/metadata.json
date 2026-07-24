@@ -1,0 +1,27 @@
+{
+  "probe_diameter_mm": 4.32,
+  "probe_area_mm2": 14.65741468458854,
+  "cornea_thickness_mm": 0.6,
+  "eyelid_thicknesses_mm": [
+    0.8,
+    1.2,
+    2.0
+  ],
+  "curve_points_per_thickness": [
+    33,
+    33,
+    33
+  ],
+  "maximum_displacement_error_um": 1.1102230246251565e-13,
+  "breakpoint_assessment_counts": {
+    "sharp_kink": 0,
+    "smooth_transition": 3,
+    "weak_transition": 0,
+    "no_clear_transition": 0
+  },
+  "breakpoint_rule": {
+    "sharp_kink": "SSE improvement >= 0.35, global relative slope change >= 0.25, and local slope jump >= 0.20",
+    "smooth_transition": "strong two-regime fit but local slope jump < 0.20",
+    "weak_transition": "SSE improvement >= 0.20 and global slope change >= 0.15"
+  }
+}

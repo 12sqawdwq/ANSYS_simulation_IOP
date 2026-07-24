@@ -13,3 +13,5 @@
 仓库继续保留 `0.26 mm` 九点推进数据作为历史对照，见 [fe_sweep_indent_0p26](data/processed/fe_sweep_indent_0p26/README.md) 和 [0.26 mm 视图索引](figures/fe_sweep_indent_0p26/views/README.md)。当前面积分析统一使用已完成的七个 `0.28 mm` 状态，见 [Ae/Ac 0.28 mm 推进报告](docs/眼睑厚度Ae_Ac推进0.28mm补充报告.md)。
 
 正式厚度工况现统一为 `0.28 mm` 名义推进。球面相交面积已从活动数据链删除；`0.5°-10°` 法向夹角面积只表示局部近水平核心，不能作为正式 `Ae/Ac`，完整扫描见[Flat Region 角度灵敏度实验](experiments/flat_region_angle_sweep/README.md)。当前外侧使用位移参与区的保守网格下界，内侧使用 bonded 界面的增量压力参与面积；公式、合理性和限制见[眼睑厚度 Ae/Ac 计算与校准](../docs/THICKNESS_CALIBRATION.md#两种面积定义)。内外两侧统一按压力分布计算的诊断结果见[统一力学有效面积对照](experiments/mechanical_area_comparison/README.md)。
+
+利用已收敛 `0.80 mm` 加载路径逐状态提取的探头反力曲线见[探头反力与拐点检查](experiments/probe_force_curve_0p8/README.md)。七个厚度均在约 `0.325-0.375 mm` 出现平滑增刚区间，但没有达到局部斜率突跳判据，当前不支持将其解释为明确机械拐点或完全压平终点。

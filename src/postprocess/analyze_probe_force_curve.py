@@ -44,7 +44,10 @@ BREAKPOINT_FIELDS = (
     "post_slope_n_per_mm",
     "slope_change_fraction",
     "two_segment_sse_improvement",
-    "evidence",
+    "local_pre_slope_n_per_mm",
+    "local_post_slope_n_per_mm",
+    "local_slope_jump_fraction",
+    "assessment",
 )
 
 
@@ -133,12 +136,25 @@ def fit_breakpoint(rows: list[dict[str, float | str]]) -> dict[str, float | str]
     slope_scale = max(abs(pre_slope), abs(post_slope), 1e-12)
     slope_change = abs(post_slope - pre_slope) / slope_scale
     improvement = 0.0 if linear_sse <= 1e-20 else 1.0 - segmented_sse / linear_sse
-    if improvement >= 0.35 and slope_change >= 0.25:
-        evidence = "strong"
+    knot_index = int(np.argmin(np.abs(x_all - knot)))
+    local_start = max(0, knot_index - 2)
+    local_end = min(len(x_all), knot_index + 3)
+    local_pre = np.polyfit(
+        x_all[local_start:knot_index + 1], y_all[local_start:knot_index + 1], 1
+    )[0]
+    local_post = np.polyfit(
+        x_all[knot_index:local_end], y_all[knot_index:local_end], 1
+    )[0]
+    local_scale = max(abs(local_pre), abs(local_post), 1e-12)
+    local_jump = abs(local_post - local_pre) / local_scale
+    if improvement >= 0.35 and slope_change >= 0.25 and local_jump >= 0.20:
+        assessment = "sharp_kink"
+    elif improvement >= 0.35 and slope_change >= 0.25:
+        assessment = "smooth_transition"
     elif improvement >= 0.20 and slope_change >= 0.15:
-        evidence = "weak"
+        assessment = "weak_transition"
     else:
-        evidence = "none"
+        assessment = "no_clear_transition"
     return {
         "eyelid_thickness_mm": float(rows[0]["eyelid_thickness_mm"]),
         "candidate_indent_mm": knot,
@@ -146,7 +162,10 @@ def fit_breakpoint(rows: list[dict[str, float | str]]) -> dict[str, float | str]
         "post_slope_n_per_mm": post_slope,
         "slope_change_fraction": slope_change,
         "two_segment_sse_improvement": improvement,
-        "evidence": evidence,
+        "local_pre_slope_n_per_mm": float(local_pre),
+        "local_post_slope_n_per_mm": float(local_post),
+        "local_slope_jump_fraction": float(local_jump),
+        "assessment": assessment,
     }
 
 
@@ -174,12 +193,26 @@ def plot_curves(
         label = f"eyelid {thickness:.1f} mm"
         force_axis.plot(x, force, color=color, linewidth=2.0, label=label)
         stiffness_axis.plot(x, stiffness, color=color, linewidth=1.8)
-        if breakpoint["evidence"] != "none":
+        if breakpoint["assessment"] != "no_clear_transition":
             knot = float(breakpoint["candidate_indent_mm"])
             stiffness_axis.scatter(
                 [knot], [np.interp(knot, x, stiffness)], color=color,
                 edgecolor="white", linewidth=0.7, s=42, zorder=4,
             )
+
+    transition_knots = [
+        float(row["candidate_indent_mm"])
+        for row in breakpoints
+        if row["assessment"] in ("sharp_kink", "smooth_transition")
+    ]
+    if transition_knots:
+        low, high = min(transition_knots), max(transition_knots)
+        stiffness_axis.axvspan(low, high, color="#6B7280", alpha=0.10, linewidth=0)
+        stiffness_axis.text(
+            0.5 * (low + high), 0.04, "fitted transition centers",
+            transform=stiffness_axis.get_xaxis_transform(), ha="center", va="bottom",
+            fontsize=8, color="#4B5563",
+        )
 
     force_axis.set_ylabel("Probe force (N)")
     force_axis.grid(True, color="#D8DDE3", linewidth=0.7)
@@ -239,9 +272,9 @@ def main() -> int:
     write_csv(args.output_dir / "probe_force_curve.csv", CURVE_FIELDS, all_rows)
     write_csv(args.output_dir / "breakpoint_analysis.csv", BREAKPOINT_FIELDS, breakpoints)
     max_error = max(abs(float(row["displacement_error_um"])) for row in all_rows)
-    evidence_counts = {
-        level: sum(row["evidence"] == level for row in breakpoints)
-        for level in ("strong", "weak", "none")
+    assessment_counts = {
+        level: sum(row["assessment"] == level for row in breakpoints)
+        for level in ("sharp_kink", "smooth_transition", "weak_transition", "no_clear_transition")
     }
     metadata = {
         "probe_diameter_mm": PROBE_DIAMETER_MM,
@@ -250,10 +283,16 @@ def main() -> int:
         "eyelid_thicknesses_mm": [item[0] for item in grouped],
         "curve_points_per_thickness": [len(item[1]) for item in grouped],
         "maximum_displacement_error_um": max_error,
-        "breakpoint_evidence_counts": evidence_counts,
+        "breakpoint_assessment_counts": assessment_counts,
         "breakpoint_rule": {
-            "strong": "SSE improvement >= 0.35 and relative slope change >= 0.25",
-            "weak": "SSE improvement >= 0.20 and relative slope change >= 0.15",
+            "sharp_kink": (
+                "SSE improvement >= 0.35, global relative slope change >= 0.25, "
+                "and local slope jump >= 0.20"
+            ),
+            "smooth_transition": (
+                "strong two-regime fit but local slope jump < 0.20"
+            ),
+            "weak_transition": "SSE improvement >= 0.20 and global slope change >= 0.15",
         },
     }
     (args.output_dir / "metadata.json").write_text(

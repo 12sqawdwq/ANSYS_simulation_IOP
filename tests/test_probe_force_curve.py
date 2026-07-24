@@ -43,4 +43,4 @@ def test_continuous_segment_fit_finds_a_clear_slope_change():
     assert abs(float(result["candidate_indent_mm"]) - 0.4) <= 0.025
     assert math.isclose(float(result["pre_slope_n_per_mm"]), 0.5, rel_tol=1e-8)
     assert math.isclose(float(result["post_slope_n_per_mm"]), 1.5, rel_tol=1e-8)
-    assert result["evidence"] == "strong"
+    assert result["assessment"] == "sharp_kink"

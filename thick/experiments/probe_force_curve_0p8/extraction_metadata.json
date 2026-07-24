@@ -1,0 +1,89 @@
+{
+  "created_at_utc": "2026-07-24T09:35:47+00:00",
+  "source_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260720T153013Z_2ecc954_thickness",
+  "source_manifest": "run_manifest.csv",
+  "macro": "models/apdl/post_probe_force_curve.mac",
+  "macro_sha256": "14948ea402f2616611965fb66f635c4c78fc6cbc273478bdf20830cf451aff15",
+  "intervals": 32,
+  "workers": 4,
+  "np": 2,
+  "cases": [
+    {
+      "case": "eyelid_0p80mm_indent_0p80mm",
+      "eyelid_thickness_mm": 0.8,
+      "status": "complete",
+      "started_at_utc": "2026-07-24T09:34:38+00:00",
+      "curve_file": "raw/eyelid_0p80mm.csv",
+      "endpoint_force_n": 0.6126994371576,
+      "returncode": 0,
+      "ended_at_utc": "2026-07-24T09:35:05+00:00",
+      "elapsed_seconds": 27.176
+    },
+    {
+      "case": "eyelid_1p00mm_indent_0p80mm",
+      "eyelid_thickness_mm": 1.0,
+      "status": "complete",
+      "started_at_utc": "2026-07-24T09:34:38+00:00",
+      "curve_file": "raw/eyelid_1p00mm.csv",
+      "endpoint_force_n": 0.7491973108698,
+      "returncode": 0,
+      "ended_at_utc": "2026-07-24T09:35:06+00:00",
+      "elapsed_seconds": 28.377
+    },
+    {
+      "case": "eyelid_1p20mm_indent_0p80mm",
+      "eyelid_thickness_mm": 1.2,
+      "status": "complete",
+      "started_at_utc": "2026-07-24T09:34:38+00:00",
+      "curve_file": "raw/eyelid_1p20mm.csv",
+      "endpoint_force_n": 0.89103879011018,
+      "returncode": 0,
+      "ended_at_utc": "2026-07-24T09:35:08+00:00",
+      "elapsed_seconds": 29.979
+    },
+    {
+      "case": "eyelid_1p40mm_indent_0p80mm",
+      "eyelid_thickness_mm": 1.4,
+      "status": "complete",
+      "started_at_utc": "2026-07-24T09:34:38+00:00",
+      "curve_file": "raw/eyelid_1p40mm.csv",
+      "endpoint_force_n": 1.0318958859797,
+      "returncode": 0,
+      "ended_at_utc": "2026-07-24T09:35:11+00:00",
+      "elapsed_seconds": 32.586
+    },
+    {
+      "case": "eyelid_1p60mm_indent_0p80mm",
+      "eyelid_thickness_mm": 1.6,
+      "status": "complete",
+      "started_at_utc": "2026-07-24T09:35:05+00:00",
+      "curve_file": "raw/eyelid_1p60mm.csv",
+      "endpoint_force_n": 1.1674240343513,
+      "returncode": 0,
+      "ended_at_utc": "2026-07-24T09:35:40+00:00",
+      "elapsed_seconds": 34.666
+    },
+    {
+      "case": "eyelid_1p80mm_indent_0p80mm",
+      "eyelid_thickness_mm": 1.8,
+      "status": "complete",
+      "started_at_utc": "2026-07-24T09:35:06+00:00",
+      "curve_file": "raw/eyelid_1p80mm.csv",
+      "endpoint_force_n": 1.2970828493701,
+      "returncode": 0,
+      "ended_at_utc": "2026-07-24T09:35:44+00:00",
+      "elapsed_seconds": 37.073
+    },
+    {
+      "case": "eyelid_2p00mm_indent_0p80mm",
+      "eyelid_thickness_mm": 2.0,
+      "status": "complete",
+      "started_at_utc": "2026-07-24T09:35:08+00:00",
+      "curve_file": "raw/eyelid_2p00mm.csv",
+      "endpoint_force_n": 1.4252590267047,
+      "returncode": 0,
+      "ended_at_utc": "2026-07-24T09:35:47+00:00",
+      "elapsed_seconds": 39.224
+    }
+  ]
+}

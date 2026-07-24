@@ -1,0 +1,99 @@
+{
+  "created_at_utc": "2026-07-24T09:38:32+00:00",
+  "source_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_calibration/20260721T070542Z_6a75cde2_calibration_0p26/final/candidates/eyelid_s1p00_cornea_s0p75/full_source",
+  "source_manifest": "run_manifest.csv",
+  "macro": "models/apdl/post_probe_force_curve.mac",
+  "macro_sha256": "14948ea402f2616611965fb66f635c4c78fc6cbc273478bdf20830cf451aff15",
+  "intervals": 32,
+  "workers": 3,
+  "np": 2,
+  "cases": [
+    {
+      "case": "eyelid_0p80mm_indent_0p80mm",
+      "eyelid_thickness_mm": 0.8,
+      "status": "complete",
+      "started_at_utc": "2026-07-24T09:37:54+00:00",
+      "curve_file": "raw/eyelid_0p80mm.csv",
+      "endpoint_force_n": 0.53612892031255,
+      "returncode": 0,
+      "ended_at_utc": "2026-07-24T09:38:22+00:00",
+      "elapsed_seconds": 28.145
+    },
+    {
+      "case": "eyelid_1p00mm_indent_0p80mm",
+      "eyelid_thickness_mm": 1.0,
+      "status": "failed",
+      "started_at_utc": "2026-07-24T09:37:54+00:00",
+      "failure_reason": "source DB or RST is missing",
+      "ended_at_utc": "2026-07-24T09:37:54+00:00",
+      "elapsed_seconds": 0.0
+    },
+    {
+      "case": "eyelid_1p20mm_indent_0p80mm",
+      "eyelid_thickness_mm": 1.2,
+      "status": "complete",
+      "started_at_utc": "2026-07-24T09:37:54+00:00",
+      "curve_file": "raw/eyelid_1p20mm.csv",
+      "endpoint_force_n": 0.7869998686086,
+      "returncode": 0,
+      "ended_at_utc": "2026-07-24T09:38:24+00:00",
+      "elapsed_seconds": 30.548
+    },
+    {
+      "case": "eyelid_1p25mm_indent_0p80mm",
+      "eyelid_thickness_mm": 1.25,
+      "status": "failed",
+      "started_at_utc": "2026-07-24T09:37:54+00:00",
+      "failure_reason": "source DB or RST is missing",
+      "ended_at_utc": "2026-07-24T09:37:54+00:00",
+      "elapsed_seconds": 0.0
+    },
+    {
+      "case": "eyelid_1p40mm_indent_0p80mm",
+      "eyelid_thickness_mm": 1.4,
+      "status": "failed",
+      "started_at_utc": "2026-07-24T09:37:54+00:00",
+      "failure_reason": "source DB or RST is missing",
+      "ended_at_utc": "2026-07-24T09:37:54+00:00",
+      "elapsed_seconds": 0.0
+    },
+    {
+      "case": "eyelid_1p50mm_indent_0p80mm",
+      "eyelid_thickness_mm": 1.5,
+      "status": "failed",
+      "started_at_utc": "2026-07-24T09:37:54+00:00",
+      "failure_reason": "source DB or RST is missing",
+      "ended_at_utc": "2026-07-24T09:37:54+00:00",
+      "elapsed_seconds": 0.0
+    },
+    {
+      "case": "eyelid_1p60mm_indent_0p80mm",
+      "eyelid_thickness_mm": 1.6,
+      "status": "failed",
+      "started_at_utc": "2026-07-24T09:37:54+00:00",
+      "failure_reason": "source DB or RST is missing",
+      "ended_at_utc": "2026-07-24T09:37:54+00:00",
+      "elapsed_seconds": 0.0
+    },
+    {
+      "case": "eyelid_1p80mm_indent_0p80mm",
+      "eyelid_thickness_mm": 1.8,
+      "status": "failed",
+      "started_at_utc": "2026-07-24T09:37:54+00:00",
+      "failure_reason": "source DB or RST is missing",
+      "ended_at_utc": "2026-07-24T09:37:54+00:00",
+      "elapsed_seconds": 0.0
+    },
+    {
+      "case": "eyelid_2p00mm_indent_0p80mm",
+      "eyelid_thickness_mm": 2.0,
+      "status": "complete",
+      "started_at_utc": "2026-07-24T09:37:54+00:00",
+      "curve_file": "raw/eyelid_2p00mm.csv",
+      "endpoint_force_n": 1.2914921185577,
+      "returncode": 0,
+      "ended_at_utc": "2026-07-24T09:38:32+00:00",
+      "elapsed_seconds": 38.877
+    }
+  ]
+}
