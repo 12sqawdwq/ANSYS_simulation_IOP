@@ -142,6 +142,7 @@ def pressure_area(
     annulus_inner_m: float,
     annulus_outer_m: float,
     sigma_factor: float,
+    minimum_status: float | None = None,
 ) -> PressureAreaResult:
     if set(preload) != set(final):
         raise ValueError("preload and final pressure element sets differ")
@@ -166,7 +167,12 @@ def pressure_area(
     local = {element: float(delta[index] - baseline) for index, element in enumerate(elements)}
     candidates = {
         element for element in elements
-        if local[element] > threshold and final[element].area_m2 > 0
+        if local[element] > threshold
+        and final[element].area_m2 > 0
+        and (
+            minimum_status is None
+            or final[element].status >= minimum_status
+        )
     }
     selected = central_component(final, candidates)
     support_area = sum(final[element].area_m2 for element in selected)

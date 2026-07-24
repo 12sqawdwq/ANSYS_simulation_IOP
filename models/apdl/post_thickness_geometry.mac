@@ -47,6 +47,51 @@ outer_elem = elnext(outer_elem)
 *enddo
 *cfclos
 
+! Preload probe-eyelid contact pressure with auditable face geometry.
+allsel
+etable,eras
+esel,s,real,,3
+esel,r,ename,,174
+etable,opres,cont,pres
+etable,ostat,cont,stat
+etable,oarea,volu
+*get,outer_contact_count,elem,0,count
+*cfopen,outer_contact_preload,csv
+outer_contact_elem = elnext(0)
+*do,outer_contact_index,1,outer_contact_count
+*get,outer_contact_pres,elem,outer_contact_elem,etab,opres
+*get,outer_contact_stat,elem,outer_contact_elem,etab,ostat
+*get,outer_contact_area,elem,outer_contact_elem,etab,oarea
+outer_contact_n1 = nelem(outer_contact_elem,1)
+outer_contact_n2 = nelem(outer_contact_elem,2)
+outer_contact_n3 = nelem(outer_contact_elem,3)
+*get,outer_contact_x1,node,outer_contact_n1,loc,x
+*get,outer_contact_y1,node,outer_contact_n1,loc,y
+*get,outer_contact_z1,node,outer_contact_n1,loc,z
+*get,outer_contact_ux1,node,outer_contact_n1,u,x
+*get,outer_contact_uy1,node,outer_contact_n1,u,y
+*get,outer_contact_uz1,node,outer_contact_n1,u,z
+*get,outer_contact_x2,node,outer_contact_n2,loc,x
+*get,outer_contact_y2,node,outer_contact_n2,loc,y
+*get,outer_contact_z2,node,outer_contact_n2,loc,z
+*get,outer_contact_ux2,node,outer_contact_n2,u,x
+*get,outer_contact_uy2,node,outer_contact_n2,u,y
+*get,outer_contact_uz2,node,outer_contact_n2,u,z
+*get,outer_contact_x3,node,outer_contact_n3,loc,x
+*get,outer_contact_y3,node,outer_contact_n3,loc,y
+*get,outer_contact_z3,node,outer_contact_n3,loc,z
+*get,outer_contact_ux3,node,outer_contact_n3,u,x
+*get,outer_contact_uy3,node,outer_contact_n3,u,y
+*get,outer_contact_uz3,node,outer_contact_n3,u,z
+outer_contact_cx = (outer_contact_x1+outer_contact_ux1+outer_contact_x2+outer_contact_ux2+outer_contact_x3+outer_contact_ux3)/3
+outer_contact_cy = (outer_contact_y1+outer_contact_uy1+outer_contact_y2+outer_contact_uy2+outer_contact_y3+outer_contact_uy3)/3
+outer_contact_cz = (outer_contact_z1+outer_contact_uz1+outer_contact_z2+outer_contact_uz2+outer_contact_z3+outer_contact_uz3)/3
+*vwrite,outer_contact_elem,outer_contact_n1,outer_contact_n2,outer_contact_n3,outer_contact_stat,outer_contact_pres,outer_contact_area,outer_contact_cx,outer_contact_cy,outer_contact_cz
+(10(E22.14,','))
+outer_contact_elem = elnext(outer_contact_elem)
+*enddo
+*cfclos
+
 allsel
 esel,s,real,,4
 esel,r,ename,,170
@@ -278,6 +323,41 @@ etable,outer_pres,cont,pres
 etable,outer_stat,cont,stat
 etable,outer_area,volu
 *get,outer_state_count,elem,0,count
+*cfopen,outer_contact_final,csv
+outer_state_elem = elnext(0)
+*do,outer_state_index,1,outer_state_count
+*get,outer_state_pres,elem,outer_state_elem,etab,outer_pres
+*get,outer_state_stat,elem,outer_state_elem,etab,outer_stat
+*get,outer_state_area,elem,outer_state_elem,etab,outer_area
+outer_state_n1 = nelem(outer_state_elem,1)
+outer_state_n2 = nelem(outer_state_elem,2)
+outer_state_n3 = nelem(outer_state_elem,3)
+*get,outer_state_x1,node,outer_state_n1,loc,x
+*get,outer_state_y1,node,outer_state_n1,loc,y
+*get,outer_state_z1,node,outer_state_n1,loc,z
+*get,outer_state_ux1,node,outer_state_n1,u,x
+*get,outer_state_uy1,node,outer_state_n1,u,y
+*get,outer_state_uz1,node,outer_state_n1,u,z
+*get,outer_state_x2,node,outer_state_n2,loc,x
+*get,outer_state_y2,node,outer_state_n2,loc,y
+*get,outer_state_z2,node,outer_state_n2,loc,z
+*get,outer_state_ux2,node,outer_state_n2,u,x
+*get,outer_state_uy2,node,outer_state_n2,u,y
+*get,outer_state_uz2,node,outer_state_n2,u,z
+*get,outer_state_x3,node,outer_state_n3,loc,x
+*get,outer_state_y3,node,outer_state_n3,loc,y
+*get,outer_state_z3,node,outer_state_n3,loc,z
+*get,outer_state_ux3,node,outer_state_n3,u,x
+*get,outer_state_uy3,node,outer_state_n3,u,y
+*get,outer_state_uz3,node,outer_state_n3,u,z
+outer_state_cx = (outer_state_x1+outer_state_ux1+outer_state_x2+outer_state_ux2+outer_state_x3+outer_state_ux3)/3
+outer_state_cy = (outer_state_y1+outer_state_uy1+outer_state_y2+outer_state_uy2+outer_state_y3+outer_state_uy3)/3
+outer_state_cz = (outer_state_z1+outer_state_uz1+outer_state_z2+outer_state_uz2+outer_state_z3+outer_state_uz3)/3
+*vwrite,outer_state_elem,outer_state_n1,outer_state_n2,outer_state_n3,outer_state_stat,outer_state_pres,outer_state_area,outer_state_cx,outer_state_cy,outer_state_cz
+(10(E22.14,','))
+outer_state_elem = elnext(outer_state_elem)
+*enddo
+*cfclos
 *cfopen,outer_contact_state,csv
 outer_state_elem = elnext(0)
 *do,outer_state_index,1,outer_state_count

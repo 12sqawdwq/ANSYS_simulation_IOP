@@ -23,6 +23,7 @@ from src.postprocess import check_calibration_run as calibration_monitor
 from src.postprocess import plot_inner_planarity_trial as planarity_trial
 from src.postprocess import calibrate_inner_planarity as planarity_calibration
 from src.postprocess import analyze_inner_pressure_area as pressure_area
+from src.postprocess import analyze_mechanical_area_comparison as mechanical_area
 from src.postprocess import plot_displacement_support as displacement_plot
 from src.postprocess import plot_flat_region_2deg as flat_region_plot
 from src.runners import run_indentation_sweep as runner
@@ -92,12 +93,14 @@ class APDLContractTests(unittest.TestCase):
             "inner_final_faces",
             "inner_contact_preload",
             "inner_contact_final",
+            "outer_contact_preload",
+            "outer_contact_final",
         ):
             self.assertIn(f"*cfopen,{filename},csv", macro)
-        self.assertEqual(macro.count("esel,s,real,,3"), 3)
+        self.assertEqual(macro.count("esel,s,real,,3"), 4)
         self.assertEqual(macro.count("esel,s,real,,4"), 4)
         self.assertEqual(macro.count("esel,r,ename,,170"), 2)
-        self.assertEqual(macro.count("esel,r,ename,,174"), 5)
+        self.assertEqual(macro.count("esel,r,ename,,174"), 6)
         self.assertIn("*cfopen,outer_contact_state,csv", macro)
         self.assertIn("etable,outer_stat,cont,stat", macro)
         self.assertIn("etable,outer_pres,cont,pres", macro)
@@ -863,16 +866,18 @@ class ThicknessGeometryTests(unittest.TestCase):
             nodes: tuple[int, int, int],
             center: tuple[float, float, float],
             delta_pa: float,
+            status: float = 3.0,
         ) -> None:
             preload[element] = pressure_area.PressureFace(
-                element, nodes, 3.0, 0.0, 1e-6, center
+                element, nodes, status, 0.0, 1e-6, center
             )
             final[element] = pressure_area.PressureFace(
-                element, nodes, 3.0, delta_pa, 1e-6, center
+                element, nodes, status, delta_pa, 1e-6, center
             )
 
         add(1, (1, 2, 3), (0.0, 0.0, 0.0), 10.0)
         add(2, (2, 3, 4), (0.0002, 0.0, 0.0), 10.0)
+        add(40, (3, 4, 5), (0.0004, 0.0, 0.0), 10.0, status=1.0)
         for index in range(31):
             angle = 2.0 * math.pi * index / 31
             add(
@@ -887,10 +892,24 @@ class ThicknessGeometryTests(unittest.TestCase):
             annulus_inner_m=0.0025,
             annulus_outer_m=0.0035,
             sigma_factor=3.0,
+            minimum_status=2.0,
         )
         self.assertEqual(result.selected, {1, 2})
         self.assertAlmostEqual(result.support_area_mm2, 2.0)
         self.assertAlmostEqual(result.participation_area_mm2, 2.0)
+
+    def test_mechanical_area_comparison_uses_matching_pressure_metrics(self) -> None:
+        outer = pressure_area.PressureAreaResult(
+            frozenset({1}), 0.0, 0.0, 0.0, 6.0, 4.0, 1.0, 0.0, 0.0, 1
+        )
+        inner = pressure_area.PressureAreaResult(
+            frozenset({2}), 0.0, 0.0, 0.0, 3.0, 2.0, 1.0, 0.0, 0.0, 1
+        )
+        metrics = mechanical_area.comparison_metrics(outer, inner, 10.0)
+        self.assertAlmostEqual(metrics["pressure_effective_ratio"], 2.0)
+        self.assertAlmostEqual(metrics["pressure_support_ratio"], 2.0)
+        self.assertAlmostEqual(metrics["current_hybrid_ratio"], 5.0)
+        self.assertAlmostEqual(metrics["effective_ratio_change_percent"], -60.0)
 
     def test_pressure_selection_maps_to_surface_triangles(self) -> None:
         surface = {
