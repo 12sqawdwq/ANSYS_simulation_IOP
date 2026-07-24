@@ -22,6 +22,7 @@ from src.postprocess import prune_solver_artifacts as pruning
 from src.postprocess import check_calibration_run as calibration_monitor
 from src.postprocess import plot_inner_planarity_trial as planarity_trial
 from src.postprocess import calibrate_inner_planarity as planarity_calibration
+from src.postprocess import analyze_inner_pressure_area as pressure_area
 from src.runners import run_indentation_sweep as runner
 from src.runners import run_thickness_calibration as calibration
 
@@ -835,6 +836,44 @@ class ThicknessGeometryTests(unittest.TestCase):
         self.assertAlmostEqual(equivalent.contact_iou, 1.0)
         self.assertAlmostEqual(equivalent.contact_precision, 1.0)
         self.assertAlmostEqual(equivalent.contact_recall, 1.0)
+
+    def test_pressure_participation_area_uses_central_significant_component(self) -> None:
+        preload: dict[int, pressure_area.PressureFace] = {}
+        final: dict[int, pressure_area.PressureFace] = {}
+
+        def add(
+            element: int,
+            nodes: tuple[int, int, int],
+            center: tuple[float, float, float],
+            delta_pa: float,
+        ) -> None:
+            preload[element] = pressure_area.PressureFace(
+                element, nodes, 3.0, 0.0, 1e-6, center
+            )
+            final[element] = pressure_area.PressureFace(
+                element, nodes, 3.0, delta_pa, 1e-6, center
+            )
+
+        add(1, (1, 2, 3), (0.0, 0.0, 0.0), 10.0)
+        add(2, (2, 3, 4), (0.0002, 0.0, 0.0), 10.0)
+        for index in range(31):
+            angle = 2.0 * math.pi * index / 31
+            add(
+                index + 3,
+                (100 + 3 * index, 101 + 3 * index, 102 + 3 * index),
+                (0.003 * math.cos(angle), 0.0, 0.003 * math.sin(angle)),
+                float(index % 3 - 1),
+            )
+        result = pressure_area.pressure_area(
+            preload,
+            final,
+            annulus_inner_m=0.0025,
+            annulus_outer_m=0.0035,
+            sigma_factor=3.0,
+        )
+        self.assertEqual(result.selected, {1, 2})
+        self.assertAlmostEqual(result.support_area_mm2, 2.0)
+        self.assertAlmostEqual(result.participation_area_mm2, 2.0)
 
     def test_segmented_surface_fit_recovers_known_transition(self) -> None:
         dummy = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))

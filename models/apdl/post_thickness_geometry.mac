@@ -129,8 +129,8 @@ inner_contact_n3 = nelem(inner_contact_elem,3)
 inner_contact_cx = (inner_contact_x1+inner_contact_ux1+inner_contact_x2+inner_contact_ux2+inner_contact_x3+inner_contact_ux3)/3
 inner_contact_cy = (inner_contact_y1+inner_contact_uy1+inner_contact_y2+inner_contact_uy2+inner_contact_y3+inner_contact_uy3)/3
 inner_contact_cz = (inner_contact_z1+inner_contact_uz1+inner_contact_z2+inner_contact_uz2+inner_contact_z3+inner_contact_uz3)/3
-*vwrite,inner_contact_elem,inner_contact_stat,inner_contact_pres,inner_contact_area,inner_contact_cx,inner_contact_cy,inner_contact_cz
-(7(E22.14,','))
+*vwrite,inner_contact_elem,inner_contact_n1,inner_contact_n2,inner_contact_n3,inner_contact_stat,inner_contact_pres,inner_contact_area,inner_contact_cx,inner_contact_cy,inner_contact_cz
+(10(E22.14,','))
 inner_contact_elem = elnext(inner_contact_elem)
 *enddo
 *cfclos
@@ -263,8 +263,8 @@ inner_contact_n3 = nelem(inner_contact_elem,3)
 inner_contact_cx = (inner_contact_x1+inner_contact_ux1+inner_contact_x2+inner_contact_ux2+inner_contact_x3+inner_contact_ux3)/3
 inner_contact_cy = (inner_contact_y1+inner_contact_uy1+inner_contact_y2+inner_contact_uy2+inner_contact_y3+inner_contact_uy3)/3
 inner_contact_cz = (inner_contact_z1+inner_contact_uz1+inner_contact_z2+inner_contact_uz2+inner_contact_z3+inner_contact_uz3)/3
-*vwrite,inner_contact_elem,inner_contact_stat,inner_contact_pres,inner_contact_area,inner_contact_cx,inner_contact_cy,inner_contact_cz
-(7(E22.14,','))
+*vwrite,inner_contact_elem,inner_contact_n1,inner_contact_n2,inner_contact_n3,inner_contact_stat,inner_contact_pres,inner_contact_area,inner_contact_cx,inner_contact_cy,inner_contact_cz
+(10(E22.14,','))
 inner_contact_elem = elnext(inner_contact_elem)
 *enddo
 *cfclos
