@@ -738,6 +738,21 @@ class ThicknessGeometryTests(unittest.TestCase):
                 )
         self.assertLess(abs(total - math.pi) / math.pi, 0.01)
 
+    def test_conservative_support_excludes_boundary_crossing_faces(self) -> None:
+        faces = {
+            1: self.face(1, ((0.0, 0.0, 0.0), (0.5, 0.0, 0.0), (0.0, 0.0, 0.5))),
+            2: self.face(2, ((0.9, 0.0, 0.0), (1.1, 0.0, 0.0), (0.9, 0.0, 0.2))),
+        }
+        lower, clipped, strict, boundary = (
+            thickness_geometry.conservative_projected_support(
+                faces, {1, 2}, radius=1.0
+            )
+        )
+        self.assertAlmostEqual(lower, 0.125)
+        self.assertGreater(clipped, lower)
+        self.assertEqual(strict, {1})
+        self.assertEqual(boundary, {2})
+
     def test_patch_geometry_distinguishes_plane_and_curvature(self) -> None:
         coordinates = np.asarray([
             (x, 0.2 * x + 0.1 * z, z)

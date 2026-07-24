@@ -501,6 +501,37 @@ def _projected_area_inside_circle(
     )
 
 
+def conservative_projected_support(
+    faces: dict[int, Face],
+    selected: set[int] | frozenset[int],
+    radius: float = PROBE_RADIUS_M,
+) -> tuple[float, float, set[int], set[int]]:
+    """Return strict-inside and clipped projected support areas.
+
+    Faces crossing the circular boundary contribute to the clipped upper
+    estimate but are excluded from the strict mesh lower bound.
+    """
+    if radius <= 0:
+        raise ValueError("support radius must be positive")
+    strict_area = 0.0
+    clipped_area = 0.0
+    strict: set[int] = set()
+    boundary: set[int] = set()
+    for element in selected:
+        face = faces[element]
+        points = tuple((point[0], point[2]) for point in face.points)
+        clipped = _projected_area_inside_circle(points, radius)
+        if clipped <= 0:
+            continue
+        clipped_area += clipped
+        if all(x * x + z * z <= radius * radius for x, z in points):
+            strict_area += _area2(points)
+            strict.add(element)
+        else:
+            boundary.add(element)
+    return strict_area, clipped_area, strict, boundary
+
+
 def _integrate_disk(records: list[SurfaceRecord], radius: float) -> tuple[float, float]:
     surface_area = 0.0
     projected_area = 0.0

@@ -18,7 +18,12 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from src.postprocess.plot_inner_planarity_trial import BACKGROUND, BLUE, EDGE, INK, RED, font
-from src.postprocess.thickness_geometry import PROBE_RADIUS_M
+from src.postprocess.thickness_geometry import (
+    PROBE_RADIUS_M,
+    conservative_projected_support,
+    read_faces,
+    select_displacement_support,
+)
 
 
 @dataclass(frozen=True)
@@ -285,9 +290,9 @@ def render_trend(
         return pixel, (left, top, plot_w, plot_h)
 
     area_fields = (
+        "outer_conservative_area_mm2",
         "outer_geometric_coverage_area_mm2",
         "outer_contact_area_mm2",
-        "inner_pressure_support_area_mm2",
         "inner_pressure_participation_area_mm2",
     )
     area_max = math.ceil(
@@ -295,9 +300,9 @@ def render_trend(
     ) * 2.0
     area_pixel, _ = panel(0, "Area (mm2)", 0.0, area_max)
     area_series = (
-        ("outer_geometric_coverage_area_mm2", (45, 95, 175), "outer geometric"),
+        ("outer_conservative_area_mm2", (45, 95, 175), "outer lower"),
+        ("outer_geometric_coverage_area_mm2", (130, 135, 145), "outer upper"),
         ("outer_contact_area_mm2", (22, 145, 122), "outer contact"),
-        ("inner_pressure_support_area_mm2", (130, 135, 145), "inner support"),
         ("inner_pressure_participation_area_mm2", RED, "inner effective"),
     )
     for index, (field, color, label) in enumerate(area_series):
@@ -371,9 +376,17 @@ def main() -> int:
         attempt = root / row["attempt_dir"]
         preload_path = attempt / "inner_contact_preload.csv"
         final_path = attempt / "inner_contact_final.csv"
-        if preload_path.is_file() and final_path.is_file():
+        outer_preload_path = attempt / "outer_preload_faces.csv"
+        outer_final_path = attempt / "outer_final_faces.csv"
+        if all(path.is_file() for path in (
+            preload_path,
+            final_path,
+            outer_preload_path,
+            outer_final_path,
+        )):
             cases.append((
                 row,
+                attempt,
                 read_pressure_faces(preload_path),
                 read_pressure_faces(final_path),
             ))
@@ -383,7 +396,7 @@ def main() -> int:
 
     sensitivity: list[dict[str, float | int | str]] = []
     selected_results: list[tuple[float, dict[int, PressureFace], PressureAreaResult]] = []
-    for row, preload, final in cases:
+    for row, attempt, preload, final in cases:
         thickness = float(row["eyelid_thickness_mm"])
         outer_area = float(row["contact_area_m2"]) * 1e6
         outer_geometric = outer_geometric_coverage_area_mm2(
@@ -391,6 +404,14 @@ def main() -> int:
             indentation_mm=float(row["indent_mm"]),
             cornea_radius_mm=cli.cornea_radius_mm,
         )
+        outer_preload = read_faces(attempt / "outer_preload_faces.csv")
+        outer_final = read_faces(attempt / "outer_final_faces.csv")
+        _, outer_selected = select_displacement_support(outer_preload, outer_final)
+        outer_lower_m2, outer_clipped_m2, _, outer_boundary = (
+            conservative_projected_support(outer_final, outer_selected)
+        )
+        outer_lower = outer_lower_m2 * 1e6
+        outer_clipped = outer_clipped_m2 * 1e6
         for inner_factor, outer_factor in annuli:
             for sigma_factor in cli.sigma_factors:
                 result = pressure_area(
@@ -413,12 +434,16 @@ def main() -> int:
                     "inner_pressure_participation_area_mm2": result.participation_area_mm2,
                     "outer_contact_area_mm2": outer_area,
                     "outer_geometric_coverage_area_mm2": outer_geometric,
+                    "outer_conservative_area_mm2": outer_lower,
+                    "outer_displacement_clipped_area_mm2": outer_clipped,
+                    "outer_boundary_uncertainty_area_mm2": outer_clipped - outer_lower,
+                    "outer_boundary_faces": len(outer_boundary),
                     "ae_over_ac_contact_diagnostic": (
                         outer_area / result.participation_area_mm2
                         if result.participation_area_mm2 > 0 else ""
                     ),
                     "ae_over_ac_hybrid": (
-                        outer_geometric / result.participation_area_mm2
+                        outer_lower / result.participation_area_mm2
                         if result.participation_area_mm2 > 0 else ""
                     ),
                     "incremental_force_n": result.incremental_force_n,

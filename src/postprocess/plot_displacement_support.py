@@ -20,11 +20,13 @@ from src.postprocess.thickness_geometry import (
     PROBE_RADIUS_M,
     DisplacementSupportResult,
     Face,
+    conservative_projected_support,
     read_faces,
     select_displacement_support,
 )
 
 RED = (211, 55, 48)
+AMBER = (226, 153, 44)
 BLUE = (42, 91, 176)
 EDGE = (235, 238, 242)
 INK = (28, 31, 35)
@@ -47,8 +49,11 @@ def font(size: int) -> ImageFont.ImageFont:
 def render_surface_panel(
     title: str,
     faces: dict[int, Face],
-    selected: set[int],
+    strict: set[int],
+    boundary: set[int],
     result: DisplacementSupportResult,
+    strict_area: float,
+    clipped_area: float,
 ) -> Image.Image:
     width, height = 650, 650
     margin, plot_size = 44, 550
@@ -70,7 +75,11 @@ def render_surface_panel(
             continue
         draw.polygon(
             [pixel(point) for point in face.points],
-            fill=RED if element in selected else BLUE,
+            fill=(
+                RED if element in strict
+                else AMBER if element in boundary
+                else BLUE
+            ),
             outline=EDGE,
             width=1,
         )
@@ -85,10 +94,16 @@ def render_surface_panel(
         width=3,
     )
     draw.text(
-        (margin, 610),
-        f"support={result.projected_area * 1e6:.3f} mm2   "
+        (margin, 595),
+        f"lower={strict_area * 1e6:.3f} mm2   "
+        f"clipped={clipped_area * 1e6:.3f} mm2",
+        fill=INK,
+        font=font(15),
+    )
+    draw.text(
+        (margin, 620),
         f"T={result.displacement_threshold * 1e6:.2f} um   "
-        f"faces={result.face_count}",
+        f"core={len(strict)}   boundary={len(boundary)}",
         fill=INK,
         font=font(15),
     )
@@ -108,6 +123,12 @@ def render_case(
     outer_final = read_faces(attempt / "outer_final_faces.csv")
     outer, outer_selected = select_displacement_support(outer_preload, outer_final)
     inner, inner_selected = select_displacement_support(inner_preload, inner_final)
+    outer_lower, outer_clipped, outer_strict, outer_boundary = (
+        conservative_projected_support(outer_final, outer_selected)
+    )
+    inner_lower, inner_clipped, inner_strict, inner_boundary = (
+        conservative_projected_support(inner_final, inner_selected)
+    )
 
     canvas = Image.new("RGB", (1320, 735), BACKGROUND)
     draw = ImageDraw.Draw(canvas)
@@ -119,22 +140,35 @@ def render_case(
         font=font(24),
     )
     canvas.paste(
-        render_surface_panel("OUTER SURFACE", outer_final, outer_selected, outer),
+        render_surface_panel(
+            "OUTER SURFACE",
+            outer_final,
+            outer_strict,
+            outer_boundary,
+            outer,
+            outer_lower,
+            outer_clipped,
+        ),
         (10, 52),
     )
     canvas.paste(
-        render_surface_panel("INNER SURFACE", inner_final, inner_selected, inner),
+        render_surface_panel(
+            "INNER SURFACE",
+            inner_final,
+            inner_strict,
+            inner_boundary,
+            inner,
+            inner_lower,
+            inner_clipped,
+        ),
         (660, 52),
     )
     draw.rectangle((32, 707, 54, 727), fill=RED)
-    draw.text(
-        (62, 707),
-        "local downward > max(3 x MAD sigma, 1 um), central-connected",
-        fill=INK,
-        font=font(14),
-    )
+    draw.text((62, 707), "strictly inside probe", fill=INK, font=font(14))
+    draw.rectangle((300, 707, 322, 727), fill=AMBER)
+    draw.text((330, 707), "boundary uncertainty (excluded)", fill=INK, font=font(14))
     draw.rectangle((760, 707, 782, 727), fill=BLUE)
-    draw.text((790, 707), "below threshold or disconnected", fill=INK, font=font(14))
+    draw.text((790, 707), "below threshold or outside", fill=INK, font=font(14))
     output.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(output, format="PNG", optimize=True)
 
@@ -149,6 +183,11 @@ def render_case(
         "outer_support_area_mm2": outer.projected_area * 1e6,
         "outer_coverage_fraction": outer.projected_area / PROBE_AREA_M2,
         "outer_selected_faces": outer.face_count,
+        "outer_conservative_area_mm2": outer_lower * 1e6,
+        "outer_conservative_coverage_fraction": outer_lower / PROBE_AREA_M2,
+        "outer_boundary_uncertainty_mm2": (outer_clipped - outer_lower) * 1e6,
+        "outer_strict_faces": len(outer_strict),
+        "outer_boundary_faces": len(outer_boundary),
         "inner_baseline_um": inner.baseline * 1e6,
         "inner_noise_sigma_um": inner.noise_sigma * 1e6,
         "inner_threshold_um": inner.displacement_threshold * 1e6,
@@ -156,6 +195,11 @@ def render_case(
         "inner_support_area_mm2": inner.projected_area * 1e6,
         "inner_coverage_fraction": inner.projected_area / PROBE_AREA_M2,
         "inner_selected_faces": inner.face_count,
+        "inner_conservative_area_mm2": inner_lower * 1e6,
+        "inner_conservative_coverage_fraction": inner_lower / PROBE_AREA_M2,
+        "inner_boundary_uncertainty_mm2": (inner_clipped - inner_lower) * 1e6,
+        "inner_strict_faces": len(inner_strict),
+        "inner_boundary_faces": len(inner_boundary),
         "image": output.name,
     }
 
@@ -189,8 +233,8 @@ def write_matrix(
         draw.text(
             (x + 10, y + tile_height + 4),
             f"t={float(row['eyelid_thickness_mm']):.2f} mm   "
-            f"outer={float(row['outer_coverage_fraction']) * 100:.1f}%   "
-            f"inner={float(row['inner_coverage_fraction']) * 100:.1f}%",
+            f"outer lower={float(row['outer_conservative_coverage_fraction']) * 100:.1f}%   "
+            f"inner lower={float(row['inner_conservative_coverage_fraction']) * 100:.1f}%",
             fill=INK,
             font=font(15),
         )
