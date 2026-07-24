@@ -33,7 +33,7 @@ from src.postprocess.thickness_geometry import (
 )
 from src.runners.run_indentation_sweep import (
     APDL_FILES,
-    GAP_M,
+    LOAD_PATH_FIELDS,
     MANIFEST_FIELDS,
     MODEL_DIR,
     RAW_METRIC_FIELDS,
@@ -62,15 +62,12 @@ OUTPUT_FIELDS = MANIFEST_FIELDS + SOURCE_FIELDS
 def result_time_for_indent(
     target_indent_mm: float,
     source_indent_mm: float,
-    gap_m: float = GAP_M,
 ) -> float:
     if source_indent_mm <= 0:
         raise ValueError("source indentation must be positive")
     if target_indent_mm < 0 or target_indent_mm > source_indent_mm:
         raise ValueError("target indentation must be between zero and the source indentation")
-    source_push_m = gap_m + source_indent_mm / 1000.0
-    target_push_m = gap_m + target_indent_mm / 1000.0
-    return 1.0 + target_push_m / source_push_m
+    return 2.0 + target_indent_mm / source_indent_mm
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -231,10 +228,11 @@ def extract_case(
             GEOMETRY_FIELDS,
             parse_numeric_csv(attempt / "thickness_geometry.csv", len(GEOMETRY_FIELDS)),
         ))
-        push_m = GAP_M + target_indent_mm / 1000.0
+        approach_push_m = float(source["approach_push_m"])
+        push_m = approach_push_m + target_indent_mm / 1000.0
         # MAPDL labels a time-interpolated result as load step zero; the selected
         # result time and imposed probe displacement are the authoritative checks.
-        if round(metrics["result_load_step"]) not in (0, 2) or not math.isclose(
+        if round(metrics["result_load_step"]) not in (0, 3) or not math.isclose(
             metrics["result_time"], target_time, rel_tol=0.0, abs_tol=1e-6
         ):
             raise ValueError("MAPDL did not select the requested load-step time")
@@ -265,6 +263,7 @@ def extract_case(
                 raise ValueError(f"{prefix} breakpoint area is invalid")
 
         row = {field: "" for field in OUTPUT_FIELDS}
+        row.update({field: source.get(field, "") for field in LOAD_PATH_FIELDS})
         row.update({
             "case": target_case,
             "profile": "thickness_state",
@@ -288,7 +287,9 @@ def extract_case(
             "ansys_error_count": error_count,
             "views_count": views_count,
             "commanded_push_m": push_m,
+            "target_indent_m": target_indent_mm / 1000.0,
             "preload_converged": source["preload_converged"],
+            "approach_converged": source["approach_converged"],
             "indentation_converged": source["indentation_converged"],
             "attempt_dir": str(attempt.relative_to(output_root)),
             "git_commit": git_commit,

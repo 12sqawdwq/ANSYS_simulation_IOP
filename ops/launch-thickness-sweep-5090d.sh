@@ -3,9 +3,13 @@ set -euo pipefail
 
 repo=/home/xuanyu/PROJECT/ziyu/blueknow/simulation
 python_bin=${BLUEKNOW_PYTHON:-/home/xuanyu/miniconda3/envs/grs-pilot/bin/python}
-indent_mm=${BLUEKNOW_THICKNESS_INDENT_MM:-0.28}
+indent_values=${BLUEKNOW_THICKNESS_INDENTS_MM:-"0.26 0.28"}
 workers=${BLUEKNOW_SWEEP_WORKERS:-4}
 np=${BLUEKNOW_CASE_NP:-4}
+initial_gap_mm=${BLUEKNOW_INITIAL_GAP_MM:-0.30}
+eyelid_material_scale=${BLUEKNOW_EYELID_MATERIAL_SCALE:-1.00}
+cornea_material_scale=${BLUEKNOW_CORNEA_MATERIAL_SCALE:-0.75}
+read -r -a indents_mm <<< "$indent_values"
 
 if [[ ! -x "$python_bin" ]]; then
     printf 'Python interpreter is not executable: %s\n' "$python_bin" >&2
@@ -19,7 +23,7 @@ fi
 
 commit=$(git -C "$repo" rev-parse --short=8 HEAD)
 timestamp=$(date -u +%Y%m%dT%H%M%SZ)
-run_root=${BLUEKNOW_RUN_ROOT:-/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/${timestamp}_${commit}_thickness_0p28}
+run_root=${BLUEKNOW_RUN_ROOT:-/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/${timestamp}_${commit}_thickness_geometry_zero}
 
 if [[ -d "$run_root" ]] && [[ -n "$(find "$run_root" -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
     printf 'run root is not empty: %s\n' "$run_root" >&2
@@ -32,7 +36,10 @@ printf 'RUN_ROOT=%s\n' "$run_root"
 set +e
 "$python_bin" "$repo/src/runners/run_indentation_sweep.py" \
     --profile thickness \
-    --thickness-indent-mm "$indent_mm" \
+    --thickness-indents-mm "${indents_mm[@]}" \
+    --initial-gap-mm "$initial_gap_mm" \
+    --eyelid-material-scale "$eyelid_material_scale" \
+    --cornea-material-scale "$cornea_material_scale" \
     --workers "$workers" \
     --np "$np"
 solver_status=$?

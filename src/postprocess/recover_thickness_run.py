@@ -15,7 +15,6 @@ if str(REPO_ROOT) not in sys.path:
 
 from src.postprocess.thickness_geometry import analyze_files, write_results as write_geometry_results
 from src.runners.run_indentation_sweep import (
-    GAP_M,
     MANIFEST_FIELDS,
     CaseSpec,
     atomic_json,
@@ -75,7 +74,7 @@ def build_row(
         "artifact_pruned_files": outcome.artifact_pruned_files,
         "artifact_pruned_bytes": outcome.artifact_pruned_bytes,
         "artifact_prune_error": outcome.artifact_prune_error,
-        "commanded_push_m": GAP_M + case.indent_mm / 1000.0,
+        "initial_gap_m": float(metadata.get("initial_gap_mm", 0.30)) / 1000.0,
         "attempt_dir": str(attempt.relative_to(Path(metadata["run_root"]))),
         "git_commit": metadata.get("git_commit", ""),
         "git_dirty": str(metadata.get("git_dirty", False)).lower(),

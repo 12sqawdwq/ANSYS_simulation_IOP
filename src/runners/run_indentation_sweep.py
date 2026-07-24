@@ -42,7 +42,7 @@ MAX_EYELID_THICKNESS_MM = 2.0
 THICKNESS_MM = tuple(round(0.8 + 0.2 * index, 1) for index in range(7))
 FULL_INDENTS_MM = tuple(i / 5 for i in range(5))
 COARSE_INDENTS_MM = (0.0, 0.4, 0.8)
-GAP_M = 0.05e-3
+INITIAL_GAP_M = 0.30e-3
 PROFILE_CASES = {
     "smoke": ((0.0, 0.0), (0.0, 0.8), (2.0, 0.4), (2.0, 0.8)),
     "coarse": tuple((offset, indent) for offset in OFFSETS_MM for indent in COARSE_INDENTS_MM),
@@ -62,6 +62,20 @@ RAW_METRIC_FIELDS = (
     "probe_uy_max_m",
     "result_load_step",
     "result_time",
+)
+LOAD_PATH_FIELDS = (
+    "initial_gap_m",
+    "preload_apex_uy_m",
+    "preload_clearance_m",
+    "approach_push_m",
+    "commanded_push_m",
+    "target_indent_m",
+    "preload_probe_fy_n",
+    "preload_contact_area_m2",
+    "preload_contact_count",
+    "approach_probe_fy_n",
+    "approach_contact_area_m2",
+    "approach_contact_count",
 )
 MANIFEST_FIELDS = (
     "case",
@@ -101,8 +115,20 @@ MANIFEST_FIELDS = (
     "eyelid_peak_pa",
     "probe_uy_m",
     "probe_uy_max_m",
+    "initial_gap_m",
+    "preload_apex_uy_m",
+    "preload_clearance_m",
+    "approach_push_m",
     "commanded_push_m",
+    "target_indent_m",
+    "preload_probe_fy_n",
+    "preload_contact_area_m2",
+    "preload_contact_count",
+    "approach_probe_fy_n",
+    "approach_contact_area_m2",
+    "approach_contact_count",
     "preload_converged",
+    "approach_converged",
     "indentation_converged",
     "result_load_step",
     "result_time",
@@ -151,6 +177,7 @@ class RunConfig:
     eyelid_material_scale: float = 1.0
     cornea_material_scale: float = 1.0
     view_policy: str = "all"
+    initial_gap_mm: float = 0.30
 
 
 @dataclass
@@ -323,9 +350,15 @@ def validate_attempt(
 
     metrics_path = attempt_dir / "metrics.csv"
     solution_status_path = attempt_dir / "solution_status.csv"
+    load_path_path = attempt_dir / "load_path.csv"
     rst_candidates = sorted(attempt_dir.glob(f"{case.name}.rst"))
-    if not metrics_path.is_file() or not solution_status_path.is_file() or not rst_candidates:
-        return AttemptOutcome("missing_results", "metrics, solution status, or RST is missing",
+    if (
+        not metrics_path.is_file()
+        or not solution_status_path.is_file()
+        or not load_path_path.is_file()
+        or not rst_candidates
+    ):
+        return AttemptOutcome("missing_results", "metrics, load-path audit, solution status, or RST is missing",
                               returncode, elapsed_seconds, error_count, 0, {}, None)
     views = [
         path for path in attempt_dir.glob(f"{case.name}[0-9][0-9][0-9].png")
@@ -337,7 +370,8 @@ def validate_attempt(
 
     try:
         raw_metrics = parse_numeric_csv(metrics_path, len(RAW_METRIC_FIELDS))
-        convergence = parse_numeric_csv(solution_status_path, 2)
+        convergence = parse_numeric_csv(solution_status_path, 3)
+        load_path = parse_numeric_csv(load_path_path, len(LOAD_PATH_FIELDS))
         thickness_metrics = (
             parse_numeric_csv(
                 attempt_dir / "thickness_geometry.csv", len(THICKNESS_GEOMETRY_FIELDS)
@@ -348,24 +382,61 @@ def validate_attempt(
         return AttemptOutcome("invalid_metrics", str(error), returncode, elapsed_seconds,
                               error_count, len(views), {}, rst_candidates[0])
     metrics = dict(zip(RAW_METRIC_FIELDS, raw_metrics))
+    metrics.update(zip(LOAD_PATH_FIELDS, load_path))
     metrics.update(zip(THICKNESS_GEOMETRY_FIELDS, thickness_metrics))
     metrics["preload_converged"] = int(round(convergence[0]))
-    metrics["indentation_converged"] = int(round(convergence[1]))
+    metrics["approach_converged"] = int(round(convergence[1]))
+    metrics["indentation_converged"] = int(round(convergence[2]))
     metrics["n_outer"] = int(round(float(metrics["n_outer"])))
-    if metrics["preload_converged"] != 1 or metrics["indentation_converged"] != 1:
-        return AttemptOutcome("nonconverged", "one or both load steps are not converged",
+    metrics["preload_contact_count"] = int(round(float(metrics["preload_contact_count"])))
+    metrics["approach_contact_count"] = int(round(float(metrics["approach_contact_count"])))
+    if any(metrics[field] != 1 for field in (
+        "preload_converged", "approach_converged", "indentation_converged"
+    )):
+        return AttemptOutcome("nonconverged", "one or more load steps are not converged",
                               returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
-    if round(float(metrics["result_load_step"])) != 2 or not math.isclose(
-        float(metrics["result_time"]), 2.0, rel_tol=0.0, abs_tol=1e-6
+    if round(float(metrics["result_load_step"])) != 3 or not math.isclose(
+        float(metrics["result_time"]), 3.0, rel_tol=0.0, abs_tol=1e-6
     ):
-        return AttemptOutcome("invalid_metrics", "final result is not load step 2 at time 2",
+        return AttemptOutcome("invalid_metrics", "final result is not load step 3 at time 3",
                               returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
     if (float(metrics["contact_area_m2"]) < 0 or float(metrics["pmax_pa"]) < 0
             or float(metrics["max_penetration_m"]) < 0 or metrics["n_outer"] < 0):
         return AttemptOutcome("invalid_metrics", "contact metrics contain negative values",
                               returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
 
-    commanded_push = GAP_M + case.indent_mm / 1000.0
+    initial_gap = float(metrics["initial_gap_m"])
+    preload_apex_uy = float(metrics["preload_apex_uy_m"])
+    preload_clearance = float(metrics["preload_clearance_m"])
+    approach_push = float(metrics["approach_push_m"])
+    commanded_push = float(metrics["commanded_push_m"])
+    target_indent = case.indent_mm / 1000.0
+    path_tolerance = 1e-9
+    if (
+        initial_gap <= 0
+        or preload_clearance <= 0
+        or approach_push <= 0
+        or not math.isclose(preload_clearance, initial_gap - preload_apex_uy,
+                            rel_tol=0.0, abs_tol=path_tolerance)
+        or not math.isclose(approach_push, preload_clearance,
+                            rel_tol=0.0, abs_tol=path_tolerance)
+        or not math.isclose(float(metrics["target_indent_m"]), target_indent,
+                            rel_tol=0.0, abs_tol=path_tolerance)
+        or not math.isclose(commanded_push, approach_push + target_indent,
+                            rel_tol=0.0, abs_tol=path_tolerance)
+    ):
+        return AttemptOutcome("invalid_metrics", "geometry-based load path is inconsistent",
+                              returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
+    if (
+        metrics["preload_contact_count"] != 0
+        or abs(float(metrics["preload_contact_area_m2"])) > 1e-14
+        or abs(float(metrics["preload_probe_fy_n"])) > 1e-5
+    ):
+        return AttemptOutcome("invalid_metrics", "probe is carrying load during IOP preload",
+                              returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
+    if abs(float(metrics["approach_probe_fy_n"])) > 1e-3:
+        return AttemptOutcome("invalid_metrics", "geometry first-touch force exceeds 1 mN",
+                              returncode, elapsed_seconds, error_count, len(views), metrics, rst_candidates[0])
     displacement_tolerance = max(1e-8, 0.005 * commanded_push)
     for field in ("probe_uy_m", "probe_uy_max_m"):
         if abs(float(metrics[field]) + commanded_push) > displacement_tolerance:
@@ -466,8 +537,9 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
         f"iop_pa={config.iop_mmhg * 133.322:.12g}\n"
         f"eyelid_material_scale={config.eyelid_material_scale:.12g}\n"
         f"cornea_material_scale={config.cornea_material_scale:.12g}\n"
+        f"initial_gap={config.initial_gap_mm / 1000:.12g}\n"
         "*use,param_eye_sweep.mac,xoff,indent,retry_mode,mesh_size,eyelid_thickness,"
-        "iop_pa,eyelid_material_scale,cornea_material_scale\n"
+        "iop_pa,eyelid_material_scale,cornea_material_scale,initial_gap\n"
         f"resume,{case.name},db\n"
         f"/filname,{case.name}\n"
         "*use,post_sweep.mac\n"
@@ -596,7 +668,7 @@ def run_case(case: CaseSpec, config: RunConfig) -> dict:
         "artifact_pruned_files": outcome.artifact_pruned_files,
         "artifact_pruned_bytes": outcome.artifact_pruned_bytes,
         "artifact_prune_error": outcome.artifact_prune_error,
-        "commanded_push_m": GAP_M + case.indent_mm / 1000.0,
+        "initial_gap_m": config.initial_gap_mm / 1000.0,
         "attempt_dir": str(attempt_dir.relative_to(config.run_root)),
         "git_commit": config.git_commit,
         "git_dirty": str(config.git_dirty).lower(),
@@ -625,12 +697,17 @@ def choose_cases(parser: argparse.ArgumentParser, cli: argparse.Namespace) -> tu
         )
     if custom_grid and (cli.offsets is None or cli.indents is None):
         parser.error("--offsets and --indents must be provided together")
+    if cli.thickness_indents_mm is not None and not (
+        thickness_grid or cli.profile == "thickness"
+    ):
+        parser.error("--thickness-indents-mm requires the thickness profile or thickness grid")
     if thickness_grid or cli.profile == "thickness":
         profile = "thickness-custom" if thickness_grid else "thickness"
         thicknesses = cli.eyelid_thicknesses if thickness_grid else THICKNESS_MM
-        if cli.thickness_indent_mm < 0:
+        indents = cli.thickness_indents_mm or [cli.thickness_indent_mm]
+        if any(value < 0 for value in indents):
             parser.error("thickness indentation must be non-negative")
-        if cli.thickness_indent_mm > MAX_INDENT_MM + 1e-12:
+        if any(value > MAX_INDENT_MM + 1e-12 for value in indents):
             parser.error(
                 f"thickness indentation exceeds the validated {MAX_INDENT_MM:g} mm limit"
             )
@@ -643,10 +720,15 @@ def choose_cases(parser: argparse.ArgumentParser, cli: argparse.Namespace) -> tu
                 f"eyelid thickness must be within {MIN_EYELID_THICKNESS_MM:g}-"
                 f"{MAX_EYELID_THICKNESS_MM:g} mm"
             )
-        unique = list(dict.fromkeys(thicknesses))
+        unique_thicknesses = list(dict.fromkeys(thicknesses))
+        unique_indents = list(dict.fromkeys(indents))
         return profile, [
-            CaseSpec(0.0, cli.thickness_indent_mm, index, thickness, "thickness")
-            for index, thickness in enumerate(unique)
+            CaseSpec(0.0, indent, index, thickness, "thickness")
+            for index, (thickness, indent) in enumerate(
+                (thickness, indent)
+                for thickness in unique_thicknesses
+                for indent in unique_indents
+            )
         ]
     if cli.case:
         profile = "custom"
@@ -673,6 +755,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--indents", type=float, nargs="+")
     parser.add_argument("--eyelid-thicknesses", type=float, nargs="+")
     parser.add_argument("--thickness-indent-mm", type=float, default=0.28)
+    parser.add_argument("--thickness-indents-mm", type=float, nargs="+")
     parser.add_argument("--run-root", type=Path)
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--np", type=int, default=4)
@@ -683,6 +766,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--eyelid-material-scale", type=float, default=1.0)
     parser.add_argument("--cornea-material-scale", type=float, default=1.0)
     parser.add_argument("--view-policy", choices=("all", "none"), default="all")
+    parser.add_argument("--initial-gap-mm", type=float, default=0.30)
     parser.add_argument("--ansys-bin", type=Path, default=os.environ.get("ANSYS_BIN"))
     parser.add_argument("--allow-dirty", action="store_true",
                         help="allow an uncommitted worktree for debugging; never use for formal results")
@@ -696,8 +780,9 @@ def main() -> int:
         cli.workers < 1 or cli.np < 1 or cli.timeout_seconds <= 0
         or cli.mesh_size_mm <= 0 or cli.iop_mmhg <= 0
         or cli.eyelid_material_scale <= 0 or cli.cornea_material_scale <= 0
+        or cli.initial_gap_mm <= 0
     ):
-        parser.error("workers, np, timeout, mesh size, IOP, and material scales must be positive")
+        parser.error("workers, np, timeout, mesh size, IOP, material scales, and initial gap must be positive")
     profile, cases = choose_cases(parser, cli)
     git_commit, git_dirty = git_provenance()
     if git_dirty and not cli.allow_dirty:
@@ -721,7 +806,7 @@ def main() -> int:
         run_root, profile, cli.np, cli.timeout_seconds, cli.retry_count,
         ansys_bin, cli.mesh_size_mm, git_commit, git_dirty,
         cli.iop_mmhg, cli.eyelid_material_scale, cli.cornea_material_scale,
-        cli.view_policy,
+        cli.view_policy, cli.initial_gap_mm,
     )
     metadata = {
         "run_id": run_id,
@@ -741,6 +826,7 @@ def main() -> int:
         "iop_mmhg": cli.iop_mmhg,
         "eyelid_material_scale": cli.eyelid_material_scale,
         "cornea_material_scale": cli.cornea_material_scale,
+        "initial_gap_mm": cli.initial_gap_mm,
         "view_policy": cli.view_policy,
         "started_at_utc": utc_now(),
         "cases": [{

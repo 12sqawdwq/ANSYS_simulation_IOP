@@ -49,15 +49,20 @@ class APDLContractTests(unittest.TestCase):
         self.assertNotIn("mkdir -p", launcher)
         self.assertNotIn("nohup", launcher)
 
-    def test_model_uses_preload_then_indentation(self) -> None:
+    def test_model_uses_preload_geometry_approach_then_indentation(self) -> None:
         model = (runner.MODEL_DIR / "param_eye_sweep.mac").read_text().lower()
         self.assertIn("cm,probe_top_nodes,node", model)
+        self.assertIn("cm,eyelid_apex_node,node", model)
         self.assertIn("cnvtol,f,,0.01", model)
         self.assertIn("indent_limit = 0.8e-3", model)
         self.assertIn("te     = arg5", model)
         self.assertIn("2.0e-3", model)
         self.assertLess(model.index("time,1"), model.index("time,2"))
-        self.assertLess(model.index("time,2"), model.index("*cfopen,solution_status,csv"))
+        self.assertLess(model.index("time,2"), model.index("time,3"))
+        self.assertLess(model.index("time,3"), model.index("*cfopen,solution_status,csv"))
+        self.assertIn("approach_push = preload_clearance", model)
+        self.assertIn("commanded_push = approach_push + indent", model)
+        self.assertIn("*cfopen,load_path,csv", model)
         self.assertIn("iop    = arg6", model)
         self.assertIn("eyelid_material_scale = arg7", model)
         self.assertIn("cornea_material_scale = arg8", model)
@@ -122,10 +127,10 @@ class APDLContractTests(unittest.TestCase):
 
 
 class ThicknessStateExtractionTests(unittest.TestCase):
-    def test_maps_nominal_indent_to_second_load_step_time(self) -> None:
+    def test_maps_nominal_indent_to_third_load_step_time(self) -> None:
         result_time = extract_thickness_state.result_time_for_indent(0.26, 0.8)
-        self.assertAlmostEqual(result_time, 1.0 + 0.31 / 0.85)
-        self.assertAlmostEqual(result_time, 1.3647058823529412)
+        self.assertAlmostEqual(result_time, 2.0 + 0.26 / 0.8)
+        self.assertAlmostEqual(result_time, 2.325)
 
     def test_rejects_target_beyond_source_load_path(self) -> None:
         with self.assertRaises(ValueError):
@@ -162,14 +167,18 @@ class AttemptValidationTests(unittest.TestCase):
         root: Path,
         case: runner.CaseSpec,
         *,
-        load_step: float = 2.0,
-        result_time: float = 2.0,
+        load_step: float = 3.0,
+        result_time: float = 3.0,
         metric_override: dict[str, float] | None = None,
+        load_path_override: dict[str, float] | None = None,
         output: str = "RUN COMPLETED",
     ) -> Path:
         attempt = root / "attempt"
         attempt.mkdir()
-        push = runner.GAP_M + case.indent_mm / 1000.0
+        initial_gap = runner.INITIAL_GAP_M
+        preload_apex_uy = 0.05e-3
+        approach_push = initial_gap - preload_apex_uy
+        push = approach_push + case.indent_mm / 1000.0
         values = {
             "probe_fx_n": 0.0,
             "probe_fy_n": 0.1,
@@ -189,7 +198,25 @@ class AttemptValidationTests(unittest.TestCase):
         (attempt / "metrics.csv").write_text(
             ",".join(str(values[field]) for field in runner.RAW_METRIC_FIELDS) + ",\n"
         )
-        (attempt / "solution_status.csv").write_text("1,1,\n")
+        load_path = {
+            "initial_gap_m": initial_gap,
+            "preload_apex_uy_m": preload_apex_uy,
+            "preload_clearance_m": approach_push,
+            "approach_push_m": approach_push,
+            "commanded_push_m": push,
+            "target_indent_m": case.indent_mm / 1000.0,
+            "preload_probe_fy_n": 0.0,
+            "preload_contact_area_m2": 0.0,
+            "preload_contact_count": 0,
+            "approach_probe_fy_n": 0.0,
+            "approach_contact_area_m2": 0.0,
+            "approach_contact_count": 0,
+        }
+        load_path.update(load_path_override or {})
+        (attempt / "load_path.csv").write_text(
+            ",".join(str(load_path[field]) for field in runner.LOAD_PATH_FIELDS) + ",\n"
+        )
+        (attempt / "solution_status.csv").write_text("1,1,1,\n")
         (attempt / f"{case.name}.rst").write_bytes(b"result")
         (attempt / "solve.out").write_text(output)
         (attempt / "launcher.log").write_text("")
@@ -254,7 +281,7 @@ class AttemptValidationTests(unittest.TestCase):
     def test_final_load_step_is_required(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             case = runner.CaseSpec(0.0, 0.8, 0)
-            attempt = self.make_attempt(Path(directory), case, load_step=1.0, result_time=1.0)
+            attempt = self.make_attempt(Path(directory), case, load_step=2.0, result_time=2.0)
             outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
             self.assertEqual(outcome.status, "invalid_metrics")
 
@@ -264,6 +291,32 @@ class AttemptValidationTests(unittest.TestCase):
             attempt = self.make_attempt(Path(directory), case, metric_override={"pmax_pa": float("nan")})
             outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
             self.assertEqual(outcome.status, "invalid_metrics")
+
+    def test_preload_probe_contact_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            case = runner.CaseSpec(0.0, 0.28, 0, 0.8, "thickness")
+            attempt = self.make_attempt(
+                Path(directory), case,
+                load_path_override={
+                    "preload_probe_fy_n": 0.002,
+                    "preload_contact_area_m2": 1e-7,
+                    "preload_contact_count": 2,
+                },
+            )
+            outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
+            self.assertEqual(outcome.status, "invalid_metrics")
+            self.assertIn("IOP preload", outcome.reason)
+
+    def test_first_touch_force_above_threshold_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            case = runner.CaseSpec(0.0, 0.28, 0, 1.2, "thickness")
+            attempt = self.make_attempt(
+                Path(directory), case,
+                load_path_override={"approach_probe_fy_n": 0.0011},
+            )
+            outcome = runner.validate_attempt(attempt, case, 0, False, 1.0)
+            self.assertEqual(outcome.status, "invalid_metrics")
+            self.assertIn("first-touch", outcome.reason)
 
     @unittest.skipUnless(os.name == "posix", "process-group timeout is a POSIX behavior")
     def test_timeout_terminates_process(self) -> None:
@@ -327,6 +380,16 @@ class RunnerBehaviorTests(unittest.TestCase):
         )
         self.assertEqual(profile, "thickness")
         self.assertTrue(all(case.indent_mm == 0.26 and case.kind == "thickness" for case in cases))
+
+        profile, cases = runner.choose_cases(
+            parser,
+            parser.parse_args([
+                "--profile", "thickness", "--thickness-indents-mm", "0.26", "0.28"
+            ]),
+        )
+        self.assertEqual(profile, "thickness")
+        self.assertEqual(len(cases), 14)
+        self.assertEqual({case.indent_mm for case in cases}, {0.26, 0.28})
 
     def test_custom_case_rejects_indent_above_limit(self) -> None:
         parser = runner.build_parser()
