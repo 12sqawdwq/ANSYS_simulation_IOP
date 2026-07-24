@@ -114,6 +114,33 @@ python src/postprocess/plot_displacement_probe_profiles.py "$RUN_ROOT" \
 支撑域，压平程度继续由预载到最终状态的曲率消减或其他形状变化量决定。完整探针数值
 保存在`displacement_probe_summary.csv`和`displacement_probe_profiles.csv`中。
 
+### 内表面平面性试绘
+
+使用眼睑侧`TARGE170`预载/最终面，对`0.8、1.25、1.6 mm`三个厚度进行局部平面残差与
+曲率消减联合试绘。局部拟合窗口直径固定为`0.75 mm`，黑圈只标示探头边界，不作为
+红色区域的强制截断条件：
+
+```bash
+python src/postprocess/plot_inner_planarity_trial.py "$RUN_ROOT" \
+  --thicknesses 0.8 1.25 1.6 \
+  --height-tolerances-um 5 10 15 \
+  --window-diameter-mm 0.75 --analysis-radius-mm 3.0
+```
+
+![内表面平面性试绘矩阵](../thick/figures/fe_sweep_indent_0p28/inner_planarity_trial/inner_planarity_trial_matrix.png)
+
+| 眼睑厚度 | `5 μm`面积 | `10 μm`面积 | `15 μm`面积 |
+|---:|---:|---:|---:|
+| `0.80 mm` | `3.173 mm²` | `6.230 mm²` | `18.649 mm²` |
+| `1.25 mm` | `2.320 mm²` | `6.482 mm²` | `27.657 mm²` |
+| `1.60 mm` | `1.386 mm²` | `6.687 mm²` | `27.656 mm²` |
+
+`5 μm`下中央区域能够自然终止，并随厚度增加而收缩；`10 μm`下三组面积集中在
+`6.2-6.7 mm²`；`15 μm`几乎选满整个`3 mm`分析半径。该试绘证明平面残差与曲率变化
+可以排除单纯整体随动，但面积对容差仍高度敏感，当前三列均只用于选择算法尺度，不能
+作为正式$A_c$。下一步必须用外表面闭合接触区的平面拟合残差校准$h_{\mathrm{tol}}$，并
+检查`0.6-1.0 mm`拟合窗口和细网格敏感性。
+
 ## 面积后处理口径复核
 
 ### 当前计算策略总览
