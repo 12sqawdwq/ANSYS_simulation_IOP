@@ -47,6 +47,9 @@ CONTACT_FIELDS = (
     "eyelid_thickness_mm",
     "source_total_push_mm",
     "force_baseline_n",
+    "preload_force_n",
+    "preload_contact_count",
+    "preload_contact_area_mm2",
     "force_threshold_n",
     "stable_points",
     "contact_zero_total_push_mm",
@@ -88,6 +91,9 @@ class ContactZero:
     bracket_low_m: float
     bracket_high_m: float
     baseline_force_n: float
+    preload_force_n: float
+    preload_contact_count: int
+    preload_contact_area_m2: float
     threshold_force_n: float
     history_step_m: float
 
@@ -135,7 +141,17 @@ def detect_contact_zero(
 ) -> ContactZero:
     if force_threshold_n <= 0 or stable_points < 1:
         raise ValueError("contact threshold and stable-point count must be positive")
-    baseline = median(abs(row["probe_fy_n"]) for row in rows[:3])
+    preload_force = abs(rows[0]["probe_fy_n"])
+    preload_contact_count = int(round(rows[0]["loaded_contact_count"]))
+    preload_contact_area = rows[0]["loaded_contact_area_m2"]
+    preload_is_contacting = (
+        preload_contact_count >= 1
+        and preload_contact_area > 0
+        and rows[0]["pmax_pa"] > 1.0
+    )
+    # A reaction carried by an already closed preload contact is physical and
+    # must not be subtracted. Only remove a non-contact numerical reaction.
+    baseline = 0.0 if preload_is_contacting else preload_force
     force_signal = [max(0.0, abs(row["probe_fy_n"]) - baseline) for row in rows]
     active = [
         force >= force_threshold_n
@@ -178,6 +194,9 @@ def detect_contact_zero(
         bracket_low_m=low["total_push_m"],
         bracket_high_m=high["total_push_m"],
         baseline_force_n=baseline,
+        preload_force_n=preload_force,
+        preload_contact_count=preload_contact_count,
+        preload_contact_area_m2=preload_contact_area,
         threshold_force_n=force_threshold_n,
         history_step_m=median(steps),
     )
@@ -384,6 +403,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--np", type=int, default=2)
     parser.add_argument("--timeout-seconds", type=float, default=1800)
+    parser.add_argument("--reuse-history", action="store_true")
     parser.add_argument(
         "--ansys-bin", type=Path,
         default=Path("/ansys_inc/v252/ansys/bin/ansys252"),
@@ -399,17 +419,31 @@ def main() -> int:
     cli.output_root.mkdir(parents=True, exist_ok=True)
 
     contacts: list[tuple[dict[str, str], ContactZero]] = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=cli.workers) as pool:
-        futures = [
-            pool.submit(
-                extract_history, cli.source_root, cli.output_root, row, cli.ansys_bin,
-                cli.history_intervals, cli.np, cli.timeout_seconds,
-                cli.force_threshold_n, cli.stable_points,
+    if cli.reuse_history:
+        for row in source_rows:
+            history = (
+                cli.output_root / "contact_history" / row["case"] /
+                "contact_history.csv"
             )
-            for row in source_rows
-        ]
-        for future in concurrent.futures.as_completed(futures):
-            contacts.append(future.result())
+            values = read_history(history)
+            contacts.append((
+                row,
+                detect_contact_zero(
+                    values, cli.force_threshold_n, cli.stable_points
+                ),
+            ))
+    else:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=cli.workers) as pool:
+            futures = [
+                pool.submit(
+                    extract_history, cli.source_root, cli.output_root, row, cli.ansys_bin,
+                    cli.history_intervals, cli.np, cli.timeout_seconds,
+                    cli.force_threshold_n, cli.stable_points,
+                )
+                for row in source_rows
+            ]
+            for future in concurrent.futures.as_completed(futures):
+                contacts.append(future.result())
     contacts.sort(key=lambda item: float(item[0]["eyelid_thickness_mm"]))
 
     contact_rows = []
@@ -419,6 +453,9 @@ def main() -> int:
             "eyelid_thickness_mm": float(source["eyelid_thickness_mm"]),
             "source_total_push_mm": float(source["commanded_push_m"]) * 1e3,
             "force_baseline_n": contact.baseline_force_n,
+            "preload_force_n": contact.preload_force_n,
+            "preload_contact_count": contact.preload_contact_count,
+            "preload_contact_area_mm2": contact.preload_contact_area_m2 * 1e6,
             "force_threshold_n": contact.threshold_force_n,
             "stable_points": cli.stable_points,
             "contact_zero_total_push_mm": contact.push_m * 1e3,
@@ -462,6 +499,7 @@ def main() -> int:
         "stable_points": cli.stable_points,
         "workers": cli.workers,
         "np": cli.np,
+        "reused_contact_history": cli.reuse_history,
         "complete_states": sum(
             row["status"] == "complete" for rows in all_states.values() for row in rows
         ),
