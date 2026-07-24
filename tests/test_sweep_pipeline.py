@@ -928,6 +928,7 @@ class ThicknessGeometryTests(unittest.TestCase):
                     "image": "top.png",
                     "multiview_image": "multi.png",
                 })
+        rows[0]["ae_over_ac"] = ""
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             flat_region_plot.write_angle_sweep_summary(root / "summary.csv", rows)

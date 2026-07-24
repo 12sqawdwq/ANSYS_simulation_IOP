@@ -547,18 +547,19 @@ def render_angle_sweep_trend(
 
         for index, thickness in enumerate(thicknesses):
             color = SERIES_COLORS[index % len(SERIES_COLORS)]
-            series = sorted(
-                (
-                    float(row["angle_deg"]),
-                    (
-                        float(row["ae_over_ac"])
-                        if logarithmic
-                        else 100.0 * float(row["outer_coverage_fraction"])
-                    ),
+            series = []
+            for row in rows:
+                if float(row["eyelid_thickness_mm"]) != thickness:
+                    continue
+                if logarithmic and row["ae_over_ac"] in ("", None):
+                    continue
+                value = (
+                    float(row["ae_over_ac"])
+                    if logarithmic
+                    else 100.0 * float(row["outer_coverage_fraction"])
                 )
-                for row in rows
-                if float(row["eyelid_thickness_mm"]) == thickness
-            )
+                series.append((float(row["angle_deg"]), value))
+            series.sort()
             points = [(x_pixel(angle), y_pixel(value)) for angle, value in series]
             if len(points) > 1:
                 draw.line(points, fill=color, width=3)
