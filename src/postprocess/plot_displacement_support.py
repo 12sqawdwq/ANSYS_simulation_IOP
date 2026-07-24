@@ -166,10 +166,11 @@ def render_pressure_panel(
         outline=INK,
         width=3,
     )
+    draw.rectangle((margin - 4, 582, width - 8, height), fill="white")
     draw.text(
         (margin, 595),
         f"support={result.support_area_mm2:.3f} mm2   "
-        f"effective={result.participation_area_mm2:.3f} mm2",
+        f"Ac={result.participation_area_mm2:.3f} mm2",
         fill=INK,
         font=font(15),
     )
@@ -313,6 +314,9 @@ def write_matrix(
     )
     draw = ImageDraw.Draw(matrix)
     for index, row in enumerate(rows):
+        ae_area = float(row["outer_conservative_area_mm2"])
+        ac_area = float(row["inner_pressure_participation_area_mm2"])
+        ratio = ae_area / ac_area if ac_area > 0 else math.nan
         with Image.open(image_dir / str(row["image"])) as opened:
             source = opened.convert("RGB")
         source.thumbnail((tile_width, tile_height), Image.Resampling.LANCZOS)
@@ -322,8 +326,7 @@ def write_matrix(
         draw.text(
             (x + 10, y + tile_height + 4),
             f"t={float(row['eyelid_thickness_mm']):.2f} mm   "
-            f"outer lower={float(row['outer_conservative_coverage_fraction']) * 100:.1f}%   "
-            f"inner lower={float(row['inner_conservative_coverage_fraction']) * 100:.1f}%",
+            f"Ae={ae_area:.3f}   Ac={ac_area:.3f}   K={ratio:.3f}",
             fill=INK,
             font=font(15),
         )
