@@ -875,6 +875,18 @@ class ThicknessGeometryTests(unittest.TestCase):
         self.assertAlmostEqual(result.support_area_mm2, 2.0)
         self.assertAlmostEqual(result.participation_area_mm2, 2.0)
 
+    def test_outer_geometric_area_caps_at_probe_projection(self) -> None:
+        full = pressure_area.outer_geometric_coverage_area_mm2(
+            eyelid_thickness_mm=0.8,
+            indentation_mm=0.28,
+        )
+        self.assertAlmostEqual(full, math.pi * 2.16**2)
+        partial = pressure_area.outer_geometric_coverage_area_mm2(
+            eyelid_thickness_mm=0.8,
+            indentation_mm=0.1,
+        )
+        self.assertLess(partial, full)
+
     def test_segmented_surface_fit_recovers_known_transition(self) -> None:
         dummy = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))
         transition = 1.4e-3

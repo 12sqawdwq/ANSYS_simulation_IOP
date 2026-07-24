@@ -45,6 +45,29 @@ class PressureAreaResult:
     selected_faces: int
 
 
+def outer_geometric_coverage_area_mm2(
+    *,
+    eyelid_thickness_mm: float,
+    indentation_mm: float,
+    cornea_radius_mm: float = 7.8,
+    probe_radius_mm: float = PROBE_RADIUS_M * 1e3,
+) -> float:
+    """Return the probe-capped outer geometric participation area."""
+    if (
+        eyelid_thickness_mm <= 0
+        or indentation_mm < 0
+        or cornea_radius_mm <= 0
+        or probe_radius_mm <= 0
+    ):
+        raise ValueError("invalid outer coverage geometry")
+    outer_radius = cornea_radius_mm + eyelid_thickness_mm
+    covered_radius_squared = max(
+        0.0,
+        2.0 * outer_radius * indentation_mm - indentation_mm**2,
+    )
+    return math.pi * min(probe_radius_mm**2, covered_radius_squared)
+
+
 def read_pressure_faces(path: Path) -> dict[int, PressureFace]:
     faces: dict[int, PressureFace] = {}
     with path.open(newline="", encoding="utf-8") as handle:
@@ -261,9 +284,19 @@ def render_trend(
 
         return pixel, (left, top, plot_w, plot_h)
 
-    area_pixel, _ = panel(0, "Curved area integral (mm2)", 0.0, 9.0)
+    area_fields = (
+        "outer_geometric_coverage_area_mm2",
+        "outer_contact_area_mm2",
+        "inner_pressure_support_area_mm2",
+        "inner_pressure_participation_area_mm2",
+    )
+    area_max = math.ceil(
+        max(float(row[field]) for row in selected for field in area_fields) / 2.0
+    ) * 2.0
+    area_pixel, _ = panel(0, "Area (mm2)", 0.0, area_max)
     area_series = (
-        ("outer_contact_area_mm2", (45, 95, 175), "outer contact"),
+        ("outer_geometric_coverage_area_mm2", (45, 95, 175), "outer geometric"),
+        ("outer_contact_area_mm2", (22, 145, 122), "outer contact"),
         ("inner_pressure_support_area_mm2", (130, 135, 145), "inner support"),
         ("inner_pressure_participation_area_mm2", RED, "inner effective"),
     )
@@ -275,15 +308,18 @@ def render_trend(
         draw.line(points, fill=color, width=3)
         for x, y in points:
             draw.ellipse((x - 4, y - 4, x + 4, y + 4), fill=color)
-        legend_x = 80 + index * 165
+        legend_x = 55 + index * 135
         draw.line((legend_x, 466, legend_x + 25, 466), fill=color, width=3)
         draw.text((legend_x + 31, 458), label, fill=INK, font=font(12))
 
-    ratio_pixel, _ = panel(640, "Ae/Ac pressure candidate", 0.8, 1.5)
+    hybrid_values = [float(row["ae_over_ac_hybrid"]) for row in sensitivity]
+    ratio_min = max(0.0, math.floor((min(hybrid_values) - 0.15) * 10) / 10)
+    ratio_max = math.ceil((max(hybrid_values) + 0.15) * 10) / 10
+    ratio_pixel, _ = panel(640, "Ae geometric / Ac pressure", ratio_min, ratio_max)
     grouped: dict[float, list[float]] = {}
     for row in sensitivity:
         grouped.setdefault(float(row["eyelid_thickness_mm"]), []).append(
-            float(row["ae_over_ac_pressure"])
+            float(row["ae_over_ac_hybrid"])
         )
     for thickness in thicknesses:
         values = grouped[thickness]
@@ -293,7 +329,7 @@ def render_trend(
     ratio_points = [
         ratio_pixel(
             float(row["eyelid_thickness_mm"]),
-            float(row["ae_over_ac_pressure"]),
+            float(row["ae_over_ac_hybrid"]),
         )
         for row in selected
     ]
@@ -309,6 +345,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("run_root", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--cornea-radius-mm", type=float, default=7.8)
     parser.add_argument("--sigma-factors", type=float, nargs="+", default=(2.0, 3.0, 4.0))
     parser.add_argument(
         "--annuli-probe-radius",
@@ -319,6 +356,8 @@ def main() -> int:
     cli = parser.parse_args()
     root = cli.run_root.expanduser().resolve()
     output = cli.output_dir.expanduser().resolve()
+    if cli.cornea_radius_mm <= 0:
+        parser.error("cornea radius must be positive")
     annuli = []
     for value in cli.annuli_probe_radius:
         first, second = (float(item) for item in value.split(":", 1))
@@ -347,6 +386,11 @@ def main() -> int:
     for row, preload, final in cases:
         thickness = float(row["eyelid_thickness_mm"])
         outer_area = float(row["contact_area_m2"]) * 1e6
+        outer_geometric = outer_geometric_coverage_area_mm2(
+            eyelid_thickness_mm=thickness,
+            indentation_mm=float(row["indent_mm"]),
+            cornea_radius_mm=cli.cornea_radius_mm,
+        )
         for inner_factor, outer_factor in annuli:
             for sigma_factor in cli.sigma_factors:
                 result = pressure_area(
@@ -368,8 +412,13 @@ def main() -> int:
                     "inner_pressure_support_area_mm2": result.support_area_mm2,
                     "inner_pressure_participation_area_mm2": result.participation_area_mm2,
                     "outer_contact_area_mm2": outer_area,
-                    "ae_over_ac_pressure": (
+                    "outer_geometric_coverage_area_mm2": outer_geometric,
+                    "ae_over_ac_contact_diagnostic": (
                         outer_area / result.participation_area_mm2
+                        if result.participation_area_mm2 > 0 else ""
+                    ),
+                    "ae_over_ac_hybrid": (
+                        outer_geometric / result.participation_area_mm2
                         if result.participation_area_mm2 > 0 else ""
                     ),
                     "incremental_force_n": result.incremental_force_n,
