@@ -252,35 +252,9 @@ nsubst,20,200,5
 solve
 *get,preload_cnv,active,0,solu,cnvg
 
-! Measure the preloaded apex and verify that the probe carried no preload.
-finish
-/post1
-set,last
-allsel
+! Read the converged apex displacement without leaving /SOLU. Leaving the
+! solution processor here would restart the nonlinear analysis at zero time.
 *get,preload_apex_uy,node,eyelid_apex_node_id,u,y
-preload_probe_fy = 0
-cmsel,s,probe_top_nodes
-*get,preload_probe_node_count,node,0,count
-*get,preload_probe_node,node,0,num,min
-*do,preload_probe_index,1,preload_probe_node_count
-*get,preload_node_fy,node,preload_probe_node,rf,fy
-preload_probe_fy = preload_probe_fy + preload_node_fy
-preload_probe_node = ndnext(preload_probe_node)
-*enddo
-allsel
-etable,eras
-esel,s,real,,3
-esel,r,ename,,174
-etable,plstat,cont,stat
-etable,plarea,volu
-esel,r,etab,plstat,2,3
-*get,preload_contact_count,elem,0,count
-preload_contact_area = 0
-*if,preload_contact_count,gt,0,then
-ssum
-*get,preload_contact_area,ssum,0,item,plarea
-*endif
-
 preload_clearance = gap0 - preload_apex_uy
 approach_push = preload_clearance
 *if,approach_push,le,0,then
@@ -289,8 +263,6 @@ approach_push = preload_clearance
 *endif
 
 ! Load step 2: retain IOP and move to geometry-based first touch.
-finish
-/solu
 cmsel,s,probe_top_nodes
 d,all,uy,-approach_push
 allsel
@@ -303,38 +275,8 @@ nsubst,20,200,5
 solve
 *get,approach_cnv,active,0,solu,cnvg
 
-! Record the first-touch force without using it to redefine the zero point.
-finish
-/post1
-set,last
-approach_probe_fy = 0
-allsel
-cmsel,s,probe_top_nodes
-*get,approach_probe_node_count,node,0,count
-*get,approach_probe_node,node,0,num,min
-*do,approach_probe_index,1,approach_probe_node_count
-*get,approach_node_fy,node,approach_probe_node,rf,fy
-approach_probe_fy = approach_probe_fy + approach_node_fy
-approach_probe_node = ndnext(approach_probe_node)
-*enddo
-allsel
-etable,eras
-esel,s,real,,3
-esel,r,ename,,174
-etable,apstat,cont,stat
-etable,aparea,volu
-esel,r,etab,apstat,2,3
-*get,approach_contact_count,elem,0,count
-approach_contact_area = 0
-*if,approach_contact_count,gt,0,then
-ssum
-*get,approach_contact_area,ssum,0,item,aparea
-*endif
-
 ! Load step 3: apply the requested indentation from geometric first touch.
 commanded_push = approach_push + indent
-finish
-/solu
 cmsel,s,probe_top_nodes
 d,all,uy,-commanded_push
 allsel
@@ -352,9 +294,5 @@ solve
 (3(E22.14,','))
 *cfclos
 
-*cfopen,load_path,csv
-*vwrite,gap0,preload_apex_uy,preload_clearance,approach_push,commanded_push,indent,preload_probe_fy,preload_contact_area,preload_contact_count,approach_probe_fy,approach_contact_area,approach_contact_count
-(12(E22.14,','))
-*cfclos
 save
 finish

@@ -77,5 +77,64 @@ nsort,s,eqv
 *vwrite,probe_fx,probe_fy,contact_area,contact_x_center,pmax,max_penetration,n_outer,cornea_s,eyelid_s,probe_uy_min,probe_uy_max,result_lstep,result_time
 (13(E22.14,','))
 *cfclos
+
+! Audit preload and geometry-based first touch after all three load steps exist.
+! This keeps the nonlinear solution continuous while still enforcing no-load preload.
+set,1,last
+allsel
+*get,preload_apex_uy_audit,node,eyelid_apex_node_id,u,y
+preload_probe_fy = 0
+cmsel,s,probe_top_nodes
+*get,preload_probe_node_count,node,0,count
+*get,preload_probe_node,node,0,num,min
+*do,preload_probe_index,1,preload_probe_node_count
+*get,preload_node_fy,node,preload_probe_node,rf,fy
+preload_probe_fy = preload_probe_fy + preload_node_fy
+preload_probe_node = ndnext(preload_probe_node)
+*enddo
+allsel
+etable,eras
+esel,s,real,,3
+esel,r,ename,,174
+etable,plstat,cont,stat
+etable,plarea,volu
+esel,r,etab,plstat,2,3
+*get,preload_contact_count,elem,0,count
+preload_contact_area = 0
+*if,preload_contact_count,gt,0,then
+ssum
+*get,preload_contact_area,ssum,0,item,plarea
+*endif
+
+set,2,last
+approach_probe_fy = 0
+allsel
+cmsel,s,probe_top_nodes
+*get,approach_probe_node_count,node,0,count
+*get,approach_probe_node,node,0,num,min
+*do,approach_probe_index,1,approach_probe_node_count
+*get,approach_node_fy,node,approach_probe_node,rf,fy
+approach_probe_fy = approach_probe_fy + approach_node_fy
+approach_probe_node = ndnext(approach_probe_node)
+*enddo
+allsel
+etable,eras
+esel,s,real,,3
+esel,r,ename,,174
+etable,apstat,cont,stat
+etable,aparea,volu
+esel,r,etab,apstat,2,3
+*get,approach_contact_count,elem,0,count
+approach_contact_area = 0
+*if,approach_contact_count,gt,0,then
+ssum
+*get,approach_contact_area,ssum,0,item,aparea
+*endif
+
+*cfopen,load_path,csv
+*vwrite,gap0,preload_apex_uy_audit,preload_clearance,approach_push,commanded_push,indent,preload_probe_fy,preload_contact_area,preload_contact_count,approach_probe_fy,approach_contact_area,approach_contact_count
+(12(E22.14,','))
+*cfclos
+set,last
 allsel
 finish
