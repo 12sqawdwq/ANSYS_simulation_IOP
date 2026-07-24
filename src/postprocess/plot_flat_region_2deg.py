@@ -30,6 +30,15 @@ BLUE = (42, 91, 176)
 EDGE = (235, 238, 242)
 INK = (28, 31, 35)
 PROBE = (78, 82, 88)
+SERIES_COLORS = (
+    (35, 87, 137),
+    (211, 84, 0),
+    (0, 132, 115),
+    (167, 66, 125),
+    (230, 159, 0),
+    (86, 180, 233),
+    (213, 94, 0),
+)
 
 
 def angle_text(angle_deg: float) -> str:
@@ -466,6 +475,106 @@ def write_matrix(
     matrix.save(path, format="PNG", optimize=True)
 
 
+def write_angle_sweep_summary(
+    path: Path,
+    rows: list[dict[str, str | float | int]],
+) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    ordered = sorted(
+        rows,
+        key=lambda row: (
+            float(row["angle_deg"]),
+            float(row["eyelid_thickness_mm"]),
+        ),
+    )
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=tuple(ordered[0]))
+        writer.writeheader()
+        writer.writerows(ordered)
+
+
+def render_angle_sweep_trend(
+    path: Path,
+    rows: list[dict[str, str | float | int]],
+) -> None:
+    width, height = 1320, 620
+    image = Image.new("RGB", (width, height), "white")
+    draw = ImageDraw.Draw(image)
+    draw.text(
+        (24, 16),
+        "DIAGNOSTIC FLAT REGION ANGLE SWEEP   indent=0.28 mm",
+        fill=INK,
+        font=font(24),
+    )
+    angles = sorted({float(row["angle_deg"]) for row in rows})
+    thicknesses = sorted({float(row["eyelid_thickness_mm"]) for row in rows})
+    x_min, x_max = min(angles), max(angles)
+
+    panels = (
+        (60, "outer coverage (%)", 0.0, 105.0, False),
+        (700, "flat-area ratio Ae / Ac (log scale)", 0.8, 12.0, True),
+    )
+    for origin_x, title, y_min, y_max, logarithmic in panels:
+        left, top, plot_w, plot_h = origin_x + 62, 92, 520, 390
+        draw.text((origin_x + 18, 58), title, fill=INK, font=font(18))
+        draw.line((left, top, left, top + plot_h), fill=INK, width=2)
+        draw.line((left, top + plot_h, left + plot_w, top + plot_h), fill=INK, width=2)
+
+        def x_pixel(value: float) -> int:
+            if x_max == x_min:
+                return left + plot_w // 2
+            return round(left + (value - x_min) / (x_max - x_min) * plot_w)
+
+        def y_pixel(value: float) -> int:
+            if logarithmic:
+                low = math.log10(y_min)
+                high = math.log10(y_max)
+                fraction = (math.log10(max(value, y_min)) - low) / (high - low)
+            else:
+                fraction = (value - y_min) / (y_max - y_min)
+            return round(top + plot_h - min(1.0, max(0.0, fraction)) * plot_h)
+
+        y_ticks = (1, 2, 3, 5, 10) if logarithmic else (0, 25, 50, 75, 100)
+        for tick in y_ticks:
+            py = y_pixel(float(tick))
+            draw.line((left, py, left + plot_w, py), fill=(225, 228, 232), width=1)
+            draw.text((origin_x + 20, py - 8), f"{tick:g}", fill=INK, font=font(13))
+        for angle in angles:
+            px = x_pixel(angle)
+            draw.line((px, top, px, top + plot_h), fill=(240, 242, 244), width=1)
+            draw.text((px - 8, top + plot_h + 8), f"{angle:g}", fill=INK, font=font(12))
+        draw.text((left + plot_w // 2 - 38, top + plot_h + 34), "angle (deg)", fill=INK, font=font(14))
+
+        for index, thickness in enumerate(thicknesses):
+            color = SERIES_COLORS[index % len(SERIES_COLORS)]
+            series = sorted(
+                (
+                    float(row["angle_deg"]),
+                    (
+                        float(row["ae_over_ac"])
+                        if logarithmic
+                        else 100.0 * float(row["outer_coverage_fraction"])
+                    ),
+                )
+                for row in rows
+                if float(row["eyelid_thickness_mm"]) == thickness
+            )
+            points = [(x_pixel(angle), y_pixel(value)) for angle, value in series]
+            if len(points) > 1:
+                draw.line(points, fill=color, width=3)
+            for px, py in points:
+                draw.ellipse((px - 3, py - 3, px + 3, py + 3), fill=color)
+
+    legend_y = 548
+    for index, thickness in enumerate(thicknesses):
+        x = 44 + index * 178
+        color = SERIES_COLORS[index % len(SERIES_COLORS)]
+        draw.line((x, legend_y + 8, x + 28, legend_y + 8), fill=color, width=4)
+        draw.text((x + 36, legend_y), f"t={thickness:.2f} mm", fill=INK, font=font(14))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    image.save(path, format="PNG", optimize=True)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("run_root", type=Path)
@@ -493,6 +602,7 @@ def main() -> int:
         print("no complete cases with surface face data", file=sys.stderr)
         return 1
 
+    all_rows: list[dict[str, str | float | int]] = []
     for angle_deg in dict.fromkeys(cli.angles):
         slug = angle_slug(angle_deg)
         output_dir = output_base / f"flat_region_{slug}deg"
@@ -513,6 +623,7 @@ def main() -> int:
             for future in concurrent.futures.as_completed(futures):
                 rows.append(future.result())
         rows.sort(key=lambda row: float(row["eyelid_thickness_mm"]))
+        all_rows.extend(rows)
         write_manifest(output_dir / f"flat_region_{slug}deg_manifest.csv", rows)
         write_matrix(output_base / f"flat_region_{slug}deg_matrix.png", rows)
         write_matrix(
@@ -521,6 +632,8 @@ def main() -> int:
             image_field="multiview_image",
         )
         print(f"angle={angle_text(angle_deg)} rendered={len(rows)} output={output_dir}")
+    write_angle_sweep_summary(output_base / "flat_region_angle_sweep.csv", all_rows)
+    render_angle_sweep_trend(output_base / "flat_region_angle_sweep.png", all_rows)
     return 0
 
 

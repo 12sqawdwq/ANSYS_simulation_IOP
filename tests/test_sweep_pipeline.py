@@ -24,6 +24,7 @@ from src.postprocess import plot_inner_planarity_trial as planarity_trial
 from src.postprocess import calibrate_inner_planarity as planarity_calibration
 from src.postprocess import analyze_inner_pressure_area as pressure_area
 from src.postprocess import plot_displacement_support as displacement_plot
+from src.postprocess import plot_flat_region_2deg as flat_region_plot
 from src.runners import run_indentation_sweep as runner
 from src.runners import run_thickness_calibration as calibration
 
@@ -908,6 +909,32 @@ class ThicknessGeometryTests(unittest.TestCase):
         )
         self.assertEqual(selected, {10})
         self.assertAlmostEqual(distance, 0.0)
+
+    def test_flat_region_angle_sweep_writes_combined_outputs(self) -> None:
+        rows = []
+        for angle in (1.0, 2.0):
+            for thickness in (0.8, 1.0):
+                rows.append({
+                    "case": f"t{thickness}",
+                    "eyelid_thickness_mm": thickness,
+                    "indent_mm": 0.28,
+                    "angle_deg": angle,
+                    "outer_flat_area_mm2": 8.0 + angle,
+                    "outer_coverage_fraction": 0.5 + 0.1 * angle,
+                    "outer_selected_faces": 10,
+                    "inner_flat_area_mm2": 6.0,
+                    "inner_selected_faces": 8,
+                    "ae_over_ac": (8.0 + angle) / 6.0,
+                    "image": "top.png",
+                    "multiview_image": "multi.png",
+                })
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            flat_region_plot.write_angle_sweep_summary(root / "summary.csv", rows)
+            flat_region_plot.render_angle_sweep_trend(root / "trend.png", rows)
+            with (root / "summary.csv").open(newline="", encoding="utf-8") as handle:
+                self.assertEqual(len(list(csv.DictReader(handle))), 4)
+            self.assertGreater((root / "trend.png").stat().st_size, 1_000)
 
     def test_outer_geometric_area_caps_at_probe_projection(self) -> None:
         full = pressure_area.outer_geometric_coverage_area_mm2(
