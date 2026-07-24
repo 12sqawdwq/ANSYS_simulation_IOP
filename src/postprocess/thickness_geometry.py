@@ -102,6 +102,19 @@ class FlatAreaResult:
     displacement_threshold: float
 
 
+@dataclass(frozen=True)
+class DisplacementSupportResult:
+    """Diagnostic support selected only by robust local displacement."""
+
+    projected_area: float
+    surface_area: float
+    face_count: int
+    displacement_threshold: float
+    baseline: float
+    noise_sigma: float
+    local_max: float
+
+
 def _vector(
     a: tuple[float, float, float], b: tuple[float, float, float]
 ) -> tuple[float, float, float]:
@@ -536,6 +549,76 @@ def _central_connected_elements(
             connected.add(neighbor)
             pending.append(neighbor)
     return connected
+
+
+def select_displacement_support(
+    preload: dict[int, Face],
+    final: dict[int, Face],
+    *,
+    maximum_radius: float = PROBE_RADIUS_M,
+    absolute_noise: float = ABSOLUTE_NOISE_M,
+) -> tuple[DisplacementSupportResult, set[int]]:
+    """Return the central support above the robust displacement noise floor.
+
+    This is a diagnostic participation map. It deliberately applies no surface
+    normal or curvature criterion and therefore is not an applanation area.
+    """
+    _validate_face_sets(preload, final)
+    if maximum_radius <= 0 or absolute_noise <= 0:
+        raise ValueError("maximum radius and absolute noise must be positive")
+
+    records = _surface_records(preload, final)
+    radii = np.asarray([record.radius for record in records], dtype=float)
+    downward = np.asarray([record.downward for record in records], dtype=float)
+    outer_mask = radii >= 0.8 * float(np.max(radii))
+    if int(np.count_nonzero(outer_mask)) < 3:
+        outer_mask = radii >= float(np.quantile(radii, 0.8))
+    baseline = float(np.median(downward[outer_mask]))
+    outer_residual = downward[outer_mask] - baseline
+    noise_sigma = 1.4826 * float(np.median(np.abs(
+        outer_residual - np.median(outer_residual)
+    )))
+    local_downward = {
+        record.face.element: max(record.downward - baseline, 0.0) for record in records
+    }
+    local_max = max(local_downward.values())
+    if local_max <= 0:
+        raise ValueError("surface has no positive local indentation displacement")
+    displacement_threshold = max(3.0 * noise_sigma, absolute_noise)
+
+    candidates: set[int] = set()
+    clipped_projected: dict[int, float] = {}
+    records_by_element = {record.face.element: record for record in records}
+    for record in records:
+        element = record.face.element
+        if local_downward[element] <= displacement_threshold:
+            continue
+        points = tuple((point[0], point[2]) for point in record.face.points)
+        area = _projected_area_inside_circle(points, maximum_radius)
+        if area > 0:
+            candidates.add(element)
+            clipped_projected[element] = area
+
+    connected = _central_connected_elements(final, candidates)
+    projected_area = 0.0
+    surface_area = 0.0
+    for element in connected:
+        record = records_by_element[element]
+        if record.projected_area <= 0:
+            continue
+        projected = clipped_projected[element]
+        fraction = min(1.0, max(0.0, projected / record.projected_area))
+        projected_area += projected
+        surface_area += fraction * record.surface_area
+    return DisplacementSupportResult(
+        projected_area=projected_area,
+        surface_area=surface_area,
+        face_count=len(connected),
+        displacement_threshold=displacement_threshold,
+        baseline=baseline,
+        noise_sigma=noise_sigma,
+        local_max=local_max,
+    ), connected
 
 
 def select_flat_surface(

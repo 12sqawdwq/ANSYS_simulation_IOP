@@ -652,6 +652,33 @@ class ThicknessGeometryTests(unittest.TestCase):
         self.assertAlmostEqual(result.projected_area, (0.5*mm) ** 2)
         self.assertLess(result.projected_area, thickness_geometry.PROBE_AREA_M2)
 
+    def test_displacement_support_uses_robust_absolute_noise_floor(self) -> None:
+        mm = 1e-3
+        preload = {
+            1: self.face(1, ((-0.2*mm, 0, -0.2*mm), (0.2*mm, 0, -0.2*mm),
+                            (0.2*mm, 0, 0.2*mm)), (1, 2, 3)),
+            2: self.face(2, ((-0.2*mm, 0, -0.2*mm), (0.2*mm, 0, 0.2*mm),
+                            (-0.2*mm, 0, 0.2*mm)), (1, 3, 4)),
+            3: self.face(3, ((3*mm, 0, 0), (3.1*mm, 0, 0), (3*mm, 0, 0.1*mm))),
+            4: self.face(4, ((-3*mm, 0, 0), (-3.1*mm, 0, 0), (-3*mm, 0, 0.1*mm))),
+            5: self.face(5, ((0, 0, 3*mm), (0.1*mm, 0, 3*mm), (0, 0, 3.1*mm))),
+        }
+        final = dict(preload)
+        for element in (1, 2):
+            face = preload[element]
+            final[element] = self.face(
+                element,
+                tuple((x, y - 0.28*mm, z) for x, y, z in face.points),
+                face.nodes,
+            )
+
+        result, selected = thickness_geometry.select_displacement_support(preload, final)
+
+        self.assertEqual(selected, {1, 2})
+        self.assertAlmostEqual(result.displacement_threshold, 1e-6)
+        self.assertAlmostEqual(result.local_max, 0.28*mm)
+        self.assertAlmostEqual(result.projected_area, (0.4*mm) ** 2)
+
     def test_preload_and_final_element_sets_must_match(self) -> None:
         face = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))
         with self.assertRaises(ValueError):
