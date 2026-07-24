@@ -9,6 +9,7 @@ import math
 import sys
 from pathlib import Path
 
+import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -118,6 +119,7 @@ def render_surface_panel(
 
 def render_pressure_panel(
     final: dict[int, PressureFace],
+    surface: dict[int, Face],
     result: PressureAreaResult,
 ) -> Image.Image:
     width, height = 650, 650
@@ -133,22 +135,19 @@ def render_pressure_panel(
             round(48 + plot_size / 2 - point[2] / extent * plot_size / 2),
         )
 
-    for element, face in sorted(final.items()):
-        if math.hypot(face.center[0], face.center[2]) > 1.18 * PROBE_RADIUS_M:
+    selected_surface, _ = map_pressure_selection_to_surface(
+        surface,
+        final,
+        result.selected,
+    )
+    for element, face in sorted(surface.items()):
+        center_x = sum(point[0] for point in face.points) / 3.0
+        center_z = sum(point[2] for point in face.points) / 3.0
+        if math.hypot(center_x, center_z) > 1.18 * PROBE_RADIUS_M:
             continue
-        center_x, center_y = pixel(face.center)
-        face_radius = max(
-            1,
-            round(math.sqrt(face.area_m2 / math.pi) / extent * plot_size / 2),
-        )
-        draw.ellipse(
-            (
-                center_x - face_radius,
-                center_y - face_radius,
-                center_x + face_radius,
-                center_y + face_radius,
-            ),
-            fill=RED if element in result.selected else BLUE,
+        draw.polygon(
+            [pixel(point) for point in face.points],
+            fill=RED if element in selected_surface else BLUE,
             outline=EDGE,
             width=1,
         )
@@ -182,6 +181,51 @@ def render_pressure_panel(
         font=font(15),
     )
     return image
+
+
+def map_pressure_selection_to_surface(
+    surface: dict[int, Face],
+    pressure: dict[int, PressureFace],
+    selected_pressure: set[int] | frozenset[int],
+    *,
+    maximum_distance_m: float = 0.5e-3,
+) -> tuple[set[int], float]:
+    """Map pressure-face selection to the nearest projected surface triangles."""
+    if not surface or not pressure or maximum_distance_m <= 0:
+        raise ValueError("surface, pressure and mapping distance must be valid")
+    surface_elements = sorted(surface)
+    pressure_elements = sorted(pressure)
+    surface_centers = np.asarray([
+        (
+            sum(point[0] for point in surface[element].points) / 3.0,
+            sum(point[2] for point in surface[element].points) / 3.0,
+        )
+        for element in surface_elements
+    ])
+    pressure_centers = np.asarray([
+        (pressure[element].center[0], pressure[element].center[2])
+        for element in pressure_elements
+    ])
+    selected_surface: set[int] = set()
+    largest_distance = 0.0
+    for start in range(0, len(surface_elements), 256):
+        stop = min(start + 256, len(surface_elements))
+        squared = np.sum(
+            (surface_centers[start:stop, None, :] - pressure_centers[None, :, :]) ** 2,
+            axis=2,
+        )
+        nearest_indices = np.argmin(squared, axis=1)
+        nearest_distances = np.sqrt(np.min(squared, axis=1))
+        largest_distance = max(largest_distance, float(np.max(nearest_distances)))
+        for offset, pressure_index in enumerate(nearest_indices):
+            if pressure_elements[int(pressure_index)] in selected_pressure:
+                selected_surface.add(surface_elements[start + offset])
+    if largest_distance > maximum_distance_m:
+        raise ValueError(
+            "pressure-to-surface mapping exceeds "
+            f"{maximum_distance_m * 1e3:.3f} mm: {largest_distance * 1e3:.3f} mm"
+        )
+    return selected_surface, largest_distance
 
 
 def render_case(
@@ -237,7 +281,7 @@ def render_case(
         (10, 52),
     )
     canvas.paste(
-        render_pressure_panel(inner_pressure_final, inner_pressure),
+        render_pressure_panel(inner_pressure_final, inner_final, inner_pressure),
         (660, 52),
     )
     draw.rectangle((32, 707, 54, 727), fill=RED)

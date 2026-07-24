@@ -23,6 +23,7 @@ from src.postprocess import check_calibration_run as calibration_monitor
 from src.postprocess import plot_inner_planarity_trial as planarity_trial
 from src.postprocess import calibrate_inner_planarity as planarity_calibration
 from src.postprocess import analyze_inner_pressure_area as pressure_area
+from src.postprocess import plot_displacement_support as displacement_plot
 from src.runners import run_indentation_sweep as runner
 from src.runners import run_thickness_calibration as calibration
 
@@ -889,6 +890,24 @@ class ThicknessGeometryTests(unittest.TestCase):
         self.assertEqual(result.selected, {1, 2})
         self.assertAlmostEqual(result.support_area_mm2, 2.0)
         self.assertAlmostEqual(result.participation_area_mm2, 2.0)
+
+    def test_pressure_selection_maps_to_surface_triangles(self) -> None:
+        surface = {
+            10: self.face(10, ((-0.1, 0, -0.1), (0.1, 0, -0.1), (0, 0, 0.2))),
+            20: self.face(20, ((0.9, 0, -0.1), (1.1, 0, -0.1), (1, 0, 0.2))),
+        }
+        pressure = {
+            1: pressure_area.PressureFace(1, (1, 2, 3), 3.0, 10.0, 1.0, (0, 0, 0)),
+            2: pressure_area.PressureFace(2, (4, 5, 6), 3.0, 10.0, 1.0, (1, 0, 0)),
+        }
+        selected, distance = displacement_plot.map_pressure_selection_to_surface(
+            surface,
+            pressure,
+            {1},
+            maximum_distance_m=0.1,
+        )
+        self.assertEqual(selected, {10})
+        self.assertAlmostEqual(distance, 0.0)
 
     def test_outer_geometric_area_caps_at_probe_projection(self) -> None:
         full = pressure_area.outer_geometric_coverage_area_mm2(
