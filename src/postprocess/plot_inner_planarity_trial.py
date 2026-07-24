@@ -171,10 +171,12 @@ def select_planarity_region(
     height_tolerance_um: float,
     window_diameter_mm: float,
     analysis_radius_m: float,
+    displacement_support: set[int] | frozenset[int] | None = None,
 ) -> PlanarityResult:
-    _, displacement_support = select_displacement_support(
-        preload, final, maximum_radius=analysis_radius_m
-    )
+    if displacement_support is None:
+        _, displacement_support = select_displacement_support(
+            preload, final, maximum_radius=analysis_radius_m
+        )
     radii = np.asarray([metric.radius_m for metric in metrics], dtype=float)
     reduction = np.asarray(
         [metric.curvature_reduction_per_mm for metric in metrics], dtype=float

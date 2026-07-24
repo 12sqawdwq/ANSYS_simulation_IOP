@@ -20,6 +20,7 @@ from src.postprocess import build_thickness_view_matrix
 from src.postprocess import prune_solver_artifacts as pruning
 from src.postprocess import check_calibration_run as calibration_monitor
 from src.postprocess import plot_inner_planarity_trial as planarity_trial
+from src.postprocess import calibrate_inner_planarity as planarity_calibration
 from src.runners import run_indentation_sweep as runner
 from src.runners import run_thickness_calibration as calibration
 
@@ -753,6 +754,26 @@ class ThicknessGeometryTests(unittest.TestCase):
         )
         self.assertGreater(residual, 0.0)
         self.assertAlmostEqual(curvature, math.sqrt(0.2**2 + 0.4**2), places=10)
+
+    def test_contact_state_parser_and_weighted_quantile(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "outer_contact_state.csv"
+            path.write_text(
+                "1,3,1200,1e-7,\n2,0,0,0,\n",
+                encoding="ascii",
+            )
+            states = planarity_calibration.read_contact_state(path)
+        self.assertEqual(set(states), {1, 2})
+        self.assertEqual(states[1].status, 3)
+        self.assertAlmostEqual(states[1].area_m2, 1e-7)
+        self.assertEqual(
+            planarity_calibration.weighted_quantile(
+                np.asarray([1.0, 2.0, 3.0]),
+                np.asarray([1.0, 1.0, 8.0]),
+                0.5,
+            ),
+            3.0,
+        )
 
     def test_segmented_surface_fit_recovers_known_transition(self) -> None:
         dummy = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))
