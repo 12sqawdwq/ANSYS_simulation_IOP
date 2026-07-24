@@ -86,6 +86,8 @@ class APDLContractTests(unittest.TestCase):
             self.assertIn(f"*cfopen,{filename},csv", macro)
         self.assertEqual(macro.count("esel,s,real,,3"), 2)
         self.assertEqual(macro.count("esel,s,real,,4"), 2)
+        self.assertEqual(macro.count("esel,r,ename,,170"), 2)
+        self.assertEqual(macro.count("esel,r,ename,,174"), 2)
 
     def test_eyelid_strain_view_is_scoped_and_uses_hencky_strain(self) -> None:
         macro = (

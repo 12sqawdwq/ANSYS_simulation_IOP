@@ -1,4 +1,4 @@
-! Export probe-facing eyelid and bonded cornea-side faces at preload and indentation.
+! Export probe-facing and cornea-facing eyelid faces at preload and indentation.
 ! Python computes breakpoint-based surface and projected applanation areas.
 /post1
 rsys,0
@@ -49,7 +49,7 @@ outer_elem = elnext(outer_elem)
 
 allsel
 esel,s,real,,4
-esel,r,ename,,174
+esel,r,ename,,170
 *get,inner_face_count,elem,0,count
 *cfopen,inner_preload_faces,csv
 inner_elem = elnext(0)
@@ -140,7 +140,7 @@ outer_elem = elnext(outer_elem)
 
 allsel
 esel,s,real,,4
-esel,r,ename,,174
+esel,r,ename,,170
 *cfopen,inner_final_faces,csv
 inner_elem = elnext(0)
 *do,inner_index,1,inner_face_count
