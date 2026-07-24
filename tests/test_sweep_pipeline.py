@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import dataclasses
 import io
 import math
 import os
@@ -774,6 +775,49 @@ class ThicknessGeometryTests(unittest.TestCase):
             ),
             3.0,
         )
+
+    def test_curvature_reduction_area_weights_only_flattened_support(self) -> None:
+        final = {
+            1: self.face(1, (
+                (0.0, 0.0, 0.0),
+                (0.001, 0.0, 0.0),
+                (0.0, 0.0, 0.001),
+            )),
+        }
+        metrics = [planarity_trial.PatchMetric(
+            element=1,
+            radius_m=0.0,
+            final_plane_rms_mm=0.001,
+            preload_curvature_per_mm=1.0,
+            final_curvature_per_mm=0.0,
+            curvature_reduction_per_mm=1.0,
+        )]
+        metrics.extend(planarity_trial.PatchMetric(
+            element=element,
+            radius_m=0.002,
+            final_plane_rms_mm=0.0,
+            preload_curvature_per_mm=0.2,
+            final_curvature_per_mm=0.2,
+            curvature_reduction_per_mm=0.0,
+        ) for element in range(2, 21))
+        result = planarity_calibration.curvature_reduction_area(
+            final,
+            metrics,
+            {1},
+            height_tolerance_um=5.0,
+            closed_contact={1},
+        )
+        self.assertAlmostEqual(result.effective_area_mm2, 0.5, places=6)
+        self.assertAlmostEqual(result.contact_overlap, 1.0)
+        self.assertEqual(result.face_count, 1)
+
+        excluded = planarity_calibration.curvature_reduction_area(
+            final,
+            [dataclasses.replace(metrics[0], final_plane_rms_mm=0.006), *metrics[1:]],
+            {1},
+            height_tolerance_um=5.0,
+        )
+        self.assertEqual(excluded.effective_area_mm2, 0.0)
 
     def test_segmented_surface_fit_recovers_known_transition(self) -> None:
         dummy = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))

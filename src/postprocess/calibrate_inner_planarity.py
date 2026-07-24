@@ -28,7 +28,9 @@ from src.postprocess.plot_inner_planarity_trial import (
     select_planarity_region,
 )
 from src.postprocess.thickness_geometry import (
+    PROBE_RADIUS_M,
     Face,
+    _projected_area_inside_circle,
     read_faces,
     select_displacement_support,
 )
@@ -54,6 +56,19 @@ class CaseData:
     outer_support: frozenset[int]
     inner_support: frozenset[int]
     metrics_by_window: dict[float, tuple[list[PatchMetric], list[PatchMetric]]]
+
+
+@dataclass(frozen=True)
+class CurvatureAreaResult:
+    effective_area_mm2: float
+    unweighted_area_mm2: float
+    face_count: int
+    curvature_baseline_per_mm: float
+    curvature_noise_per_mm: float
+    contact_overlap: float
+    centroid_x_mm: float
+    centroid_z_mm: float
+    weights: dict[int, float]
 
 
 def read_contact_state(path: Path) -> dict[int, ContactState]:
@@ -139,6 +154,81 @@ def numerical_plane_floor_um(
     return median, p95, mad, len(array)
 
 
+def curvature_reduction_area(
+    final: dict[int, Face],
+    metrics: list[PatchMetric],
+    support: set[int] | frozenset[int],
+    *,
+    height_tolerance_um: float,
+    measurement_radius_m: float = PROBE_RADIUS_M,
+    closed_contact: set[int] | frozenset[int] = frozenset(),
+) -> CurvatureAreaResult:
+    """Integrate significant fractional curvature loss over the central support."""
+    if height_tolerance_um <= 0 or measurement_radius_m <= 0:
+        raise ValueError("height tolerance and measurement radius must be positive")
+    radii = np.asarray([metric.radius_m for metric in metrics], dtype=float)
+    reduction = np.asarray(
+        [metric.curvature_reduction_per_mm for metric in metrics], dtype=float
+    )
+    annulus = (radii >= 0.65 * float(np.max(radii))) & (
+        radii <= 0.82 * float(np.max(radii))
+    )
+    if int(np.count_nonzero(annulus)) < 12:
+        annulus = radii >= float(np.quantile(radii, 0.7))
+    baseline = float(np.median(reduction[annulus]))
+    centered = reduction[annulus] - baseline
+    noise = 1.4826 * float(np.median(np.abs(centered - np.median(centered))))
+    significance = max(3.0 * noise, 1e-6)
+    height_limit_mm = height_tolerance_um * 1e-3
+
+    effective_area = 0.0
+    unweighted_area = 0.0
+    contact_area = 0.0
+    first_x = 0.0
+    first_z = 0.0
+    weights: dict[int, float] = {}
+    for metric in metrics:
+        element = metric.element
+        delta = metric.curvature_reduction_per_mm - baseline
+        if (
+            element not in support
+            or metric.final_plane_rms_mm > height_limit_mm
+            or delta <= significance
+        ):
+            continue
+        denominator = max(metric.preload_curvature_per_mm, significance)
+        weight = min(1.0, max(0.0, delta / denominator))
+        if weight <= 0:
+            continue
+        points = tuple((point[0], point[2]) for point in final[element].points)
+        projected = _projected_area_inside_circle(points, measurement_radius_m)
+        if projected <= 0:
+            continue
+        weighted = weight * projected
+        center_x = sum(point[0] for point in final[element].points) / 3.0
+        center_z = sum(point[2] for point in final[element].points) / 3.0
+        effective_area += weighted
+        unweighted_area += projected
+        first_x += center_x * weighted
+        first_z += center_z * weighted
+        if element in closed_contact:
+            contact_area += weighted
+        weights[element] = weight
+    centroid_x = first_x / effective_area if effective_area > 0 else math.nan
+    centroid_z = first_z / effective_area if effective_area > 0 else math.nan
+    return CurvatureAreaResult(
+        effective_area_mm2=effective_area * 1e6,
+        unweighted_area_mm2=unweighted_area * 1e6,
+        face_count=len(weights),
+        curvature_baseline_per_mm=baseline,
+        curvature_noise_per_mm=noise,
+        contact_overlap=contact_area / effective_area if effective_area > 0 else math.nan,
+        centroid_x_mm=centroid_x * 1e3,
+        centroid_z_mm=centroid_z * 1e3,
+        weights=weights,
+    )
+
+
 def load_case(
     root: Path,
     row: dict[str, str],
@@ -186,12 +276,16 @@ def evaluate_pair(
     window_mm: float,
     tolerance_um: float,
     analysis_radius_m: float,
-) -> tuple[dict[str, float | int], list[tuple[CaseData, PlanarityResult]]]:
-    results: list[tuple[CaseData, PlanarityResult]] = []
-    errors: list[float] = []
+) -> tuple[
+    dict[str, float | int],
+    list[tuple[CaseData, PlanarityResult, CurvatureAreaResult]],
+]:
+    results: list[tuple[CaseData, PlanarityResult, CurvatureAreaResult]] = []
+    binary_errors: list[float] = []
+    curvature_errors: list[float] = []
     for case in cases:
         outer_metrics = case.metrics_by_window[window_mm][0]
-        result = select_planarity_region(
+        binary = select_planarity_region(
             case.outer_preload,
             case.outer_final,
             outer_metrics,
@@ -200,18 +294,41 @@ def evaluate_pair(
             analysis_radius_m=analysis_radius_m,
             displacement_support=case.outer_support,
         )
-        error = abs(result.projected_area_mm2 - case.contact_area_mm2) / case.contact_area_mm2
-        errors.append(error)
-        results.append((case, result))
+        closed = frozenset(
+            element for element, state in case.contact.items()
+            if state.status >= 2.0 and state.area_m2 > 0
+        )
+        curvature = curvature_reduction_area(
+            case.outer_final,
+            outer_metrics,
+            case.outer_support,
+            height_tolerance_um=tolerance_um,
+            closed_contact=closed,
+        )
+        binary_errors.append(
+            abs(binary.projected_area_mm2 - case.contact_area_mm2)
+            / case.contact_area_mm2
+        )
+        curvature_errors.append(
+            abs(curvature.effective_area_mm2 - case.contact_area_mm2)
+            / case.contact_area_mm2
+        )
+        results.append((case, binary, curvature))
     floor_median, floor_p95, floor_mad, floor_count = numerical_plane_floor_um(
         cases, window_mm
     )
     row: dict[str, float | int] = {
         "window_diameter_mm": window_mm,
         "height_tolerance_um": tolerance_um,
-        "outer_mean_absolute_relative_error": float(np.mean(errors)),
-        "outer_rms_relative_error": math.sqrt(float(np.mean(np.square(errors)))),
-        "outer_max_relative_error": max(errors),
+        "outer_mean_absolute_relative_error": float(np.mean(curvature_errors)),
+        "outer_rms_relative_error": math.sqrt(
+            float(np.mean(np.square(curvature_errors)))
+        ),
+        "outer_max_relative_error": max(curvature_errors),
+        "outer_binary_mean_relative_error": float(np.mean(binary_errors)),
+        "outer_mean_contact_overlap": float(np.mean([
+            result.contact_overlap for _, _, result in results
+        ])),
         "outer_plane_floor_median_um": floor_median,
         "outer_plane_floor_p95_um": floor_p95,
         "outer_plane_floor_mad_um": floor_mad,
@@ -268,10 +385,14 @@ def render_area_chart(path: Path, rows: list[dict[str, float | int]]) -> None:
     left, top, plot_w, plot_h = 85, 55, 785, 410
     image = Image.new("RGB", (width, height), "white")
     draw = ImageDraw.Draw(image)
-    draw.text((25, 14), "CALIBRATED INNER AREA AND OUTER CONTACT", fill=INK, font=font(22))
+    draw.text((25, 14), "CURVATURE-REDUCTION AREA AND OUTER CONTACT", fill=INK, font=font(22))
     thicknesses = [float(row["eyelid_thickness_mm"]) for row in rows]
     max_area = math.ceil(max(
-        max(float(row["inner_projected_area_mm2"]), float(row["outer_contact_area_mm2"]))
+        max(
+            float(row["inner_curvature_area_mm2"]),
+            float(row["outer_curvature_area_mm2"]),
+            float(row["outer_contact_area_mm2"]),
+        )
         for row in rows
     ) / 2.0) * 2.0
     x_min, x_max = min(thicknesses), max(thicknesses)
@@ -286,14 +407,21 @@ def render_area_chart(path: Path, rows: list[dict[str, float | int]]) -> None:
         y = top + plot_h - fraction * plot_h
         draw.line((left, y, left + plot_w, y), fill=(220, 224, 230), width=1)
         draw.text((32, y - 8), f"{fraction * max_area:.1f}", fill=INK, font=font(13))
-    colors = (("outer_contact_area_mm2", (45, 95, 175), "outer contact"),
-              ("inner_projected_area_mm2", (211, 55, 48), "inner planarity"))
+    colors = (
+        ("outer_contact_area_mm2", (45, 95, 175), "outer contact"),
+        ("outer_curvature_area_mm2", (22, 145, 122), "outer curvature"),
+        ("inner_curvature_area_mm2", (211, 55, 48), "inner curvature"),
+    )
     for field, color, label in colors:
         points = [pixel(float(row["eyelid_thickness_mm"]), float(row[field])) for row in rows]
         draw.line(points, fill=color, width=4)
         for point in points:
             draw.ellipse((point[0] - 4, point[1] - 4, point[0] + 4, point[1] + 4), fill=color)
-        legend_x = 540 if field.startswith("outer") else 700
+        legend_x = {
+            "outer_contact_area_mm2": 450,
+            "outer_curvature_area_mm2": 610,
+            "inner_curvature_area_mm2": 760,
+        }[field]
         draw.line((legend_x, 30, legend_x + 26, 30), fill=color, width=4)
         draw.text((legend_x + 32, 21), label, fill=INK, font=font(13))
     for row in rows:
@@ -367,7 +495,10 @@ def main() -> int:
     cases.sort(key=lambda case: case.thickness_mm)
 
     grid: list[dict[str, float | int]] = []
-    outer_results: dict[tuple[float, float], list[tuple[CaseData, PlanarityResult]]] = {}
+    outer_results: dict[
+        tuple[float, float],
+        list[tuple[CaseData, PlanarityResult, CurvatureAreaResult]],
+    ] = {}
     for window in windows:
         for tolerance in tolerances:
             row, results = evaluate_pair(
@@ -389,8 +520,9 @@ def main() -> int:
     rows: list[dict[str, float | int | str]] = []
     inner_results: list[tuple[CaseData, PlanarityResult]] = []
     selected_outer = {
-        case.case: result
-        for case, result in outer_results[(selected_window, selected_tolerance)]
+        case.case: (binary, curvature)
+        for case, binary, curvature
+        in outer_results[(selected_window, selected_tolerance)]
     }
     for case in cases:
         result = select_planarity_region(
@@ -403,21 +535,37 @@ def main() -> int:
             displacement_support=case.inner_support,
         )
         inner_results.append((case, result))
-        outer = selected_outer[case.case]
+        inner_curvature = curvature_reduction_area(
+            case.inner_final,
+            case.metrics_by_window[selected_window][1],
+            case.inner_support,
+            height_tolerance_um=selected_tolerance,
+        )
+        outer_binary, outer_curvature = selected_outer[case.case]
         rows.append({
             "case": case.case,
             "eyelid_thickness_mm": case.thickness_mm,
             "selected_window_diameter_mm": selected_window,
             "selected_height_tolerance_um": selected_tolerance,
             "outer_contact_area_mm2": case.contact_area_mm2,
-            "outer_geometric_area_mm2": outer.projected_area_mm2,
-            "outer_relative_error": abs(outer.projected_area_mm2 - case.contact_area_mm2) / case.contact_area_mm2,
-            "inner_projected_area_mm2": result.projected_area_mm2,
-            "inner_selected_faces": result.face_count,
-            "contact_over_inner_area": (
-                case.contact_area_mm2 / result.projected_area_mm2
-                if result.projected_area_mm2 > 0 else ""
+            "outer_binary_area_mm2": outer_binary.projected_area_mm2,
+            "outer_curvature_area_mm2": outer_curvature.effective_area_mm2,
+            "outer_relative_error": (
+                abs(outer_curvature.effective_area_mm2 - case.contact_area_mm2)
+                / case.contact_area_mm2
             ),
+            "outer_contact_overlap": outer_curvature.contact_overlap,
+            "inner_binary_area_mm2": result.projected_area_mm2,
+            "inner_curvature_area_mm2": inner_curvature.effective_area_mm2,
+            "inner_unweighted_candidate_area_mm2": inner_curvature.unweighted_area_mm2,
+            "inner_selected_faces": inner_curvature.face_count,
+            "ae_over_ac_curvature": (
+                outer_curvature.effective_area_mm2
+                / inner_curvature.effective_area_mm2
+                if inner_curvature.effective_area_mm2 > 0 else ""
+            ),
+            "inner_centroid_x_mm": inner_curvature.centroid_x_mm,
+            "inner_centroid_z_mm": inner_curvature.centroid_z_mm,
             "status": "candidate_not_approved",
         })
     write_csv(output_dir / "calibration_grid.csv", grid)
