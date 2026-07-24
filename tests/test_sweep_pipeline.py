@@ -10,6 +10,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
+import numpy as np
+
 from src.postprocess import summarize_indentation_sweep as summary
 from src.postprocess import summarize_thickness_sweep as thickness_summary
 from src.postprocess import thickness_geometry
@@ -17,6 +19,7 @@ from src.postprocess import extract_thickness_state
 from src.postprocess import build_thickness_view_matrix
 from src.postprocess import prune_solver_artifacts as pruning
 from src.postprocess import check_calibration_run as calibration_monitor
+from src.postprocess import plot_inner_planarity_trial as planarity_trial
 from src.runners import run_indentation_sweep as runner
 from src.runners import run_thickness_calibration as calibration
 
@@ -724,6 +727,29 @@ class ThicknessGeometryTests(unittest.TestCase):
                     ((x0, z0), (x1, z1), (x0, z1)), 1.0
                 )
         self.assertLess(abs(total - math.pi) / math.pi, 0.01)
+
+    def test_patch_geometry_distinguishes_plane_and_curvature(self) -> None:
+        coordinates = np.asarray([
+            (x, 0.2 * x + 0.1 * z, z)
+            for x in (-1.0, 0.0, 1.0)
+            for z in (-1.0, 0.0, 1.0)
+        ])
+        residual, curvature = planarity_trial._fit_patch_geometry(
+            coordinates, np.ones(len(coordinates))
+        )
+        self.assertAlmostEqual(residual, 0.0, places=12)
+        self.assertAlmostEqual(curvature, 0.0, places=12)
+
+        paraboloid = np.asarray([
+            (x, 0.1 * x**2 + 0.2 * z**2, z)
+            for x in (-1.0, 0.0, 1.0)
+            for z in (-1.0, 0.0, 1.0)
+        ])
+        residual, curvature = planarity_trial._fit_patch_geometry(
+            paraboloid, np.ones(len(paraboloid))
+        )
+        self.assertGreater(residual, 0.0)
+        self.assertAlmostEqual(curvature, math.sqrt(0.2**2 + 0.4**2), places=10)
 
     def test_segmented_surface_fit_recovers_known_transition(self) -> None:
         dummy = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))
