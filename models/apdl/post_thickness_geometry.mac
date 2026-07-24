@@ -90,6 +90,51 @@ inner_elem = elnext(inner_elem)
 *enddo
 *cfclos
 
+! Preload pressure carried by the cornea-side CONTA174 bonded interface.
+allsel
+etable,eras
+esel,s,real,,4
+esel,r,ename,,174
+etable,ipres,cont,pres
+etable,istat,cont,stat
+etable,iarea,volu
+*get,inner_contact_count,elem,0,count
+*cfopen,inner_contact_preload,csv
+inner_contact_elem = elnext(0)
+*do,inner_contact_index,1,inner_contact_count
+*get,inner_contact_pres,elem,inner_contact_elem,etab,ipres
+*get,inner_contact_stat,elem,inner_contact_elem,etab,istat
+*get,inner_contact_area,elem,inner_contact_elem,etab,iarea
+inner_contact_n1 = nelem(inner_contact_elem,1)
+inner_contact_n2 = nelem(inner_contact_elem,2)
+inner_contact_n3 = nelem(inner_contact_elem,3)
+*get,inner_contact_x1,node,inner_contact_n1,loc,x
+*get,inner_contact_y1,node,inner_contact_n1,loc,y
+*get,inner_contact_z1,node,inner_contact_n1,loc,z
+*get,inner_contact_ux1,node,inner_contact_n1,u,x
+*get,inner_contact_uy1,node,inner_contact_n1,u,y
+*get,inner_contact_uz1,node,inner_contact_n1,u,z
+*get,inner_contact_x2,node,inner_contact_n2,loc,x
+*get,inner_contact_y2,node,inner_contact_n2,loc,y
+*get,inner_contact_z2,node,inner_contact_n2,loc,z
+*get,inner_contact_ux2,node,inner_contact_n2,u,x
+*get,inner_contact_uy2,node,inner_contact_n2,u,y
+*get,inner_contact_uz2,node,inner_contact_n2,u,z
+*get,inner_contact_x3,node,inner_contact_n3,loc,x
+*get,inner_contact_y3,node,inner_contact_n3,loc,y
+*get,inner_contact_z3,node,inner_contact_n3,loc,z
+*get,inner_contact_ux3,node,inner_contact_n3,u,x
+*get,inner_contact_uy3,node,inner_contact_n3,u,y
+*get,inner_contact_uz3,node,inner_contact_n3,u,z
+inner_contact_cx = (inner_contact_x1+inner_contact_ux1+inner_contact_x2+inner_contact_ux2+inner_contact_x3+inner_contact_ux3)/3
+inner_contact_cy = (inner_contact_y1+inner_contact_uy1+inner_contact_y2+inner_contact_uy2+inner_contact_y3+inner_contact_uy3)/3
+inner_contact_cz = (inner_contact_z1+inner_contact_uz1+inner_contact_z2+inner_contact_uz2+inner_contact_z3+inner_contact_uz3)/3
+*vwrite,inner_contact_elem,inner_contact_stat,inner_contact_pres,inner_contact_area,inner_contact_cx,inner_contact_cy,inner_contact_cz
+(7(E22.14,','))
+inner_contact_elem = elnext(inner_contact_elem)
+*enddo
+*cfclos
+
 post_time = arg1
 *if,post_time,gt,0,then
 set,,,,,post_time
@@ -177,6 +222,50 @@ inner_dz3 = inner_z3 + inner_uz3
 *vwrite,inner_elem,inner_n1,inner_n2,inner_n3,inner_dx1,inner_dy1,inner_dz1,inner_dx2,inner_dy2,inner_dz2,inner_dx3,inner_dy3,inner_dz3
 (13(E22.14,','))
 inner_elem = elnext(inner_elem)
+*enddo
+*cfclos
+
+! Final pressure carried by the same cornea-side bonded interface.
+allsel
+etable,eras
+esel,s,real,,4
+esel,r,ename,,174
+etable,ipres,cont,pres
+etable,istat,cont,stat
+etable,iarea,volu
+*cfopen,inner_contact_final,csv
+inner_contact_elem = elnext(0)
+*do,inner_contact_index,1,inner_contact_count
+*get,inner_contact_pres,elem,inner_contact_elem,etab,ipres
+*get,inner_contact_stat,elem,inner_contact_elem,etab,istat
+*get,inner_contact_area,elem,inner_contact_elem,etab,iarea
+inner_contact_n1 = nelem(inner_contact_elem,1)
+inner_contact_n2 = nelem(inner_contact_elem,2)
+inner_contact_n3 = nelem(inner_contact_elem,3)
+*get,inner_contact_x1,node,inner_contact_n1,loc,x
+*get,inner_contact_y1,node,inner_contact_n1,loc,y
+*get,inner_contact_z1,node,inner_contact_n1,loc,z
+*get,inner_contact_ux1,node,inner_contact_n1,u,x
+*get,inner_contact_uy1,node,inner_contact_n1,u,y
+*get,inner_contact_uz1,node,inner_contact_n1,u,z
+*get,inner_contact_x2,node,inner_contact_n2,loc,x
+*get,inner_contact_y2,node,inner_contact_n2,loc,y
+*get,inner_contact_z2,node,inner_contact_n2,loc,z
+*get,inner_contact_ux2,node,inner_contact_n2,u,x
+*get,inner_contact_uy2,node,inner_contact_n2,u,y
+*get,inner_contact_uz2,node,inner_contact_n2,u,z
+*get,inner_contact_x3,node,inner_contact_n3,loc,x
+*get,inner_contact_y3,node,inner_contact_n3,loc,y
+*get,inner_contact_z3,node,inner_contact_n3,loc,z
+*get,inner_contact_ux3,node,inner_contact_n3,u,x
+*get,inner_contact_uy3,node,inner_contact_n3,u,y
+*get,inner_contact_uz3,node,inner_contact_n3,u,z
+inner_contact_cx = (inner_contact_x1+inner_contact_ux1+inner_contact_x2+inner_contact_ux2+inner_contact_x3+inner_contact_ux3)/3
+inner_contact_cy = (inner_contact_y1+inner_contact_uy1+inner_contact_y2+inner_contact_uy2+inner_contact_y3+inner_contact_uy3)/3
+inner_contact_cz = (inner_contact_z1+inner_contact_uz1+inner_contact_z2+inner_contact_uz2+inner_contact_z3+inner_contact_uz3)/3
+*vwrite,inner_contact_elem,inner_contact_stat,inner_contact_pres,inner_contact_area,inner_contact_cx,inner_contact_cy,inner_contact_cz
+(7(E22.14,','))
+inner_contact_elem = elnext(inner_contact_elem)
 *enddo
 *cfclos
 
