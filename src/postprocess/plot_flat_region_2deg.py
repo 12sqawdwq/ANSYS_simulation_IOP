@@ -509,10 +509,20 @@ def render_angle_sweep_trend(
     angles = sorted({float(row["angle_deg"]) for row in rows})
     thicknesses = sorted({float(row["eyelid_thickness_mm"]) for row in rows})
     x_min, x_max = min(angles), max(angles)
+    ratio_values = [
+        float(row["ae_over_ac"])
+        for row in rows
+        if row["ae_over_ac"] not in ("", None)
+    ]
+    ratio_maximum = max(ratio_values, default=1.0)
+    ratio_ceiling = next(
+        (limit for limit in (12.0, 20.0, 50.0, 100.0, 200.0) if ratio_maximum <= limit),
+        10.0 ** math.ceil(math.log10(ratio_maximum)),
+    )
 
     panels = (
         (60, "outer coverage (%)", 0.0, 105.0, False),
-        (700, "flat-area ratio Ae / Ac (log scale)", 0.8, 12.0, True),
+        (700, "flat-area ratio Ae / Ac (log scale)", 0.8, ratio_ceiling, True),
     )
     for origin_x, title, y_min, y_max, logarithmic in panels:
         left, top, plot_w, plot_h = origin_x + 62, 92, 520, 390
@@ -534,7 +544,15 @@ def render_angle_sweep_trend(
                 fraction = (value - y_min) / (y_max - y_min)
             return round(top + plot_h - min(1.0, max(0.0, fraction)) * plot_h)
 
-        y_ticks = (1, 2, 3, 5, 10) if logarithmic else (0, 25, 50, 75, 100)
+        y_ticks = (
+            tuple(
+                value
+                for value in (1, 2, 3, 5, 10, 20, 30, 50, 100, 200)
+                if value <= y_max
+            )
+            if logarithmic
+            else (0, 25, 50, 75, 100)
+        )
         for tick in y_ticks:
             py = y_pixel(float(tick))
             draw.line((left, py, left + plot_w, py), fill=(225, 228, 232), width=1)

@@ -189,11 +189,11 @@ $$
 
 该式描述理想平面与未变形球面的几何相交。一旦 $r$ 达到探头半径，`min` 会直接返回完整探头面积，与实际位移场、接触和压力无关。它只可用于几何尺度核对，不能定义 $A_e$ 或 $A_c$。
 
-### 0.5°/1°/2°/3°/5°/10° 法向角区域
+### 0.5°-10° 法向角扫描
 
 法向夹角阈值只识别中央近水平核心，面积随阈值和网格平滑方式高度变化。相关红蓝图继续用于观察形态与阈值敏感性，不进入材料评分、实验回归或专利结论。
 
-在当前七个 `0.28 mm` 状态中，`5°` 外侧覆盖率为 `57.7%-65.2%`，角度面积比由 `1.028` 增至 `1.651`，仍具有厚度区分；`10°` 外侧覆盖率已达到 `97.8%-99.6%`，角度面积比仅为 `1.053-1.188`，说明阈值放宽后接近整圆饱和并丧失主要区分能力。[5°俯视](../thick/figures/fe_sweep_indent_0p28/flat_region_5deg_matrix.png)、[5°多视角](../thick/figures/fe_sweep_indent_0p28/flat_region_5deg_multiview_matrix.png)、[10°俯视](../thick/figures/fe_sweep_indent_0p28/flat_region_10deg_matrix.png)和[10°多视角](../thick/figures/fe_sweep_indent_0p28/flat_region_10deg_multiview_matrix.png)仅用于展示这种敏感性。
+当前独立实验扫描 `0.5°、1°、2°、3°、4°、5°、6°、7°、8°、9°、10°`。`5°` 外侧覆盖率为 `57.7%-65.2%`，角度面积比为 `1.028-1.651`；`10°` 外侧覆盖率达到 `97.8%-99.6%`，角度面积比收缩为 `1.053-1.188`。低角度端同样不稳定，`0.5°` 有一个厚度没有形成有效内侧区域，其他状态的比值最高达到 `37.7`。完整[趋势图](../thick/experiments/flat_region_angle_sweep/figures/flat_region_angle_sweep.png)、[汇总数据](../thick/experiments/flat_region_angle_sweep/figures/flat_region_angle_sweep.csv)和[实验说明](../thick/experiments/flat_region_angle_sweep/README.md)只用于展示阈值敏感性。
 
 ### 径向折点与局部平面残差
 
