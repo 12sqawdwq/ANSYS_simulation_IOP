@@ -138,8 +138,89 @@ python src/postprocess/plot_inner_planarity_trial.py "$RUN_ROOT" \
 `5 μm`下中央区域能够自然终止，并随厚度增加而收缩；`10 μm`下三组面积集中在
 `6.2-6.7 mm²`；`15 μm`几乎选满整个`3 mm`分析半径。该试绘证明平面残差与曲率变化
 可以排除单纯整体随动，但面积对容差仍高度敏感，当前三列均只用于选择算法尺度，不能
-作为正式$A_c$。下一步必须用外表面闭合接触区的平面拟合残差校准$h_{\mathrm{tol}}$，并
-检查`0.6-1.0 mm`拟合窗口和细网格敏感性。
+作为正式$A_c$。后续已使用外表面闭合接触区校准$h_{\mathrm{tol}}$并检查
+`0.6-1.0 mm`拟合窗口，结果见下节。
+
+### 外接触校准对几何方案的否定结果
+
+`post_thickness_geometry.mac`现已逐单元导出探头—眼睑外表面的`CONT:STAT`、
+`CONT:PRES`和曲面面积。7个完成工况的真实闭合接触面积为`6.028-7.767 mm²`。
+在`5-10 μm`平面残差范围和`0.6-1.0 mm`局部窗口内进行了三轮目标独立检查：
+
+1. 二值近似平面区在`0.60 mm`窗口、`8 μm`门槛下可用`6.9%`平均相对误差复原外接触
+   面积，但同一规则得到的内表面面积为`9.45-12.70 mm²`，内表面反而更大。
+2. 连续曲率消减权重使内表面面积随厚度由`5.94 mm²`降至`5.18 mm²`，但外表面自身
+   低估真实接触面积`11%-25%`，不能通过外表面验收。
+3. 用真实闭合/开放状态按空间IoU校准“接触等效”曲率阈值，外表面平均IoU达到
+   `91.6%`，但最优曲率消减比例落在搜索下边界`0.10`；应用到内表面后面积达到
+   `12.54-14.37 mm²`，接近整个探头圆。
+
+这些结果共同说明，`5-10 μm`可以作为局部几何残差检查范围，但不能单独定义当前
+完全bonded模型的内侧有效压缩面积。bonded界面把较宽范围的几何随动传到内表面，继续
+提高曲率或平面门槛只会把目标比例写入算法。完整校准网格和试绘保存在：
+
+![外接触校准网格](../thick/figures/fe_sweep_indent_0p28/inner_planarity_calibration/outer_contact_calibration_heatmap.png)
+
+![接触等效内表面试绘](../thick/figures/fe_sweep_indent_0p28/inner_planarity_calibration/inner_planarity_candidate_matrix.png)
+
+### 内表面压力参与面积候选
+
+更合理的内表面口径改用眼睑—角膜bonded界面的法向压缩载荷。MAPDL分别在IOP预载
+末端和`0.28 mm`推进末端导出角膜侧`CONTA174`的压力、状态、真实曲面面积、节点号和
+面中心。第$i$个面片的压力增量为：
+
+$$
+\Delta p_i=p_i^{(1)}-p_i^{(0)}.
+$$
+
+在探头边缘之外的参考环带$1.2a\le r\le1.6a$中计算背景与噪声：
+
+$$
+b_p=\operatorname{median}_{\mathrm{annulus}}(\Delta p_i),
+\qquad
+\sigma_p=1.4826\,\operatorname{MAD}_{\mathrm{annulus}}(\Delta p_i-b_p).
+$$
+
+只保留满足$\Delta p_i-b_p>3\sigma_p$且与探头轴最近面片共享边连通的中央分量
+$\mathcal C_p$。这里不使用探头圆裁切；孤立的远端约束压力斑块不会进入中央分量。
+显著压缩曲面面积为：
+
+$$
+A_{c,\mathrm{support}}^{P}=\sum_{i\in\mathcal C_p}A_i.
+$$
+
+令$q_i=\Delta p_i-b_p$，内侧压力参与面积定义为：
+
+$$
+A_c^{P}
+=\frac{\left(\sum_{i\in\mathcal C_p}q_iA_i\right)^2}
+{\sum_{i\in\mathcal C_p}q_i^2A_i}.
+$$
+
+该式使用真实曲面面积积分：压力均匀时$A_c^P$等于支撑面积，压力集中时$A_c^P$小于
+支撑面积。外层暂用直接求得的闭合接触面积$A_e^{\mathrm{contact}}$作独立参照，候选比例为
+$K_P=A_e^{\mathrm{contact}}/A_c^P$。
+
+![内表面增量压力区域](../thick/figures/fe_sweep_indent_0p28/inner_pressure_area/inner_pressure_area_matrix.png)
+
+![内表面压力面积趋势](../thick/figures/fe_sweep_indent_0p28/inner_pressure_area/inner_pressure_area_trend.png)
+
+| 眼睑厚度 | 外闭合接触面积$A_e$ | 内压力支撑面积 | 内压力参与面积$A_c^P$ | $K_P$ |
+|---:|---:|---:|---:|---:|
+| `0.80 mm` | `6.028 mm²` | `7.875 mm²` | `5.848 mm²` | `1.031` |
+| `1.00 mm` | `6.367 mm²` | `7.713 mm²` | `5.792 mm²` | `1.099` |
+| `1.20 mm` | `6.893 mm²` | `7.574 mm²` | `5.810 mm²` | `1.186` |
+| `1.25 mm` | `7.004 mm²` | `7.843 mm²` | `5.902 mm²` | `1.187` |
+| `1.40 mm` | `7.341 mm²` | `7.720 mm²` | `5.963 mm²` | `1.231` |
+| `1.50 mm` | `7.482 mm²` | `7.907 mm²` | `6.087 mm²` | `1.229` |
+| `1.60 mm` | `7.767 mm²` | `8.109 mm²` | `6.268 mm²` | `1.239` |
+
+参考环带`1.1a-1.5a、1.2a-1.6a、1.3a-1.7a`与`2σ、3σ、4σ`的9组组合中，
+$K_P$范围由`0.80 mm`的`1.009-1.056`扩大到`1.60 mm`的`1.166-1.363`；中心质心
+偏移约`0.03 mm`，低于`0.10 mm`对称性门槛。该候选具有稳定中央区域和正确的总体
+上升方向，但没有覆盖实验`1.5-2.0`区间，因此仍标记为`candidate_not_approved`。
+差异应进入材料、IOP、bonded假设和外层$A_e$定义的模型校准，不能再通过后处理阈值
+补偿。
 
 ## 面积后处理口径复核
 
@@ -156,6 +237,7 @@ python src/postprocess/plot_inner_planarity_trial.py "$RUN_ROOT" \
 | 径向折点面积 | 对径向位移/最终高度轮廓分段拟合后，在折点半径内积分 | 仅诊断 |
 | 初始表面边缘弓高 | $R-\sqrt{R^2-a^2}$ | 仅为高度尺度，不是面积 |
 | 球面相交面积 | $\pi\min(a^2,2R\delta-\delta^2)$ | 已删除 |
+| bonded界面增量压力参与面积 | 背景扣除、`3σ`中央连通区上的压力曲面积分 | 候选，未批准 |
 | 正式 $A_e/A_c$ | 尚无批准字段 | 未实现 |
 | 材料自动评分 | 只接受未来的`approved_ae_over_ac` | 当前停用 |
 

@@ -6,6 +6,7 @@ import argparse
 import csv
 import math
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -223,6 +224,87 @@ def write_csv(path: Path, rows: list[dict[str, float | int | str]]) -> None:
         writer.writerows(rows)
 
 
+def render_trend(
+    path: Path,
+    selected: list[dict[str, float | int | str]],
+    sensitivity: list[dict[str, float | int | str]],
+) -> None:
+    width, height = 1280, 520
+    image = Image.new("RGB", (width, height), "white")
+    draw = ImageDraw.Draw(image)
+    draw.text((24, 14), "INNER PRESSURE AREA - THICKNESS TREND", fill=INK, font=font(23))
+    thicknesses = [float(row["eyelid_thickness_mm"]) for row in selected]
+    x_min, x_max = min(thicknesses), max(thicknesses)
+
+    def panel(
+        origin_x: int,
+        title: str,
+        y_min: float,
+        y_max: float,
+    ) -> tuple[Callable[[float, float], tuple[int, int]], tuple[int, int, int, int]]:
+        left, top, plot_w, plot_h = origin_x + 70, 82, 500, 350
+        draw.text((origin_x + 18, 50), title, fill=INK, font=font(17))
+        for fraction in np.linspace(0, 1, 5):
+            y = top + plot_h - fraction * plot_h
+            value = y_min + fraction * (y_max - y_min)
+            draw.line((left, y, left + plot_w, y), fill=(224, 228, 233), width=1)
+            draw.text((origin_x + 22, y - 8), f"{value:.1f}", fill=INK, font=font(12))
+        for thickness in thicknesses:
+            x = left + (thickness - x_min) / max(x_max - x_min, 1e-9) * plot_w
+            draw.text((x - 12, top + plot_h + 8), f"{thickness:g}", fill=INK, font=font(12))
+
+        def pixel(x_value: float, y_value: float) -> tuple[int, int]:
+            return (
+                round(left + (x_value - x_min) / max(x_max - x_min, 1e-9) * plot_w),
+                round(top + plot_h - (y_value - y_min) / (y_max - y_min) * plot_h),
+            )
+
+        return pixel, (left, top, plot_w, plot_h)
+
+    area_pixel, _ = panel(0, "Curved area integral (mm2)", 0.0, 9.0)
+    area_series = (
+        ("outer_contact_area_mm2", (45, 95, 175), "outer contact"),
+        ("inner_pressure_support_area_mm2", (130, 135, 145), "inner support"),
+        ("inner_pressure_participation_area_mm2", RED, "inner effective"),
+    )
+    for index, (field, color, label) in enumerate(area_series):
+        points = [
+            area_pixel(float(row["eyelid_thickness_mm"]), float(row[field]))
+            for row in selected
+        ]
+        draw.line(points, fill=color, width=3)
+        for x, y in points:
+            draw.ellipse((x - 4, y - 4, x + 4, y + 4), fill=color)
+        legend_x = 80 + index * 165
+        draw.line((legend_x, 466, legend_x + 25, 466), fill=color, width=3)
+        draw.text((legend_x + 31, 458), label, fill=INK, font=font(12))
+
+    ratio_pixel, _ = panel(640, "Ae/Ac pressure candidate", 0.8, 1.5)
+    grouped: dict[float, list[float]] = {}
+    for row in sensitivity:
+        grouped.setdefault(float(row["eyelid_thickness_mm"]), []).append(
+            float(row["ae_over_ac_pressure"])
+        )
+    for thickness in thicknesses:
+        values = grouped[thickness]
+        x1, y1 = ratio_pixel(thickness, min(values))
+        _, y2 = ratio_pixel(thickness, max(values))
+        draw.line((x1, y1, x1, y2), fill=(175, 180, 188), width=7)
+    ratio_points = [
+        ratio_pixel(
+            float(row["eyelid_thickness_mm"]),
+            float(row["ae_over_ac_pressure"]),
+        )
+        for row in selected
+    ]
+    draw.line(ratio_points, fill=RED, width=3)
+    for x, y in ratio_points:
+        draw.ellipse((x - 5, y - 5, x + 5, y + 5), fill=RED)
+    draw.text((720, 458), "gray: 9-setting sensitivity range", fill=INK, font=font(13))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    image.save(path, format="PNG", optimize=True)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("run_root", type=Path)
@@ -311,6 +393,11 @@ def main() -> int:
         and float(row["sigma_factor"]) == 3.0
     ]
     write_csv(output / "inner_pressure_area_candidate.csv", selected_rows)
+    render_trend(
+        output / "inner_pressure_area_trend.png",
+        selected_rows,
+        sensitivity,
+    )
 
     columns = 4
     rows = math.ceil(len(selected_results) / columns)
