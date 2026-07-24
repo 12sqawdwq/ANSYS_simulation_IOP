@@ -320,7 +320,7 @@ def render_trend(
     hybrid_values = [float(row["ae_over_ac_hybrid"]) for row in sensitivity]
     ratio_min = max(0.0, math.floor((min(hybrid_values) - 0.15) * 10) / 10)
     ratio_max = math.ceil((max(hybrid_values) + 0.15) * 10) / 10
-    ratio_pixel, _ = panel(640, "Ae geometric / Ac pressure", ratio_min, ratio_max)
+    ratio_pixel, _ = panel(640, "Ae conservative / Ac pressure", ratio_min, ratio_max)
     grouped: dict[float, list[float]] = {}
     for row in sensitivity:
         grouped.setdefault(float(row["eyelid_thickness_mm"]), []).append(
