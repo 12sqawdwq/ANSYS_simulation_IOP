@@ -610,6 +610,7 @@ def select_displacement_support(
         fraction = min(1.0, max(0.0, projected / record.projected_area))
         projected_area += projected
         surface_area += fraction * record.surface_area
+    projected_area = min(projected_area, math.pi * maximum_radius**2)
     return DisplacementSupportResult(
         projected_area=projected_area,
         surface_area=surface_area,
