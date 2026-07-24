@@ -819,6 +819,19 @@ class ThicknessGeometryTests(unittest.TestCase):
         )
         self.assertEqual(excluded.effective_area_mm2, 0.0)
 
+        equivalent = planarity_calibration.contact_equivalent_region(
+            final,
+            metrics,
+            {1},
+            height_tolerance_um=5.0,
+            flattening_minimum=0.8,
+            closed_contact={1},
+        )
+        self.assertAlmostEqual(equivalent.projected_area_mm2, 0.5, places=6)
+        self.assertAlmostEqual(equivalent.contact_iou, 1.0)
+        self.assertAlmostEqual(equivalent.contact_precision, 1.0)
+        self.assertAlmostEqual(equivalent.contact_recall, 1.0)
+
     def test_segmented_surface_fit_recovers_known_transition(self) -> None:
         dummy = self.face(1, ((0, 0, 0), (1, 0, 0), (0, 0, 1)))
         transition = 1.4e-3
