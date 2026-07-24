@@ -1,0 +1,48 @@
+! Extract the probe reaction along a completed load path without resolving.
+! ARG1 = number of equal indentation intervals (default 32)
+! ARG2 = source nominal indentation in m (default 0.8 mm)
+! ARG3 = initial probe gap in m (default 0.05 mm)
+! Output columns (SI units, no header):
+! target_indent, result_time, result_lstep, probe_fy, probe_uy_min, probe_uy_max
+/post1
+curve_steps = ARG1
+*if,curve_steps,lt,2,then
+curve_steps = 32
+*endif
+source_indent = ARG2
+*if,source_indent,le,0,then
+source_indent = 0.8e-3
+*endif
+curve_gap = ARG3
+*if,curve_gap,lt,0,then
+curve_gap = 0.05e-3
+*endif
+source_push = curve_gap + source_indent
+
+*cfopen,probe_force_curve,csv
+*do,curve_index,0,curve_steps
+target_indent = source_indent*curve_index/curve_steps
+target_time = 1.0 + (curve_gap+target_indent)/source_push
+set,,,,,target_time
+*get,result_lstep,active,0,set,lstp
+
+allsel
+cmsel,s,probe_top_nodes
+*get,probe_node_count,node,0,count
+probe_fy = 0
+*get,probe_node,node,0,num,min
+*do,probe_index,1,probe_node_count
+*get,node_fy,node,probe_node,rf,fy
+probe_fy = probe_fy + node_fy
+probe_node = ndnext(probe_node)
+*enddo
+nsort,u,y
+*get,probe_uy_min,sort,0,min
+*get,probe_uy_max,sort,0,max
+
+*vwrite,target_indent,target_time,result_lstep,probe_fy,probe_uy_min,probe_uy_max
+(5(E22.14,','),E22.14)
+*enddo
+*cfclos
+allsel
+finish
