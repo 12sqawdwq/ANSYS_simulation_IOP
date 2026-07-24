@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compute objective flat-region and diagnostic applanation areas."""
+"""Compute diagnostic angle-threshold and radial-breakpoint area metrics."""
 from __future__ import annotations
 
 import argparse
@@ -33,8 +33,7 @@ GEOMETRY_FIELDS = (
     "inner_face_count",
     "inner_area_smooth_2deg_m2",
     "inner_smooth_2deg_face_count",
-    # Objective central connected flat regions. The 2 degree result is primary;
-    # 1 and 3 degree results quantify threshold sensitivity.
+    # Diagnostic central connected angle-threshold regions.
     "outer_flat_projected_area_1deg_m2",
     "outer_flat_projected_area_2deg_m2",
     "outer_flat_projected_area_3deg_m2",
@@ -547,7 +546,7 @@ def select_flat_surface(
     maximum_radius: float = PROBE_RADIUS_M,
     displacement_fraction: float = DISPLACEMENT_FRACTION,
 ) -> tuple[FlatAreaResult, set[int]]:
-    """Return objective flat-area metrics and the selected deformed face IDs."""
+    """Return diagnostic angle-threshold metrics and selected face IDs."""
     _validate_face_sets(preload, final)
     if angle_limit_deg <= 0 or maximum_radius <= 0:
         raise ValueError("flatness angle and maximum radius must be positive")
@@ -643,15 +642,15 @@ def _flat_surface_metrics(
         )
         for angle in ANGLE_LIMITS_DEG
     }
-    primary = results[2]
+    two_degree = results[2]
     return {
         **{
             f"{prefix}_flat_projected_area_{angle}deg_m2": results[angle].projected_area
             for angle in (1, 2, 3)
         },
-        f"{prefix}_flat_surface_area_2deg_m2": primary.surface_area,
-        f"{prefix}_flat_face_count_2deg": primary.face_count,
-        f"{prefix}_flat_displacement_threshold_m": primary.displacement_threshold,
+        f"{prefix}_flat_surface_area_2deg_m2": two_degree.surface_area,
+        f"{prefix}_flat_face_count_2deg": two_degree.face_count,
+        f"{prefix}_flat_displacement_threshold_m": two_degree.displacement_threshold,
     }
 
 
@@ -837,15 +836,16 @@ def write_results(output_dir: Path, metrics: dict[str, float | int]) -> None:
     method_names = {value: key for key, value in BREAK_METHOD_CODES.items()}
     payload = {
         "definition": {
+            "status": "diagnostic_only",
             "reference_state": "end of IOP preload (load step 1)",
             "final_state": "requested probe-indentation state",
-            "primary_boundary": (
+            "angle_threshold_boundary": (
                 "central edge-connected deformed faces within the probe radius, with smoothed face "
                 "normal at most 2 degrees from the probe axis and indentation displacement above an "
                 "outer-annulus noise floor"
             ),
-            "primary_area": "projected integral of the objective 2 degree flat region",
-            "primary_area_is_forced_to_probe": False,
+            "angle_threshold_area": "diagnostic projected integral of the 2 degree region",
+            "angle_threshold_area_is_forced_to_probe": False,
             "flatness_sensitivity_deg": list(ANGLE_LIMITS_DEG),
             "diagnostic_area": "contact-status and radial-breakpoint areas are independent checks",
             "radial_bin_m": RADIAL_BIN_M,

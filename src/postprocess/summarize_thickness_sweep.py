@@ -368,10 +368,10 @@ def build_qc(
                     or flat_areas[1] <= 0
                     or flat_surface < flat_areas[1]
                 ):
-                    add_check(checks, "error", "objective_flat_area", case,
-                              f"{prefix} objective flat-region areas are invalid")
+                    add_check(checks, "error", "diagnostic_angle_area", case,
+                              f"{prefix} diagnostic angle-threshold areas are invalid")
                 elif (flat_areas[2] - flat_areas[0]) / flat_areas[1] > 0.35:
-                    add_check(checks, "warning", "objective_flat_angle_sensitivity", case,
+                    add_check(checks, "warning", "diagnostic_angle_sensitivity", case,
                               f"{prefix} 1-3 degree spread exceeds 35% of the 2 degree area")
         for prefix in ("outer", "inner"):
             surface = value(raw, f"{prefix}_surface_area_m2")

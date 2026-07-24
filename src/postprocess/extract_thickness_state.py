@@ -255,7 +255,7 @@ def extract_case(
                 or metrics[f"{prefix}_flat_surface_area_2deg_m2"] < flat_areas[1]
                 or metrics[f"{prefix}_flat_face_count_2deg"] <= 0
             ):
-                raise ValueError(f"{prefix} objective flat-region area is invalid")
+                raise ValueError(f"{prefix} diagnostic angle-threshold area is invalid")
         for prefix in ("outer", "inner"):
             if (
                 metrics[f"{prefix}_surface_area_m2"] <= 0

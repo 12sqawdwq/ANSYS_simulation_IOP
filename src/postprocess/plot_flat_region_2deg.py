@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render binary 2-degree objective flat-region maps for a thickness run."""
+"""Render diagnostic binary angle-threshold maps for a thickness run."""
 from __future__ import annotations
 
 import argparse
@@ -353,7 +353,7 @@ def render_multiview(
     draw = ImageDraw.Draw(canvas)
     draw.text(
         (24, 14),
-        f"{angle_text(angle_deg)} DEG OBJECTIVE FLAT REGION MULTIVIEW   "
+        f"{angle_text(angle_deg)} DEG DIAGNOSTIC FLAT REGION MULTIVIEW   "
         f"t={thickness_mm:.2f} mm   indent={indent_mm:.2f} mm",
         fill=INK,
         font=font(25),
@@ -387,7 +387,7 @@ def render_case(
     draw = ImageDraw.Draw(canvas)
     draw.text(
         (24, 12),
-        f"{angle_text(angle_deg)} DEG OBJECTIVE FLAT REGION   "
+        f"{angle_text(angle_deg)} DEG DIAGNOSTIC FLAT REGION   "
         f"t={thickness_mm:.2f} mm   indent={indent_mm:.2f} mm",
         fill=INK,
         font=font(24),

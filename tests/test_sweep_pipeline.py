@@ -22,6 +22,16 @@ from src.runners import run_thickness_calibration as calibration
 
 
 class APDLContractTests(unittest.TestCase):
+    def test_angle_threshold_outputs_are_labeled_diagnostic_only(self) -> None:
+        geometry = Path(thickness_geometry.__file__).read_text(encoding="utf-8").lower()
+        plot = (
+            runner.REPO_ROOT / "src" / "postprocess" / "plot_flat_region_2deg.py"
+        ).read_text(encoding="utf-8").lower()
+        self.assertIn('"status": "diagnostic_only"', geometry)
+        self.assertNotIn("objective flat", geometry)
+        self.assertIn("diagnostic flat region", plot)
+        self.assertNotIn("objective flat region", plot)
+
     def test_material_calibration_launcher_is_disabled_before_creating_runs(self) -> None:
         launcher = (
             runner.REPO_ROOT / "ops" / "start-thickness-calibration-5090d.sh"
