@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render binary robust-displacement support maps for a thickness run."""
+"""Render outer-displacement and inner-pressure area comparison maps."""
 from __future__ import annotations
 
 import argparse
@@ -23,6 +23,12 @@ from src.postprocess.thickness_geometry import (
     conservative_projected_support,
     read_faces,
     select_displacement_support,
+)
+from src.postprocess.analyze_inner_pressure_area import (
+    PressureAreaResult,
+    PressureFace,
+    pressure_area,
+    read_pressure_faces,
 )
 
 RED = (211, 55, 48)
@@ -110,6 +116,73 @@ def render_surface_panel(
     return image
 
 
+def render_pressure_panel(
+    final: dict[int, PressureFace],
+    result: PressureAreaResult,
+) -> Image.Image:
+    width, height = 650, 650
+    margin, plot_size = 44, 550
+    extent = 1.12 * PROBE_RADIUS_M
+    image = Image.new("RGB", (width, height), "white")
+    draw = ImageDraw.Draw(image)
+    draw.text((margin, 12), "INNER PRESSURE PARTICIPATION", fill=INK, font=font(22))
+
+    def pixel(point: tuple[float, float, float]) -> tuple[int, int]:
+        return (
+            round(margin + plot_size / 2 + point[0] / extent * plot_size / 2),
+            round(48 + plot_size / 2 - point[2] / extent * plot_size / 2),
+        )
+
+    for element, face in sorted(final.items()):
+        if math.hypot(face.center[0], face.center[2]) > 1.18 * PROBE_RADIUS_M:
+            continue
+        center_x, center_y = pixel(face.center)
+        face_radius = max(
+            1,
+            round(math.sqrt(face.area_m2 / math.pi) / extent * plot_size / 2),
+        )
+        draw.ellipse(
+            (
+                center_x - face_radius,
+                center_y - face_radius,
+                center_x + face_radius,
+                center_y + face_radius,
+            ),
+            fill=RED if element in result.selected else BLUE,
+            outline=EDGE,
+            width=1,
+        )
+
+    center_x = margin + plot_size / 2
+    center_y = 48 + plot_size / 2
+    radius_px = PROBE_RADIUS_M / extent * plot_size / 2
+    draw.ellipse(
+        (
+            center_x - radius_px,
+            center_y - radius_px,
+            center_x + radius_px,
+            center_y + radius_px,
+        ),
+        outline=INK,
+        width=3,
+    )
+    draw.text(
+        (margin, 595),
+        f"support={result.support_area_mm2:.3f} mm2   "
+        f"effective={result.participation_area_mm2:.3f} mm2",
+        fill=INK,
+        font=font(15),
+    )
+    draw.text(
+        (margin, 620),
+        f"T={result.threshold_pa / 1e3:.2f} kPa   "
+        f"faces={result.selected_faces}",
+        fill=INK,
+        font=font(15),
+    )
+    return image
+
+
 def render_case(
     attempt: Path,
     output: Path,
@@ -121,8 +194,19 @@ def render_case(
     inner_final = read_faces(attempt / "inner_final_faces.csv")
     outer_preload = read_faces(attempt / "outer_preload_faces.csv")
     outer_final = read_faces(attempt / "outer_final_faces.csv")
+    inner_pressure_preload = read_pressure_faces(
+        attempt / "inner_contact_preload.csv"
+    )
+    inner_pressure_final = read_pressure_faces(attempt / "inner_contact_final.csv")
     outer, outer_selected = select_displacement_support(outer_preload, outer_final)
     inner, inner_selected = select_displacement_support(inner_preload, inner_final)
+    inner_pressure = pressure_area(
+        inner_pressure_preload,
+        inner_pressure_final,
+        annulus_inner_m=1.2 * PROBE_RADIUS_M,
+        annulus_outer_m=1.6 * PROBE_RADIUS_M,
+        sigma_factor=3.0,
+    )
     outer_lower, outer_clipped, outer_strict, outer_boundary = (
         conservative_projected_support(outer_final, outer_selected)
     )
@@ -134,7 +218,7 @@ def render_case(
     draw = ImageDraw.Draw(canvas)
     draw.text(
         (24, 12),
-        f"ROBUST DISPLACEMENT SUPPORT   t={thickness_mm:.2f} mm   "
+        f"OUTER / INNER AREA COMPARISON   t={thickness_mm:.2f} mm   "
         f"indent={indent_mm:.2f} mm",
         fill=INK,
         font=font(24),
@@ -152,23 +236,20 @@ def render_case(
         (10, 52),
     )
     canvas.paste(
-        render_surface_panel(
-            "INNER SURFACE",
-            inner_final,
-            inner_strict,
-            inner_boundary,
-            inner,
-            inner_lower,
-            inner_clipped,
-        ),
+        render_pressure_panel(inner_pressure_final, inner_pressure),
         (660, 52),
     )
     draw.rectangle((32, 707, 54, 727), fill=RED)
-    draw.text((62, 707), "strictly inside probe", fill=INK, font=font(14))
-    draw.rectangle((300, 707, 322, 727), fill=AMBER)
-    draw.text((330, 707), "boundary uncertainty (excluded)", fill=INK, font=font(14))
+    draw.text(
+        (62, 707),
+        "outer: strict inside / inner: selected pressure",
+        fill=INK,
+        font=font(14),
+    )
+    draw.rectangle((480, 707, 502, 727), fill=AMBER)
+    draw.text((510, 707), "outer boundary (excluded)", fill=INK, font=font(14))
     draw.rectangle((760, 707, 782, 727), fill=BLUE)
-    draw.text((790, 707), "below threshold or outside", fill=INK, font=font(14))
+    draw.text((790, 707), "not selected", fill=INK, font=font(14))
     output.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(output, format="PNG", optimize=True)
 
@@ -200,6 +281,14 @@ def render_case(
         "inner_boundary_uncertainty_mm2": (inner_clipped - inner_lower) * 1e6,
         "inner_strict_faces": len(inner_strict),
         "inner_boundary_faces": len(inner_boundary),
+        "inner_pressure_baseline_pa": inner_pressure.baseline_pa,
+        "inner_pressure_noise_pa": inner_pressure.noise_pa,
+        "inner_pressure_threshold_pa": inner_pressure.threshold_pa,
+        "inner_pressure_support_area_mm2": inner_pressure.support_area_mm2,
+        "inner_pressure_participation_area_mm2": (
+            inner_pressure.participation_area_mm2
+        ),
+        "inner_pressure_selected_faces": inner_pressure.selected_faces,
         "image": output.name,
     }
 
@@ -263,6 +352,9 @@ def main() -> int:
         required = tuple(
             attempt / f"{name}_{state}_faces.csv"
             for name in ("inner", "outer")
+            for state in ("preload", "final")
+        ) + tuple(
+            attempt / f"inner_contact_{state}.csv"
             for state in ("preload", "final")
         )
         if all(path.is_file() for path in required):
