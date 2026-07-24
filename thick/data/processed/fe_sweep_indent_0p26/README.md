@@ -48,4 +48,4 @@ Ae = pi*r^2
 
 接触平台诊断目录共约 `52 MB`，未复制源 `.db/.rst`。其中只有 `0.80、1.20、2.00 mm` 保留完整源结果；其他厚度的 `invalid_metrics` 是源文件按存储策略删除后的预期跳过，不进入 `contact_endpoint_scan.csv`。
 
-报告见 [0.26 mm 补充报告](../../../docs/眼睑厚度Ae_Ac推进0.26mm补充报告.md)，图片见 [视图索引](../../../figures/fe_sweep_indent_0p26/views/README.md)。
+本目录只作为 `0.26 mm` 历史数据保留。当前面积口径和 `0.28 mm` 结果见 [0.28 mm 补充报告](../../../docs/眼睑厚度Ae_Ac推进0.28mm补充报告.md)，历史图片见 [视图索引](../../../figures/fe_sweep_indent_0p26/views/README.md)。

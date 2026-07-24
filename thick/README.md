@@ -10,6 +10,6 @@
 
 7 个状态已全部完成并通过 QC。报告见 [眼睑厚度有限元实验报告](docs/眼睑厚度有限元实验报告.md)，机器可读结果见 [fe_sweep 数据](data/processed/fe_sweep/README.md)，每个状态的 9 张图片见 [完整视图索引](figures/fe_sweep/views/README.md)。
 
-在不覆盖上述 `0.80 mm` 基准结果的前提下，仓库另保存校准材料下从相同加载路径提取的 `0.26 mm` 九点推进状态。补充分析见 [Ae/Ac 0.26 mm 推进报告](docs/眼睑厚度Ae_Ac推进0.26mm补充报告.md)，数据见 [fe_sweep_indent_0p26](data/processed/fe_sweep_indent_0p26/README.md)，九个厚度的固定视图和压平边界质检图见 [0.26 mm 视图索引](figures/fe_sweep_indent_0p26/views/README.md)。
+仓库继续保留 `0.26 mm` 九点推进数据作为历史对照，见 [fe_sweep_indent_0p26](data/processed/fe_sweep_indent_0p26/README.md) 和 [0.26 mm 视图索引](figures/fe_sweep_indent_0p26/views/README.md)。当前面积分析统一使用已完成的七个 `0.28 mm` 状态，见 [Ae/Ac 0.28 mm 推进报告](docs/眼睑厚度Ae_Ac推进0.28mm补充报告.md)。
 
-正式厚度工况现统一为 `0.28 mm` 名义推进。球面相交面积已从活动数据链删除；中央连续 `0.5°/1°/2°/3°` 网格面积也只表示局部近水平核心，不能作为正式 `Ae/Ac`。位移场、反力、接触结果和变形面网格继续有效，新的形变面积后处理完成前暂停材料评分。候选方法采用预载—最终状态的曲率消减等效投影面积，其公式、合理性评估和验收门槛见[眼睑厚度材料校准](../docs/THICKNESS_CALIBRATION.md#新面积计算方案)。
+正式厚度工况现统一为 `0.28 mm` 名义推进。球面相交面积已从活动数据链删除；中央连续 `0.5°/1°/2°/3°` 网格面积也只表示局部近水平核心，不能作为正式 `Ae/Ac`。当前外侧使用位移参与区的保守网格下界，内侧使用 bonded 界面的增量压力参与面积；公式、合理性和限制见[眼睑厚度 Ae/Ac 计算与校准](../docs/THICKNESS_CALIBRATION.md#两种面积定义)。
