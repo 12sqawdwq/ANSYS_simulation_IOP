@@ -1,0 +1,62 @@
+! Extract probe reaction and pressure-bearing contact along load step 2.
+! ARG1 = number of equal total-push intervals (default 132)
+! ARG2 = source total probe push in m (default 0.33 mm)
+! Output columns (SI units, no header):
+! total_push, result_time, result_lstep, probe_fy, probe_uy_min,
+! probe_uy_max, loaded_contact_count, loaded_contact_area, pmax
+/post1
+rsys,0
+history_steps = ARG1
+*if,history_steps,lt,4,then
+history_steps = 132
+*endif
+source_push = ARG2
+*if,source_push,le,0,then
+source_push = 0.33e-3
+*endif
+
+*cfopen,contact_history,csv
+*do,history_index,0,history_steps
+target_push = source_push*history_index/history_steps
+target_time = 1.0 + target_push/source_push
+set,,,,,target_time
+*get,result_lstep,active,0,set,lstp
+
+allsel
+cmsel,s,probe_top_nodes
+*get,probe_node_count,node,0,count
+probe_fy = 0
+*get,probe_node,node,0,num,min
+*do,probe_index,1,probe_node_count
+*get,node_fy,node,probe_node,rf,fy
+probe_fy = probe_fy + node_fy
+probe_node = ndnext(probe_node)
+*enddo
+nsort,u,y
+*get,probe_uy_min,sort,0,min
+*get,probe_uy_max,sort,0,max
+
+allsel
+etable,eras
+esel,s,real,,3
+esel,r,ename,,174
+etable,hpres,cont,pres
+etable,harea,volu
+esel,r,etab,hpres,1.0,1e12
+*get,loaded_contact_count,elem,0,count
+loaded_contact_area = 0
+pmax = 0
+*if,loaded_contact_count,gt,0,then
+ssum
+*get,loaded_contact_area,ssum,0,item,harea
+esort,etab,hpres,0,0
+*get,pmax,sort,0,max
+eusort
+*endif
+
+*vwrite,target_push,target_time,result_lstep,probe_fy,probe_uy_min,probe_uy_max,loaded_contact_count,loaded_contact_area,pmax
+(8(E22.14,','),E22.14)
+*enddo
+*cfclos
+allsel
+finish
