@@ -1,0 +1,41 @@
+{
+  "generated_at_utc": "2026-07-29T09:43:30+00:00",
+  "status": "complete",
+  "interpretation": "F(IOP)-F(0) is a total causal response difference. Near-affinity supports using one engineering baseline but does not prove physical separability of material, prestress, geometry, and contact contributions.",
+  "configuration": {
+    "eyelid_thickness_mm": 1.25,
+    "indent_mm": 0.28,
+    "mesh_size_mm": 0.3,
+    "eyelid_material_scale": 1.0,
+    "cornea_material_scale": 0.75,
+    "cornea_thickness_mm": 0.6
+  },
+  "initial_gap_mm": 0.3,
+  "probe_area_mm2": 14.65741468458854,
+  "force_zero_n": 0.16191409651865,
+  "free_linear_fit_intercept_n": 0.163401425850819,
+  "free_linear_fit_slope_n_per_mmhg": 0.0005501711735383997,
+  "fixed_zero_baseline_slope_n_per_mmhg": 0.0006139138592027864,
+  "quadratic_fit_coefficients_n": {
+    "intercept": 0.16195356623624407,
+    "linear_per_mmhg": 0.0009845290579108801,
+    "quadratic_per_mmhg2": -1.4478596145749379e-05
+  },
+  "quadratic_contribution_at_30_mmhg_n": -0.01303073653117444,
+  "quadratic_fraction_of_delta_at_30_percent": -78.57379331067423,
+  "second_differences_n_at_10_and_20_mmhg": [
+    -0.0032904164050900075,
+    -0.0025010220532100114
+  ],
+  "secant_gain_spread_percent": 43.26044918499315,
+  "maximum_fixed_baseline_residual_over_delta_percent": 28.241773699684686,
+  "free_slope_inferred_baseline_spread_n": 0.003053598099526017,
+  "holdout_20_fit_points_mmhg": [
+    10.0,
+    30.0
+  ],
+  "holdout_20_inferred_iop_mmhg": 23.702260023325707,
+  "holdout_20_error_mmhg": 3.7022600233257066,
+  "engineering_gain_spread_limit_percent": 5.0,
+  "engineering_fixed_baseline_check": "fail"
+}
