@@ -1,0 +1,20 @@
+{
+  "generated_at_utc": "2026-07-29T10:33:20+00:00",
+  "status": "complete",
+  "row_count": 9,
+  "requested_indent_mm": 0.26,
+  "actual_indent_mm_range": [
+    0.259875,
+    0.259875
+  ],
+  "mean_signed_error_0p26_mmhg": 1.1160936493965903,
+  "mean_absolute_error_0p26_mmhg": 2.70180692571675,
+  "rmse_0p26_mmhg": 3.1778961408058746,
+  "mean_signed_error_0p28_mmhg": 0.9183776830932575,
+  "mean_absolute_error_0p28_mmhg": 2.6134560575043864,
+  "rmse_0p28_mmhg": 3.042949476432578,
+  "geometry_0p28_csv": "/home/xuanyu/PROJECT/ziyu/blueknow/simulation/thick/experiments/geometric_observable_5deg/geometry_zero_server_full9.csv",
+  "iop_0p28_csv": "/home/xuanyu/PROJECT/ziyu/blueknow/simulation/thick/experiments/geometric_observable_5deg/iop_from_material_baseline/iop_from_kgeo_material_baseline_full9.csv",
+  "state_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/geometry_zero_state_0p26/20260729T101302Z_full9_iop0_20_from_retained_rst/states",
+  "interpretation": "0.26-mm values are independently read from retained 0- and 20-mmHg RST states; no force or area is interpolated from the 0.28-mm endpoint."
+}

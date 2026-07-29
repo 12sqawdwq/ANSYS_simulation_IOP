@@ -1,0 +1,72 @@
+! Extract all converged geometry-zero and indentation result sets without resolving.
+! ARG1 = source indentation after geometry zero in m
+! ARG2 = geometry-zero approach push in m
+! Output columns (SI units, no header):
+! target_indent, actual_indent, result_time, result_lstep, probe_fy,
+! probe_uy_min, probe_uy_max
+/post1
+source_indent = ARG1
+approach_push_curve = ARG2
+*if,source_indent,le,0,then
+source_indent = 0.5e-3
+*endif
+*if,approach_push_curve,lt,0,then
+/com,ERROR: geometry-zero approach push must not be negative
+/exit,nosave
+*endif
+
+*get,curve_nsets,active,0,set,nset
+*if,curve_nsets,lt,1,then
+/com,ERROR: result file has no result sets
+/exit,nosave
+*endif
+
+*cfopen,probe_pressure_curve,csv
+set,first
+*do,curve_index,1,curve_nsets
+*get,result_time,active,0,set,time
+*get,result_lstep,active,0,set,lstp
+curve_include = 0
+*if,result_lstep,eq,2,then
+  *if,result_time,ge,1.999999,then
+    curve_include = 1
+  *endif
+*endif
+*if,result_lstep,eq,3,then
+  curve_include = 1
+*endif
+
+*if,curve_include,eq,1,then
+  allsel
+  cmsel,s,probe_top_nodes
+  *get,probe_node_count,node,0,count
+  probe_fy = 0
+  *get,probe_node,node,0,num,min
+  *do,probe_index,1,probe_node_count
+    *get,node_fy,node,probe_node,rf,fy
+    probe_fy = probe_fy + node_fy
+    probe_node = ndnext(probe_node)
+  *enddo
+  nsort,u,y
+  *get,probe_uy_min,sort,0,min
+  *get,probe_uy_max,sort,0,max
+  probe_uy_mean = 0.5*(probe_uy_min+probe_uy_max)
+  actual_indent = abs(probe_uy_mean)-approach_push_curve
+  *if,actual_indent,lt,0,then
+    actual_indent = 0
+  *endif
+  target_indent = 0
+  *if,result_lstep,eq,3,then
+    target_indent = source_indent*(result_time-2.0)
+  *endif
+  *vwrite,target_indent,actual_indent,result_time,result_lstep,probe_fy,probe_uy_min,probe_uy_max
+  (6(E22.14,','),E22.14)
+*endif
+
+*if,curve_index,lt,curve_nsets,then
+  set,next
+*endif
+*enddo
+*cfclos
+allsel
+finish
