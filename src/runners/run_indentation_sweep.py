@@ -778,11 +778,11 @@ def main() -> int:
     cli = parser.parse_args()
     if (
         cli.workers < 1 or cli.np < 1 or cli.timeout_seconds <= 0
-        or cli.mesh_size_mm <= 0 or cli.iop_mmhg <= 0
+        or cli.mesh_size_mm <= 0 or cli.iop_mmhg < 0
         or cli.eyelid_material_scale <= 0 or cli.cornea_material_scale <= 0
         or cli.initial_gap_mm <= 0
     ):
-        parser.error("workers, np, timeout, mesh size, IOP, material scales, and initial gap must be positive")
+        parser.error("IOP must be non-negative; workers, np, timeout, mesh size, material scales, and initial gap must be positive")
     profile, cases = choose_cases(parser, cli)
     git_commit, git_dirty = git_provenance()
     if git_dirty and not cli.allow_dirty:

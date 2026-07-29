@@ -5,7 +5,7 @@
 ! ARG3 = solver retry mode (0=standard, 1=smaller initial steps)
 ! ARG4 = mesh size in m (default 0.3 mm)
 ! ARG5 = eyelid thickness in m (default 1.0 mm)
-! ARG6 = IOP in Pa (default 2666.4 Pa = 20 mmHg)
+! ARG6 = IOP in Pa (0 Pa is a valid zero-IOP case; negative uses 20 mmHg default)
 ! ARG7 = eyelid C10/C01 scale (default 1.0)
 ! ARG8 = cornea C10/C01 scale (default 1.0)
 ! ARG9 = unloaded probe-apex gap in m (default 0.30 mm)
@@ -51,7 +51,7 @@ indent_limit = 0.8e-3
 mesh_size = 0.3e-3
 *endif
 iop    = ARG6
-*if,iop,le,0,then
+*if,iop,lt,0,then
 iop = 2666.4
 *endif
 eyelid_material_scale = ARG7
