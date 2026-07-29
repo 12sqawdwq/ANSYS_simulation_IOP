@@ -1,0 +1,14 @@
+{
+  "status": "complete",
+  "metric_version": "geometric_observable_5deg_v1",
+  "approved_field": "approved_ae_over_ac",
+  "indent_mm": 0.28,
+  "row_count": 9,
+  "missing_standard_thicknesses_mm": [],
+  "all_geometry_zero_qc_passed": true,
+  "source_roots": [
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260724_371ed27_geometry_zero_smoke",
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260724_371ed27_geometry_zero_middle",
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260727T080548Z_371ed27_geometry_zero_missing_1p25_1p50"
+  ]
+}
