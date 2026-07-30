@@ -1,0 +1,172 @@
+{
+  "generated_at_utc": "2026-07-30T05:25:21+00:00",
+  "source": "high_iop_mechanical_transfer_t1p25_c0p60/results/20260730_23d4f22f_full_high_iop_summary.json",
+  "definition": {
+    "k_area": "Ae/Ac5deg",
+    "outer_pressure": "deltaF/Ae = (Aprobe/Ae)*deltaPprobe",
+    "iop_calc": "Karea*(deltaF/Ae) = deltaF/Ac5deg = (Aprobe/Ac5deg)*deltaPprobe",
+    "fit_parameters": 0,
+    "warning": "Karea*deltaPprobe is not area-consistent because deltaPprobe uses Aprobe, not Ae."
+  },
+  "probe_area_mm2": 14.65741468458854,
+  "summaries": {
+    "primary_0p26": {
+      "mae_mmhg": 5.492345190610991,
+      "rmse_mmhg": 6.700702727136052,
+      "mape_percent": 16.174543008687387,
+      "maximum_absolute_error_mmhg": 11.228019800877512
+    },
+    "sensitivity_0p28": {
+      "mae_mmhg": 6.0847205769287385,
+      "rmse_mmhg": 7.212235880666787,
+      "mape_percent": 18.16512394531297,
+      "maximum_absolute_error_mmhg": 11.606395513282372
+    }
+  },
+  "rows": [
+    {
+      "state": "primary_0p26",
+      "input_iop_mmhg": 0.0,
+      "outer_ae_mm2": 13.052876225311696,
+      "inner_ac_5deg_mm2": 5.317452780205752,
+      "k_area_ae_over_ac5": 2.4547234860083953,
+      "delta_probe_pressure_over_full_probe_mmhg": 0.0,
+      "delta_pressure_renormalized_over_ae_mmhg": 0.0,
+      "iop_calc_from_area_ratio_mmhg": 0.0,
+      "iop_error_mmhg": 0.0,
+      "naive_k_area_times_full_probe_pressure_mmhg_not_area_consistent": 0.0
+    },
+    {
+      "state": "primary_0p26",
+      "input_iop_mmhg": 20.0,
+      "outer_ae_mm2": 12.992362429491527,
+      "inner_ac_5deg_mm2": 4.9382329831556735,
+      "k_area_ae_over_ac5": 2.630973968585223,
+      "delta_probe_pressure_over_full_probe_mmhg": 6.542306492824867,
+      "delta_pressure_renormalized_over_ae_mmhg": 7.380743862358761,
+      "iop_calc_from_area_ratio_mmhg": 19.418544970661056,
+      "iop_error_mmhg": -0.5814550293389438,
+      "naive_k_area_times_full_probe_pressure_mmhg_not_area_consistent": 17.212638077128315
+    },
+    {
+      "state": "primary_0p26",
+      "input_iop_mmhg": 25.0,
+      "outer_ae_mm2": 12.981325536992436,
+      "inner_ac_5deg_mm2": 4.705746031154027,
+      "k_area_ae_over_ac5": 2.758611589119042,
+      "delta_probe_pressure_over_full_probe_mmhg": 7.266876996289621,
+      "delta_pressure_renormalized_over_ae_mmhg": 8.205142787074088,
+      "iop_calc_from_area_ratio_mmhg": 22.634801982799097,
+      "iop_error_mmhg": -2.3651980172009033,
+      "naive_k_area_times_full_probe_pressure_mmhg_not_area_consistent": 20.046491098667126
+    },
+    {
+      "state": "primary_0p26",
+      "input_iop_mmhg": 30.0,
+      "outer_ae_mm2": 13.02073684451477,
+      "inner_ac_5deg_mm2": 4.654786931120484,
+      "k_area_ae_over_ac5": 2.7972788093611975,
+      "delta_probe_pressure_over_full_probe_mmhg": 7.878858149633224,
+      "delta_pressure_renormalized_over_ae_mmhg": 8.869213203465806,
+      "iop_calc_from_area_ratio_mmhg": 24.809662149761444,
+      "iop_error_mmhg": -5.190337850238556,
+      "naive_k_area_times_full_probe_pressure_mmhg_not_area_consistent": 22.039362943931792
+    },
+    {
+      "state": "primary_0p26",
+      "input_iop_mmhg": 35.0,
+      "outer_ae_mm2": 13.05974260410465,
+      "inner_ac_5deg_mm2": 4.592259068391804,
+      "k_area_ae_over_ac5": 2.8438601589343993,
+      "delta_probe_pressure_over_full_probe_mmhg": 8.428966226071458,
+      "delta_pressure_renormalized_over_ae_mmhg": 9.460129275372555,
+      "iop_calc_from_area_ratio_mmhg": 26.90328474460096,
+      "iop_error_mmhg": -8.09671525539904,
+      "naive_k_area_times_full_probe_pressure_mmhg_not_area_consistent": 23.97080123132826
+    },
+    {
+      "state": "primary_0p26",
+      "input_iop_mmhg": 40.0,
+      "outer_ae_mm2": 13.098559607262061,
+      "inner_ac_5deg_mm2": 4.552776604011648,
+      "k_area_ae_over_ac5": 2.8770486115484677,
+      "delta_probe_pressure_over_full_probe_mmhg": 8.936937455920008,
+      "delta_pressure_renormalized_over_ae_mmhg": 10.00051931122464,
+      "iop_calc_from_area_ratio_mmhg": 28.77198019912249,
+      "iop_error_mmhg": -11.228019800877512,
+      "naive_k_area_times_full_probe_pressure_mmhg_not_area_consistent": 25.712003499050155
+    },
+    {
+      "state": "sensitivity_0p28",
+      "input_iop_mmhg": 0.0,
+      "outer_ae_mm2": 13.117809389934731,
+      "inner_ac_5deg_mm2": 5.956870681344404,
+      "k_area_ae_over_ac5": 2.202130966350637,
+      "delta_probe_pressure_over_full_probe_mmhg": 0.0,
+      "delta_pressure_renormalized_over_ae_mmhg": 0.0,
+      "iop_calc_from_area_ratio_mmhg": 0.0,
+      "iop_error_mmhg": 0.0,
+      "naive_k_area_times_full_probe_pressure_mmhg_not_area_consistent": 0.0
+    },
+    {
+      "state": "sensitivity_0p28",
+      "input_iop_mmhg": 20.0,
+      "outer_ae_mm2": 12.956443846627105,
+      "inner_ac_5deg_mm2": 5.344842095422948,
+      "k_area_ae_over_ac5": 2.424102268189054,
+      "delta_probe_pressure_over_full_probe_mmhg": 7.072201318504799,
+      "delta_pressure_renormalized_over_ae_mmhg": 8.00066659380491,
+      "iop_calc_from_area_ratio_mmhg": 19.394434037066876,
+      "iop_error_mmhg": -0.6055659629331238,
+      "naive_k_area_times_full_probe_pressure_mmhg_not_area_consistent": 17.1437392572771
+    },
+    {
+      "state": "sensitivity_0p28",
+      "input_iop_mmhg": 25.0,
+      "outer_ae_mm2": 12.997150537482145,
+      "inner_ac_5deg_mm2": 5.2956892835676275,
+      "k_area_ae_over_ac5": 2.4542887321225457,
+      "delta_probe_pressure_over_full_probe_mmhg": 7.827667089393361,
+      "delta_pressure_renormalized_over_ae_mmhg": 8.827578184254165,
+      "iop_calc_from_area_ratio_mmhg": 21.665425669545797,
+      "iop_error_mmhg": -3.3345743304542026,
+      "naive_k_area_times_full_probe_pressure_mmhg_not_area_consistent": 19.21135513630461
+    },
+    {
+      "state": "sensitivity_0p28",
+      "input_iop_mmhg": 30.0,
+      "outer_ae_mm2": 12.986023718220407,
+      "inner_ac_5deg_mm2": 5.219701684224896,
+      "k_area_ae_over_ac5": 2.487886186574047,
+      "delta_probe_pressure_over_full_probe_mmhg": 8.486554119632837,
+      "delta_pressure_renormalized_over_ae_mmhg": 9.578832264115727,
+      "iop_calc_from_area_ratio_mmhg": 23.83104447340332,
+      "iop_error_mmhg": -6.16895552659668,
+      "naive_k_area_times_full_probe_pressure_mmhg_not_area_consistent": 21.11358076584761
+    },
+    {
+      "state": "sensitivity_0p28",
+      "input_iop_mmhg": 35.0,
+      "outer_ae_mm2": 13.02525639354491,
+      "inner_ac_5deg_mm2": 5.061779071089094,
+      "k_area_ae_over_ac5": 2.5732565982462745,
+      "delta_probe_pressure_over_full_probe_mmhg": 9.079618305988,
+      "delta_pressure_renormalized_over_ae_mmhg": 10.217359771482226,
+      "iop_calc_from_area_ratio_mmhg": 26.291888448622686,
+      "iop_error_mmhg": -8.708111551377314,
+      "naive_k_area_times_full_probe_pressure_mmhg_not_area_consistent": 23.364187715441282
+    },
+    {
+      "state": "sensitivity_0p28",
+      "input_iop_mmhg": 40.0,
+      "outer_ae_mm2": 13.064304407254397,
+      "inner_ac_5deg_mm2": 4.978204699133277,
+      "k_area_ae_over_ac5": 2.624300364653333,
+      "delta_probe_pressure_over_full_probe_mmhg": 9.64352706959504,
+      "delta_pressure_renormalized_over_ae_mmhg": 10.819494928686789,
+      "iop_calc_from_area_ratio_mmhg": 28.393604486717628,
+      "iop_error_mmhg": -11.606395513282372,
+      "naive_k_area_times_full_probe_pressure_mmhg_not_area_consistent": 25.307511605282553
+    }
+  ]
+}
