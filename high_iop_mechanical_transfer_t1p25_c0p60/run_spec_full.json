@@ -1,0 +1,92 @@
+{
+  "experiment_id": "high_iop_mechanical_transfer_t1p25_c0p60",
+  "phase": "full_high_iop_matrix_after_iop40_preflight",
+  "status_before_launch": "approved",
+  "host": "5090d",
+  "pressure_matrix_mmhg": [0.0, 20.0, 25.0, 30.0, 35.0, 40.0],
+  "new_solver_pressures_mmhg": [0.0, 20.0, 25.0, 30.0, 35.0],
+  "reused_iop40_preflight": {
+    "data_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T040825Z_bdca48fe_iop40_preflight",
+    "solver_git_commit": "bdca48fe1704b1cb1bf9f863a7275b0866b34f97",
+    "preflight_pass": true,
+    "rst_sha256": "0512fbd67e4ebcfea22fb02b24b17e26915398f798f4f15033d08a40c351356a",
+    "db_sha256": "4deb0865b99cd3387a6d3925af3b10c79448620dfaa32ebd41d74ffcb30b0e43"
+  },
+  "solver": {
+    "ansys_executable": "/ansys_inc/v252/ansys/bin/ansys252",
+    "ansys_release": "2025 R2",
+    "python_executable": "/home/xuanyu/miniconda3/envs/grs-pilot/bin/python",
+    "np_first_attempt": 8,
+    "maximum_parallel_cases": 2,
+    "timeout_seconds_per_attempt": 3600,
+    "maximum_total_attempts_per_case": 2,
+    "view_policy": "none"
+  },
+  "geometry": {
+    "eyelid_thickness_mm": 1.25,
+    "cornea_thickness_mm": 0.60,
+    "cornea_outer_radius_mm": 7.80,
+    "probe_radius_mm": 2.16,
+    "probe_area_mm2": 14.65741468458854,
+    "initial_gap_mm": 0.30,
+    "mesh_size_mm": 0.30,
+    "solve_indent_mm": 0.28,
+    "primary_target_indent_mm": 0.26,
+    "expected_primary_result_indent_mm": 0.259875,
+    "maximum_primary_indent_error_mm": 0.001
+  },
+  "pressure_conversion": {
+    "pa_per_mmhg": 133.32236842105263
+  },
+  "absolute_material_parameters": {
+    "eyelid": {
+      "model": "two_parameter_mooney_rivlin",
+      "c10_mpa": 0.076,
+      "c01_mpa": 0.010,
+      "d1_pa_inv": 1e-7,
+      "initial_shear_modulus_mpa": 0.172,
+      "initial_bulk_modulus_mpa": 20.0,
+      "equivalent_initial_young_modulus_mpa": 0.5145250282523433,
+      "equivalent_initial_poisson_ratio": 0.49571229143123047
+    },
+    "cornea": {
+      "model": "two_parameter_mooney_rivlin",
+      "c10_mpa": 0.0825,
+      "c01_mpa": 0.01875,
+      "d1_pa_inv": 1e-7,
+      "initial_shear_modulus_mpa": 0.2025,
+      "initial_bulk_modulus_mpa": 20.0,
+      "equivalent_initial_young_modulus_mpa": 0.6054565840289025,
+      "equivalent_initial_poisson_ratio": 0.4949545284664258
+    }
+  },
+  "frozen_sensor_models": {
+    "primary_0p259875_mm": {
+      "alpha": 1.7958537965375994,
+      "beta_per_mmhg": 0.06706030329458683
+    },
+    "sensitivity_0p28_mm": {
+      "alpha": 1.6587166492607621,
+      "beta_per_mmhg": 0.06254272079315978
+    }
+  },
+  "acceptance": {
+    "required_status": "complete",
+    "required_returncode": 0,
+    "maximum_ansys_error_count": 0,
+    "all_three_load_steps_converged": true,
+    "maximum_preload_contact_count": 0,
+    "maximum_absolute_approach_force_n": 0.001,
+    "maximum_penetration_mm": 0.03,
+    "maximum_primary_indent_error_mm": 0.001,
+    "maximum_iop_mae_mmhg": 2.0,
+    "maximum_single_iop_error_mmhg": 3.0,
+    "require_monotonic_delta_force": true
+  },
+  "interpretation": {
+    "primary_state_policy": "Solve every case to 0.28 mm and use the retained result set nearest 0.26 mm for primary conclusions.",
+    "zero_reference_policy": "Use the new 0 mmHg case in this full batch for F0 at both work points.",
+    "iop40_reuse_policy": "The accepted preflight may be promoted because geometry, material, mesh, APDL, runner and pressure conversion are unchanged; verify hashes before aggregation.",
+    "ksensor_policy": "Delta force remains a coupled structural response difference and is not a pure IOP force."
+  }
+}

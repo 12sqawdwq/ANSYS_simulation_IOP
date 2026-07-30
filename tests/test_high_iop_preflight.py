@@ -9,7 +9,9 @@ from src.runners.run_indentation_sweep import PA_PER_MMHG, material_properties
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SPEC = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60" / "run_spec.json"
+EXPERIMENT_ROOT = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60"
+SPEC = EXPERIMENT_ROOT / "run_spec.json"
+FULL_SPEC = EXPERIMENT_ROOT / "run_spec_full.json"
 
 
 class HighIopPreflightTests(unittest.TestCase):
@@ -42,6 +44,15 @@ class HighIopPreflightTests(unittest.TestCase):
         self.assertEqual(geometry["solve_indent_mm"], 0.28)
         self.assertEqual(geometry["primary_target_indent_mm"], 0.26)
         self.assertLess(geometry["primary_target_indent_mm"], geometry["solve_indent_mm"])
+
+    def test_full_matrix_reuses_only_the_accepted_40_mmhg_case(self) -> None:
+        spec = json.loads(FULL_SPEC.read_text(encoding="utf-8"))
+        self.assertEqual(spec["pressure_matrix_mmhg"], [0.0, 20.0, 25.0, 30.0, 35.0, 40.0])
+        self.assertEqual(spec["new_solver_pressures_mmhg"], [0.0, 20.0, 25.0, 30.0, 35.0])
+        self.assertTrue(spec["reused_iop40_preflight"]["preflight_pass"])
+        self.assertEqual(spec["solver"]["maximum_parallel_cases"], 2)
+        self.assertEqual(spec["geometry"]["solve_indent_mm"], 0.28)
+        self.assertEqual(spec["geometry"]["primary_target_indent_mm"], 0.26)
 
 
 if __name__ == "__main__":
