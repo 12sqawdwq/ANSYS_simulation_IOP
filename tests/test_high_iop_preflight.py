@@ -12,6 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENT_ROOT = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60"
 SPEC = EXPERIMENT_ROOT / "run_spec.json"
 FULL_SPEC = EXPERIMENT_ROOT / "run_spec_full.json"
+SUPPLEMENT_SPEC = EXPERIMENT_ROOT / "run_spec_iop_5_to_50.json"
 
 
 class HighIopPreflightTests(unittest.TestCase):
@@ -53,6 +54,17 @@ class HighIopPreflightTests(unittest.TestCase):
         self.assertEqual(spec["solver"]["maximum_parallel_cases"], 2)
         self.assertEqual(spec["geometry"]["solve_indent_mm"], 0.28)
         self.assertEqual(spec["geometry"]["primary_target_indent_mm"], 0.26)
+
+    def test_supplement_fills_exact_five_mmhg_grid_through_50(self) -> None:
+        spec = json.loads(SUPPLEMENT_SPEC.read_text(encoding="utf-8"))
+        self.assertEqual(spec["final_pressure_grid_mmhg"], [float(value) for value in range(0, 51, 5)])
+        self.assertEqual(spec["plotted_pressure_grid_mmhg"], [float(value) for value in range(5, 51, 5)])
+        self.assertEqual(spec["new_solver_pressures_mmhg"], [5.0, 10.0, 15.0, 45.0, 50.0])
+        self.assertEqual(spec["solver"]["execution_order"][0], [50.0])
+        self.assertEqual(spec["solver"]["maximum_parallel_cases"], 2)
+        self.assertEqual(spec["geometry"]["solve_indent_mm"], 0.28)
+        self.assertEqual(spec["geometry"]["primary_target_indent_mm"], 0.26)
+        self.assertTrue(spec["reused_formal_matrix"]["campaign_pass"])
 
 
 if __name__ == "__main__":
