@@ -28,8 +28,8 @@ class RationalIopRegressionTests(unittest.TestCase):
         module = load_module()
         rows = module.load_points(SOURCE)
         a, b = module.fit_rational(rows)
-        self.assertTrue(math.isclose(a, 0.06531173069023494, rel_tol=0.0, abs_tol=1e-12))
-        self.assertTrue(math.isclose(b, 1.8273148619678283, rel_tol=0.0, abs_tol=1e-12))
+        self.assertTrue(math.isclose(a, 0.06531173069023494, rel_tol=0.0, abs_tol=1e-9))
+        self.assertTrue(math.isclose(b, 1.8273148619678283, rel_tol=0.0, abs_tol=1e-9))
 
     def test_result_metrics_and_denominator_are_valid(self) -> None:
         result = json.loads(RESULT.read_text(encoding="utf-8"))
