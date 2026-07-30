@@ -52,8 +52,8 @@ def main() -> int:
     left, right, top, bottom = 200, 90, 165, 180
     plot_width = width - left - right
     plot_height = height - top - bottom
-    x_min, x_max = 0.0, 55.0
-    y_min, y_max = 0.0, 11.0
+    x_min, x_max = 0.0, 11.0
+    y_min, y_max = 0.0, 55.0
     xp = lambda value: left + (value - x_min) / (x_max - x_min) * plot_width
     yp = lambda value: top + (y_max - value) / (y_max - y_min) * plot_height
 
@@ -65,20 +65,20 @@ def main() -> int:
     tick_font = font(regular, 24)
     label_font = font(bold, 21)
 
-    title = "P_IOP 与扣除后 P_probe 的二值散点分布"
+    title = "扣除后 P_probe 与 P_IOP 的二值散点分布"
     box = draw.textbbox((0, 0), title, font=title_font)
     draw.text(((width - (box[2] - box[0])) / 2, 35), title, fill="#111827", font=title_font)
     subtitle = "5–50 mmHg，步长 5 mmHg；0.259875 mm 主工作点"
     box = draw.textbbox((0, 0), subtitle, font=subtitle_font)
     draw.text(((width - (box[2] - box[0])) / 2, 103), subtitle, fill="#4b5563", font=subtitle_font)
 
-    for y in range(0, 12):
+    for y in range(0, 56, 5):
         py = yp(y)
         draw.line((left, py, width - right, py), fill="#dbe3ec", width=2)
         text = str(y)
         box = draw.textbbox((0, 0), text, font=tick_font)
         draw.text((left - 22 - (box[2] - box[0]), py - (box[3] - box[1]) / 2), text, fill="#374151", font=tick_font)
-    for x in range(0, 56, 5):
+    for x in range(0, 12):
         px = xp(x)
         draw.line((px, top, px, height - bottom), fill="#eef2f7", width=2)
         text = str(x)
@@ -88,10 +88,10 @@ def main() -> int:
     draw.line((left, top, left, height - bottom), fill="#1f2937", width=4)
     draw.line((left, height - bottom, width - right, height - bottom), fill="#1f2937", width=4)
 
-    xlabel = "眼内压 P_IOP（mmHg）"
+    xlabel = "扣除后探头读数 P_probe（mmHg）"
     box = draw.textbbox((0, 0), xlabel, font=axis_font)
     draw.text(((width - (box[2] - box[0])) / 2, height - 82), xlabel, fill="#111827", font=axis_font)
-    ylabel = "扣除后探头读数 P_probe（mmHg）"
+    ylabel = "眼内压 P_IOP（mmHg）"
     layer = Image.new("RGBA", (600, 70), (255, 255, 255, 0))
     layer_draw = ImageDraw.Draw(layer)
     box = layer_draw.textbbox((0, 0), ylabel, font=axis_font)
@@ -100,13 +100,14 @@ def main() -> int:
     image.paste(layer, (29, top + (plot_height - layer.height) // 2), layer)
 
     for index, (pressure, probe) in enumerate(points):
-        px, py = xp(pressure), yp(probe)
+        px, py = xp(probe), yp(pressure)
         draw.ellipse((px - 13, py - 13, px + 13, py + 13), fill="#2563eb", outline="white", width=4)
         text = f"{probe:.6f}"
         box = draw.textbbox((0, 0), text, font=label_font)
         text_width = box[2] - box[0]
-        dx = -text_width / 2
-        dy = -53 if index % 2 == 0 else 25
+        text_height = box[3] - box[1]
+        dx = -text_width - 20 if index % 2 == 0 else 20
+        dy = -text_height / 2
         tx, ty = px + dx, py + dy
         pad = 7
         draw.rounded_rectangle(

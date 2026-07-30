@@ -56,6 +56,8 @@
 
 ## 4. PIOP—扣除后Pprobe二值散点分布
 
+横轴为扣除后探头读数Pprobe，纵轴为眼内压PIOP。
+
 ![PIOP与扣除后Pprobe的5至50 mmHg二值散点分布](figures/piop_vs_delta_pprobe_scatter_5_to_50_step5.png)
 
 ## 5. 数据位置
