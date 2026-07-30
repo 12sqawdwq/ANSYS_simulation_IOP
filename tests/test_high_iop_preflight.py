@@ -15,6 +15,7 @@ FULL_SPEC = EXPERIMENT_ROOT / "run_spec_full.json"
 SUPPLEMENT_SPEC = EXPERIMENT_ROOT / "run_spec_iop_5_to_50.json"
 DENSE_SUPPLEMENT_SPEC = EXPERIMENT_ROOT / "run_spec_iop_2p5.json"
 SUPPLEMENT_RESULT = EXPERIMENT_ROOT / "results" / "20260730_440e44e5_iop_5_to_50_summary.json"
+DENSE_SUPPLEMENT_RESULT = EXPERIMENT_ROOT / "results" / "20260730_290d0544_iop_0_to_50_step2p5_summary.json"
 
 
 class HighIopPreflightTests(unittest.TestCase):
@@ -80,6 +81,22 @@ class HighIopPreflightTests(unittest.TestCase):
         self.assertTrue(all(len(wave) == 2 for wave in spec["solver"]["execution_order"]))
         self.assertEqual(spec["geometry"]["solve_indent_mm"], 0.28)
         self.assertEqual(spec["geometry"]["primary_target_indent_mm"], 0.26)
+
+    def test_dense_supplement_result_contains_all_actual_fe_points(self) -> None:
+        result = json.loads(DENSE_SUPPLEMENT_RESULT.read_text(encoding="utf-8"))
+        self.assertTrue(result["campaign_pass"])
+        self.assertTrue(all(result["qc"].values()))
+        rows = [row for row in result["rows"] if row["state"] == "primary_0p26"]
+        expected = [index * 2.5 for index in range(21)]
+        self.assertEqual([row["input_iop_mmhg"] for row in rows], expected)
+        readings = [row["delta_probe_pressure_mmhg"] for row in rows]
+        self.assertTrue(all(right > left for left, right in zip(readings, readings[1:])))
+        self.assertTrue(math.isclose(readings[1], 0.21312253920016047, rel_tol=0.0, abs_tol=1e-12))
+        self.assertTrue(math.isclose(readings[-2], 9.65902083101028, rel_tol=0.0, abs_tol=1e-12))
+        self.assertEqual(
+            [row["source_kind"] for row in rows[1::2]],
+            ["new_supplemental_solver"] * 10,
+        )
 
     def test_supplement_result_contains_monotonic_actual_fe_scatter(self) -> None:
         result = json.loads(SUPPLEMENT_RESULT.read_text(encoding="utf-8"))
