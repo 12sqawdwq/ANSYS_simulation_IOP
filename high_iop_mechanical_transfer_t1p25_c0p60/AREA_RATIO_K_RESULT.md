@@ -51,7 +51,11 @@ $$
 
 ![眼内压与KAe/Ac的关系](figures/iop_vs_k_ae_over_ac_0p259875.png)
 
-![PIOP与扣除后探头读数的二值散点分布](figures/piop_vs_delta_pprobe_scatter_0p259875.png)
+### PIOP 5–50 mmHg补充实验二值散点分布
+
+![PIOP与扣除后探头读数的5至50 mmHg二值散点分布](figures/piop_vs_delta_pprobe_scatter_5_to_50_step5.png)
+
+补充实验的十个压力点、收敛检查及反力数值见[`IOP_5_TO_50_SUPPLEMENT_RESULT.md`](IOP_5_TO_50_SUPPLEMENT_RESULT.md)。
 
 主工作点面积法性能：
 
