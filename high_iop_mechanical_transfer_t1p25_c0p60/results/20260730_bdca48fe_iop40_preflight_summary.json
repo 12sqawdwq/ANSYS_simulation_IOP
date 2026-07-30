@@ -1,0 +1,100 @@
+{
+  "generated_at_utc": "2026-07-30T04:22:19+00:00",
+  "experiment_id": "high_iop_mechanical_transfer_t1p25_c0p60",
+  "phase": "phase1_iop40_preflight",
+  "input_iop_mmhg": 40.0,
+  "input_iop_pa": 5332.894736842105,
+  "git_commit": "bdca48fe1704b1cb1bf9f863a7275b0866b34f97",
+  "attempt_count": 1,
+  "elapsed_seconds": 590.633,
+  "preflight_pass": true,
+  "checks": {
+    "manifest_status_complete": true,
+    "returncode_zero": true,
+    "ansys_error_count_zero": true,
+    "preload_converged": true,
+    "approach_converged": true,
+    "indentation_converged": true,
+    "preload_contact_zero": true,
+    "preload_clearance_positive": true,
+    "approach_force_within_limit": true,
+    "penetration_within_limit": true,
+    "primary_indent_within_limit": true,
+    "primary_result_is_load_step_3": true,
+    "sensitivity_indent_is_0p28": true,
+    "sensitivity_result_is_load_step_3": true,
+    "primary_provisional_iop_within_expected_range": true,
+    "primary_rst_and_db_retained": true
+  },
+  "files": {
+    "manifest": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T040825Z_bdca48fe_iop40_preflight/run/run_manifest.csv",
+    "attempt_dir": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T040825Z_bdca48fe_iop40_preflight/run/eyelid_1p25mm_indent_0p28mm/attempt_1",
+    "result_rst": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T040825Z_bdca48fe_iop40_preflight/run/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.rst",
+    "result_db": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T040825Z_bdca48fe_iop40_preflight/run/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.db",
+    "rst_exists": true,
+    "db_exists": true
+  },
+  "absolute_material_parameters": {
+    "eyelid": {
+      "model": "two_parameter_mooney_rivlin",
+      "c10_mpa": 0.076,
+      "c01_mpa": 0.01,
+      "d1_pa_inv": 1e-07,
+      "initial_shear_modulus_mpa": 0.172,
+      "initial_bulk_modulus_mpa": 20.0,
+      "equivalent_initial_young_modulus_mpa": 0.5145250282523433,
+      "equivalent_initial_poisson_ratio": 0.49571229143123047
+    },
+    "cornea": {
+      "model": "two_parameter_mooney_rivlin",
+      "c10_mpa": 0.0825,
+      "c01_mpa": 0.01875,
+      "d1_pa_inv": 1e-07,
+      "initial_shear_modulus_mpa": 0.2025,
+      "initial_bulk_modulus_mpa": 20.0,
+      "equivalent_initial_young_modulus_mpa": 0.6054565840289025,
+      "equivalent_initial_poisson_ratio": 0.4949545284664258
+    }
+  },
+  "observations": [
+    {
+      "state": "primary_0p26",
+      "indent_mm": 0.259875,
+      "probe_force_n": 0.16349733912426,
+      "probe_total_equivalent_pressure_mmhg": 83.66624806633783,
+      "historical_zero_reference_force_n_preflight_only": 0.14603312233755,
+      "historical_zero_reference_pressure_mmhg_preflight_only": 74.72931061042806,
+      "delta_force_n_preflight_only": 0.017464216786710007,
+      "delta_probe_pressure_mmhg_preflight_only": 8.936937455909767,
+      "provisional_ksensor": 4.475806191700382,
+      "provisional_iop_calc_mmhg": 40.054862156079714,
+      "provisional_iop_error_mmhg": 0.05486215607971445,
+      "expected_force_n": 0.1634877467118688,
+      "force_relative_error_vs_prediction": 5.8673586150238636e-05,
+      "outer_ae_lower_mm2": 13.098559607262061,
+      "inner_ac_5deg_mm2": 4.552776604011648,
+      "kgeo_5deg": 2.8770486115484672,
+      "formal_ksensor_ready": false
+    },
+    {
+      "state": "sensitivity_0p28",
+      "indent_mm": 0.27999999999999997,
+      "probe_force_n": 0.18075910336111,
+      "probe_total_equivalent_pressure_mmhg": 92.49958478263325,
+      "historical_zero_reference_force_n_preflight_only": 0.16191409651865,
+      "historical_zero_reference_pressure_mmhg_preflight_only": 82.8560577029981,
+      "delta_force_n_preflight_only": 0.018845006842460016,
+      "delta_probe_pressure_mmhg_preflight_only": 9.643527079635152,
+      "provisional_ksensor": 4.147859975886886,
+      "provisional_iop_calc_mmhg": 40.30533053164265,
+      "provisional_iop_error_mmhg": 0.3053305316426531,
+      "expected_force_n": 0.18070218681959865,
+      "force_relative_error_vs_prediction": 0.0003149742817898242,
+      "outer_ae_lower_mm2": 13.064304407254397,
+      "inner_ac_5deg_mm2": 4.978204699133277,
+      "kgeo_5deg": 2.624300364653333,
+      "formal_ksensor_ready": false
+    }
+  ],
+  "warning": "Ksensor and IOP_calc are provisional because phase 1 uses historical F0. Recompute with the same-campaign zero-IOP case before formal interpretation."
+}

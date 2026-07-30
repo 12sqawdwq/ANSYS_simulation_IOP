@@ -45,6 +45,7 @@ def observation(
     model: dict[str, float],
     pressure_factor_mmhg_per_n: float,
     input_iop_mmhg: float,
+    geometry_state: dict[str, object],
 ) -> dict[str, float | str | bool]:
     zero_force_n = number(model["historical_zero_iop_force_n_for_preflight_only"], "F0")
     delta_force_n = force_n - zero_force_n
@@ -75,6 +76,9 @@ def observation(
         "provisional_iop_error_mmhg": iop_calc - input_iop_mmhg,
         "expected_force_n": expected_force,
         "force_relative_error_vs_prediction": (force_n - expected_force) / expected_force,
+        "outer_ae_lower_mm2": number(geometry_state["outer_ae_lower_mm2"], "Ae"),
+        "inner_ac_5deg_mm2": number(geometry_state["inner_ac_5deg_mm2"], "Ac5"),
+        "kgeo_5deg": number(geometry_state["kgeo_5deg"], "Kgeo5"),
         "formal_ksensor_ready": False,
     }
 
@@ -83,6 +87,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--run-root", type=Path, required=True)
     parser.add_argument("--state-json", type=Path, required=True)
+    parser.add_argument("--sensitivity-state-json", type=Path, required=True)
     parser.add_argument("--run-spec", type=Path, required=True)
     args = parser.parse_args()
 
@@ -90,6 +95,9 @@ def main() -> int:
     manifest_path = root / "run" / "run_manifest.csv"
     row = load_single_manifest_row(manifest_path)
     state = json.loads(args.state_json.expanduser().resolve().read_text(encoding="utf-8"))
+    sensitivity_state = json.loads(
+        args.sensitivity_state_json.expanduser().resolve().read_text(encoding="utf-8")
+    )
     spec = json.loads(args.run_spec.expanduser().resolve().read_text(encoding="utf-8"))
 
     area_mm2 = number(spec["geometry"]["probe_area_mm2"], "probe area")
@@ -105,14 +113,16 @@ def main() -> int:
         model=models["primary_0p259875_mm"],
         pressure_factor_mmhg_per_n=pressure_factor,
         input_iop_mmhg=input_iop,
+        geometry_state=state,
     )
     sensitivity = observation(
         label="sensitivity_0p28",
-        indent_mm=number(row["indent_mm"], "final indent"),
-        force_n=abs(number(row["probe_fy_n"], "final probe force")),
+        indent_mm=number(sensitivity_state["actual_indent_mm"], "final indent"),
+        force_n=number(sensitivity_state["probe_force_n"], "final probe force"),
         model=models["sensitivity_0p28_mm"],
         pressure_factor_mmhg_per_n=pressure_factor,
         input_iop_mmhg=input_iop,
+        geometry_state=sensitivity_state,
     )
 
     criteria = spec["preflight_acceptance"]
@@ -134,6 +144,8 @@ def main() -> int:
         "primary_indent_within_limit": abs(number(state["indent_error_mm"], "indent error"))
         <= number(criteria["maximum_primary_indent_error_mm"], "indent limit"),
         "primary_result_is_load_step_3": int(round(number(state["result_load_step"], "load step"))) == 3,
+        "sensitivity_indent_is_0p28": abs(number(sensitivity_state["actual_indent_mm"], "sensitivity indent") - 0.28) <= 1e-6,
+        "sensitivity_result_is_load_step_3": int(round(number(sensitivity_state["result_load_step"], "sensitivity load step"))) == 3,
         "primary_provisional_iop_within_expected_range": (
             number(criteria["expected_iop_calc_range_mmhg"][0], "IOP lower")
             <= number(primary["provisional_iop_calc_mmhg"], "primary IOP result")

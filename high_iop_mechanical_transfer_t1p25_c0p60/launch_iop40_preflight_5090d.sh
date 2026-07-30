@@ -83,14 +83,7 @@ run_controller() {
   test -d "$root" || { echo "ERROR: missing run root: $root" >&2; return 1; }
   test ! -e "$root/run" || { echo "ERROR: run output already exists: $root/run" >&2; return 1; }
   local state="$root/controller_state.txt"
-  local started
-  started=$(date -Is)
   log() { printf '%s %s\n' "$(date -Is)" "$*" | tee -a "$state"; }
-  finish() {
-    local rc=$?
-    log "CONTROLLER_EXIT rc=$rc"
-  }
-  trap finish EXIT
   write_launch_metadata "$root"
   log "START phase=iop40_preflight pid=$$ commit=$(git -C "$REPO" rev-parse HEAD) np=8 max_attempts=2"
 
@@ -124,9 +117,20 @@ run_controller() {
     > "$root/analysis/extract_0p26.log" 2>&1
   log "PRIMARY_STATE_EXTRACTED"
 
+  "$PY" "$REPO/$EXTRACT_REL" \
+    --manifest "$root/run/run_manifest.csv" \
+    --eyelid-thickness-mm 1.25 --iop-mmhg 40 \
+    --target-indent-mm 0.28 --source-indent-mm 0.28 \
+    --output-dir "$root/analysis/sensitivity_state_0p28" \
+    --ansys-bin "$ANSYS" --np 1 --timeout-seconds 900 \
+    --max-indent-error-mm 0.000001 \
+    > "$root/analysis/extract_0p28.log" 2>&1
+  log "SENSITIVITY_STATE_EXTRACTED"
+
   "$PY" "$REPO/$POST_REL" \
     --run-root "$root" \
     --state-json "$root/analysis/primary_state_0p26/geometry_state.json" \
+    --sensitivity-state-json "$root/analysis/sensitivity_state_0p28/geometry_state.json" \
     --run-spec "$root/run_spec.json" \
     > "$root/analysis/preflight_summary.log" 2>&1
   log "PREFLIGHT_PASSED analysis=$root/analysis/iop40_preflight_summary.json"
@@ -152,7 +156,9 @@ case "$mode" in
     ;;
   --run)
     [[ $# -eq 2 ]] || { usage >&2; exit 2; }
-    run_controller "$(realpath "$2")"
+    root=$(realpath "$2")
+    trap 'rc=$?; printf "%s CONTROLLER_EXIT rc=%s\n" "$(date -Is)" "$rc" | tee -a "$root/controller_state.txt"' EXIT
+    run_controller "$root"
     ;;
   *)
     usage >&2
