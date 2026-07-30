@@ -33,7 +33,7 @@ from src.postprocess.thickness_geometry import (  # noqa: E402
     select_flat_surface,
 )
 
-PA_PER_MMHG = 133.322
+PA_PER_MMHG = 133.32236842105263
 FACE_MACRO = REPO_ROOT / "models" / "apdl" / "post_thickness_geometry.mac"
 CURVE_MACRO = REPO_ROOT / "models" / "apdl" / "post_geometry_zero_probe_pressure_curve.mac"
 

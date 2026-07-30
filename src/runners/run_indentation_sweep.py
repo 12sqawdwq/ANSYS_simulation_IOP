@@ -43,6 +43,12 @@ THICKNESS_MM = tuple(round(0.8 + 0.2 * index, 1) for index in range(7))
 FULL_INDENTS_MM = tuple(i / 5 for i in range(5))
 COARSE_INDENTS_MM = (0.0, 0.4, 0.8)
 INITIAL_GAP_M = 0.30e-3
+PA_PER_MMHG = 133.32236842105263
+EYELID_C10_MPA = 0.076
+EYELID_C01_MPA = 0.010
+CORNEA_C10_MPA = 0.110
+CORNEA_C01_MPA = 0.025
+TISSUE_D1_PA_INV = 0.1e-6
 PROFILE_CASES = {
     "smoke": ((0.0, 0.0), (0.0, 0.8), (2.0, 0.4), (2.0, 0.8)),
     "coarse": tuple((offset, indent) for offset in OFFSETS_MM for indent in COARSE_INDENTS_MM),
@@ -88,6 +94,12 @@ MANIFEST_FIELDS = (
     "iop_mmhg",
     "eyelid_material_scale",
     "cornea_material_scale",
+    "eyelid_c10_mpa",
+    "eyelid_c01_mpa",
+    "eyelid_d1_pa_inv",
+    "cornea_c10_mpa",
+    "cornea_c01_mpa",
+    "cornea_d1_pa_inv",
     "status",
     "failure_reason",
     "attempt_count",
@@ -201,6 +213,38 @@ def label(value: float) -> str:
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def material_properties(c10_mpa: float, c01_mpa: float) -> dict[str, float]:
+    """Return absolute material inputs and their isotropic small-strain equivalents."""
+    shear_mpa = 2.0 * (c10_mpa + c01_mpa)
+    bulk_mpa = 2.0 / TISSUE_D1_PA_INV / 1e6
+    young_mpa = 9.0 * bulk_mpa * shear_mpa / (3.0 * bulk_mpa + shear_mpa)
+    poisson = (3.0 * bulk_mpa - 2.0 * shear_mpa) / (
+        2.0 * (3.0 * bulk_mpa + shear_mpa)
+    )
+    return {
+        "c10_mpa": c10_mpa,
+        "c01_mpa": c01_mpa,
+        "d1_pa_inv": TISSUE_D1_PA_INV,
+        "initial_shear_modulus_mpa": shear_mpa,
+        "initial_bulk_modulus_mpa": bulk_mpa,
+        "equivalent_initial_young_modulus_mpa": young_mpa,
+        "equivalent_initial_poisson_ratio": poisson,
+    }
+
+
+def absolute_materials(config: RunConfig) -> dict[str, dict[str, float]]:
+    return {
+        "eyelid": material_properties(
+            EYELID_C10_MPA * config.eyelid_material_scale,
+            EYELID_C01_MPA * config.eyelid_material_scale,
+        ),
+        "cornea": material_properties(
+            CORNEA_C10_MPA * config.cornea_material_scale,
+            CORNEA_C01_MPA * config.cornea_material_scale,
+        ),
+    }
 
 
 def git_provenance() -> tuple[str, bool]:
@@ -534,7 +578,7 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
         f"retry_mode={retry_mode}\n"
         f"mesh_size={config.mesh_size_mm / 1000:.12g}\n"
         f"eyelid_thickness={case.eyelid_thickness_mm / 1000:.12g}\n"
-        f"iop_pa={config.iop_mmhg * 133.322:.12g}\n"
+        f"iop_pa={config.iop_mmhg * PA_PER_MMHG:.12g}\n"
         f"eyelid_material_scale={config.eyelid_material_scale:.12g}\n"
         f"cornea_material_scale={config.cornea_material_scale:.12g}\n"
         f"initial_gap={config.initial_gap_mm / 1000:.12g}\n"
@@ -642,6 +686,7 @@ def run_case(case: CaseSpec, config: RunConfig) -> dict:
     assert outcome is not None
     attempt_dir = case_dir / f"attempt_{selected_attempt}"
     row = {field: "" for field in MANIFEST_FIELDS}
+    materials = absolute_materials(config)
     row.update({
         "case": case.name,
         "profile": config.profile,
@@ -653,6 +698,12 @@ def run_case(case: CaseSpec, config: RunConfig) -> dict:
         "iop_mmhg": config.iop_mmhg,
         "eyelid_material_scale": config.eyelid_material_scale,
         "cornea_material_scale": config.cornea_material_scale,
+        "eyelid_c10_mpa": materials["eyelid"]["c10_mpa"],
+        "eyelid_c01_mpa": materials["eyelid"]["c01_mpa"],
+        "eyelid_d1_pa_inv": materials["eyelid"]["d1_pa_inv"],
+        "cornea_c10_mpa": materials["cornea"]["c10_mpa"],
+        "cornea_c01_mpa": materials["cornea"]["c01_mpa"],
+        "cornea_d1_pa_inv": materials["cornea"]["d1_pa_inv"],
         "status": outcome.status,
         "failure_reason": outcome.reason,
         "attempt_count": selected_attempt,
@@ -808,6 +859,7 @@ def main() -> int:
         cli.iop_mmhg, cli.eyelid_material_scale, cli.cornea_material_scale,
         cli.view_policy, cli.initial_gap_mm,
     )
+    materials = absolute_materials(config)
     metadata = {
         "run_id": run_id,
         "profile": profile,
@@ -824,8 +876,11 @@ def main() -> int:
         "retry_count": cli.retry_count,
         "mesh_size_mm": cli.mesh_size_mm,
         "iop_mmhg": cli.iop_mmhg,
+        "iop_pa": cli.iop_mmhg * PA_PER_MMHG,
+        "pa_per_mmhg": PA_PER_MMHG,
         "eyelid_material_scale": cli.eyelid_material_scale,
         "cornea_material_scale": cli.cornea_material_scale,
+        "absolute_material_parameters": materials,
         "initial_gap_mm": cli.initial_gap_mm,
         "view_policy": cli.view_policy,
         "started_at_utc": utc_now(),
@@ -835,8 +890,13 @@ def main() -> int:
             "eyelid_thickness_mm": case.eyelid_thickness_mm,
             "cornea_thickness_mm": 0.6,
             "iop_mmhg": cli.iop_mmhg,
-            "eyelid_material_scale": cli.eyelid_material_scale,
-            "cornea_material_scale": cli.cornea_material_scale,
+            "iop_pa": cli.iop_mmhg * PA_PER_MMHG,
+            "eyelid_c10_mpa": materials["eyelid"]["c10_mpa"],
+            "eyelid_c01_mpa": materials["eyelid"]["c01_mpa"],
+            "eyelid_d1_pa_inv": materials["eyelid"]["d1_pa_inv"],
+            "cornea_c10_mpa": materials["cornea"]["c10_mpa"],
+            "cornea_c01_mpa": materials["cornea"]["c01_mpa"],
+            "cornea_d1_pa_inv": materials["cornea"]["d1_pa_inv"],
         } for case in cases],
         "apdl_sha256": {filename: sha256(MODEL_DIR / filename) for filename in APDL_FILES},
         "artifact_retention_policy": ARTIFACT_POLICY,
