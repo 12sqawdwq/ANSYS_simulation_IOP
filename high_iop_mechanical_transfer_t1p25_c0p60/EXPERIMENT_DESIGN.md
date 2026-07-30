@@ -3,7 +3,7 @@
 ## 1. 实验状态
 
 - 状态：**仅完成预注册设计，尚未启动求解**。
-- 实验目录：`thick/experiments/high_iop_mechanical_transfer_t1p25_c0p60/`
+- 实验目录：`high_iop_mechanical_transfer_t1p25_c0p60/`（与厚度研究目录 `thick/` 同级）
 - 目标压力：`20、25、30、35、40 mmHg`，步长 `5 mmHg`。
 - 高眼压实验点：5个。
 - 零眼压结构参考：另设1个 `0 mmHg` 对照，不计入5个高眼压实验点。
