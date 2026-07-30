@@ -51,6 +51,8 @@ $$
 
 ![眼内压与KAe/Ac的关系](figures/iop_vs_k_ae_over_ac_0p259875.png)
 
+![PIOP与扣除后探头读数的二值散点分布](figures/piop_vs_delta_pprobe_scatter_0p259875.png)
+
 主工作点面积法性能：
 
 - MAE：`5.4923 mmHg`；
