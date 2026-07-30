@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Combine new 5/10/15/45/50 mmHg FE cases with the accepted formal matrix."""
+"""Combine newly solved pressures with an accepted FE pressure grid."""
 from __future__ import annotations
 
 import argparse
@@ -9,7 +9,6 @@ import math
 from datetime import datetime, timezone
 from pathlib import Path
 
-NEW_PRESSURES = (5.0, 10.0, 15.0, 45.0, 50.0)
 STATE_NAMES = ("primary_0p26", "sensitivity_0p28")
 
 
@@ -39,8 +38,12 @@ def manifest_row(path: Path) -> dict[str, str]:
     return rows[0]
 
 
+def pressure_key(pressure: float) -> str:
+    return f"{pressure:g}".replace(".", "p")
+
+
 def state_path(root: Path, pressure: float, state_name: str) -> Path:
-    return root / "states" / f"iop{int(pressure)}" / state_name / "geometry_state.json"
+    return root / "states" / f"iop{pressure_key(pressure)}" / state_name / "geometry_state.json"
 
 
 def main() -> int:
@@ -50,38 +53,51 @@ def main() -> int:
     args = parser.parse_args()
     root = args.run_root.expanduser().resolve()
     spec = load_json(args.run_spec.expanduser().resolve())
-    source_summary_path = Path(spec["reused_formal_matrix"]["summary_json"])
-    source_root = Path(spec["reused_formal_matrix"]["data_root"])
+    source_spec = spec.get("reused_pressure_grid", spec.get("reused_formal_matrix"))
+    if not source_spec:
+        raise ValueError("run specification is missing a reused pressure grid")
+    source_summary_path = Path(source_spec["summary_json"])
     source = load_json(source_summary_path)
     if not source.get("campaign_pass"):
         raise ValueError("reused formal campaign did not pass")
 
     final_grid = tuple(num(value, "final pressure") for value in spec["final_pressure_grid_mmhg"])
-    expected_grid = tuple(float(value) for value in range(0, 51, 5))
-    if final_grid != expected_grid:
-        raise ValueError(f"unexpected final pressure grid: {final_grid}")
+    step = num(spec.get("pressure_step_mmhg", 5.0), "pressure step")
+    interval_count = round(50.0 / step)
+    expected_grid = tuple(index * step for index in range(interval_count + 1))
+    if step <= 0.0 or not close(interval_count * step, 50.0) or final_grid != expected_grid:
+        raise ValueError(f"unexpected final pressure grid for step {step:g}: {final_grid}")
+    new_pressures = tuple(num(value, "new pressure") for value in spec["new_solver_pressures_mmhg"])
+    reused_pressures = tuple(num(value, "reused pressure") for value in source_spec["pressures_mmhg"])
     old_rows = {
         (row["state"], num(row["input_iop_mmhg"], "old pressure")): row
         for row in source["rows"]
     }
     for state_name in STATE_NAMES:
-        for pressure in (0.0, 20.0, 25.0, 30.0, 35.0, 40.0):
+        for pressure in reused_pressures:
             if (state_name, pressure) not in old_rows:
                 raise ValueError(f"missing reused row: {state_name}, {pressure:g}")
 
     criteria = spec["acceptance"]
     expected_materials = spec["absolute_material_parameters"]
-    reference_metadata = load_json(source_root / "iop0" / "run" / "run_metadata.json")
+    reference_metadata_path = Path(
+        spec.get("reference_apdl_run_metadata", source_spec.get("reference_apdl_run_metadata", ""))
+    )
+    if not reference_metadata_path.is_file():
+        fallback_root = source_spec.get("data_root")
+        reference_metadata_path = Path(fallback_root) / "iop0" / "run" / "run_metadata.json" if fallback_root else reference_metadata_path
+    reference_metadata = load_json(reference_metadata_path)
     reference_apdl_hash = reference_metadata["apdl_sha256"]
     qc: dict[str, bool] = {"reused_formal_campaign_pass": True}
     new_states: dict[tuple[str, float], dict] = {}
     source_manifests: dict[str, str] = {}
-    for pressure in NEW_PRESSURES:
-        case_root = root / f"iop{int(pressure)}"
+    for pressure in new_pressures:
+        key = pressure_key(pressure)
+        case_root = root / f"iop{key}"
         mpath = case_root / "run" / "run_manifest.csv"
         row = manifest_row(mpath)
         metadata = load_json(case_root / "run" / "run_metadata.json")
-        prefix = f"iop{int(pressure)}"
+        prefix = f"iop{key}"
         source_manifests[prefix] = str(mpath)
         qc[f"{prefix}_complete"] = row.get("status") == criteria["required_status"]
         qc[f"{prefix}_returncode_zero"] = int(num(row.get("returncode"), "returncode")) == int(criteria["required_returncode"])
@@ -210,8 +226,9 @@ def main() -> int:
     }
     analysis = root / "analysis"
     analysis.mkdir(parents=True, exist_ok=True)
-    output_json = analysis / "iop_5_to_50_summary.json"
-    output_csv = analysis / "iop_5_to_50_summary.csv"
+    output_stem = spec.get("analysis_output_stem", "iop_5_to_50_summary")
+    output_json = analysis / f"{output_stem}.json"
+    output_csv = analysis / f"{output_stem}.csv"
     output_json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     with output_csv.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(rows[0]))

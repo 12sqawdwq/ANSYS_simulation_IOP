@@ -13,6 +13,7 @@ EXPERIMENT_ROOT = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60"
 SPEC = EXPERIMENT_ROOT / "run_spec.json"
 FULL_SPEC = EXPERIMENT_ROOT / "run_spec_full.json"
 SUPPLEMENT_SPEC = EXPERIMENT_ROOT / "run_spec_iop_5_to_50.json"
+DENSE_SUPPLEMENT_SPEC = EXPERIMENT_ROOT / "run_spec_iop_2p5.json"
 SUPPLEMENT_RESULT = EXPERIMENT_ROOT / "results" / "20260730_440e44e5_iop_5_to_50_summary.json"
 
 
@@ -66,6 +67,19 @@ class HighIopPreflightTests(unittest.TestCase):
         self.assertEqual(spec["geometry"]["solve_indent_mm"], 0.28)
         self.assertEqual(spec["geometry"]["primary_target_indent_mm"], 0.26)
         self.assertTrue(spec["reused_formal_matrix"]["campaign_pass"])
+
+    def test_dense_supplement_fills_two_point_five_mmhg_grid(self) -> None:
+        spec = json.loads(DENSE_SUPPLEMENT_SPEC.read_text(encoding="utf-8"))
+        expected = [index * 2.5 for index in range(21)]
+        self.assertEqual(spec["pressure_step_mmhg"], 2.5)
+        self.assertEqual(spec["final_pressure_grid_mmhg"], expected)
+        self.assertEqual(spec["plotted_pressure_grid_mmhg"], expected)
+        self.assertEqual(spec["new_solver_pressures_mmhg"], expected[1::2])
+        self.assertEqual(spec["reused_pressure_grid"]["pressures_mmhg"], expected[::2])
+        self.assertEqual(spec["solver"]["maximum_parallel_cases"], 2)
+        self.assertTrue(all(len(wave) == 2 for wave in spec["solver"]["execution_order"]))
+        self.assertEqual(spec["geometry"]["solve_indent_mm"], 0.28)
+        self.assertEqual(spec["geometry"]["primary_target_indent_mm"], 0.26)
 
     def test_supplement_result_contains_monotonic_actual_fe_scatter(self) -> None:
         result = json.loads(SUPPLEMENT_RESULT.read_text(encoding="utf-8"))
