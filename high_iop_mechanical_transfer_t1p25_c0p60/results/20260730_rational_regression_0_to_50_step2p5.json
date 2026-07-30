@@ -1,0 +1,240 @@
+{
+  "generated_at_utc": "2026-07-30T15:35:36+00:00",
+  "model": "P_IOP=b*P_probe/(1-a*P_probe)",
+  "fit_direction": "inverse calibration: input P_probe, target known FE P_IOP",
+  "objective": "unweighted nonlinear least squares in P_IOP space",
+  "source_json": "/home/ziyu/PROJECT/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/results/20260730_290d0544_iop_0_to_50_step2p5_summary.json",
+  "pressure_grid_mmhg": [
+    0.0,
+    2.5,
+    5.0,
+    7.5,
+    10.0,
+    12.5,
+    15.0,
+    17.5,
+    20.0,
+    22.5,
+    25.0,
+    27.5,
+    30.0,
+    32.5,
+    35.0,
+    37.5,
+    40.0,
+    42.5,
+    45.0,
+    47.5,
+    50.0
+  ],
+  "parameters": {
+    "a_per_mmhg": 0.06531173069023494,
+    "b_dimensionless": 1.8273148619678283
+  },
+  "metrics": {
+    "point_count_including_origin": 21,
+    "informative_nonzero_point_count": 20,
+    "mae_all_points_mmhg": 0.7658358446494337,
+    "rmse_all_points_mmhg": 0.9540593559328312,
+    "mae_nonzero_points_mmhg": 0.8041276368819054,
+    "rmse_nonzero_points_mmhg": 0.9776199248046846,
+    "maximum_absolute_error_mmhg": 2.1397985911435353,
+    "maximum_absolute_error_pressure_mmhg": 5.0,
+    "r_squared_iop_space": 0.9960280905251944,
+    "sse_iop_mmhg2": 19.114814347502342,
+    "minimum_denominator_on_observed_grid": 0.35299284825057187,
+    "probe_pressure_asymptote_mmhg": 15.311185133691684,
+    "nominal_parameter_uncertainty": {
+      "residual_degrees_of_freedom": 18,
+      "standard_error_a_per_mmhg": 0.0013854150422566382,
+      "standard_error_b": 0.05503713912579603,
+      "covariance_a_b": -7.371652629186016e-05,
+      "correlation_a_b": -0.9667832388504665,
+      "a_nominal_95_percent_interval_per_mmhg": [
+        0.062401081693076496,
+        0.06822237968739338
+      ],
+      "b_nominal_95_percent_interval": [
+        1.711686123346631,
+        1.9429436005890257
+      ],
+      "caveat": "Nominal regression uncertainty only; deterministic FE points are not independent experimental replicates."
+    }
+  },
+  "rows": [
+    {
+      "input_iop_mmhg": 0.0,
+      "delta_probe_pressure_mmhg": 0.0,
+      "source_kind": "reused_formal_matrix",
+      "regression_iop_mmhg": 0.0,
+      "regression_error_mmhg": 0.0,
+      "absolute_error_mmhg": 0.0
+    },
+    {
+      "input_iop_mmhg": 2.5,
+      "delta_probe_pressure_mmhg": 0.21312253920016047,
+      "source_kind": "new_supplemental_solver",
+      "regression_iop_mmhg": 0.39493930216753337,
+      "regression_error_mmhg": -2.1050606978324664,
+      "absolute_error_mmhg": 2.1050606978324664
+    },
+    {
+      "input_iop_mmhg": 5.0,
+      "delta_probe_pressure_mmhg": 1.420075281027457,
+      "source_kind": "reused_formal_matrix",
+      "regression_iop_mmhg": 2.8602014088564647,
+      "regression_error_mmhg": -2.1397985911435353,
+      "absolute_error_mmhg": 2.1397985911435353
+    },
+    {
+      "input_iop_mmhg": 7.5,
+      "delta_probe_pressure_mmhg": 2.828621976178267,
+      "source_kind": "new_supplemental_solver",
+      "regression_iop_mmhg": 6.340059494363707,
+      "regression_error_mmhg": -1.1599405056362926,
+      "absolute_error_mmhg": 1.1599405056362926
+    },
+    {
+      "input_iop_mmhg": 10.0,
+      "delta_probe_pressure_mmhg": 4.054410649992031,
+      "source_kind": "reused_formal_matrix",
+      "regression_iop_mmhg": 10.077109149213758,
+      "regression_error_mmhg": 0.07710914921375789,
+      "absolute_error_mmhg": 0.07710914921375789
+    },
+    {
+      "input_iop_mmhg": 12.5,
+      "delta_probe_pressure_mmhg": 4.943005551939201,
+      "source_kind": "new_supplemental_solver",
+      "regression_iop_mmhg": 13.338616358719968,
+      "regression_error_mmhg": 0.8386163587199675,
+      "absolute_error_mmhg": 0.8386163587199675
+    },
+    {
+      "input_iop_mmhg": 15.0,
+      "delta_probe_pressure_mmhg": 5.599841227108005,
+      "source_kind": "reused_formal_matrix",
+      "regression_iop_mmhg": 16.133127787228855,
+      "regression_error_mmhg": 1.1331277872288545,
+      "absolute_error_mmhg": 1.1331277872288545
+    },
+    {
+      "input_iop_mmhg": 17.5,
+      "delta_probe_pressure_mmhg": 6.114935700663478,
+      "source_kind": "new_supplemental_solver",
+      "regression_iop_mmhg": 18.603872166382835,
+      "regression_error_mmhg": 1.1038721663828355,
+      "absolute_error_mmhg": 1.1038721663828355
+    },
+    {
+      "input_iop_mmhg": 20.0,
+      "delta_probe_pressure_mmhg": 6.542306492824867,
+      "source_kind": "reused_formal_matrix",
+      "regression_iop_mmhg": 20.87416060703548,
+      "regression_error_mmhg": 0.8741606070354813,
+      "absolute_error_mmhg": 0.8741606070354813
+    },
+    {
+      "input_iop_mmhg": 22.5,
+      "delta_probe_pressure_mmhg": 6.912171364537767,
+      "source_kind": "new_supplemental_solver",
+      "regression_iop_mmhg": 23.02546436001096,
+      "regression_error_mmhg": 0.525464360010961,
+      "absolute_error_mmhg": 0.525464360010961
+    },
+    {
+      "input_iop_mmhg": 25.0,
+      "delta_probe_pressure_mmhg": 7.266876996289621,
+      "source_kind": "reused_formal_matrix",
+      "regression_iop_mmhg": 25.27442624292781,
+      "regression_error_mmhg": 0.2744262429278095,
+      "absolute_error_mmhg": 0.2744262429278095
+    },
+    {
+      "input_iop_mmhg": 27.5,
+      "delta_probe_pressure_mmhg": 7.564234291037806,
+      "source_kind": "new_supplemental_solver",
+      "regression_iop_mmhg": 27.318469587404888,
+      "regression_error_mmhg": -0.18153041259511227,
+      "absolute_error_mmhg": 0.18153041259511227
+    },
+    {
+      "input_iop_mmhg": 30.0,
+      "delta_probe_pressure_mmhg": 7.878858149633224,
+      "source_kind": "reused_formal_matrix",
+      "regression_iop_mmhg": 29.6592843441594,
+      "regression_error_mmhg": -0.3407156558406008,
+      "absolute_error_mmhg": 0.3407156558406008
+    },
+    {
+      "input_iop_mmhg": 32.5,
+      "delta_probe_pressure_mmhg": 8.157971754813781,
+      "source_kind": "new_supplemental_solver",
+      "regression_iop_mmhg": 31.908266553985225,
+      "regression_error_mmhg": -0.591733446014775,
+      "absolute_error_mmhg": 0.591733446014775
+    },
+    {
+      "input_iop_mmhg": 35.0,
+      "delta_probe_pressure_mmhg": 8.428966226071458,
+      "source_kind": "reused_formal_matrix",
+      "regression_iop_mmhg": 34.26636412000001,
+      "regression_error_mmhg": -0.7336358799999871,
+      "absolute_error_mmhg": 0.7336358799999871
+    },
+    {
+      "input_iop_mmhg": 37.5,
+      "delta_probe_pressure_mmhg": 8.687134114308124,
+      "source_kind": "new_supplemental_solver",
+      "regression_iop_mmhg": 36.69230980470886,
+      "regression_error_mmhg": -0.8076901952911371,
+      "absolute_error_mmhg": 0.8076901952911371
+    },
+    {
+      "input_iop_mmhg": 40.0,
+      "delta_probe_pressure_mmhg": 8.936937455920008,
+      "source_kind": "reused_formal_matrix",
+      "regression_iop_mmhg": 39.22671845592458,
+      "regression_error_mmhg": -0.7732815440754166,
+      "absolute_error_mmhg": 0.7732815440754166
+    },
+    {
+      "input_iop_mmhg": 42.5,
+      "delta_probe_pressure_mmhg": 9.18187963698267,
+      "source_kind": "new_supplemental_solver",
+      "regression_iop_mmhg": 41.91239916821423,
+      "regression_error_mmhg": -0.587600831785771,
+      "absolute_error_mmhg": 0.587600831785771
+    },
+    {
+      "input_iop_mmhg": 45.0,
+      "delta_probe_pressure_mmhg": 9.421805330298094,
+      "source_kind": "reused_formal_matrix",
+      "regression_iop_mmhg": 44.759657875521825,
+      "regression_error_mmhg": -0.24034212447817538,
+      "absolute_error_mmhg": 0.24034212447817538
+    },
+    {
+      "input_iop_mmhg": 47.5,
+      "delta_probe_pressure_mmhg": 9.65902083101028,
+      "source_kind": "new_supplemental_solver",
+      "regression_iop_mmhg": 47.81239723228176,
+      "regression_error_mmhg": 0.31239723228176075,
+      "absolute_error_mmhg": 0.31239723228176075
+    },
+    {
+      "input_iop_mmhg": 50.0,
+      "delta_probe_pressure_mmhg": 9.906446283258044,
+      "source_kind": "reused_formal_matrix",
+      "regression_iop_mmhg": 51.28204894914341,
+      "regression_error_mmhg": 1.2820489491434088,
+      "absolute_error_mmhg": 1.2820489491434088
+    }
+  ],
+  "interpretation": {
+    "status": "exploratory all-point inverse regression; not a production hardware calibration",
+    "mechanistic_decomposition_not_used": true,
+    "new_midpoint_holdout_consumed_by_this_fit": true,
+    "known_limitation": "largest residuals occur in the low-pressure contact-activation region"
+  }
+}
