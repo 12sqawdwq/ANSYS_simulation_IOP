@@ -1,0 +1,44 @@
+{
+  "experiment_id": "high_iop_mechanical_transfer_t1p25_c0p60",
+  "phase": "rst_contact_force_vector_integrals_0_to_50_step2p5",
+  "status_before_launch": "approved_by_user",
+  "pressure_grid_mmhg": [0.0, 2.5, 5.0, 7.5, 10.0, 12.5, 15.0, 17.5, 20.0, 22.5, 25.0, 27.5, 30.0, 32.5, 35.0, 37.5, 40.0, 42.5, 45.0, 47.5, 50.0],
+  "source_state_roots": {
+    "formal_matrix": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T043130Z_23d4f22f_full_matrix/states",
+    "step5_supplement": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T061631Z_440e44e5_iop5_to50_step5/states",
+    "step2p5_supplement": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T100745Z_290d0544_iop0_to50_step2p5/states"
+  },
+  "state_root_pressures_mmhg": {
+    "formal_matrix": [0.0, 20.0, 25.0, 30.0, 35.0, 40.0],
+    "step5_supplement": [5.0, 10.0, 15.0, 45.0, 50.0],
+    "step2p5_supplement": [2.5, 7.5, 12.5, 17.5, 22.5, 27.5, 32.5, 37.5, 42.5, 47.5]
+  },
+  "source_fe_summary": "/home/xuanyu/PROJECT/ziyu/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/results/20260730_290d0544_iop_0_to_50_step2p5_summary.json",
+  "geometry": {
+    "probe_area_mm2": 14.65741468458854,
+    "primary_actual_indent_mm": 0.259875,
+    "cornea_radius_mm": 7.8
+  },
+  "pressure_conversion": {
+    "pa_per_mmhg": 133.32236842105263
+  },
+  "postprocessor": {
+    "ansys_executable": "/ansys_inc/v252/ansys/bin/ansys252",
+    "python_executable": "/home/xuanyu/miniconda3/envs/grs-pilot/bin/python",
+    "np": 1,
+    "timeout_seconds_per_case": 300,
+    "maximum_parallel_cases": 1
+  },
+  "acceptance": {
+    "required_mapdl_error_count": 0,
+    "maximum_probe_contact_reaction_relative_error": 0.01,
+    "maximum_actual_indent_error_mm": 1e-9,
+    "require_all_pressures": true
+  },
+  "interpretation": {
+    "direct_interface_ratio": "tau_interface=delta_F_eyelid_cornea/delta_F_probe; it does not use known IOP in its numerator or denominator.",
+    "pressure_equivalence_correction": "chi=p*A_c5/delta_F_eyelid_cornea; this still uses known FE input IOP.",
+    "factorization": "eta_eff=tau_interface*chi=p*A_c5/delta_F_probe.",
+    "area_policy": "A_c5 is the frozen geometric proxy and is not relabeled as a validated mechanical effective area."
+  }
+}

@@ -1,0 +1,116 @@
+! Integrate global contact-force vectors and constrained reactions from one RST result set.
+! ARG1 = target result time (default 2.928125 for the retained 0.259875 mm state)
+! Output: contact_force_integrals.csv, one row, SI units.
+/post1
+rsys,0
+post_time = ARG1
+*if,post_time,gt,0,then
+  set,,,,,post_time
+*else
+  set,last
+*endif
+*get,result_time,active,0,set,time
+*get,result_lstep,active,0,set,lstp
+
+! Probe top constrained-node reaction.
+allsel
+cmsel,s,probe_top_nodes
+*get,probe_node_count,node,0,count
+probe_rf_x = 0
+probe_rf_y = 0
+probe_rf_z = 0
+*get,probe_node,node,0,num,min
+*do,probe_index,1,probe_node_count
+  *get,node_fx,node,probe_node,rf,fx
+  *get,node_fy,node,probe_node,rf,fy
+  *get,node_fz,node,probe_node,rf,fz
+  probe_rf_x = probe_rf_x + node_fx
+  probe_rf_y = probe_rf_y + node_fy
+  probe_rf_z = probe_rf_z + node_fz
+  probe_node = ndnext(probe_node)
+*enddo
+
+! Probe-eyelid CONTA174 pair: real constant 3.
+allsel
+etable,eras
+esel,s,real,,3
+esel,r,ename,,174
+*get,outer_contact_count,elem,0,count
+etable,ostat,nmisc,41
+etable,ocfx,nmisc,43
+etable,ocfy,nmisc,44
+etable,ocfz,nmisc,45
+etable,octx,nmisc,186
+etable,octy,nmisc,187
+etable,octz,nmisc,188
+etable,oarea,nmisc,58
+ssum
+*get,outer_cnf_x,ssum,0,item,ocfx
+*get,outer_cnf_y,ssum,0,item,ocfy
+*get,outer_cnf_z,ssum,0,item,ocfz
+*get,outer_cnt_x,ssum,0,item,octx
+*get,outer_cnt_y,ssum,0,item,octy
+*get,outer_cnt_z,ssum,0,item,octz
+*get,outer_area_sum,ssum,0,item,oarea
+esel,r,etab,ostat,2,3
+*get,outer_closed_count,elem,0,count
+
+! Eyelid-cornea bonded CONTA174 pair: real constant 4.
+allsel
+etable,eras
+esel,s,real,,4
+esel,r,ename,,174
+*get,inner_contact_count,elem,0,count
+etable,istat,nmisc,41
+etable,icfx,nmisc,43
+etable,icfy,nmisc,44
+etable,icfz,nmisc,45
+etable,ictx,nmisc,186
+etable,icty,nmisc,187
+etable,ictz,nmisc,188
+etable,iarea,nmisc,58
+ssum
+*get,inner_cnf_x,ssum,0,item,icfx
+*get,inner_cnf_y,ssum,0,item,icfy
+*get,inner_cnf_z,ssum,0,item,icfz
+*get,inner_cnt_x,ssum,0,item,ictx
+*get,inner_cnt_y,ssum,0,item,icty
+*get,inner_cnt_z,ssum,0,item,ictz
+*get,inner_area_sum,ssum,0,item,iarea
+esel,r,etab,istat,2,3
+*get,inner_closed_count,elem,0,count
+
+! Fixed outer corneal support reaction, reconstructed from the frozen model geometry.
+allsel
+Rc_force = 7.8e-3
+rmax_force = 6.0e-3
+kcen_force = -Rc_force
+edge_y_force = kcen_force + sqrt(Rc_force*Rc_force-rmax_force*rmax_force)
+cmsel,s,vcornea
+nslv,s,1
+nsel,r,loc,y,edge_y_force-0.5e-3,edge_y_force+0.4e-3
+*get,support_node_count,node,0,count
+support_rf_x = 0
+support_rf_y = 0
+support_rf_z = 0
+*get,support_node,node,0,num,min
+*do,support_index,1,support_node_count
+  *get,support_fx,node,support_node,rf,fx
+  *get,support_fy,node,support_node,rf,fy
+  *get,support_fz,node,support_node,rf,fz
+  support_rf_x = support_rf_x + support_fx
+  support_rf_y = support_rf_y + support_fy
+  support_rf_z = support_rf_z + support_fz
+  support_node = ndnext(support_node)
+*enddo
+
+*cfopen,contact_force_integrals_a,csv
+*vwrite,result_time,result_lstep,probe_node_count,probe_rf_x,probe_rf_y,probe_rf_z,outer_contact_count,outer_closed_count,outer_cnf_x,outer_cnf_y,outer_cnf_z,outer_cnt_x,outer_cnt_y,outer_cnt_z,outer_area_sum
+(15(E22.14,','))
+*cfclos
+*cfopen,contact_force_integrals_b,csv
+*vwrite,inner_contact_count,inner_closed_count,inner_cnf_x,inner_cnf_y,inner_cnf_z,inner_cnt_x,inner_cnt_y,inner_cnt_z,inner_area_sum,support_node_count,support_rf_x,support_rf_y,support_rf_z
+(13(E22.14,','))
+*cfclos
+allsel
+finish
