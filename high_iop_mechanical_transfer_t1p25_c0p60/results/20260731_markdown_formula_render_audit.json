@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-31T04:09:56+00:00",
+  "generated_at_utc": "2026-07-31T05:05:29+00:00",
   "audit_pass": true,
   "structural_audit_pass": true,
   "delimiter_balance_pass": true,
@@ -32,6 +32,13 @@
       "pass": true
     },
     {
+      "path": "/home/ziyu/PROJECT/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/IOP_50_TO_60_EXTENSION_RESULT.md",
+      "returncode": 0,
+      "expected_math_count": 13,
+      "rendered_mathml_count": 13,
+      "pass": true
+    },
+    {
       "path": "/home/ziyu/PROJECT/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/FORWARD_INVERSE_RIGOR_AUDIT.md",
       "returncode": 0,
       "expected_math_count": 70,
@@ -55,14 +62,14 @@
     {
       "path": "/home/ziyu/PROJECT/blueknow/simulation/docs/IOP修正算法全局方向.md",
       "returncode": 0,
-      "expected_math_count": 130,
-      "rendered_mathml_count": 130,
+      "expected_math_count": 135,
+      "rendered_mathml_count": 135,
       "pass": true
     }
   ],
-  "document_count": 7,
-  "formula_occurrence_count": 383,
-  "unique_formula_count": 241,
+  "document_count": 8,
+  "formula_occurrence_count": 401,
+  "unique_formula_count": 249,
   "non_ascii_formulas": [],
   "documents": [
     {
@@ -105,8 +112,21 @@
       "standard_inline_delimiter_count": 0
     },
     {
+      "path": "/home/ziyu/PROJECT/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/IOP_50_TO_60_EXTENSION_RESULT.md",
+      "sha256": "76dfd201701fd1d7a28bf6ab18e91eb125e3cb40c357a0578f2eeff8ef4818eb",
+      "delimiter_balance_pass": true,
+      "display_formula_count": 11,
+      "inline_formula_count": 2,
+      "legacy_display_open_count": 0,
+      "legacy_display_close_count": 0,
+      "legacy_inline_open_count": 0,
+      "legacy_inline_close_count": 0,
+      "standard_display_delimiter_count": 22,
+      "standard_inline_delimiter_count": 4
+    },
+    {
       "path": "/home/ziyu/PROJECT/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/FORWARD_INVERSE_RIGOR_AUDIT.md",
-      "sha256": "d250f229bdc2a354eeae8eebd3974729db422a4baff9b2d947cac0e027884592",
+      "sha256": "6608942f0066a8c5e201f1bad0adf0fce306051eac9053cd5420df1472bc2df1",
       "delimiter_balance_pass": true,
       "display_formula_count": 31,
       "inline_formula_count": 39,
@@ -145,17 +165,17 @@
     },
     {
       "path": "/home/ziyu/PROJECT/blueknow/simulation/docs/IOP修正算法全局方向.md",
-      "sha256": "c06a19ad3a9be492b16b35734429b85ec4016d36e54bb602a5838670e42e0eb6",
+      "sha256": "4350f53a34277e1883e116766ed2696eea64bc16b880244402277afb8ee86742",
       "delimiter_balance_pass": true,
       "display_formula_count": 48,
-      "inline_formula_count": 82,
+      "inline_formula_count": 87,
       "legacy_display_open_count": 0,
       "legacy_display_close_count": 0,
       "legacy_inline_open_count": 0,
       "legacy_inline_close_count": 0,
       "standard_display_delimiter_count": 96,
-      "standard_inline_delimiter_count": 164
+      "standard_inline_delimiter_count": 174
     }
   ],
-  "latex_output_tail": "(/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty)\n(/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty))\n(/usr/share/texmf-dist/tex/latex/amsfonts/amssymb.sty\n(/usr/share/texmf-dist/tex/latex/amsfonts/amsfonts.sty))\n(/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def)\nNo file audit.aux.\n(/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd)\n(/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd) [1] [2] [3] [4] [5] [6]\n[7] [8] [9] [10] [11] [12] [13] [14] (./audit.aux) )\nOutput written on audit.dvi (14 pages, 23648 bytes).\nTranscript written on audit.log.\n"
+  "latex_output_tail": "(/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty)\n(/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty))\n(/usr/share/texmf-dist/tex/latex/amsfonts/amssymb.sty\n(/usr/share/texmf-dist/tex/latex/amsfonts/amsfonts.sty))\n(/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def)\nNo file audit.aux.\n(/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd)\n(/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd) [1] [2] [3] [4] [5] [6]\n[7] [8] [9] [10] [11] [12] [13] [14] [15] (./audit.aux) )\nOutput written on audit.dvi (15 pages, 24428 bytes).\nTranscript written on audit.log.\n"
 }

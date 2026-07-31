@@ -1,0 +1,44 @@
+{
+  "started_at_utc": "2026-07-31T04:21:25+00:00",
+  "host": "xuanyu",
+  "platform": "Linux-6.17.0-29-generic-x86_64-with-glibc2.39",
+  "git_commit": "5017b6193ccb0b6e85162e9df2293aaba0cb837b",
+  "git_dirty": false,
+  "python_executable": "/home/xuanyu/miniconda3/envs/grs-pilot/bin/python",
+  "ansys_executable": "/ansys_inc/v252/ansys/bin/ansys252",
+  "phase": "extension_iop_0_to_60_step2p5",
+  "new_pressures_mmhg": [
+    52.5,
+    55.0,
+    57.5,
+    60.0
+  ],
+  "execution_order": [
+    [
+      60.0
+    ],
+    [
+      52.5,
+      57.5
+    ],
+    [
+      55.0
+    ]
+  ],
+  "maximum_parallel_cases": 2,
+  "np_per_case": 8,
+  "source_dense_summary": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T100745Z_290d0544_iop0_to50_step2p5/analysis/iop_0_to_50_step2p5_summary.json",
+  "source_dense_summary_sha256": "fefce51b82295e41028cc00a8609267410beebb1482f89a3f76f74eebeacce43",
+  "reference_run_metadata": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T043130Z_23d4f22f_full_matrix/iop0/run/run_metadata.json",
+  "reference_run_metadata_sha256": "afaa175419b96c2bee3b99f275293d941b03c7105c2ac49e73dd13964599d4e2",
+  "file_sha256": {
+    "high_iop_mechanical_transfer_t1p25_c0p60/run_spec_iop_50_to_60_step2p5.json": "f55fbdb858960f9533de071184acb69fbf38c95f10d56c64204df37e450ccc26",
+    "high_iop_mechanical_transfer_t1p25_c0p60/launch_iop_50_to_60_step2p5_5090d.sh": "62e418a7312b3718d6a1a5cf7a265f967d4a8e966cf832f68dc9ffe4940c548b",
+    "high_iop_mechanical_transfer_t1p25_c0p60/postprocess_iop_5_to_50_supplement.py": "ffec04a3c0b37e80e3bd031c40399b4568d2cd5ed6f2e9c017782a92a0d8d7de",
+    "high_iop_mechanical_transfer_t1p25_c0p60/plot_piop_vs_delta_pprobe_2p5.py": "454ecf7af95e4958ab1476a309d2fb89d39c0b04884d224d3ca06874fb0f6c4a",
+    "high_iop_mechanical_transfer_t1p25_c0p60/evaluate_iop60_extrapolation.py": "cd0edbb72d5d9096cea03d51a53dbc495e99cf5a2465adacd023242565aca0ea",
+    "src/runners/run_indentation_sweep.py": "0e25be7815034d47a46dc94734e89ea65afff40edeb3c47d7dfd3f71e903858c",
+    "src/postprocess/extract_geometry_zero_state.py": "c4ff1e35c9f48798306ee77ab178518da91702f17c30108b651ab9630325898c",
+    "models/apdl/param_eye_sweep.mac": "34fcb63afeeed93f14025bc273af0d0f113ff64c54c03f85dc29fd84370c87f2"
+  }
+}

@@ -18,6 +18,9 @@ DENSE_RESULT = ROOT / "results" / "20260730_290d0544_iop_0_to_50_step2p5_summary
 INVERSE_RESULT = ROOT / "results" / "20260730_rational_regression_0_to_50_step2p5.json"
 LOAD_SHARE_RESULT = ROOT / "results" / "20260731_global_load_share_derivation.json"
 EVALUATOR = ROOT / "evaluate_iop60_extrapolation.py"
+EXTENDED_RESULT = ROOT / "results" / "20260731_5017b619_iop_0_to_60_step2p5_summary.json"
+EXTRAPOLATION_RESULT = ROOT / "results" / "20260731_5017b619_iop60_frozen_model_extrapolation.json"
+EXTRAPOLATION_FIGURE = ROOT / "figures" / "iop60_frozen_model_extrapolation.png"
 
 
 def load_module(path: Path, name: str):
@@ -60,6 +63,33 @@ class Iop60ExtensionTests(unittest.TestCase):
         self.assertEqual(points[0][0], 0.0)
         self.assertEqual(points[-1][0], 50.0)
         self.assertTrue(math.isclose(points[-1][1], 9.906446283258044, abs_tol=1e-12))
+
+    def test_completed_extension_contains_actual_monotonic_fe_points(self) -> None:
+        result = json.loads(EXTENDED_RESULT.read_text(encoding="utf-8"))
+        self.assertTrue(result["campaign_pass"])
+        self.assertTrue(all(result["qc"].values()))
+        rows = [row for row in result["rows"] if row["state"] == "primary_0p26"]
+        self.assertEqual([row["input_iop_mmhg"] for row in rows], [index * 2.5 for index in range(25)])
+        new_rows = rows[-4:]
+        expected_q = [10.133792905170191, 10.357769771489542, 10.579466298404345, 10.799184206334418]
+        for row, q in zip(new_rows, expected_q):
+            self.assertTrue(math.isclose(row["delta_probe_pressure_mmhg"], q, abs_tol=1e-12))
+            self.assertEqual(row["actual_indent_mm"], 0.259875)
+            self.assertEqual(row["source_kind"], "new_supplemental_solver")
+        self.assertTrue(all(
+            right["delta_probe_pressure_mmhg"] > left["delta_probe_pressure_mmhg"]
+            for left, right in zip(rows, rows[1:])
+        ))
+
+    def test_unseen_points_reject_frozen_high_pressure_extrapolation(self) -> None:
+        result = json.loads(EXTRAPOLATION_RESULT.read_text(encoding="utf-8"))
+        self.assertEqual(result["status"], "frozen_models_evaluated_without_refit")
+        self.assertTrue(result["interpretation"]["no_refit"])
+        inverse = result["metrics"]["inverse_regression_0_to_50"]["unseen_52p5_to_60"]
+        self.assertTrue(math.isclose(inverse["mae_mmhg"], 4.4465879011024985, abs_tol=1e-12))
+        self.assertTrue(math.isclose(inverse["rmse_mmhg"], 4.781689754763103, abs_tol=1e-12))
+        self.assertTrue(math.isclose(inverse["maximum_absolute_error_mmhg"], 6.9643971066102495, abs_tol=1e-12))
+        self.assertGreater(EXTRAPOLATION_FIGURE.stat().st_size, 100_000)
 
     def test_frozen_model_evaluator_round_trips_synthetic_unseen_points(self) -> None:
         spec = json.loads(SPEC.read_text(encoding="utf-8"))

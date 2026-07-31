@@ -14,6 +14,7 @@ DEFAULT_DOCUMENTS = [
     REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "FORWARD_RATIONAL_PARAMETER_DERIVATION.md",
     REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "RATIONAL_REGRESSION_RESULT.md",
     REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "IOP_2P5_SUPPLEMENT_RESULT.md",
+    REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "IOP_50_TO_60_EXTENSION_RESULT.md",
     REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "FORWARD_INVERSE_RIGOR_AUDIT.md",
     REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "GLOBAL_LOAD_SHARE_DERIVATION.md",
     REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "INTERFACE_FORCE_INTEGRAL_RESULT.md",
