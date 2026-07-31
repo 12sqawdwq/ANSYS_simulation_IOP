@@ -93,7 +93,7 @@ def main() -> int:
     left_box = (135, 225, 900, 845)
     right_box = (1085, 225, 1850, 845)
     centered(draw, "A. 进入探头的IOP总载荷份额", panel_font, 145, 950)
-    title_b = "B. 载荷分流正向模型与实际FE"
+    title_b = "B. 载荷分流机制重建与实际FE"
     tb = draw.textbbox((0, 0), title_b, font=panel_font)
     draw.text((1085 + (765 - (tb[2] - tb[0])) / 2, 145), title_b, fill="#111827", font=panel_font)
 
