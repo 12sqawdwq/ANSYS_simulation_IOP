@@ -64,6 +64,9 @@ def main() -> int:
         name: {float(value) for value in values}
         for name, values in spec["state_root_pressures_mmhg"].items()
     }
+    state_overrides = {
+        float(key): Path(value) for key, value in spec.get("state_json_overrides", {}).items()
+    }
     source_summary = load_json(Path(spec["source_fe_summary"]))
     fe_rows = {
         float(row["input_iop_mmhg"]): row
@@ -75,10 +78,15 @@ def main() -> int:
     source_states = {}
     for pressure in pressures:
         matching_roots = [name for name, values in root_pressures.items() if pressure in values]
-        if len(matching_roots) != 1:
-            raise ValueError(f"expected one source root for {pressure:g} mmHg; found {matching_roots}")
         key = pressure_key(pressure)
-        state_path = roots[matching_roots[0]] / f"iop{key}" / "primary_0p26" / "geometry_state.json"
+        if pressure in state_overrides:
+            if matching_roots:
+                raise ValueError(f"override and regular root both defined for {pressure:g} mmHg")
+            state_path = state_overrides[pressure]
+        else:
+            if len(matching_roots) != 1:
+                raise ValueError(f"expected one source root for {pressure:g} mmHg; found {matching_roots}")
+            state_path = roots[matching_roots[0]] / f"iop{key}" / "primary_0p26" / "geometry_state.json"
         if not state_path.is_file():
             raise FileNotFoundError(state_path)
         source_states[key] = str(state_path)

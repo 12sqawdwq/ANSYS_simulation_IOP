@@ -9,9 +9,12 @@
     "step2p5_supplement": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T100745Z_290d0544_iop0_to50_step2p5/states"
   },
   "state_root_pressures_mmhg": {
-    "formal_matrix": [0.0, 20.0, 25.0, 30.0, 35.0, 40.0],
+    "formal_matrix": [0.0, 20.0, 25.0, 30.0, 35.0],
     "step5_supplement": [5.0, 10.0, 15.0, 45.0, 50.0],
     "step2p5_supplement": [2.5, 7.5, 12.5, 17.5, 22.5, 27.5, 32.5, 37.5, 42.5, 47.5]
+  },
+  "state_json_overrides": {
+    "40": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T040825Z_bdca48fe_iop40_preflight/analysis/primary_state_0p26/geometry_state.json"
   },
   "source_fe_summary": "/home/xuanyu/PROJECT/ziyu/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/results/20260730_290d0544_iop_0_to_50_step2p5_summary.json",
   "geometry": {

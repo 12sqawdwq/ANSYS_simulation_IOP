@@ -31,6 +31,7 @@ class InterfaceForceIntegralTests(unittest.TestCase):
         partition = []
         for values in spec["state_root_pressures_mmhg"].values():
             partition.extend(values)
+        partition.extend(float(value) for value in spec.get("state_json_overrides", {}))
         self.assertEqual(sorted(partition), expected)
         self.assertEqual(len(partition), len(set(partition)))
         self.assertEqual(spec["postprocessor"]["maximum_parallel_cases"], 1)
