@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-31T05:05:29+00:00",
+  "generated_at_utc": "2026-07-31T06:16:30+00:00",
   "audit_pass": true,
   "structural_audit_pass": true,
   "delimiter_balance_pass": true,
@@ -55,8 +55,15 @@
     {
       "path": "/home/ziyu/PROJECT/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/INTERFACE_FORCE_INTEGRAL_RESULT.md",
       "returncode": 0,
-      "expected_math_count": 39,
-      "rendered_mathml_count": 39,
+      "expected_math_count": 40,
+      "rendered_mathml_count": 40,
+      "pass": true
+    },
+    {
+      "path": "/home/ziyu/PROJECT/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/ETA_EFF_EFFECTIVE_CORRECTION_ANALYSIS.md",
+      "returncode": 0,
+      "expected_math_count": 70,
+      "rendered_mathml_count": 70,
       "pass": true
     },
     {
@@ -67,9 +74,9 @@
       "pass": true
     }
   ],
-  "document_count": 8,
-  "formula_occurrence_count": 401,
-  "unique_formula_count": 249,
+  "document_count": 9,
+  "formula_occurrence_count": 472,
+  "unique_formula_count": 275,
   "non_ascii_formulas": [],
   "documents": [
     {
@@ -152,16 +159,29 @@
     },
     {
       "path": "/home/ziyu/PROJECT/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/INTERFACE_FORCE_INTEGRAL_RESULT.md",
-      "sha256": "5d019f0f474b46f45120b0e053ab6da3d42fb4188f2aaceb3dfde47a73b2f38e",
+      "sha256": "24e2f80fa941658ab812de82872181a0ed310b8527fb7f5e47f324cdb0cb8538",
       "delimiter_balance_pass": true,
       "display_formula_count": 13,
-      "inline_formula_count": 26,
+      "inline_formula_count": 27,
       "legacy_display_open_count": 0,
       "legacy_display_close_count": 0,
       "legacy_inline_open_count": 0,
       "legacy_inline_close_count": 0,
       "standard_display_delimiter_count": 26,
-      "standard_inline_delimiter_count": 52
+      "standard_inline_delimiter_count": 54
+    },
+    {
+      "path": "/home/ziyu/PROJECT/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/ETA_EFF_EFFECTIVE_CORRECTION_ANALYSIS.md",
+      "sha256": "5746f772710c5d72104902fe5e3240f5316898abd423d2ca2599d8c3294632d7",
+      "delimiter_balance_pass": true,
+      "display_formula_count": 22,
+      "inline_formula_count": 48,
+      "legacy_display_open_count": 0,
+      "legacy_display_close_count": 0,
+      "legacy_inline_open_count": 0,
+      "legacy_inline_close_count": 0,
+      "standard_display_delimiter_count": 44,
+      "standard_inline_delimiter_count": 96
     },
     {
       "path": "/home/ziyu/PROJECT/blueknow/simulation/docs/IOP修正算法全局方向.md",
@@ -177,5 +197,5 @@
       "standard_inline_delimiter_count": 174
     }
   ],
-  "latex_output_tail": "(/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty)\n(/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty))\n(/usr/share/texmf-dist/tex/latex/amsfonts/amssymb.sty\n(/usr/share/texmf-dist/tex/latex/amsfonts/amsfonts.sty))\n(/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def)\nNo file audit.aux.\n(/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd)\n(/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd) [1] [2] [3] [4] [5] [6]\n[7] [8] [9] [10] [11] [12] [13] [14] [15] (./audit.aux) )\nOutput written on audit.dvi (15 pages, 24428 bytes).\nTranscript written on audit.log.\n"
+  "latex_output_tail": "(/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty)\n(/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty))\n(/usr/share/texmf-dist/tex/latex/amsfonts/amssymb.sty\n(/usr/share/texmf-dist/tex/latex/amsfonts/amsfonts.sty))\n(/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def)\nNo file audit.aux.\n(/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd)\n(/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd) [1] [2] [3] [4] [5] [6]\n[7] [8] [9] [10] [11] [12] [13] [14] [15] [16] (./audit.aux) )\nOutput written on audit.dvi (16 pages, 27380 bytes).\nTranscript written on audit.log.\n"
 }

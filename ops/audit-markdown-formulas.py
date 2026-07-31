@@ -20,6 +20,7 @@ DEFAULT_DOCUMENTS = [
     REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "FORWARD_INVERSE_RIGOR_AUDIT.md",
     REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "GLOBAL_LOAD_SHARE_DERIVATION.md",
     REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "INTERFACE_FORCE_INTEGRAL_RESULT.md",
+    REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "ETA_EFF_EFFECTIVE_CORRECTION_ANALYSIS.md",
     REPO / "docs" / "IOP修正算法全局方向.md",
 ]
 LEGACY_DISPLAY = re.compile(r"\\\[([\s\S]+?)\\\]")

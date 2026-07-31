@@ -180,6 +180,8 @@ $$
 - $\chi$：界面力到压力—面积合力的等效修正；
 - $\eta_{eff}$：二者乘积，是反演公式中的综合修正，而不是单纯力传递效率。
 
+$\eta_{eff}$的定义、0–60 mmHg数值范围、低压异常和代数闭环见[`ETA_EFF_EFFECTIVE_CORRECTION_ANALYSIS.md`](ETA_EFF_EFFECTIVE_CORRECTION_ANALYSIS.md)。
+
 此前得到接近逆向回归的正向代理 $a=0.0666201$、$b=1.7350568$，实际使用的是 $\eta_{eff}$，其中已经包含 $\chi$，因此不能将那次接近性解释为“直接传力×面积”获得独立验证。
 
 ## 7. 图像
