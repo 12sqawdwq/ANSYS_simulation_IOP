@@ -200,6 +200,8 @@ p=\eta_{eff}K_AP_{probe}
 
 只有 \(\chi\)能够在未知IOP条件下由这些可观测量预测，才形成真正可部署的正向算法。
 
+后续载荷分流推导已将该问题进一步改写为预测全局载荷份额 \(\lambda\)，详见`GLOBAL_LOAD_SHARE_DERIVATION.md`。该推导表明 \(\chi=A_c/(\tau_{interface}\lambda A_{IOP,proj})\)，总公式可化简为 \(p=A_pq/(\lambda A_{IOP,proj})\)。
+
 ## 9. 轻量产物
 
 - `results/20260731_3ce7c957_interface_force_integrals_summary.json`
