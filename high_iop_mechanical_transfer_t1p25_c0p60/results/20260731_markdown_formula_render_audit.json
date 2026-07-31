@@ -1,0 +1,55 @@
+{
+  "generated_at_utc": "2026-07-31T03:58:48+00:00",
+  "audit_pass": true,
+  "delimiter_balance_pass": true,
+  "ascii_formula_source_pass": true,
+  "latex_batch_compile_pass": true,
+  "latex_returncode": 0,
+  "document_count": 4,
+  "formula_occurrence_count": 298,
+  "unique_formula_count": 190,
+  "non_ascii_formulas": [],
+  "documents": [
+    {
+      "path": "/home/ziyu/PROJECT/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/FORWARD_INVERSE_RIGOR_AUDIT.md",
+      "sha256": "f1a2a1eb2b204f37d3d950800a7f49ae9c0d975ae31ffe83be063fde1e8339be",
+      "display_formula_count": 31,
+      "inline_formula_count": 39,
+      "display_open_count": 31,
+      "display_close_count": 31,
+      "inline_open_count": 39,
+      "inline_close_count": 39
+    },
+    {
+      "path": "/home/ziyu/PROJECT/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/GLOBAL_LOAD_SHARE_DERIVATION.md",
+      "sha256": "9b2b17f72f10e64989b8ad79d655c9873184ae270c433000de4c27d561b70b0d",
+      "display_formula_count": 33,
+      "inline_formula_count": 26,
+      "display_open_count": 33,
+      "display_close_count": 33,
+      "inline_open_count": 26,
+      "inline_close_count": 26
+    },
+    {
+      "path": "/home/ziyu/PROJECT/blueknow/simulation/high_iop_mechanical_transfer_t1p25_c0p60/INTERFACE_FORCE_INTEGRAL_RESULT.md",
+      "sha256": "c1142fbb247065cc81bfa5cf12a5267a6620032234c161e74b023fef89005fe1",
+      "display_formula_count": 13,
+      "inline_formula_count": 26,
+      "display_open_count": 13,
+      "display_close_count": 13,
+      "inline_open_count": 26,
+      "inline_close_count": 26
+    },
+    {
+      "path": "/home/ziyu/PROJECT/blueknow/simulation/docs/IOP修正算法全局方向.md",
+      "sha256": "3e9da50122335b370f5dc8c53b5b0c283be01f796932d7f32c9f315b6f984302",
+      "display_formula_count": 48,
+      "inline_formula_count": 82,
+      "display_open_count": 48,
+      "display_close_count": 48,
+      "inline_open_count": 82,
+      "inline_close_count": 82
+    }
+  ],
+  "latex_output_tail": "(/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty)\n(/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty))\n(/usr/share/texmf-dist/tex/latex/amsfonts/amssymb.sty\n(/usr/share/texmf-dist/tex/latex/amsfonts/amsfonts.sty))\n(/usr/share/texmf-dist/tex/latex/l3backend/l3backend-dvips.def)\nNo file audit.aux.\n(/usr/share/texmf-dist/tex/latex/amsfonts/umsa.fd)\n(/usr/share/texmf-dist/tex/latex/amsfonts/umsb.fd) [1] [2] [3] [4] [5] [6]\n[7] [8] [9] [10] [11] (./audit.aux) )\nOutput written on audit.dvi (11 pages, 18712 bytes).\nTranscript written on audit.log.\n"
+}
