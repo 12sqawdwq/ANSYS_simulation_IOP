@@ -13,6 +13,7 @@ MACRO = REPO_ROOT / "models" / "apdl" / "post_contact_force_integrals.mac"
 EXTRACTOR = REPO_ROOT / "src" / "postprocess" / "extract_contact_force_integrals.py"
 POSTPROCESSOR = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60" / "postprocess_interface_force_integrals.py"
 SPEC = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60" / "run_spec_interface_force_integrals.json"
+RESULT = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60" / "results" / "20260731_3ce7c957_interface_force_integrals_summary.json"
 
 
 def load_module(path: Path, name: str):
@@ -61,6 +62,20 @@ class InterfaceForceIntegralTests(unittest.TestCase):
         self.assertEqual(set(values), set(module.FIELDS_A + module.FIELDS_B))
         self.assertEqual(values["result_time"], 1.0)
         self.assertEqual(values["support_rf_z_n"], 113.0)
+
+    def test_completed_integral_result_passes_and_freezes_direct_model(self) -> None:
+        result = json.loads(RESULT.read_text(encoding="utf-8"))
+        self.assertTrue(result["campaign_pass"])
+        self.assertTrue(all(result["qc"].values()))
+        self.assertEqual(len(result["rows"]), 21)
+        model = result["direct_interface_forward_model"]
+        self.assertTrue(math.isclose(model["a_per_mmhg"], 0.004381238891724214, rel_tol=0.0, abs_tol=1e-12))
+        self.assertTrue(math.isclose(model["b_dimensionless"], 2.839581578487181, rel_tol=0.0, abs_tol=1e-12))
+        self.assertGreater(model["metrics_all_points"]["rmse_mmhg"], 9.0)
+        self.assertLess(max(row["probe_contact_reaction_relative_error"] for row in result["rows"]), 0.01)
+        row50 = result["rows"][-1]
+        self.assertTrue(math.isclose(row50["tau_interface_delta"], 0.9157746170067667, rel_tol=0.0, abs_tol=1e-12))
+        self.assertTrue(math.isclose(row50["chi_pressure_equivalence"], 1.6789386222558909, rel_tol=0.0, abs_tol=1e-12))
 
     def test_direct_rational_helpers(self) -> None:
         module = load_module(POSTPROCESSOR, "postprocess_interface_force_integrals_test")

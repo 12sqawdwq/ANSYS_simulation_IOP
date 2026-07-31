@@ -1,0 +1,14 @@
+{
+  "started_at_utc": "2026-07-31T03:03:36+00:00",
+  "host": "xuanyu",
+  "git_commit": "3ce7c957e7920d63334c86657f182a7027ba3404",
+  "git_dirty": false,
+  "phase": "rst_contact_force_vector_integrals_0_to_50_step2p5",
+  "file_sha256": {
+    "models/apdl/post_contact_force_integrals.mac": "987b13437e279a415c7b28d521f78d1f0ec5d6180b01bcc9352227077c14dbb7",
+    "src/postprocess/extract_contact_force_integrals.py": "2d07210a7a8f77becc11848aa06e5a507aace78bc1b99a09e9958429ad97def5",
+    "high_iop_mechanical_transfer_t1p25_c0p60/run_spec_interface_force_integrals.json": "1a9138cf05c321dd243b76a5e402a1967219215bd40029210427f7eb6a02daca",
+    "high_iop_mechanical_transfer_t1p25_c0p60/postprocess_interface_force_integrals.py": "4a5c5c7c29bbb54a034ef4f9fc02cc309108991b9054260fd20f130df9efc65e",
+    "high_iop_mechanical_transfer_t1p25_c0p60/launch_interface_force_integrals_5090d.sh": "b401285b1cc2b371851620ea2a007d1b7ef82e15eed625b4376e38b50debda9d"
+  }
+}
