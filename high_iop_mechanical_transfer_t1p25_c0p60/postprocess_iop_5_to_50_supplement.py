@@ -63,9 +63,12 @@ def main() -> int:
 
     final_grid = tuple(num(value, "final pressure") for value in spec["final_pressure_grid_mmhg"])
     step = num(spec.get("pressure_step_mmhg", 5.0), "pressure step")
-    interval_count = round(50.0 / step)
+    if step <= 0.0 or not final_grid or not close(final_grid[0], 0.0):
+        raise ValueError(f"invalid final pressure grid for step {step:g}: {final_grid}")
+    maximum_pressure = final_grid[-1]
+    interval_count = round(maximum_pressure / step)
     expected_grid = tuple(index * step for index in range(interval_count + 1))
-    if step <= 0.0 or not close(interval_count * step, 50.0) or final_grid != expected_grid:
+    if not close(interval_count * step, maximum_pressure) or final_grid != expected_grid:
         raise ValueError(f"unexpected final pressure grid for step {step:g}: {final_grid}")
     new_pressures = tuple(num(value, "new pressure") for value in spec["new_solver_pressures_mmhg"])
     reused_pressures = tuple(num(value, "reused pressure") for value in source_spec["pressures_mmhg"])
@@ -231,7 +234,7 @@ def main() -> int:
     output_csv = analysis / f"{output_stem}.csv"
     output_json.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     with output_csv.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     print(json.dumps({

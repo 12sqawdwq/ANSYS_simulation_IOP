@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -20,11 +21,16 @@ def find_font(filename: str) -> str:
     raise FileNotFoundError(filename)
 
 
-def load_points(path: Path) -> list[tuple[float, float, bool]]:
+def load_points(path: Path) -> tuple[list[tuple[float, float, bool]], float]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not payload.get("campaign_pass"):
         raise ValueError("dense FE campaign did not pass")
-    expected = [index * 2.5 for index in range(21)]
+    expected = [float(value) for value in payload["final_pressure_grid_mmhg"]]
+    if len(expected) < 2:
+        raise ValueError("pressure grid requires at least two points")
+    step = expected[1] - expected[0]
+    if step <= 0.0 or any(not math.isclose(right - left, step, abs_tol=1e-12) for left, right in zip(expected, expected[1:])):
+        raise ValueError(f"nonuniform pressure grid: {expected}")
     rows = {
         float(row["input_iop_mmhg"]): row
         for row in payload["rows"]
@@ -32,14 +38,14 @@ def load_points(path: Path) -> list[tuple[float, float, bool]]:
     }
     if sorted(rows) != expected:
         raise ValueError(f"expected pressure grid {expected}, found {sorted(rows)}")
-    return [
+    return ([
         (
             pressure,
             float(rows[pressure]["delta_probe_pressure_mmhg"]),
             rows[pressure]["source_kind"] == "new_supplemental_solver",
         )
         for pressure in expected
-    ]
+    ], step)
 
 
 def main() -> int:
@@ -47,7 +53,7 @@ def main() -> int:
     parser.add_argument("--input-json", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    points = load_points(args.input_json)
+    points, pressure_step = load_points(args.input_json)
 
     regular = find_font("NotoSansCJK-Regular.ttc")
     bold = find_font("NotoSansCJK-Bold.ttc")
@@ -57,8 +63,10 @@ def main() -> int:
     left, right, top, bottom = 210, 100, 175, 190
     plot_width = width - left - right
     plot_height = height - top - bottom
-    x_min, x_max = 0.0, 11.0
-    y_min, y_max = 0.0, 52.5
+    maximum_pressure = max(point[0] for point in points)
+    maximum_probe = max(point[1] for point in points)
+    x_min, x_max = 0.0, float(math.ceil(maximum_probe + 1.0))
+    y_min, y_max = 0.0, maximum_pressure + pressure_step
     xp = lambda value: left + (value - x_min) / (x_max - x_min) * plot_width
     yp = lambda value: top + (y_max - value) / (y_max - y_min) * plot_height
 
@@ -74,12 +82,13 @@ def main() -> int:
     title = "扣除后 P_probe 与 P_IOP 的有限元散点关系"
     box = draw.textbbox((0, 0), title, font=title_font)
     draw.text(((width - (box[2] - box[0])) / 2, 34), title, fill="#111827", font=title_font)
-    subtitle = "0–50 mmHg，步长 2.5 mmHg；0.259875 mm 主工作点；无插值"
+    subtitle = f"0–{maximum_pressure:g} mmHg，步长 {pressure_step:g} mmHg；0.259875 mm 主工作点；无插值"
     box = draw.textbbox((0, 0), subtitle, font=subtitle_font)
     draw.text(((width - (box[2] - box[0])) / 2, 102), subtitle, fill="#4b5563", font=subtitle_font)
 
-    for y_index in range(22):
-        y = y_index * 2.5
+    y_tick_count = round(y_max / pressure_step)
+    for y_index in range(y_tick_count + 1):
+        y = y_index * pressure_step
         py = yp(y)
         major = y_index % 2 == 0
         draw.line((left, py, width - right, py), fill="#dbe3ec" if major else "#eff3f7", width=2 if major else 1)
@@ -87,7 +96,7 @@ def main() -> int:
             text = f"{y:g}"
             box = draw.textbbox((0, 0), text, font=tick_font)
             draw.text((left - 22 - (box[2] - box[0]), py - (box[3] - box[1]) / 2), text, fill="#374151", font=tick_font)
-    for x in range(12):
+    for x in range(math.ceil(x_max) + 1):
         px = xp(x)
         draw.line((px, top, px, height - bottom), fill="#eef2f7", width=2)
         text = str(x)
@@ -108,10 +117,15 @@ def main() -> int:
     layer = layer.rotate(90, expand=True, resample=Image.Resampling.BICUBIC)
     image.paste(layer, (30, top + (plot_height - layer.height) // 2), layer)
 
+    new_pressures = [pressure for pressure, _, is_new in points if is_new]
+    new_label = (
+        f"新增 {min(new_pressures):g}–{max(new_pressures):g} mmHg"
+        if new_pressures else "新增求解点"
+    )
     legend_y = 145
     for legend_x, color, text in (
-        (width - 660, "#2563eb", "复用的5 mmHg网格"),
-        (width - 360, "#f97316", "新增中间点"),
+        (width - 720, "#2563eb", "复用的已通过FE点"),
+        (width - 380, "#f97316", new_label),
     ):
         draw.ellipse((legend_x, legend_y - 8, legend_x + 20, legend_y + 12), fill=color, outline="white", width=2)
         draw.text((legend_x + 30, legend_y - 14), text, fill="#374151", font=legend_font)

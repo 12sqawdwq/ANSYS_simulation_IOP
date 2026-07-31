@@ -1,0 +1,100 @@
+{
+  "experiment_id": "high_iop_mechanical_transfer_t1p25_c0p60",
+  "phase": "extension_iop_0_to_60_step2p5",
+  "status_before_launch": "approved_by_user",
+  "pressure_step_mmhg": 2.5,
+  "final_pressure_grid_mmhg": [0.0, 2.5, 5.0, 7.5, 10.0, 12.5, 15.0, 17.5, 20.0, 22.5, 25.0, 27.5, 30.0, 32.5, 35.0, 37.5, 40.0, 42.5, 45.0, 47.5, 50.0, 52.5, 55.0, 57.5, 60.0],
+  "plotted_pressure_grid_mmhg": [0.0, 2.5, 5.0, 7.5, 10.0, 12.5, 15.0, 17.5, 20.0, 22.5, 25.0, 27.5, 30.0, 32.5, 35.0, 37.5, 40.0, 42.5, 45.0, 47.5, 50.0, 52.5, 55.0, 57.5, 60.0],
+  "new_solver_pressures_mmhg": [52.5, 55.0, 57.5, 60.0],
+  "reused_pressure_grid": {
+    "data_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T100745Z_290d0544_iop0_to50_step2p5",
+    "summary_json": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T100745Z_290d0544_iop0_to50_step2p5/analysis/iop_0_to_50_step2p5_summary.json",
+    "pressures_mmhg": [0.0, 2.5, 5.0, 7.5, 10.0, 12.5, 15.0, 17.5, 20.0, 22.5, 25.0, 27.5, 30.0, 32.5, 35.0, 37.5, 40.0, 42.5, 45.0, 47.5, 50.0],
+    "campaign_pass": true
+  },
+  "reference_apdl_run_metadata": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T043130Z_23d4f22f_full_matrix/iop0/run/run_metadata.json",
+  "analysis_output_stem": "iop_0_to_60_step2p5_summary",
+  "solver": {
+    "ansys_executable": "/ansys_inc/v252/ansys/bin/ansys252",
+    "ansys_release": "2025 R2",
+    "python_executable": "/home/xuanyu/miniconda3/envs/grs-pilot/bin/python",
+    "np_first_attempt": 8,
+    "maximum_parallel_cases": 2,
+    "timeout_seconds_per_attempt": 3600,
+    "maximum_total_attempts_per_case": 2,
+    "view_policy": "none",
+    "execution_order": [[60.0], [52.5, 57.5], [55.0]]
+  },
+  "geometry": {
+    "eyelid_thickness_mm": 1.25,
+    "cornea_thickness_mm": 0.60,
+    "probe_radius_mm": 2.16,
+    "probe_area_mm2": 14.65741468458854,
+    "initial_gap_mm": 0.30,
+    "mesh_size_mm": 0.30,
+    "solve_indent_mm": 0.28,
+    "primary_target_indent_mm": 0.26,
+    "expected_primary_result_indent_mm": 0.259875,
+    "maximum_primary_indent_error_mm": 0.001
+  },
+  "pressure_conversion": {
+    "pa_per_mmhg": 133.32236842105263
+  },
+  "absolute_material_parameters": {
+    "eyelid": {
+      "model": "two_parameter_mooney_rivlin",
+      "c10_mpa": 0.076,
+      "c01_mpa": 0.010,
+      "d1_pa_inv": 1e-7
+    },
+    "cornea": {
+      "model": "two_parameter_mooney_rivlin",
+      "c10_mpa": 0.0825,
+      "c01_mpa": 0.01875,
+      "d1_pa_inv": 1e-7
+    }
+  },
+  "frozen_sensor_models_for_diagnostic_only": {
+    "primary_0p26": {
+      "alpha": 1.7958537965375994,
+      "beta_per_mmhg": 0.06706030329458683
+    },
+    "sensitivity_0p28": {
+      "alpha": 1.6587166492607621,
+      "beta_per_mmhg": 0.06254272079315978
+    }
+  },
+  "frozen_rational_models_for_extrapolation_only": {
+    "inverse_regression_0_to_50": {
+      "a_per_mmhg": 0.06531173069023494,
+      "b_dimensionless": 1.8273148619678283
+    },
+    "composite_proxy_0_to_50": {
+      "a_per_mmhg": 0.06662009837002528,
+      "b_dimensionless": 1.7350568491710625
+    },
+    "load_share_reparameterization_10_to_50": {
+      "a_per_mmhg": 0.06836830871096425,
+      "b_dimensionless": 1.7255463542188867
+    }
+  },
+  "acceptance": {
+    "required_status": "complete",
+    "required_returncode": 0,
+    "maximum_ansys_error_count": 0,
+    "all_three_load_steps_converged": true,
+    "maximum_preload_contact_count": 0,
+    "maximum_absolute_approach_force_n": 0.001,
+    "maximum_penetration_mm": 0.03,
+    "maximum_primary_indent_error_mm": 0.001,
+    "require_monotonic_probe_force": true,
+    "require_monotonic_delta_probe_pressure": true
+  },
+  "interpretation": {
+    "primary_state_policy": "Solve every new case to 0.28 mm and use the retained result set nearest 0.26 mm; expected actual state is 0.259875 mm.",
+    "zero_reference_policy": "Reuse the accepted formal 0 mmHg force through the accepted 0-to-50 mmHg dense summary.",
+    "plot_policy": "Plot only actual FE values from 0 through 60 mmHg in 2.5 mmHg increments; do not interpolate missing points.",
+    "model_policy": "Freeze all 0-to-50 mmHg rational parameters before launch. Evaluate 52.5-to-60 mmHg as unseen extrapolation points and do not refit before reporting frozen-model errors.",
+    "scope_policy": "Results remain restricted to the frozen 1.25 mm eyelid, 0.60 mm cornea, 0.259875 mm work point, 0.30 mm mesh, and current materials."
+  }
+}
