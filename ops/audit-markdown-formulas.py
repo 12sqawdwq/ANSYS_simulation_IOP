@@ -35,6 +35,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("documents", nargs="*", type=Path, default=DEFAULT_DOCUMENTS)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--skip-latex", action="store_true", help="check delimiters and source compatibility without compiling")
     args = parser.parse_args()
     documents = [path.resolve() for path in args.documents]
     formulas: list[str] = []
@@ -75,26 +76,37 @@ def main() -> int:
     for index, formula in enumerate(formulas, 1):
         tex_lines.extend((f"% FORMULA {index}", r"\[", r"\displaystyle " + formula, r"\]", r"\par"))
     tex_lines.append(r"\end{document}")
-    with tempfile.TemporaryDirectory(prefix="blueknow-formula-audit-") as directory:
-        work = Path(directory)
-        (work / "audit.tex").write_text("\n".join(tex_lines) + "\n", encoding="utf-8")
-        completed = subprocess.run(
-            ["latex", "-no-shell-escape", "-interaction=nonstopmode", "-halt-on-error", "audit.tex"],
-            cwd=work,
-            text=True,
-            capture_output=True,
-            timeout=120,
-            check=False,
-        )
-        compile_output_tail = "\n".join((completed.stdout + "\n" + completed.stderr).splitlines()[-12:])
-
+    latex_returncode = None
+    compile_output_tail = "LaTeX compilation explicitly skipped"
+    if not args.skip_latex:
+        with tempfile.TemporaryDirectory(prefix="blueknow-formula-audit-") as directory:
+            work = Path(directory)
+            (work / "audit.tex").write_text("\n".join(tex_lines) + "\n", encoding="utf-8")
+            try:
+                completed = subprocess.run(
+                    ["latex", "-no-shell-escape", "-interaction=nonstopmode", "-halt-on-error", "audit.tex"],
+                    cwd=work,
+                    text=True,
+                    capture_output=True,
+                    timeout=120,
+                    check=False,
+                )
+                latex_returncode = completed.returncode
+                compile_output_tail = "\n".join((completed.stdout + "\n" + completed.stderr).splitlines()[-12:])
+            except FileNotFoundError:
+                latex_returncode = 127
+                compile_output_tail = "latex executable not found"
+    structural_pass = delimiters_pass and not non_ascii
+    latex_pass = None if args.skip_latex else latex_returncode == 0
     payload = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "audit_pass": delimiters_pass and not non_ascii and completed.returncode == 0,
+        "audit_pass": structural_pass and (args.skip_latex or latex_pass is True),
+        "structural_audit_pass": structural_pass,
         "delimiter_balance_pass": delimiters_pass,
         "ascii_formula_source_pass": not non_ascii,
-        "latex_batch_compile_pass": completed.returncode == 0,
-        "latex_returncode": completed.returncode,
+        "latex_compile_skipped": args.skip_latex,
+        "latex_batch_compile_pass": latex_pass,
+        "latex_returncode": latex_returncode,
         "document_count": len(documents),
         "formula_occurrence_count": sum(
             item["display_formula_count"] + item["inline_formula_count"] for item in document_results
