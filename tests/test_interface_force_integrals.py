@@ -11,8 +11,8 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MACRO = REPO_ROOT / "models" / "apdl" / "post_contact_force_integrals.mac"
 EXTRACTOR = REPO_ROOT / "src" / "postprocess" / "extract_contact_force_integrals.py"
-POSTPROCESSOR = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60" / "postprocess_interface_force_integrals.py"
-SPEC = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60" / "run_spec_interface_force_integrals.json"
+POSTPROCESSOR = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60" / "scripts" / "postprocess" / "postprocess_interface_force_integrals.py"
+SPEC = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60" / "config" / "interface_force_integrals.json"
 RESULT = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60" / "results" / "20260731_3ce7c957_interface_force_integrals_summary.json"
 
 

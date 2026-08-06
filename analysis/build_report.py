@@ -236,7 +236,7 @@ E:\\SOFTWARE\\annaconda\\annaconda_evn\\python.exe analysis\\run_all.py
 配置见 [`config.yaml`](../config.yaml)，排除记录见 [`exclusion_log.csv`](exclusion_log.csv)，输出清单见 [`output_manifest.csv`](output_manifest.csv)。所有原始数据均只读。
 """
     path = out / "report.md"
-    path.write_text(report, encoding="utf-8")
+    path.write_text(report, encoding="utf-8", newline="\n")
     return path
 
 

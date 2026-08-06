@@ -7,6 +7,7 @@
 - 适用对象：经眼睑探头有限元、传感器换算、厚度/推进量扩展和后续硬件标定。
 - 本文将原先单独使用经验线性关系 `Ksensor(p)=αold+βold·p` 的做法降为历史诊断，不再将其作为最终算法解释。
 - 原有FE求解结果仍然有效；改变的是算法解释、参数识别和独立验证流程，不是已经完成的力学求解。
+- 固定高眼压配置的当前冻结数值、证伪结果和适用边界以 [`../high_iop_mechanical_transfer_t1p25_c0p60/docs/MAIN_CONCLUSIONS.md`](../high_iop_mechanical_transfer_t1p25_c0p60/docs/MAIN_CONCLUSIONS.md) 为准；完整阶段原文见同模块 `docs/EXPERIMENT_RECORD.md`。
 
 新的核心方向是：**把面积变化和力传递分开建模，再由二者推导IOP反演关系。**
 

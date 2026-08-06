@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import subprocess
 
 import pandas as pd
 
@@ -39,11 +40,30 @@ def first_line(path: Path) -> str:
         return ""
 
 
+def repository_visible_files() -> list[Path]:
+    """Return tracked and non-ignored untracked files, excluding local ignored runs."""
+    try:
+        completed = subprocess.run(
+            ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+        )
+        relative_paths = [
+            item.decode("utf-8")
+            for item in completed.stdout.split(b"\0")
+            if item
+        ]
+        return sorted(ROOT / relative for relative in relative_paths)
+    except (FileNotFoundError, subprocess.CalledProcessError, UnicodeDecodeError):
+        return sorted(path for path in ROOT.rglob("*") if ".git" not in path.parts)
+
+
 def run(config: dict | None = None) -> pd.DataFrame:
     config = config or load_config()
     out = output_dir(config)
     rows: list[dict] = []
-    for path in sorted(ROOT.rglob("*")):
+    for path in repository_visible_files():
         if not path.is_file() or path.suffix.lower() not in DATA_EXTENSIONS:
             continue
         rel = relative_path(path)

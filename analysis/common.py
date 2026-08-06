@@ -38,13 +38,14 @@ def read_csv(config: dict[str, Any], key: str) -> pd.DataFrame:
 
 def write_csv(frame: pd.DataFrame, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    frame.to_csv(path, index=False, encoding="utf-8-sig")
+    frame.to_csv(path, index=False, encoding="utf-8-sig", lineterminator="\n")
 
 
 def write_json(payload: Any, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
+    with path.open("w", encoding="utf-8", newline="\n") as handle:
         json.dump(payload, handle, ensure_ascii=False, indent=2, allow_nan=False)
+        handle.write("\n")
 
 
 def finite(values: pd.Series | np.ndarray) -> np.ndarray:

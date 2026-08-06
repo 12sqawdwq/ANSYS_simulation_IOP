@@ -9,7 +9,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENT_ROOT = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60"
-SCRIPT = EXPERIMENT_ROOT / "derive_forward_rational_parameters.py"
+SCRIPT = EXPERIMENT_ROOT / "scripts" / "analysis" / "derive_forward_rational_parameters.py"
 SOURCE = EXPERIMENT_ROOT / "results" / "20260730_290d0544_iop_0_to_50_step2p5_summary.json"
 INVERSE = EXPERIMENT_ROOT / "results" / "20260730_rational_regression_0_to_50_step2p5.json"
 RESULT = EXPERIMENT_ROOT / "results" / "20260731_forward_rational_parameters_ac5_proxy.json"

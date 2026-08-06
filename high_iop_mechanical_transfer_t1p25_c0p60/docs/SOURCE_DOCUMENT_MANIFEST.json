@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "generated_on": "2026-08-06",
+  "record": "EXPERIMENT_RECORD.md",
+  "source_count": 14,
+  "sources": [
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/EXPERIMENT_DESIGN.md",
+      "source_git_blob": "49ce05c5f77537fba6a15c3e8ee25149360234f4",
+      "source_size_bytes": 27940,
+      "source_sha256": "777b9587449ff40b91765dcc7927ada11a6fc8983ffa4f29040cba5117348029",
+      "source_line_count": 592,
+      "normalized_text_sha256": "777b9587449ff40b91765dcc7927ada11a6fc8983ffa4f29040cba5117348029",
+      "record_anchor": "source-experiment-design",
+      "merged_section_sha256": "777b9587449ff40b91765dcc7927ada11a6fc8983ffa4f29040cba5117348029",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/IOP40_PREFLIGHT_RESULT.md",
+      "source_git_blob": "ca4e90505158ccd4528c2eb834da8dffb0ebe3ba",
+      "source_size_bytes": 3607,
+      "source_sha256": "cf66834a0319c503b5fe604eefc15c386bdc4725b9a1d8fce10a171e18217eb8",
+      "source_line_count": 75,
+      "normalized_text_sha256": "cf66834a0319c503b5fe604eefc15c386bdc4725b9a1d8fce10a171e18217eb8",
+      "record_anchor": "source-iop40-preflight-result",
+      "merged_section_sha256": "cf66834a0319c503b5fe604eefc15c386bdc4725b9a1d8fce10a171e18217eb8",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/FULL_EXPERIMENT_RESULT.md",
+      "source_git_blob": "f385d022d408f681991402586f5b376b9bcabb0c",
+      "source_size_bytes": 5840,
+      "source_sha256": "25e8e73cee155feede7b328502251bae930a98dbd3b5f2af033ecc5887400f4c",
+      "source_line_count": 94,
+      "normalized_text_sha256": "25e8e73cee155feede7b328502251bae930a98dbd3b5f2af033ecc5887400f4c",
+      "record_anchor": "source-full-experiment-result",
+      "merged_section_sha256": "25e8e73cee155feede7b328502251bae930a98dbd3b5f2af033ecc5887400f4c",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/IOP_5_TO_50_SUPPLEMENT_RESULT.md",
+      "source_git_blob": "5db084de01c431f6262f1edd749e2a544068640a",
+      "source_size_bytes": 2811,
+      "source_sha256": "1821f058b65be90da4483dee890d481f930a39bd2895c659aadcd2b26bd786d9",
+      "source_line_count": 78,
+      "normalized_text_sha256": "1821f058b65be90da4483dee890d481f930a39bd2895c659aadcd2b26bd786d9",
+      "record_anchor": "source-iop-5-to-50-supplement-result",
+      "merged_section_sha256": "ccc2078b8d99cbfb102645dc1d7b7083ae33067ae7f7e98510b916aa816c1d9f",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/AREA_RATIO_K_RESULT.md",
+      "source_git_blob": "51cd0ee7a77f1d5c678d96346334120bcaafa26a",
+      "source_size_bytes": 3975,
+      "source_sha256": "0d45e05aff06a7460e8eba76e12e25725be0d8e4200ddfd06363b5a9c468fe2d",
+      "source_line_count": 94,
+      "normalized_text_sha256": "0d45e05aff06a7460e8eba76e12e25725be0d8e4200ddfd06363b5a9c468fe2d",
+      "record_anchor": "source-area-ratio-k-result",
+      "merged_section_sha256": "5069ce3c1fb2727bd9091c7bfb6068414b5274f100579a29a3bde288474d6256",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/IOP_2P5_SUPPLEMENT_RESULT.md",
+      "source_git_blob": "f5bfa1260eb5e9d2872474601ceda9c14c7e8169",
+      "source_size_bytes": 5063,
+      "source_sha256": "506b28965d76e517c44affc21aad2f6a62021bd2ac9fe9bb049112470e0e338d",
+      "source_line_count": 164,
+      "normalized_text_sha256": "506b28965d76e517c44affc21aad2f6a62021bd2ac9fe9bb049112470e0e338d",
+      "record_anchor": "source-iop-2p5-supplement-result",
+      "merged_section_sha256": "62e7ffa4f47abf6856a145c89dff8cdbd3c81f4ddc9cf09237230a23c0a75a4f",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/RATIONAL_REGRESSION_RESULT.md",
+      "source_git_blob": "136b731484c5952fe6271f4158481d4bfd471359",
+      "source_size_bytes": 3801,
+      "source_sha256": "09ce78bfd837fe4589e42ecc92b864036c0fdf781c03f81e5dc42997164a04bc",
+      "source_line_count": 142,
+      "normalized_text_sha256": "09ce78bfd837fe4589e42ecc92b864036c0fdf781c03f81e5dc42997164a04bc",
+      "record_anchor": "source-rational-regression-result",
+      "merged_section_sha256": "a54fd4cc62bc5861b8324ec8e768cdc30054e3c1f3a2c8480ef3422da3d41c06",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/AREA_RATIO_ERROR_ANALYSIS.md",
+      "source_git_blob": "9b17d9014a4d672fc0dd7b43030743c775eb859e",
+      "source_size_bytes": 6076,
+      "source_sha256": "9a723e60320e92cd19c5bec15e349aa24d85e6f909114be03e6c681cc45e0b76",
+      "source_line_count": 124,
+      "normalized_text_sha256": "9a723e60320e92cd19c5bec15e349aa24d85e6f909114be03e6c681cc45e0b76",
+      "record_anchor": "source-area-ratio-error-analysis",
+      "merged_section_sha256": "9a723e60320e92cd19c5bec15e349aa24d85e6f909114be03e6c681cc45e0b76",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/FORWARD_INVERSE_RIGOR_AUDIT.md",
+      "source_git_blob": "39248fd3d6811b6b23c7760f1c02da21049b8542",
+      "source_size_bytes": 9661,
+      "source_sha256": "6608942f0066a8c5e201f1bad0adf0fce306051eac9053cd5420df1472bc2df1",
+      "source_line_count": 386,
+      "normalized_text_sha256": "6608942f0066a8c5e201f1bad0adf0fce306051eac9053cd5420df1472bc2df1",
+      "record_anchor": "source-forward-inverse-rigor-audit",
+      "merged_section_sha256": "6608942f0066a8c5e201f1bad0adf0fce306051eac9053cd5420df1472bc2df1",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/FORWARD_RATIONAL_PARAMETER_DERIVATION.md",
+      "source_git_blob": "a80637073149a7d69ca9f8493ef763e7767840de",
+      "source_size_bytes": 5273,
+      "source_sha256": "366ccdbd6268ebaeaec16bd4be98dac75bc8489f6ecb4ac28bb7bbe979a4217a",
+      "source_line_count": 263,
+      "normalized_text_sha256": "366ccdbd6268ebaeaec16bd4be98dac75bc8489f6ecb4ac28bb7bbe979a4217a",
+      "record_anchor": "source-forward-rational-parameter-derivation",
+      "merged_section_sha256": "a73f2eed118389bac99010569530f37dcf02409661405d2a505288ee6c5be2ee",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/INTERFACE_FORCE_INTEGRAL_RESULT.md",
+      "source_git_blob": "d06e1cfdd9632694bd00934c48adc6c40b12960f",
+      "source_size_bytes": 6242,
+      "source_sha256": "24e2f80fa941658ab812de82872181a0ed310b8527fb7f5e47f324cdb0cb8538",
+      "source_line_count": 215,
+      "normalized_text_sha256": "24e2f80fa941658ab812de82872181a0ed310b8527fb7f5e47f324cdb0cb8538",
+      "record_anchor": "source-interface-force-integral-result",
+      "merged_section_sha256": "5ba3c1f52784bd2aad5d0f48d7708bbc6c3aaf9e473c94dfff71b7aae6af173d",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/GLOBAL_LOAD_SHARE_DERIVATION.md",
+      "source_git_blob": "20311e47cf36c1bd761052f8d6d0ea9fa59f2aff",
+      "source_size_bytes": 6548,
+      "source_sha256": "4f887a1e0a578eb0e37573ecc160800eea02bda3bfb379fdf733ae927af49af6",
+      "source_line_count": 325,
+      "normalized_text_sha256": "4f887a1e0a578eb0e37573ecc160800eea02bda3bfb379fdf733ae927af49af6",
+      "record_anchor": "source-global-load-share-derivation",
+      "merged_section_sha256": "4f887a1e0a578eb0e37573ecc160800eea02bda3bfb379fdf733ae927af49af6",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/IOP_50_TO_60_EXTENSION_RESULT.md",
+      "source_git_blob": "d598e8a2989f06bc0c3753c2bc766ac8a20cd99d",
+      "source_size_bytes": 6327,
+      "source_sha256": "76dfd201701fd1d7a28bf6ab18e91eb125e3cb40c357a0578f2eeff8ef4818eb",
+      "source_line_count": 225,
+      "normalized_text_sha256": "76dfd201701fd1d7a28bf6ab18e91eb125e3cb40c357a0578f2eeff8ef4818eb",
+      "record_anchor": "source-iop-50-to-60-extension-result",
+      "merged_section_sha256": "76dfd201701fd1d7a28bf6ab18e91eb125e3cb40c357a0578f2eeff8ef4818eb",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    },
+    {
+      "source_path": "high_iop_mechanical_transfer_t1p25_c0p60/ETA_EFF_EFFECTIVE_CORRECTION_ANALYSIS.md",
+      "source_git_blob": "57d4494fb50ae1a355b4885297d2f8d8ec91ac2b",
+      "source_size_bytes": 12798,
+      "source_sha256": "d7fa69aee1c7bcbf580dcc2b3253e83db40716f3d0eccc13172aac4ccd5550b8",
+      "source_line_count": 457,
+      "normalized_text_sha256": "d7fa69aee1c7bcbf580dcc2b3253e83db40716f3d0eccc13172aac4ccd5550b8",
+      "record_anchor": "source-eta-eff-effective-correction-analysis",
+      "merged_section_sha256": "6b73ad30e946f1b77438f400ba53f7a8563548338704bc240b8f4f180ec7de02",
+      "allowed_transformations": [
+        "CRLF/CR normalized to LF",
+        "UTF-8 BOM omitted",
+        "relative Markdown links rebased to docs/EXPERIMENT_RECORD.md"
+      ]
+    }
+  ]
+}

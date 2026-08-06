@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60" / "derive_global_load_share_model.py"
+SCRIPT = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60" / "scripts" / "analysis" / "derive_global_load_share_model.py"
 RESULT = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60" / "results" / "20260731_global_load_share_derivation.json"
 
 

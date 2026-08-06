@@ -28,6 +28,7 @@ def setup_style() -> None:
             "figure.dpi": 120,
             "savefig.dpi": 250,
             "svg.fonttype": "none",
+            "svg.hashsalt": "blueknow-analysis",
         }
     )
 
@@ -36,7 +37,14 @@ def save(fig: plt.Figure, figures: Path, stem: str, manifest: list[dict], descri
     fig.tight_layout()
     for extension in ["svg", "png"]:
         path = figures / f"{stem}.{extension}"
-        fig.savefig(path, bbox_inches="tight")
+        metadata = {"Date": None} if extension == "svg" else None
+        fig.savefig(path, bbox_inches="tight", metadata=metadata)
+        if extension == "svg":
+            # Matplotlib uses the host newline when writing SVG. Normalize it so
+            # the checked-in bytes and recorded SHA-256 agree on every platform.
+            svg = path.read_text(encoding="utf-8")
+            svg = "\n".join(line.rstrip() for line in svg.splitlines()) + "\n"
+            path.write_text(svg, encoding="utf-8", newline="\n")
         manifest.append(
             {
                 "figure": stem,

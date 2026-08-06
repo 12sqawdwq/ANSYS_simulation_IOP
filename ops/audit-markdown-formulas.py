@@ -12,15 +12,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
+HIGH_IOP_DOCS = REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "docs"
 DEFAULT_DOCUMENTS = [
-    REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "FORWARD_RATIONAL_PARAMETER_DERIVATION.md",
-    REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "RATIONAL_REGRESSION_RESULT.md",
-    REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "IOP_2P5_SUPPLEMENT_RESULT.md",
-    REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "IOP_50_TO_60_EXTENSION_RESULT.md",
-    REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "FORWARD_INVERSE_RIGOR_AUDIT.md",
-    REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "GLOBAL_LOAD_SHARE_DERIVATION.md",
-    REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "INTERFACE_FORCE_INTEGRAL_RESULT.md",
-    REPO / "high_iop_mechanical_transfer_t1p25_c0p60" / "ETA_EFF_EFFECTIVE_CORRECTION_ANALYSIS.md",
+    HIGH_IOP_DOCS / "MAIN_CONCLUSIONS.md",
+    HIGH_IOP_DOCS / "intermediate" / "MECHANICAL_TRANSFER_PATH.md",
     REPO / "docs" / "IOP修正算法全局方向.md",
 ]
 LEGACY_DISPLAY = re.compile(r"\\\[([\s\S]+?)\\\]")

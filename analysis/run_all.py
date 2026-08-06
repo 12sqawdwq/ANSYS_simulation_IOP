@@ -64,18 +64,6 @@ def run() -> None:
     }
     write_json(validation, out / "pipeline_validation.json")
 
-    manifest_rows = []
-    for path in sorted(out.rglob("*")):
-        if path.is_file() and path.name != "output_manifest.csv":
-            manifest_rows.append(
-                {
-                    "relative_path": path.relative_to(out).as_posix(),
-                    "size_bytes": path.stat().st_size,
-                    "sha256": sha256(path),
-                }
-            )
-    write_csv(pandas.DataFrame(manifest_rows), out / "output_manifest.csv")
-
     run_manifest = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "python": platform.python_version(),
@@ -95,6 +83,20 @@ def run() -> None:
         "validation": validation,
     }
     write_json(run_manifest, out / "run_manifest.json")
+
+    # Write the output manifest last. No output listed in it may be modified
+    # afterwards, otherwise its recorded SHA-256 values become stale.
+    manifest_rows = []
+    for path in sorted(out.rglob("*")):
+        if path.is_file() and path.name != "output_manifest.csv":
+            manifest_rows.append(
+                {
+                    "relative_path": path.relative_to(out).as_posix(),
+                    "size_bytes": path.stat().st_size,
+                    "sha256": sha256(path),
+                }
+            )
+    write_csv(pandas.DataFrame(manifest_rows), out / "output_manifest.csv")
 
 
 if __name__ == "__main__":

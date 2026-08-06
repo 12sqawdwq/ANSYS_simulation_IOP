@@ -120,7 +120,7 @@ class APDLContractTests(unittest.TestCase):
 
     def test_eyelid_strain_view_is_scoped_and_uses_hencky_strain(self) -> None:
         macro = (
-            runner.MODEL_DIR / "plot_thickness_eyelid_strain_007.mac"
+            runner.MODEL_DIR / "plot_thickness_eyelid_strain.mac"
         ).read_text().lower()
         self.assertIn("show_probe = arg2", macro)
         self.assertIn("esel,r,mat,,2", macro)

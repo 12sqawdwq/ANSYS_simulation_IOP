@@ -12,12 +12,12 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ROOT = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60"
-SPEC = ROOT / "run_spec_iop_50_to_60_step2p5.json"
-PLOTTER = ROOT / "plot_piop_vs_delta_pprobe_2p5.py"
+SPEC = ROOT / "config" / "extrapolation_50_to_60.json"
+PLOTTER = ROOT / "scripts" / "analysis" / "plot_pressure_sweep.py"
 DENSE_RESULT = ROOT / "results" / "20260730_290d0544_iop_0_to_50_step2p5_summary.json"
 INVERSE_RESULT = ROOT / "results" / "20260730_rational_regression_0_to_50_step2p5.json"
 LOAD_SHARE_RESULT = ROOT / "results" / "20260731_global_load_share_derivation.json"
-EVALUATOR = ROOT / "evaluate_iop60_extrapolation.py"
+EVALUATOR = ROOT / "scripts" / "analysis" / "evaluate_iop60_extrapolation.py"
 EXTENDED_RESULT = ROOT / "results" / "20260731_5017b619_iop_0_to_60_step2p5_summary.json"
 EXTRAPOLATION_RESULT = ROOT / "results" / "20260731_5017b619_iop60_frozen_model_extrapolation.json"
 EXTRAPOLATION_FIGURE = ROOT / "figures" / "iop60_frozen_model_extrapolation.png"
