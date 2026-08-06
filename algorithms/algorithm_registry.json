@@ -1,0 +1,266 @@
+{
+  "schema_version": 1,
+  "classification_date": "2026-08-06",
+  "classification_basis_head": "bea2e5dcbc3071d4169198f9e2dcc34d5211e64a",
+  "production_algorithm_available": false,
+  "generations": [
+    {
+      "id": "historical_empirical_ksensor",
+      "display_name": "经验线性 Ksensor 反演",
+      "lifecycle_status": "retired_diagnostic_only",
+      "introduced_commit": "4bc0f9ff21df849da629d09bf0ef95ce7d73aec9",
+      "demoted_commit": "e04b0c989a3038ffc9c8b401a8db79a8bd9206d0",
+      "equations": [
+        "Ksensor(p)=alpha+beta*p",
+        "p=alpha*q/(1-beta*q)"
+      ],
+      "parameters": {
+        "primary_0p259875": {
+          "alpha": 1.7958537965375994,
+          "beta_per_mmhg": 0.06706030329458683
+        },
+        "sensitivity_0p28": {
+          "alpha": 1.6587166492607621,
+          "beta_per_mmhg": 0.06254272079315978
+        }
+      }
+    },
+    {
+      "id": "current_mechanistic_area_transfer",
+      "display_name": "面积—传力分解与全局载荷份额框架",
+      "lifecycle_status": "current_research_framework_not_production",
+      "introduced_commit": "e04b0c989a3038ffc9c8b401a8db79a8bd9206d0",
+      "frozen_conclusion_commit": "956a0ec87abcbd168a8d1e34445307d0d906c6cd",
+      "equations": [
+        "q=(Fprobe(p)-Fprobe(0))/Ap",
+        "p=eta_eff(p)*K_A(p)*q",
+        "eta_eff=tau_interface*chi",
+        "p=Ap*q/(lambda(p)*A_iop_projected)"
+      ],
+      "deployment_blockers": [
+        "eta_eff or lambda is not independently predicted from unknown-IOP observables",
+        "the frozen 0-to-50 rational model failed unseen 52.5-to-60 mmHg extrapolation",
+        "no validation on real hardware or across thickness, material and indentation configurations"
+      ]
+    }
+  ],
+  "current_files": [
+    {
+      "path": "algorithms/current/MECHANISTIC_PRESSURE_TRANSFER.md",
+      "classification": "current_canonical",
+      "role": "current-generation summary"
+    },
+    {
+      "path": "docs/IOP修正算法全局方向.md",
+      "classification": "current_canonical",
+      "role": "global algorithm design"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/docs/MAIN_CONCLUSIONS.md",
+      "classification": "current_canonical",
+      "role": "frozen evidence and limitations"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/docs/intermediate/MECHANICAL_TRANSFER_PATH.md",
+      "classification": "current_canonical",
+      "role": "mechanical-path audit"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/scripts/analysis/fit_rational_piop_vs_pprobe.py",
+      "classification": "current_diagnostic",
+      "role": "sample-internal rational fit"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/scripts/analysis/derive_forward_rational_parameters.py",
+      "classification": "current_diagnostic",
+      "role": "composite proxy reconstruction with known-IOP circularity"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/scripts/analysis/derive_global_load_share_model.py",
+      "classification": "current_diagnostic",
+      "role": "load-share mechanism reparameterization"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/scripts/postprocess/postprocess_interface_force_integrals.py",
+      "classification": "current_diagnostic",
+      "role": "direct RST interface-force evidence"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/scripts/analysis/evaluate_iop60_extrapolation.py",
+      "classification": "current_diagnostic",
+      "role": "unseen high-pressure extrapolation evaluation"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/results/20260730_rational_regression_0_to_50_step2p5.json",
+      "classification": "evidence_only",
+      "role": "frozen inverse fit parameters and sample-internal metrics"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/results/20260731_3ce7c957_interface_force_integrals_summary.json",
+      "classification": "evidence_only",
+      "role": "21-point interface-force integration"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/results/20260731_global_load_share_derivation.json",
+      "classification": "evidence_only",
+      "role": "load-share derivation and non-independent status"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/results/20260731_5017b619_iop60_frozen_model_extrapolation.json",
+      "classification": "evidence_only",
+      "role": "failed unseen extrapolation evidence"
+    }
+  ],
+  "mixed_compatibility_files": [
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/config/calibration_0_to_50.json",
+      "historical_content": "frozen_sensor_models_for_diagnostic_only",
+      "current_content": "FE grid, geometry, materials, execution and QC"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/config/extrapolation_50_to_60.json",
+      "historical_content": "frozen linear Ksensor parameters",
+      "current_content": "frozen rational-model extrapolation protocol"
+    },
+    {
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/scripts/postprocess/postprocess_pressure_sweep.py",
+      "historical_content": "frozen_model_iop_calc_diagnostic_mmhg",
+      "current_content": "pressure-grid aggregation and QC"
+    }
+  ],
+  "historical_files": [
+    {
+      "commit": "4bc0f9ff21df849da629d09bf0ef95ce7d73aec9",
+      "path": "thick/experiments/high_iop_mechanical_transfer_t1p25_c0p60/EXPERIMENT_DESIGN.md",
+      "git_blob": "61e0dc0327b36cf588c1be727854345db7ab6c9d",
+      "classification": "historical_algorithm",
+      "role": "first explicit linear Ksensor design"
+    },
+    {
+      "commit": "23d4f22fc9366c99edeee92acda68d880f4d21d2",
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/run_spec_full.json",
+      "git_blob": "11c14e20be33126f1d60cd8141b6c33a011f7d29",
+      "classification": "historical_algorithm",
+      "role": "formal historical parameter configuration"
+    },
+    {
+      "commit": "23d4f22fc9366c99edeee92acda68d880f4d21d2",
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/postprocess_full_high_iop.py",
+      "git_blob": "52b6cb237e15c8eddffeddd96adef86740250c81",
+      "classification": "historical_algorithm",
+      "role": "formal historical inversion implementation"
+    },
+    {
+      "commit": "33e9f4628c10be4018d9eb20491336cf4a0e1367",
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/FULL_EXPERIMENT_RESULT.md",
+      "git_blob": "334eea7ff5c60beb9515a0b04ecc2871520cdb86",
+      "classification": "evidence_only",
+      "role": "first complete historical-model result"
+    },
+    {
+      "commit": "61eb289ad109f068993f9eaadb681597235681a8",
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/AREA_RATIO_K_RESULT.md",
+      "git_blob": "6c41ed23eb36479b5d780a852c43f072c6a7df2f",
+      "classification": "rejected_branch",
+      "role": "direct area-ratio diagnostic"
+    },
+    {
+      "commit": "61eb289ad109f068993f9eaadb681597235681a8",
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/postprocess_area_ratio_iop.py",
+      "git_blob": "503b6a5cb3c47bf7be40004b6114a69357c6b8b3",
+      "classification": "rejected_branch",
+      "role": "direct area-consistent conversion implementation"
+    },
+    {
+      "commit": "e04b0c989a3038ffc9c8b401a8db79a8bd9206d0",
+      "path": "docs/IOP修正算法全局方向.md",
+      "git_blob": "52150e0aa31629659c56c3238d8f9655418b093f",
+      "classification": "current_canonical_origin",
+      "role": "mechanistic-generation introduction"
+    },
+    {
+      "commit": "b3509ff33c871c77182048ec31d9e82cf5a2ae79",
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/fit_rational_piop_vs_pprobe.py",
+      "git_blob": "b7aca7f592a73b8f15da5a69e028df890375ff8b",
+      "classification": "current_diagnostic_origin",
+      "role": "inverse rational fit introduction"
+    },
+    {
+      "commit": "df2915dd95f6dbdc0935d47d430395b1bdb941ff",
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/derive_forward_rational_parameters.py",
+      "git_blob": "0492c435f21a2e2ee2ff3e6472cd8ebb87f0a7f0",
+      "classification": "current_diagnostic_origin",
+      "role": "composite proxy introduction"
+    },
+    {
+      "commit": "fe8687e6b4a98267bec458a04034d7669b4fa5ef",
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/INTERFACE_FORCE_INTEGRAL_RESULT.md",
+      "git_blob": "daab7c4772228d9020bd049556d564c12bf2104f",
+      "classification": "current_evidence_origin",
+      "role": "direct interface-force conclusion"
+    },
+    {
+      "commit": "2f454fd8e8ba09056e242f4e443e20f70dd0fea3",
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/derive_global_load_share_model.py",
+      "git_blob": "1d720466c77d9582a869fbe2815e639ad2fd6efb",
+      "classification": "current_diagnostic_origin",
+      "role": "load-share derivation introduction"
+    },
+    {
+      "commit": "8b2c8a11a62c9aff3cc2e774f769f043279a6927",
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/FORWARD_INVERSE_RIGOR_AUDIT.md",
+      "git_blob": "cf72e9b45a3dbbc79faf3aeaf908434609e16cec",
+      "classification": "current_evidence_origin",
+      "role": "circularity and validation audit"
+    },
+    {
+      "commit": "5017b6193ccb0b6e85162e9df2293aaba0cb837b",
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/evaluate_iop60_extrapolation.py",
+      "git_blob": "2b1004c85921de1869436d8ac2f4c038389ec3a9",
+      "classification": "current_diagnostic_origin",
+      "role": "frozen extrapolation evaluator"
+    },
+    {
+      "commit": "af9b970febc106bee648f40044fc91cf61aafd56",
+      "path": "high_iop_mechanical_transfer_t1p25_c0p60/IOP_50_TO_60_EXTENSION_RESULT.md",
+      "git_blob": "d598e8a2989f06bc0c3753c2bc766ac8a20cd99d",
+      "classification": "current_evidence_origin",
+      "role": "failed unseen extrapolation report"
+    }
+  ],
+  "diagnostic_models": [
+    {
+      "id": "fixed_inverse_rational_0_to_50",
+      "generation": "current_mechanistic_area_transfer",
+      "status": "sample_internal_fit_failed_unseen_high_pressure_extrapolation",
+      "a_per_mmhg": 0.06531173069023494,
+      "b_dimensionless": 1.8273148619678283,
+      "fit_rmse_mmhg": 0.9540593559328312,
+      "unseen_52p5_to_60_rmse_mmhg": 4.781690
+    },
+    {
+      "id": "direct_area_ratio",
+      "generation": "current_mechanistic_area_transfer",
+      "status": "rejected_as_complete_algorithm",
+      "reason": "systematic high-pressure underestimation"
+    },
+    {
+      "id": "direct_interface_times_area",
+      "generation": "current_mechanistic_area_transfer",
+      "status": "rejected_as_complete_algorithm",
+      "rmse_0_to_50_mmhg": 9.54752
+    },
+    {
+      "id": "composite_eta_area_proxy",
+      "generation": "current_mechanistic_area_transfer",
+      "status": "mechanism_proxy_not_independent_validation",
+      "reason": "eta_eff uses known input IOP"
+    },
+    {
+      "id": "global_load_share_rational",
+      "generation": "current_mechanistic_area_transfer",
+      "status": "mechanism_reparameterization_not_independent_validation",
+      "reason": "lambda parameters are identified from the same p/q responses"
+    }
+  ]
+}

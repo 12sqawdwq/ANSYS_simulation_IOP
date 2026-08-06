@@ -14,6 +14,7 @@
 
 ## 目录
 
+- `algorithms/`：IOP 修正算法的代际分类、历史来源、当前框架和机器可读文件清单。
 - `baseline/`：无偏心基线图表、说明与本地 Workbench 工程入口。
 - `offset/`：偏心研究的报告、轻量数据、图表与本地 Workbench 工程入口。
 - `thick/`：厚度项目的实验协议、占位结果、真实实验数据契约、处理脚本与报告。
@@ -26,6 +27,7 @@
 - `docs/DATA_PROVENANCE.md`：模型层级、参数差异和结论适用范围。
 - `docs/INDENTATION_SWEEP.md`：连续三载荷步扫描、状态判定、质检和分阶段运行协议。
 - `docs/IOP修正算法全局方向.md`：面积变化、力传递分解和分式 IOP 反演的全局方向。
+- `algorithms/README.md`：明确历史经验 `Ksensor` 与当前机制框架的边界，并逐文件标注归属。
 - `docs/SCRIPT_INDEX.md`：全仓库脚本职责索引。
 - `docs/CHANGELOG.md`：按 Git 提交记录时间和完整文件清单的系统日志。
 - `docs/DOCUMENTATION_POLICY.md`：主要结论、工程配置、索引、日志和中间结论的治理规则。

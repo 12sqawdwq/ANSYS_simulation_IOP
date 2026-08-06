@@ -5,11 +5,12 @@
 ## 从这里开始
 
 1. **当前主要结论**：[`docs/MAIN_CONCLUSIONS.md`](docs/MAIN_CONCLUSIONS.md)
-2. **系统与运行配置**：[`docs/SYSTEM_ENGINEERING.md`](docs/SYSTEM_ENGINEERING.md)
-3. **模块脚本索引**：[`docs/SCRIPT_INDEX.md`](docs/SCRIPT_INDEX.md)
-4. **系统/更改日志**：[`docs/CHANGELOG.md`](docs/CHANGELOG.md)
-5. **14 份原文无损合并记录**：[`docs/EXPERIMENT_RECORD.md`](docs/EXPERIMENT_RECORD.md)
-6. **中间结论生命周期**：[`docs/intermediate/README.md`](docs/intermediate/README.md)
+2. **算法代际与文件归属**：[`../algorithms/README.md`](../algorithms/README.md)
+3. **系统与运行配置**：[`docs/SYSTEM_ENGINEERING.md`](docs/SYSTEM_ENGINEERING.md)
+4. **模块脚本索引**：[`docs/SCRIPT_INDEX.md`](docs/SCRIPT_INDEX.md)
+5. **系统/更改日志**：[`docs/CHANGELOG.md`](docs/CHANGELOG.md)
+6. **14 份原文无损合并记录**：[`docs/EXPERIMENT_RECORD.md`](docs/EXPERIMENT_RECORD.md)
+7. **中间结论生命周期**：[`docs/intermediate/README.md`](docs/intermediate/README.md)
 
 ## 当前状态
 
