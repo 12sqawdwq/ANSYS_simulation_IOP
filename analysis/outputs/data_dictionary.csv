@@ -1,0 +1,24 @@
+﻿column,unit,meaning,source_or_derivation
+record_type,category,standardized record family,pipeline
+source_file,path,source relative path,pipeline
+case_id,string,unique row/case identifier,case/source_case/state
+state,category,FE work point,state or inferred dataset state
+eyelid_thickness_mm,mm,eyelid thickness h_l,eyelid_thickness_mm
+cornea_thickness_mm,mm,corneal thickness,cornea_thickness_mm/run metadata
+p_iop_mmhg,mmHg,applied intraocular pressure,input_iop_mmhg/actual_iop_mmhg/iop_mmhg
+p_iop_pa,Pa,applied intraocular pressure in SI,p_iop_mmhg × pa_per_mmhg
+p_probe_delta_mmhg,mmHg,zero-referenced probe pressure used in rational fit,delta_probe_pressure_mmhg
+p_probe_delta_pa,Pa,zero-referenced probe pressure in SI,p_probe_delta_mmhg × pa_per_mmhg
+p_probe_absolute_mmhg,mmHg,absolute force/nominal probe-area pressure including tissue baseline,probe_pressure_* or probe_equivalent_pressure_mmhg
+probe_force_n,N,total probe reaction force,probe_force_n/force_iop_n
+probe_force_delta_n,N,probe force increment from the independent 0-IOP baseline,delta_force_n
+probe_displacement_mm,mm,nominal/actual probe advance s,actual_indent_mm/indent_mm/indentation_mm
+eyelid_modulus_scale,1,eyelid material multiplier,eyelid_material_scale
+cornea_modulus_scale,1,corneal material multiplier,cornea_material_scale
+corneal_radius_mm,mm,nominal corneal curvature radius R_c,run_spec/config
+probe_area_mm2,mm^2,nominal full probe area A_p,probe_area_mm2 or diameter 4.32 mm
+corneal_applanation_area_mm2,mm^2,"5-degree corneal-side area proxy, not validated optical applanation",inner_ac_5deg_mm2
+contact_force_n,N,probe contact force when explicitly integrated,probe_contact_force_n
+eyelid_displacement_mm,mm,eyelid-only displacement; absent in current selected data,candidate mapping only
+corneal_displacement_mm,mm,corneal-side displacement proxy,inner_max_downward_mm when present
+tangent_stiffness_n_per_mm,N/mm,coupled probe-system tangent stiffness,tangent_stiffness_n_per_mm

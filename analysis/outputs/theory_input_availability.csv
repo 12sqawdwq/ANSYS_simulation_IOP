@@ -1,0 +1,7 @@
+﻿input,value,unit,status,source
+A_p,14.65741468458854,mm^2,available,run metadata/config
+s,0.259875,mm,available_by_state,pressure scan actual_indent_mm (0.259875 or 0.28)
+R_c,7.8,mm,available,run metadata
+k_l,,N/mm,not_identifiable,eyelid-only force/displacement is absent
+k_c0,,N/mm,not_identifiable,no corneal force-displacement curves across pressure
+alpha,,model-dependent,not_identifiable,cannot estimate beta/R_c without k_c(P)

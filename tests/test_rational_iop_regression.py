@@ -9,7 +9,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 EXPERIMENT_ROOT = REPO_ROOT / "high_iop_mechanical_transfer_t1p25_c0p60"
-SCRIPT = EXPERIMENT_ROOT / "fit_rational_piop_vs_pprobe.py"
+SCRIPT = EXPERIMENT_ROOT / "scripts" / "analysis" / "fit_rational_piop_vs_pprobe.py"
 SOURCE = EXPERIMENT_ROOT / "results" / "20260730_290d0544_iop_0_to_50_step2p5_summary.json"
 RESULT = EXPERIMENT_ROOT / "results" / "20260730_rational_regression_0_to_50_step2p5.json"
 FIGURE = EXPERIMENT_ROOT / "figures" / "piop_vs_delta_pprobe_rational_regression_0_to_50_step2p5.png"

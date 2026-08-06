@@ -30,7 +30,7 @@ from src.runners.run_indentation_sweep import (
     utc_now,
 )
 
-MACRO = REPO_ROOT / "models" / "apdl" / "plot_thickness_eyelid_strain_007.mac"
+MACRO = REPO_ROOT / "models" / "apdl" / "plot_thickness_eyelid_strain.mac"
 MANIFEST_FIELDS = (
     "case",
     "eyelid_thickness_mm",

@@ -1,0 +1,2 @@
+﻿comparison,n_pairs,pearson_r,pearson_p,spearman_rho,spearman_p,mean_relative_error,bland_altman_mean_difference,bland_altman_lower_loa,bland_altman_upper_loa,consistency_intercept,consistency_slope,status
+theory_vs_direct_fit,0,,,,,,,,,,,not_estimable_no_theory_pairs

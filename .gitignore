@@ -54,3 +54,10 @@ _ProjectScratch/
 /offset/workbench/
 /thick/data/raw/**
 !/thick/data/raw/README.md
+
+# Local exploratory sponge-compression experiments and deliveries.
+# Authoritative solver artifacts remain on 5090d rather than in Git.
+/sponge_compression*/
+
+# Browser-created duplicate of the authoritative Dryad workbook.
+/data/raw/dryad_z8w9ghx9f/Tangent_(Et)_vs_stress_curve (1).xlsx

@@ -1,0 +1,9 @@
+﻿state,eyelid_thickness_mm,parameter,fit_value,theory_value,relative_error,pair_status,reason
+primary_0p26,1.25,a,0.0616130324736518,,,theory_not_computable,"independent k_l, k_c0 and alpha are not identified by the current outputs"
+primary_0p26,1.25,b,1.9419250278216376,,,theory_not_computable,"independent k_l, k_c0 and alpha are not identified by the current outputs"
+primary_0p26,1.25,G0=1/b,0.5149529387968979,,,theory_not_computable,"independent k_l, k_c0 and alpha are not identified by the current outputs"
+primary_0p26,1.25,lambda=a/b,0.0317278121404957,,,theory_not_computable,"independent k_l, k_c0 and alpha are not identified by the current outputs"
+sensitivity_0p28,1.25,a,0.0572561512226929,,,theory_not_computable,"independent k_l, k_c0 and alpha are not identified by the current outputs"
+sensitivity_0p28,1.25,b,1.7927409909169385,,,theory_not_computable,"independent k_l, k_c0 and alpha are not identified by the current outputs"
+sensitivity_0p28,1.25,G0=1/b,0.5578050622296126,,,theory_not_computable,"independent k_l, k_c0 and alpha are not identified by the current outputs"
+sensitivity_0p28,1.25,lambda=a/b,0.0319377709958023,,,theory_not_computable,"independent k_l, k_c0 and alpha are not identified by the current outputs"
