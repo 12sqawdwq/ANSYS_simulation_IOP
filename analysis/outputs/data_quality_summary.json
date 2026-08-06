@@ -1,0 +1,38 @@
+{
+  "row_count": 299,
+  "row_count_by_record_type": {
+    "force_displacement": 231,
+    "pressure_scan": 50,
+    "thickness_pressure_endpoint": 18
+  },
+  "duplicate_key_rows": 0,
+  "maximum_pressure_conversion_error_mmhg": 3.222334623131928e-05,
+  "missing_counts": {
+    "record_type": 0,
+    "source_file": 0,
+    "case_id": 0,
+    "state": 0,
+    "eyelid_thickness_mm": 0,
+    "cornea_thickness_mm": 0,
+    "p_iop_mmhg": 0,
+    "p_iop_pa": 0,
+    "p_probe_delta_mmhg": 231,
+    "p_probe_delta_pa": 231,
+    "p_probe_absolute_mmhg": 50,
+    "probe_force_n": 0,
+    "probe_force_delta_n": 231,
+    "probe_displacement_mm": 0,
+    "eyelid_modulus_scale": 281,
+    "cornea_modulus_scale": 281,
+    "corneal_radius_mm": 0,
+    "probe_area_mm2": 0,
+    "corneal_applanation_area_mm2": 240,
+    "contact_force_n": 299,
+    "eyelid_displacement_mm": 299,
+    "corneal_displacement_mm": 299,
+    "tangent_stiffness_n_per_mm": 68,
+    "source_status": 0,
+    "assumption_note": 0
+  },
+  "pressure_fit_uses_delta_not_absolute": true
+}

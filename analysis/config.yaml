@@ -1,0 +1,78 @@
+project:
+  name: "Eyelid-thickness sensitivity of rational IOP calibration"
+  random_seed: 20260805
+  output_dir: "analysis/outputs"
+
+units:
+  pa_per_mmhg: 133.322
+  length_internal: "mm"
+  force_internal: "N"
+  pressure_internal: "mmHg"
+
+geometry:
+  probe_diameter_mm: 4.32
+  probe_area_mm2: 14.65741468458854
+  corneal_radius_mm: 7.8
+  reference_thickness_mm: 1.25
+
+inputs:
+  pressure_scan: "high_iop_mechanical_transfer_t1p25_c0p60/results/20260731_5017b619_iop_0_to_60_step2p5_summary.csv"
+  interface_forces: "high_iop_mechanical_transfer_t1p25_c0p60/results/20260731_3ce7c957_interface_force_integrals_summary.csv"
+  thickness_pressure_endpoints: "thick/experiments/geometric_observable_5deg/iop_from_material_baseline/iop_from_kgeo_material_baseline_full9.csv"
+  thickness_zero_geometry: "thick/experiments/geometric_observable_5deg/geometry_zero_server_full9.csv"
+  force_displacement: "thick/experiments/probe_force_curve_0p8/probe_force_curve.csv"
+  thickness_endpoint_0p26: "thick/data/processed/fe_sweep_indent_0p26/summary.csv"
+  thickness_endpoint_0p80: "thick/data/processed/fe_sweep/summary.csv"
+  run_spec: "high_iop_mechanical_transfer_t1p25_c0p60/run_spec_full.json"
+
+column_mapping:
+  case_id: ["case_id", "case", "source_case", "state"]
+  p_iop_mmhg: ["p_iop_mmhg", "input_iop_mmhg", "actual_iop_mmhg", "iop_mmhg", "reference_iop_mmhg"]
+  p_probe_delta_mmhg: ["p_probe_delta_mmhg", "delta_probe_pressure_mmhg"]
+  p_probe_absolute_mmhg: ["p_probe_absolute_mmhg", "probe_pressure_mmhg", "probe_equivalent_pressure_mmhg"]
+  probe_force_n: ["probe_force_n", "force_iop_n", "probe_fy_n"]
+  probe_force_delta_n: ["probe_force_delta_n", "delta_force_n"]
+  probe_displacement_mm: ["probe_displacement_mm", "actual_indent_mm", "indent_mm", "indentation_mm", "actual_indentation_mm"]
+  eyelid_thickness_mm: ["eyelid_thickness_mm"]
+  eyelid_modulus_scale: ["eyelid_modulus_scale", "eyelid_material_scale"]
+  cornea_modulus_scale: ["cornea_modulus_scale", "cornea_material_scale"]
+  corneal_radius_mm: ["corneal_radius_mm", "cornea_outer_radius_mm"]
+  probe_area_mm2: ["probe_area_mm2"]
+  corneal_applanation_area_mm2: ["corneal_applanation_area_mm2", "inner_ac_5deg_mm2", "inner_pressure_effective_area_mm2"]
+  contact_force_n: ["contact_force_n", "probe_contact_force_n"]
+  eyelid_displacement_mm: ["eyelid_displacement_mm"]
+  corneal_displacement_mm: ["corneal_displacement_mm", "inner_max_downward_mm"]
+
+fit:
+  states: ["primary_0p26", "sensitivity_0p28"]
+  bootstrap_replicates: 1000
+  bootstrap_method: "pairs_nonzero_plus_origin"
+  max_nfev: 50000
+  confidence_level: 0.95
+  identifiability_correlation_threshold: 0.95
+  direct_fit_response: "p_probe_delta_mmhg"
+  linearized_crosscheck: true
+
+stiffness:
+  target_window_mm: [0.20, 0.35]
+  target_displacement_mm: 0.28
+  power_law_bootstrap_replicates: 1000
+  force_curve_assumed_iop_mmhg: 20.0
+
+pressure_ranges_mmhg:
+  normal: [10.0, 21.0]
+  high: [21.0, 60.0]
+
+thresholds:
+  max_abs_log_sensitivity: 0.2
+  max_relative_deviation_fraction: 0.05
+  max_iop_mae_mmhg: 1.5
+  max_iop_relative_error_fraction: 0.05
+
+analysis_policy:
+  minimum_nonzero_pressures_for_two_parameter_fit: 4
+  minimum_distinct_pressures_for_residual_dof: 4
+  use_candidate_contact_areas_for_primary_conclusions: false
+  do_not_impute_missing_factorial_cells: true
+  exact_thickness_parameter_claim_requires_multiiop_per_thickness: true
+

@@ -1,0 +1,4 @@
+﻿quantity,is_exact_requested_parameter,decision,abs_log_sensitivity,max_relative_deviation,iop_mae_mmhg,total_calibration_mae_mmhg,mean_iop_relative_error,total_calibration_mean_relative_error,passes_sensitivity_threshold,passes_relative_deviation_threshold,passes_iop_error_threshold
+G0=1/b,True,not_evaluable_due_to_nonidentifiability,,,,,,,,,
+lambda=a/b,True,not_evaluable_due_to_nonidentifiability,,,,,,,,,
+G_eff_at_20 proxy,False,proxy_only_not_sufficient_for_G0_or_lambda_claim,0.009322924827168518,0.0423880328934805,0.6218447812247838,1.505769848237014,0.031092239061239188,0.0752884924118507,True,True,True

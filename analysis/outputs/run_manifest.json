@@ -1,0 +1,23 @@
+{
+  "generated_at_utc": "2026-08-05T09:13:16.670881+00:00",
+  "python": "3.12.4",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "versions": {
+    "pandas": "2.2.3",
+    "numpy": "1.26.4",
+    "scipy": "1.13.1",
+    "statsmodels": "0.14.2",
+    "scikit_learn": "1.4.2",
+    "matplotlib": "3.9.2",
+    "pyyaml": "6.0.1"
+  },
+  "random_seed": 20260805,
+  "bootstrap_replicates": 1000,
+  "config_sha256": "97a8361b96dee3ab3cf5a0cc5e13bd88e521a77b405f8c1e0ec61df08d283e65",
+  "validation": {
+    "status": "pass",
+    "missing_required_outputs": [],
+    "svg_figure_count": 11,
+    "required_minimum_svg_figures": 10
+  }
+}

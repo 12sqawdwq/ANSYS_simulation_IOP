@@ -1,0 +1,6 @@
+﻿scope,reason,action
+thick/data/placeholder,placeholder data explicitly documented as non-FE evidence,excluded from all inference
+contact_rezeroed candidate areas,source status says candidate_not_approved,retained in inventory; excluded from primary calibration
+older/superseded high-IOP summaries,complete 0-60 step-2.5 summary is the most inclusive frozen dataset,retained in inventory; excluded to prevent duplicate FE states
+absolute probe pressure,nonzero tissue preload at P_IOP=0 conflicts with the model's zero intercept,retained in tidy table; zero-referenced delta pressure used for fit
+raw material/offset studies,different experiment or response definition,retained in inventory; not pooled

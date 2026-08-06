@@ -1,0 +1,6 @@
+﻿quantity,required_observation,available_observation,status,reason
+k_l,eyelid-only force versus eyelid-only displacement in the target window,total probe force versus commanded probe displacement,not_identifiable,"cornea, bonded interface and whole-globe motion are included in the same reaction"
+k_c(P_IOP),corneal force-displacement slope at multiple displacements for every IOP,one retained indentation state at each IOP,not_identifiable,pressure derivative of endpoint force is not a displacement stiffness
+k_c0,intercept of independently measured k_c(P_IOP),no independent k_c curve,not_identifiable,cannot separate corneal stiffness from eyelid/coupling stiffness
+alpha,slope beta/R_c from independently measured k_c(P_IOP),no independent k_c curve,not_identifiable,"single-displacement pressure scan measures transfer, not pressure-induced stiffness"
+k_c(P_IOP)/k_l,both independently extracted structural stiffnesses,neither component stiffness is independently available,not_identifiable,material modulus values cannot substitute for structural equivalent stiffness

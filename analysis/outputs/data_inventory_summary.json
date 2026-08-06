@@ -1,0 +1,16 @@
+{
+  "total_files": 191,
+  "counts_by_extension": {
+    ".csv": 110,
+    ".json": 48,
+    ".xlsx": 16,
+    ".txt": 13,
+    ".dat": 4
+  },
+  "counts_by_relevance": {
+    "primary": 134,
+    "context": 49,
+    "diagnostic": 7,
+    "excluded": 1
+  }
+}

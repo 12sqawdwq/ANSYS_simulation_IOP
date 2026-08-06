@@ -1,0 +1,11 @@
+﻿output,factor,effect_metric,effect_value,standardized_log_coefficient,status,reason
+zero_iop_baseline_force,eyelid_thickness,single-factor log-log R2,0.9997093599194565,1.0330407366270813,unadjusted_single_factor_only,"material, radius, probe area and IOP are fixed in the thickness matrix"
+total_probe_force_at_20,eyelid_thickness,single-factor log-log R2,0.9997999629321735,0.951835230749548,unadjusted_single_factor_only,"material, radius, probe area and IOP are fixed in the thickness matrix"
+delta_probe_force_at_20,eyelid_thickness,single-factor log-log R2,0.013141556131209708,0.009322924827161665,unadjusted_single_factor_only,"material, radius, probe area and IOP are fixed in the thickness matrix"
+P_probe_delta_at_20,eyelid_thickness,single-factor log-log R2,0.013141556131218812,0.009322924827170107,unadjusted_single_factor_only,"material, radius, probe area and IOP are fixed in the thickness matrix"
+G_eff_at_20=P_probe/P_IOP,eyelid_thickness,single-factor log-log R2,0.013141556131220589,0.009322924827168518,unadjusted_single_factor_only,"material, radius, probe area and IOP are fixed in the thickness matrix"
+shared_calibration_iop_prediction,eyelid_thickness,single-factor log-log R2,0.0146459445736421,0.01655756769254017,unadjusted_single_factor_only,"material, radius, probe area and IOP are fixed in the thickness matrix"
+all,eyelid_modulus,partial R2/Sobol,,,not_estimable_no_independent_scan,factor is fixed or not crossed with thickness in the selected FE matrix
+all,probe_displacement,partial R2/Sobol,,,not_estimable_no_independent_scan,factor is fixed or not crossed with thickness in the selected FE matrix
+all,probe_area,partial R2/Sobol,,,not_estimable_no_independent_scan,factor is fixed or not crossed with thickness in the selected FE matrix
+all,corneal_radius,partial R2/Sobol,,,not_estimable_no_independent_scan,factor is fixed or not crossed with thickness in the selected FE matrix

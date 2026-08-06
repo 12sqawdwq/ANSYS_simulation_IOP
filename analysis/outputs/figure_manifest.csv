@@ -1,0 +1,23 @@
+﻿figure,format,relative_path,description
+fig01_pressure_curves,svg,figures/fig01_pressure_curves.svg,"Pressure curves, direct fits and bootstrap intervals"
+fig01_pressure_curves,png,figures/fig01_pressure_curves.png,"Pressure curves, direct fits and bootstrap intervals"
+fig02_parameters_vs_thickness,svg,figures/fig02_parameters_vs_thickness.svg,Only h=1.25 mm has identifiable rational parameters
+fig02_parameters_vs_thickness,png,figures/fig02_parameters_vs_thickness.png,Only h=1.25 mm has identifiable rational parameters
+fig03_normalized_sensitivity,svg,figures/fig03_normalized_sensitivity.svg,Exact parameter sensitivities unavailable; 20-mmHg effective-gain proxy shown
+fig03_normalized_sensitivity,png,figures/fig03_normalized_sensitivity.png,Exact parameter sensitivities unavailable; 20-mmHg effective-gain proxy shown
+fig04_coefficient_of_variation,svg,figures/fig04_coefficient_of_variation.svg,CV comparison with non-identifiable exact parameters marked N/A
+fig04_coefficient_of_variation,png,figures/fig04_coefficient_of_variation.png,CV comparison with non-identifiable exact parameters marked N/A
+fig05_coupled_stiffness_power_law,svg,figures/fig05_coupled_stiffness_power_law.svg,Coupled local stiffness and power-law fit
+fig05_coupled_stiffness_power_law,png,figures/fig05_coupled_stiffness_power_law.png,Coupled local stiffness and power-law fit
+fig06_corneal_stiffness_identifiability,svg,figures/fig06_corneal_stiffness_identifiability.svg,Diagnostic showing why corneal stiffness cannot be extracted
+fig06_corneal_stiffness_identifiability,png,figures/fig06_corneal_stiffness_identifiability.png,Diagnostic showing why corneal stiffness cannot be extracted
+fig07_stiffness_ratio_identifiability,svg,figures/fig07_stiffness_ratio_identifiability.svg,Diagnostic showing why k_c/k_l cannot be calculated
+fig07_stiffness_ratio_identifiability,png,figures/fig07_stiffness_ratio_identifiability.png,Diagnostic showing why k_c/k_l cannot be calculated
+fig08_theory_fit_identity,svg,figures/fig08_theory_fit_identity.svg,Identity-line audit; no theory-fit pairs are computable
+fig08_theory_fit_identity,png,figures/fig08_theory_fit_identity.png,Identity-line audit; no theory-fit pairs are computable
+fig09_iop_error_vs_thickness,svg,figures/fig09_iop_error_vs_thickness.svg,20-mmHg shared-calibration errors across thickness
+fig09_iop_error_vs_thickness,png,figures/fig09_iop_error_vs_thickness.png,20-mmHg shared-calibration errors across thickness
+fig10_sensitivity_ranking,svg,figures/fig10_sensitivity_ranking.svg,Single-factor thickness sensitivity ranking; other factors were fixed
+fig10_sensitivity_ranking,png,figures/fig10_sensitivity_ranking.png,Single-factor thickness sensitivity ranking; other factors were fixed
+fig11_pressure_fit_residuals,svg,figures/fig11_pressure_fit_residuals.svg,Residuals reveal pressure-dependent model discrepancy
+fig11_pressure_fit_residuals,png,figures/fig11_pressure_fit_residuals.png,Residuals reveal pressure-dependent model discrepancy

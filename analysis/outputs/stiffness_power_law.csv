@@ -1,0 +1,2 @@
+﻿observable,c_n_per_mm_per_mm_power,exponent_m_for_k_proportional_h_to_m,n_for_k_proportional_h_to_minus_n,n_ci95_low,n_ci95_high,r2_log_space,p_value_test_n_equals_1,supports_inverse_thickness_n_equals_1,bootstrap_successful,scope_warning
+coupled_local_linear_stiffness_n_per_mm,0.8315306199687539,0.9919367280212364,-0.9919367280212364,-1.0023956081503165,-0.9846676168094011,0.9999467366062655,2.1529732523956605e-13,False,1000,"This is k_probe,coupled(h), not independently extracted eyelid k_l(h)."
