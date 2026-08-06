@@ -2,13 +2,20 @@
 
 本日志是仓库级可读索引：按 Git 提交逆时间排列，保存每个提交的时间、主题和完整 `name-status` 文件清单。科学结论应读取各模块主要结论文档；运行时环境与外部求解日志读取 launch metadata/manifest。完整差异仍以 `git show <commit>` 为唯一真源。
 
-## Unreleased（整理分支 `repo-reorganization-20260806`）
+## Unreleased（分支 `algorithm-classification-20260806`）
 
+- 建立 `algorithms/` 总入口，明确历史经验 `Ksensor` 与当前面积—传力机制框架的分界；
+- 建立逐文件分类、Git 演化链和机器可读 `algorithm_registry.json`；
+- 保存历史设计、配置、实现和结果的提交号及 Git blob，不复制旧脚本；
+- 增加注册表、权威参数及完整历史对象的自动测试。
+
+## 2026-08-06 · `bea2e5d` · Merge repository reorganization
+
+- 通过非快进合并纳入 `e70b506` 和 `ae5f69f`；
 - 建立仓库级脚本索引和文档治理规则；
 - 系统整理高眼压实验目录并做无损文档合并；
 - 审计并删除已被当前密集压力链替代的阶段入口；
-- 保留结果证据和 Git 可恢复性；
-- 本节在整理分支合并后由合并提交固化。
+- 保留结果证据、整理分支和 Git 可恢复性。
 
 ## 2026-08-06T15:46:10+08:00 · `e70b506` · Add thickness sensitivity analysis and ignore local sponge runs
 

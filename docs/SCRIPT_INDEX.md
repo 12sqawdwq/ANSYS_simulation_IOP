@@ -80,6 +80,8 @@
 
 - [`../high_iop_mechanical_transfer_t1p25_c0p60/docs/SCRIPT_INDEX.md`](../high_iop_mechanical_transfer_t1p25_c0p60/docs/SCRIPT_INDEX.md)
 - [`../high_iop_mechanical_transfer_t1p25_c0p60/docs/SYSTEM_ENGINEERING.md`](../high_iop_mechanical_transfer_t1p25_c0p60/docs/SYSTEM_ENGINEERING.md)
+- [`../algorithms/README.md`](../algorithms/README.md)：历史经验算法、当前机制框架及逐文件归属
+- [`../algorithms/algorithm_registry.json`](../algorithms/algorithm_registry.json)：机器可读算法代际和历史 Git blob 清单
 
 当前三条正式入口是：
 
@@ -149,7 +151,8 @@ high_iop_mechanical_transfer_t1p25_c0p60/scripts/server/launch_interface_force_i
 - runner 参数、APDL 宏契约、重试和产物策略；
 - 厚度面积、接触归零、探头力曲线；
 - 高眼压当前配置、分式模型、外推和界面力；
-- 高眼压原文无损合并完整性。
+- 高眼压原文无损合并完整性；
+- 算法代际注册表、权威参数和历史 Git blob 完整性。
 
 标准命令：
 
