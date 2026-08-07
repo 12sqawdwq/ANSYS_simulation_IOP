@@ -31,7 +31,7 @@
 
 |脚本|职责|默认产物|
 |---|---|---|
-|`scripts/analysis/fit_rational_piop_vs_pprobe.py`|拟合 0–50 mmHg 的 $p=bq/(1-aq)$|`results/20260730_rational_regression_*`、分式图|
+|`scripts/analysis/fit_rational_piop_vs_pprobe.py`|按历史源字段拟合 0–50 mmHg 的 $p=b_{source}q/(1-a_{source}q)$；三版本展示映射为 $p=a_{display}q/(1-b_{display}q)$|`results/20260730_rational_regression_*`、分式图|
 |`scripts/analysis/derive_forward_rational_parameters.py`|由面积和综合修正代理推导局部参数，并与逆向回归比较|`results/20260731_forward_rational_parameters_*`|
 |`scripts/analysis/derive_global_load_share_model.py`|将分式重参数化为全局载荷份额模型|`results/20260731_global_load_share_derivation.*`|
 |`scripts/analysis/evaluate_iop60_extrapolation.py`|用冻结参数评估 52.5–60 mmHg 未见点|`results/20260731_5017b619_iop60_frozen_model_extrapolation.*`|

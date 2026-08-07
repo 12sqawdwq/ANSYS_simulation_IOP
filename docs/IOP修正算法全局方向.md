@@ -282,6 +282,30 @@ $$
 - 必须满足 $1-aq>0$；
 - 不得在已验证压力范围外靠近或跨越分母奇点外推。
 
+### 5.1 与三版本总览的符号映射
+
+本文及既有脚本沿用历史结果字段，把分母斜率记为 $a_{source}$、分子增益记为 $b_{source}$：
+
+$$
+p=\frac{b_{source}q}{1-a_{source}q}
+$$
+
+[`../algorithms/README.md`](../algorithms/README.md) 按三版本展示要求，把版本二统一写成：
+
+$$
+p=\frac{a_{display}q}{1-b_{display}q}
+$$
+
+两者只是符号交换：
+
+$$
+a_{display}=b_{source},
+\qquad
+b_{display}=a_{source}
+$$
+
+原始 JSON 中对应 `a_source=a_per_mmhg`、`b_source=b_dimensionless`。为了保持历史产物哈希和脚本接口稳定，不批量改写原字段；新文档或接口必须注明使用哪套符号。
+
 ---
 
 ## 6. 与旧线性Ksensor模型的关系

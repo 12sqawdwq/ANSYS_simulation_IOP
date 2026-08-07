@@ -142,12 +142,22 @@ p=\frac{1.8273148620q}{1-0.0653117307q}
 }
 $$
 
-其中：
+其中本结果文件沿用历史源字段约定：
 
 $$
-a=0.0653117307\ \mathrm{mmHg^{-1}},
-\qquad b=1.8273148620
+a_{source}=0.0653117307\ \mathrm{mmHg^{-1}},
+\qquad b_{source}=1.8273148620
 $$
+
+三版本总览统一把版本二写成 $p=a_{display}q/(1-b_{display}q)$，因此：
+
+$$
+a_{display}=b_{source}=1.8273148620,
+\qquad
+b_{display}=a_{source}=0.0653117307\ \mathrm{mmHg^{-1}}
+$$
+
+两种写法是同一个模型；原始 JSON 和脚本字段继续使用 `a_per_mmhg`、`b_dimensionless`，不得静默交换。
 
 0–50 mmHg、21 个实际 FE 点上的指标：
 
