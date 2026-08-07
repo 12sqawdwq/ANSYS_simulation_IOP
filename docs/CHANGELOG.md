@@ -2,12 +2,14 @@
 
 本日志是仓库级可读索引：按 Git 提交逆时间排列，保存每个提交的时间、主题和完整 `name-status` 文件清单。科学结论应读取各模块主要结论文档；运行时环境与外部求解日志读取 launch metadata/manifest。完整差异仍以 `git show <commit>` 为唯一真源。
 
-## Unreleased（分支 `algorithm-classification-20260806`）
+## Unreleased（分支 `algorithm-three-version-presentation-20260806`）
 
-- 建立 `algorithms/` 总入口，明确历史经验 `Ksensor` 与当前面积—传力机制框架的分界；
-- 建立逐文件分类、Git 演化链和机器可读 `algorithm_registry.json`；
-- 保存历史设计、配置、实现和结果的提交号及 Git blob，不复制旧脚本；
-- 增加注册表、权威参数及完整历史对象的自动测试。
+- 将算法展示统一为三个概念版本：有效压平面积比换算、$p=aq/(1-bq)$ 经验分式反演、力学传递效率/修正模型；
+- 新增版本一说明，保留其高压失效负结果，并明确面积项继续作为版本三的组成部分；
+- 统一版本二展示符号，同时保留与历史 `a_per_mmhg`、`b_dimensionless` 字段的显式映射；
+- 将机器可读注册表升级为三版本 schema，并继续声明 `production_algorithm_available=false`；
+- 保留逐文件分类、Git 演化链、历史设计/实现/结果的提交号和 Git blob，不复制旧脚本；
+- 扩展自动测试，校验三版本顺序、生命周期、参数映射和完整历史对象。
 
 ## 2026-08-06 · `bea2e5d` · Merge repository reorganization
 

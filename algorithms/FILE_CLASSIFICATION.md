@@ -2,7 +2,15 @@
 
 ## 1. 判定规则
 
-本清单按文件的**算法职责**分类，而不是按文件修改时间分类：
+本清单按文件的**算法职责**分类，而不是按文件修改时间分类。统一使用以下三版本展示：
+
+- 版本一 `area_only_effective_applanation`：有效压平面积比换算；
+- 版本二 `empirical_rational_inversion`：$p=aq/(1-bq)$ 经验分式反演；
+- 版本三 `mechanical_transfer_efficiency`：面积与力学传递效率/修正分解。
+
+版本编号表示模型层级，不覆盖 Git 真实提交顺序。
+
+职责分类为：
 
 - `current_canonical`：定义当前认可的机制框架或冻结结论；
 - `current_diagnostic`：当前仍使用的分析工具，但输出不是生产算法；
@@ -12,29 +20,32 @@
 - `evidence_only`：不可变结果/QC，不是算法源码；
 - `not_algorithm`：FE 模型、运行器、绘图或实验编排。
 
-## 2. 当前代权威文件
+## 2. 三版本说明与当前权威文件
 
-|文件|分类|说明|
-|---|---|---|
-|`docs/IOP修正算法全局方向.md`|`current_canonical`|当前面积—传力分解总设计；分界提交 `e04b0c9`|
-|`high_iop_mechanical_transfer_t1p25_c0p60/docs/MAIN_CONCLUSIONS.md`|`current_canonical`|当前冻结数值、允许/禁止表述和验证失败|
-|`high_iop_mechanical_transfer_t1p25_c0p60/docs/intermediate/MECHANICAL_TRANSFER_PATH.md`|`current_canonical`|机制路径审计及关闭判定|
-|`high_iop_mechanical_transfer_t1p25_c0p60/docs/EXPERIMENT_RECORD.md`|`evidence_only`|14 份阶段原文的无损记录，包含新旧两代历史|
-|`algorithms/current/MECHANISTIC_PRESSURE_TRANSFER.md`|`current_canonical`|面向接手者的当前代算法摘要|
+|文件|版本|分类|说明|
+|---|---|---|---|
+|`algorithms/historical/AREA_ONLY_EFFECTIVE_APPLANATION.md`|版本一|`version_summary`|面积比换算公式、面积口径和高压失效|
+|`algorithms/historical/EMPIRICAL_KSENSOR.md`|版本二|`version_summary`|经验分式、历史参数、密集拟合和退役原因|
+|`algorithms/current/MECHANISTIC_PRESSURE_TRANSFER.md`|版本三|`current_canonical`|力学传递效率/修正和全局载荷份额摘要|
+|`docs/IOP修正算法全局方向.md`|版本三|`current_canonical`|面积—传力分解总设计；分界提交 `e04b0c9`|
+|`high_iop_mechanical_transfer_t1p25_c0p60/docs/MAIN_CONCLUSIONS.md`|全版本证据|`current_canonical`|当前冻结数值、允许/禁止表述和验证失败|
+|`high_iop_mechanical_transfer_t1p25_c0p60/docs/intermediate/MECHANICAL_TRANSFER_PATH.md`|版本三|`current_canonical`|机制路径审计及关闭判定|
+|`high_iop_mechanical_transfer_t1p25_c0p60/docs/EXPERIMENT_RECORD.md`|全版本历史|`evidence_only`|14 份阶段原文的无损记录|
 
-## 3. 当前代分析与验证脚本
+## 3. 分析与验证脚本
 
-|文件|分类|准确角色|
-|---|---|---|
-|`high_iop_mechanical_transfer_t1p25_c0p60/scripts/analysis/fit_rational_piop_vs_pprobe.py`|`current_diagnostic`|0–50 mmHg 经验逆向分式拟合；不是生产算法|
-|`high_iop_mechanical_transfer_t1p25_c0p60/scripts/analysis/derive_forward_rational_parameters.py`|`current_diagnostic`|面积＋综合修正代理；含已知 IOP，存在闭环|
-|`high_iop_mechanical_transfer_t1p25_c0p60/scripts/analysis/derive_global_load_share_model.py`|`current_diagnostic`|全局载荷份额机制重参数化|
-|`high_iop_mechanical_transfer_t1p25_c0p60/scripts/postprocess/postprocess_interface_force_integrals.py`|`current_diagnostic`|RST 界面力与力平衡证据提取|
-|`high_iop_mechanical_transfer_t1p25_c0p60/scripts/analysis/evaluate_iop60_extrapolation.py`|`current_diagnostic`|冻结分式的独立高压外推评估；结果为失败|
-|`analysis/fit_pressure_model.py`|`current_diagnostic`|跨厚度可识别性和分式拟合；除 1.25 mm 外不能识别完整参数|
-|`analysis/sensitivity_analysis.py`|`current_diagnostic`|厚度敏感性及共享参数诊断，不定义新生产公式|
+|文件|主要版本|分类|准确角色|
+|---|---|---|---|
+|`high_iop_mechanical_transfer_t1p25_c0p60/scripts/postprocess/postprocess_area_ratio_iop.py`|版本一|`rejected_branch`|面积一致换算；高压系统性低估|
+|`high_iop_mechanical_transfer_t1p25_c0p60/scripts/analysis/fit_rational_piop_vs_pprobe.py`|版本二|`current_diagnostic`|0–50 mmHg 经验逆向分式拟合；不是生产算法|
+|`high_iop_mechanical_transfer_t1p25_c0p60/scripts/analysis/derive_forward_rational_parameters.py`|版本三|`current_diagnostic`|面积＋综合修正代理；含已知 IOP，存在闭环|
+|`high_iop_mechanical_transfer_t1p25_c0p60/scripts/analysis/derive_global_load_share_model.py`|版本三|`current_diagnostic`|全局载荷份额机制重参数化|
+|`high_iop_mechanical_transfer_t1p25_c0p60/scripts/postprocess/postprocess_interface_force_integrals.py`|版本三|`current_diagnostic`|RST 界面力与力平衡证据提取|
+|`high_iop_mechanical_transfer_t1p25_c0p60/scripts/analysis/evaluate_iop60_extrapolation.py`|版本二|`current_diagnostic`|冻结分式的独立高压外推评估；结果为失败|
+|`analysis/fit_pressure_model.py`|版本二诊断|`current_diagnostic`|跨厚度可识别性和分式拟合；除 1.25 mm 外不能识别完整参数|
+|`analysis/sensitivity_analysis.py`|版本二诊断|`current_diagnostic`|厚度敏感性及共享参数诊断，不定义新生产公式|
 
-## 4. 历史代原文件
+## 4. 版本一和版本二的历史原文件
 
 这些文件已经从当前工作树移除或被重构，但可由 Git 精确恢复。
 
@@ -61,7 +72,7 @@
 
 结论：旧参数仍然出现是为了复现和比较，不代表旧算法仍在服役。
 
-## 6. 当前机制代中的诊断或已否定分支
+## 6. 三版本中的诊断或已否定分支
 
 |文件/结果|分类|结论|
 |---|---|---|
@@ -82,16 +93,18 @@
 
 |范围|分类原因|
 |---|---|
-|`models/apdl/param_eye_sweep.mac`|FE 物理模型；新旧算法都使用其求解结果|
+|`models/apdl/param_eye_sweep.mac`|FE 物理模型；三个算法版本都可使用其求解结果|
 |`src/runners/run_indentation_sweep.py`|工况运行与 QC，不执行 IOP 标定策略选择|
 |`high_iop_mechanical_transfer_t1p25_c0p60/scripts/server/*.sh`|服务器编排入口|
 |`plot_*.py`|可视化，不定义算法参数来源|
 |`figures/`|图件证据|
 |`results/*launch_metadata.json`、controller state、artifact SHA|运行溯源与完整性证据|
-|厚度、偏心和 baseline 模块|独立实验域；可能提供未来参数，但不是两代 IOP 反演算法本身|
+|厚度、偏心和 baseline 模块|独立实验域；可能为三个版本提供未来参数，但自身不是新的 IOP 反演版本|
 
 ## 8. 最终文件归属结论
 
-- **旧版本算法文件**：以 `4bc0f9f`、`23d4f22` 中的设计、配置和 `postprocess_full_high_iop.py` 为核心；当前只残留诊断兼容字段。
-- **新版本算法文件**：以 `docs/IOP修正算法全局方向.md` 和当前高眼压主要结论为核心；现有分析脚本用于识别、审计和证伪，尚没有可直接发布的生产算法文件。
-- **不能归入任一生产版本**：固定逆向分式、面积法、直接界面法、综合代理和载荷分流现阶段分别属于诊断拟合、已否定路径或机制重参数化。
+- **版本一文件**：以面积一致换算脚本、面积法结果及 `AREA_ONLY_EFFECTIVE_APPLANATION.md` 为入口；已否定为完整算法，但面积项继续进入版本三。
+- **版本二文件**：以 `4bc0f9f`、`23d4f22` 的历史 `Ksensor` 实现以及当前固定分式拟合/外推脚本为核心；当前只允许经验诊断。
+- **版本三文件**：以 `docs/IOP修正算法全局方向.md`、`MECHANISTIC_PRESSURE_TRANSFER.md` 和高眼压冻结结论为核心；尚没有可直接发布的生产实现。
+- **版本三内部不能误判为新版本的路径**：直接界面法、综合代理和载荷分流现阶段分别属于已否定路径、闭环诊断或机制重参数化。
+- **生产状态**：三个版本均不能直接部署；版本号只表达算法迭代，不表达发布资格。

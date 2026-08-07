@@ -15,24 +15,41 @@ class AlgorithmRegistryTests(unittest.TestCase):
     def setUpClass(cls) -> None:
         cls.registry = json.loads(REGISTRY_PATH.read_text(encoding="utf-8"))
 
-    def test_two_generations_have_unambiguous_nonproduction_status(self) -> None:
+    def test_three_versions_have_unambiguous_nonproduction_status(self) -> None:
+        self.assertEqual(self.registry["schema_version"], 2)
         self.assertFalse(self.registry["production_algorithm_available"])
-        generations = {item["id"]: item for item in self.registry["generations"]}
+        versions = {item["id"]: item for item in self.registry["versions"]}
         self.assertEqual(
-            set(generations),
-            {"historical_empirical_ksensor", "current_mechanistic_area_transfer"},
+            set(versions),
+            {
+                "area_only_effective_applanation",
+                "empirical_rational_inversion",
+                "mechanical_transfer_efficiency",
+            },
         )
         self.assertEqual(
-            generations["historical_empirical_ksensor"]["lifecycle_status"],
+            [item["version"] for item in self.registry["versions"]], [1, 2, 3]
+        )
+        self.assertEqual(
+            versions["area_only_effective_applanation"]["lifecycle_status"],
+            "rejected_as_complete_algorithm_retained_as_geometry_component",
+        )
+        self.assertEqual(
+            versions["empirical_rational_inversion"]["lifecycle_status"],
             "retired_diagnostic_only",
         )
         self.assertEqual(
-            generations["current_mechanistic_area_transfer"]["lifecycle_status"],
+            versions["mechanical_transfer_efficiency"]["lifecycle_status"],
             "current_research_framework_not_production",
         )
+        self.assertIn(
+            "p=a*q/(1-b*q)",
+            versions["empirical_rational_inversion"]["equations"],
+        )
 
-    def test_all_current_and_mixed_paths_exist(self) -> None:
+    def test_all_classified_worktree_paths_exist(self) -> None:
         entries = [
+            *self.registry["version_documents"],
             *self.registry["current_files"],
             *self.registry["mixed_compatibility_files"],
         ]
@@ -41,8 +58,8 @@ class AlgorithmRegistryTests(unittest.TestCase):
             self.assertTrue(path.is_file(), entry["path"])
 
     def test_registry_parameters_match_authoritative_files(self) -> None:
-        generations = {item["id"]: item for item in self.registry["generations"]}
-        old_parameters = generations["historical_empirical_ksensor"]["parameters"]
+        versions = {item["id"]: item for item in self.registry["versions"]}
+        old_parameters = versions["empirical_rational_inversion"]["parameters"]
         calibration = json.loads(
             (
                 REPO_ROOT
@@ -69,6 +86,14 @@ class AlgorithmRegistryTests(unittest.TestCase):
         )
         self.assertEqual(model["a_per_mmhg"], rational["parameters"]["a_per_mmhg"])
         self.assertEqual(model["b_dimensionless"], rational["parameters"]["b_dimensionless"])
+        self.assertEqual(
+            model["display_a_numerator_dimensionless"],
+            rational["parameters"]["b_dimensionless"],
+        )
+        self.assertEqual(
+            model["display_b_denominator_per_mmhg"],
+            rational["parameters"]["a_per_mmhg"],
+        )
         self.assertEqual(
             model["fit_rmse_mmhg"], rational["metrics"]["rmse_all_points_mmhg"]
         )

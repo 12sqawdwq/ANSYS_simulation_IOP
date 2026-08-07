@@ -80,7 +80,7 @@
 
 - [`../high_iop_mechanical_transfer_t1p25_c0p60/docs/SCRIPT_INDEX.md`](../high_iop_mechanical_transfer_t1p25_c0p60/docs/SCRIPT_INDEX.md)
 - [`../high_iop_mechanical_transfer_t1p25_c0p60/docs/SYSTEM_ENGINEERING.md`](../high_iop_mechanical_transfer_t1p25_c0p60/docs/SYSTEM_ENGINEERING.md)
-- [`../algorithms/README.md`](../algorithms/README.md)：历史经验算法、当前机制框架及逐文件归属
+- [`../algorithms/README.md`](../algorithms/README.md)：有效压平面积换算、经验分式和力学传递三个版本及逐文件归属
 - [`../algorithms/algorithm_registry.json`](../algorithms/algorithm_registry.json)：机器可读算法代际和历史 Git blob 清单
 
 当前三条正式入口是：

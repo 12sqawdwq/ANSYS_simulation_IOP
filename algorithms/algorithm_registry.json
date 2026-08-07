@@ -1,19 +1,47 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "classification_date": "2026-08-06",
-  "classification_basis_head": "bea2e5dcbc3071d4169198f9e2dcc34d5211e64a",
+  "classification_basis_head": "9a76686b8709d4b88c0f35147a810a821b1b9e84",
+  "versioning_policy": "three conceptual algorithm versions; Git commits remain the chronological source of truth",
   "production_algorithm_available": false,
-  "generations": [
+  "versions": [
     {
-      "id": "historical_empirical_ksensor",
-      "display_name": "经验线性 Ksensor 反演",
+      "version": 1,
+      "id": "area_only_effective_applanation",
+      "display_name": "有效压平面积比换算",
+      "lifecycle_status": "rejected_as_complete_algorithm_retained_as_geometry_component",
+      "formal_test_commit": "61eb289ad109f068993f9eaadb681597235681a8",
+      "failure_analysis_commit": "c3a7fe7f0beec21e5fa277b9d9ede590d84e6843",
+      "incorporated_as_component_commit": "e04b0c989a3038ffc9c8b401a8db79a8bd9206d0",
+      "equations": [
+        "q=delta_Fprobe/Ap",
+        "p=(Ap/Ac)*q",
+        "p=(Ae/Ac)*(delta_Fprobe/Ae)"
+      ],
+      "assumption": "delta_Fprobe=p*Ac",
+      "evidence": {
+        "primary_working_point_mae_mmhg": 5.4923,
+        "primary_working_point_rmse_mmhg": 6.7007,
+        "conclusion": "approximately accurate near 20 mmHg but systematically underestimates high pressure"
+      }
+    },
+    {
+      "version": 2,
+      "id": "empirical_rational_inversion",
+      "display_name": "经验分式反演",
       "lifecycle_status": "retired_diagnostic_only",
       "introduced_commit": "4bc0f9ff21df849da629d09bf0ef95ce7d73aec9",
       "demoted_commit": "e04b0c989a3038ffc9c8b401a8db79a8bd9206d0",
       "equations": [
         "Ksensor(p)=alpha+beta*p",
-        "p=alpha*q/(1-beta*q)"
+        "p=a*q/(1-b*q)",
+        "a=alpha; b=beta"
       ],
+      "display_parameter_convention": {
+        "a": "dimensionless numerator gain",
+        "b_per_mmhg": "denominator slope",
+        "legacy_result_mapping": "a_display=b_dimensionless; b_display=a_per_mmhg"
+      },
       "parameters": {
         "primary_0p259875": {
           "alpha": 1.7958537965375994,
@@ -26,29 +54,47 @@
       }
     },
     {
-      "id": "current_mechanistic_area_transfer",
-      "display_name": "面积—传力分解与全局载荷份额框架",
+      "version": 3,
+      "id": "mechanical_transfer_efficiency",
+      "display_name": "力学传递效率/修正与全局载荷份额框架",
       "lifecycle_status": "current_research_framework_not_production",
       "introduced_commit": "e04b0c989a3038ffc9c8b401a8db79a8bd9206d0",
       "frozen_conclusion_commit": "956a0ec87abcbd168a8d1e34445307d0d906c6cd",
       "equations": [
         "q=(Fprobe(p)-Fprobe(0))/Ap",
-        "p=eta_eff(p)*K_A(p)*q",
+        "K_A(p)=Ap/Ac(p)",
+        "T_mech(p)=delta_Fprobe/(p*Ac(p))",
+        "eta_eff(p)=1/T_mech(p)",
+        "p=K_A(p)*q/T_mech(p)=eta_eff(p)*K_A(p)*q",
         "eta_eff=tau_interface*chi",
-        "p=Ap*q/(lambda(p)*A_iop_projected)"
+        "p=Ap*q/(lambda_load(p)*A_iop_projected)"
       ],
       "deployment_blockers": [
-        "eta_eff or lambda is not independently predicted from unknown-IOP observables",
+        "T_mech, eta_eff or lambda_load is not independently predicted from unknown-IOP observables",
         "the frozen 0-to-50 rational model failed unseen 52.5-to-60 mmHg extrapolation",
         "no validation on real hardware or across thickness, material and indentation configurations"
       ]
+    }
+  ],
+  "version_documents": [
+    {
+      "version": 1,
+      "path": "algorithms/historical/AREA_ONLY_EFFECTIVE_APPLANATION.md"
+    },
+    {
+      "version": 2,
+      "path": "algorithms/historical/EMPIRICAL_KSENSOR.md"
+    },
+    {
+      "version": 3,
+      "path": "algorithms/current/MECHANISTIC_PRESSURE_TRANSFER.md"
     }
   ],
   "current_files": [
     {
       "path": "algorithms/current/MECHANISTIC_PRESSURE_TRANSFER.md",
       "classification": "current_canonical",
-      "role": "current-generation summary"
+      "role": "version-three current-framework summary"
     },
     {
       "path": "docs/IOP修正算法全局方向.md",
@@ -176,7 +222,7 @@
       "path": "docs/IOP修正算法全局方向.md",
       "git_blob": "52150e0aa31629659c56c3238d8f9655418b093f",
       "classification": "current_canonical_origin",
-      "role": "mechanistic-generation introduction"
+      "role": "version-three mechanistic-framework introduction"
     },
     {
       "commit": "b3509ff33c871c77182048ec31d9e82cf5a2ae79",
@@ -231,36 +277,44 @@
   "diagnostic_models": [
     {
       "id": "fixed_inverse_rational_0_to_50",
-      "generation": "current_mechanistic_area_transfer",
+      "version": 2,
+      "version_id": "empirical_rational_inversion",
       "status": "sample_internal_fit_failed_unseen_high_pressure_extrapolation",
       "a_per_mmhg": 0.06531173069023494,
       "b_dimensionless": 1.8273148619678283,
+      "display_a_numerator_dimensionless": 1.8273148619678283,
+      "display_b_denominator_per_mmhg": 0.06531173069023494,
+      "legacy_field_mapping": "display_a=b_dimensionless; display_b=a_per_mmhg",
       "fit_rmse_mmhg": 0.9540593559328312,
       "unseen_52p5_to_60_rmse_mmhg": 4.781690
     },
     {
       "id": "direct_area_ratio",
-      "generation": "current_mechanistic_area_transfer",
+      "version": 1,
+      "version_id": "area_only_effective_applanation",
       "status": "rejected_as_complete_algorithm",
       "reason": "systematic high-pressure underestimation"
     },
     {
       "id": "direct_interface_times_area",
-      "generation": "current_mechanistic_area_transfer",
+      "version": 3,
+      "version_id": "mechanical_transfer_efficiency",
       "status": "rejected_as_complete_algorithm",
       "rmse_0_to_50_mmhg": 9.54752
     },
     {
       "id": "composite_eta_area_proxy",
-      "generation": "current_mechanistic_area_transfer",
+      "version": 3,
+      "version_id": "mechanical_transfer_efficiency",
       "status": "mechanism_proxy_not_independent_validation",
       "reason": "eta_eff uses known input IOP"
     },
     {
       "id": "global_load_share_rational",
-      "generation": "current_mechanistic_area_transfer",
+      "version": 3,
+      "version_id": "mechanical_transfer_efficiency",
       "status": "mechanism_reparameterization_not_independent_validation",
-      "reason": "lambda parameters are identified from the same p/q responses"
+      "reason": "lambda_load parameters are identified from the same p/q responses"
     }
   ]
 }
