@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-09T11:44:37+00:00",
+  "source_git_commit": "cef09f91ca328cc39488b55047afaf9e078a980a",
+  "accepted_pressure_sources_mmhg": {
+    "0": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T171738Z_cef09f9_mesh0p20_confirmation_bounded_np4/iop0",
+    "20": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260808T084727Z_cef09f9_mesh0p20_iop20_sequential/iop20"
+  },
+  "note": "The first root campaign is globally failed only because its incomplete simultaneous IOP20 runner was intentionally aborted; its three IOP0 endpoints completed with return code 0 and are accepted. No endpoint from the aborted IOP20 run is used.",
+  "files": [
+    {
+      "role": "accepted_iop0_manifest",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T171738Z_cef09f9_mesh0p20_confirmation_bounded_np4/iop0/run_manifest.csv",
+      "byte_size": 6128,
+      "sha256": "d36890e1a782c76796d1e0b528580b8f169f709284abbed7ad5e208030c7cb18"
+    },
+    {
+      "role": "accepted_iop0_metadata",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T171738Z_cef09f9_mesh0p20_confirmation_bounded_np4/iop0/run_metadata.json",
+      "byte_size": 4224,
+      "sha256": "d4a9aae5a3a8f95f5719ef531973dcd29526d658b77202a02c333713911de546"
+    },
+    {
+      "role": "iop0_source_campaign_status",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T171738Z_cef09f9_mesh0p20_confirmation_bounded_np4/campaign_status.csv",
+      "byte_size": 235,
+      "sha256": "8a937b4f8038b6fadb3c085e6f4c1b4e4b9d8989b32d8cf41a46e472bbdc7dd1"
+    },
+    {
+      "role": "accepted_iop20_manifest",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260808T084727Z_cef09f9_mesh0p20_iop20_sequential/iop20/run_manifest.csv",
+      "byte_size": 6112,
+      "sha256": "c7abb9192a45e61648a7f8b61a43881bb61b290f559890bcece4404c19bac405"
+    },
+    {
+      "role": "accepted_iop20_metadata",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260808T084727Z_cef09f9_mesh0p20_iop20_sequential/iop20/run_metadata.json",
+      "byte_size": 4275,
+      "sha256": "599d3b488dcf761798432dc20182830956ec8de59d0e6c6dc16abb538f32af31"
+    },
+    {
+      "role": "iop20_source_campaign_status",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260808T084727Z_cef09f9_mesh0p20_iop20_sequential/campaign_status.csv",
+      "byte_size": 216,
+      "sha256": "75b44b78d5ee035fc3c0b6550df4022d7ef3a7b487f8b9b9261700daceb21a63"
+    },
+    {
+      "role": "aborted_parallel_iop20_marker",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T171738Z_cef09f9_mesh0p20_confirmation_bounded_np4/IOP20_ABORTED_RESOURCE_PREFLIGHT",
+      "byte_size": 149,
+      "sha256": "28183e35b72b92acc0cb4a033583d8f70c1651b0a712cf0be69caca4f88cb243"
+    },
+    {
+      "role": "aborted_parallel_cleanup_marker",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T171738Z_cef09f9_mesh0p20_confirmation_bounded_np4/IOP20_TRANSIENT_ARTIFACTS_CLEANED",
+      "byte_size": 36,
+      "sha256": "830a7079d175e134f548726fda6310e45c435964a2c8361d7c0d8b26eb75f4e5"
+    },
+    {
+      "role": "iop0_solver_log",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T171738Z_cef09f9_mesh0p20_confirmation_bounded_np4/iop0/eyelid_1p60mm_indent_0p28mm/attempt_1/solve.out",
+      "byte_size": 125544,
+      "sha256": "ff2966ae575f747bc2bcb278035585cbd7b4c9782bddbd0f3aa8ada131d0e9d2"
+    },
+    {
+      "role": "iop0_solver_log",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T171738Z_cef09f9_mesh0p20_confirmation_bounded_np4/iop0/eyelid_1p80mm_indent_0p28mm/attempt_1/solve.out",
+      "byte_size": 126063,
+      "sha256": "e0a7eba0e5a55f466412a70b7751a05a86754500a6e2b8c03d16dfaa2f1af751"
+    },
+    {
+      "role": "iop0_solver_log",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T171738Z_cef09f9_mesh0p20_confirmation_bounded_np4/iop0/eyelid_2p00mm_indent_0p28mm/attempt_1/solve.out",
+      "byte_size": 126799,
+      "sha256": "2d756de2ab7bff2f02149c567d20d59a73bdafe040b4b5663d1e301099c78f23"
+    },
+    {
+      "role": "iop20_solver_log",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260808T084727Z_cef09f9_mesh0p20_iop20_sequential/iop20/eyelid_1p60mm_indent_0p28mm/attempt_1/solve.out",
+      "byte_size": 128662,
+      "sha256": "9d7d533946a5533e444674c68eb406940e423e25a39251703c40e374d1065ff1"
+    },
+    {
+      "role": "iop20_solver_log",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260808T084727Z_cef09f9_mesh0p20_iop20_sequential/iop20/eyelid_1p80mm_indent_0p28mm/attempt_1/solve.out",
+      "byte_size": 129175,
+      "sha256": "95355502642101f0040f34c26c3be893fd5cae9a333c22583857db5386169721"
+    },
+    {
+      "role": "iop20_solver_log",
+      "remote_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260808T084727Z_cef09f9_mesh0p20_iop20_sequential/iop20/eyelid_2p00mm_indent_0p28mm/attempt_1/solve.out",
+      "byte_size": 128517,
+      "sha256": "16b44b81e1959e47e60f94a8b96011092e26e5af91ab75ba275a816f1f97f901"
+    }
+  ]
+}

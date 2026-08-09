@@ -120,6 +120,16 @@ high_iop_mechanical_transfer_t1p25_c0p60/scripts/server/launch_interface_force_i
 
 这些脚本对应不同问题，不是彼此的 v1/v2 版本。
 
+### 6.1 厚端网格无关性
+
+|路径|职责|
+|---|---|
+|`thickness_mesh_independence/scripts/server/launch_mesh_campaign_5090d.sh`|在 5090d 对 1.60、1.80、2.00 mm 执行网格筛查或三级确认；`PRESSURES` 可限定 0/20 mmHg 压力子集以实现资源受控串行|
+|`thickness_mesh_independence/scripts/analysis/collect_baseline_inventory.py`|从保留的 0.30 mm manifest 与求解日志提取网格规模和接触 QC 清单|
+|`thickness_mesh_independence/scripts/analysis/evaluate_mesh_independence.py`|汇总 0.30/0.24/0.20 mm 结果，检查 QC、厚端次序、前一级相对变化和三级网格判定|
+
+配置、证据等级和大文件边界见 `thickness_mesh_independence/README.md`。
+
 ## 7. 数据构建
 
 |路径|职责|
