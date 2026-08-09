@@ -1,0 +1,162 @@
+{
+  "generated_at_utc": "2026-08-07T07:46:12+00:00",
+  "status": "existing_rst_postprocessing_only",
+  "ansys": "2025 R2",
+  "git_commit": "cef09f91ca328cc39488b55047afaf9e078a980a",
+  "git_dirty": false,
+  "macro": "models/apdl/plot_sweep_views.mac",
+  "macro_sha256": "f3b6074851d76a23117d35d8db716bc73d32480ff82d45c8c82e62218cf9b6f4",
+  "view_suffixes": {
+    "007": "all-material deformed central section, actual scale"
+  },
+  "scale_policy": "native MAPDL auto scale per panel; colors must not be compared quantitatively across IOP states",
+  "rows": [
+    {
+      "iop_mmhg": 0.0,
+      "actual_indent_mm": 0.259875,
+      "result_time": 2.928125,
+      "source_geometry_state": {
+        "generated_at_utc": "2026-07-30T05:07:37+00:00",
+        "case": "eyelid_1p25mm_indent_0p28mm",
+        "eyelid_thickness_mm": 1.25,
+        "iop_mmhg": 0.0,
+        "requested_indent_mm": 0.26,
+        "actual_indent_mm": 0.259875,
+        "indent_error_mm": -0.00012499999999998623,
+        "result_time": 2.928125,
+        "result_load_step": 3.0,
+        "probe_force_n": 0.14603312233753,
+        "probe_pressure_mmhg": 74.72931061041783,
+        "outer_ae_lower_mm2": 13.052876225311696,
+        "outer_ae_clipped_mm2": 14.657478116423219,
+        "outer_strict_faces": 765,
+        "outer_boundary_faces": 147,
+        "inner_ac_5deg_mm2": 5.317452780205752,
+        "inner_5deg_faces": 310,
+        "kgeo_5deg": 2.4547234860083953,
+        "source_manifest": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T043130Z_23d4f22f_full_matrix/iop0/run/run_manifest.csv",
+        "source_attempt": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T043130Z_23d4f22f_full_matrix/iop0/run/eyelid_1p25mm_indent_0p28mm/attempt_1",
+        "source_rst": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T043130Z_23d4f22f_full_matrix/iop0/run/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.rst",
+        "source_git_commit": "23d4f22fc9366c99edeee92acda68d880f4d21d2",
+        "mapdl_returncode": 0
+      },
+      "images": {
+        "eyelid_1p25mm_indent_0p28mm007.png": "1e63612391384427a7506f706ec3fb1d33bf87fa189c91bb7cb5a9220ad3ad92"
+      },
+      "post_out_sha256": "56d4e511f60eadabf225ef44a4fb6bb10128dfb610e3ef55e1c20f58e70708e5",
+      "mapdl_error_count": 0,
+      "run_completed": true
+    },
+    {
+      "iop_mmhg": 20.0,
+      "actual_indent_mm": 0.259875,
+      "result_time": 2.928125,
+      "source_geometry_state": {
+        "generated_at_utc": "2026-07-30T05:08:38+00:00",
+        "case": "eyelid_1p25mm_indent_0p28mm",
+        "eyelid_thickness_mm": 1.25,
+        "iop_mmhg": 20.0,
+        "requested_indent_mm": 0.26,
+        "actual_indent_mm": 0.259875,
+        "indent_error_mm": -0.00012499999999998623,
+        "result_time": 2.928125,
+        "result_load_step": 3.0,
+        "probe_force_n": 0.15881784411045,
+        "probe_pressure_mmhg": 81.27161710324269,
+        "outer_ae_lower_mm2": 12.992362429491527,
+        "outer_ae_clipped_mm2": 14.6573424676834,
+        "outer_strict_faces": 755,
+        "outer_boundary_faces": 143,
+        "inner_ac_5deg_mm2": 4.9382329831556735,
+        "inner_5deg_faces": 286,
+        "kgeo_5deg": 2.630973968585223,
+        "source_manifest": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T043130Z_23d4f22f_full_matrix/iop20/run/run_manifest.csv",
+        "source_attempt": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T043130Z_23d4f22f_full_matrix/iop20/run/eyelid_1p25mm_indent_0p28mm/attempt_1",
+        "source_rst": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T043130Z_23d4f22f_full_matrix/iop20/run/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.rst",
+        "source_git_commit": "23d4f22fc9366c99edeee92acda68d880f4d21d2",
+        "mapdl_returncode": 0
+      },
+      "images": {
+        "eyelid_1p25mm_indent_0p28mm007.png": "1c0fd2e54c372ecd20bde40d1fea6a9629d82017382c2778a3f9bdb965a454cb"
+      },
+      "post_out_sha256": "91159a6297361e40a907f52dbdf7ee2a36b791e35228fe279835feb3efb0d10b",
+      "mapdl_error_count": 0,
+      "run_completed": true
+    },
+    {
+      "iop_mmhg": 40.0,
+      "actual_indent_mm": 0.259875,
+      "result_time": 2.928125,
+      "source_geometry_state": {
+        "generated_at_utc": "2026-07-30T04:18:50+00:00",
+        "case": "eyelid_1p25mm_indent_0p28mm",
+        "eyelid_thickness_mm": 1.25,
+        "iop_mmhg": 40.0,
+        "requested_indent_mm": 0.26,
+        "actual_indent_mm": 0.259875,
+        "indent_error_mm": -0.00012499999999998623,
+        "result_time": 2.928125,
+        "result_load_step": 3.0,
+        "probe_force_n": 0.16349733912426,
+        "probe_pressure_mmhg": 83.66624806633783,
+        "outer_ae_lower_mm2": 13.098559607262061,
+        "outer_ae_clipped_mm2": 14.657498613535832,
+        "outer_strict_faces": 753,
+        "outer_boundary_faces": 143,
+        "inner_ac_5deg_mm2": 4.552776604011648,
+        "inner_5deg_faces": 261,
+        "kgeo_5deg": 2.8770486115484672,
+        "source_manifest": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T040825Z_bdca48fe_iop40_preflight/run/run_manifest.csv",
+        "source_attempt": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T040825Z_bdca48fe_iop40_preflight/run/eyelid_1p25mm_indent_0p28mm/attempt_1",
+        "source_rst": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T040825Z_bdca48fe_iop40_preflight/run/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.rst",
+        "source_git_commit": "bdca48fe1704b1cb1bf9f863a7275b0866b34f97",
+        "mapdl_returncode": 0
+      },
+      "images": {
+        "eyelid_1p25mm_indent_0p28mm007.png": "23567a4e4c54d735d33a945218f9654538543bb317d4bf61887590973bd388f6"
+      },
+      "post_out_sha256": "afbcf2a129b9e551a0ff77d8e47180e3c72cc1c48b65e3f0181408dfc9e88720",
+      "mapdl_error_count": 0,
+      "run_completed": true
+    },
+    {
+      "iop_mmhg": 50.0,
+      "actual_indent_mm": 0.259875,
+      "result_time": 2.928125,
+      "source_geometry_state": {
+        "generated_at_utc": "2026-07-30T06:57:15+00:00",
+        "case": "eyelid_1p25mm_indent_0p28mm",
+        "eyelid_thickness_mm": 1.25,
+        "iop_mmhg": 50.0,
+        "requested_indent_mm": 0.26,
+        "actual_indent_mm": 0.259875,
+        "indent_error_mm": -0.00012499999999998623,
+        "result_time": 2.928125,
+        "result_load_step": 3.0,
+        "probe_force_n": 0.16539191569714,
+        "probe_pressure_mmhg": 84.63575689367588,
+        "outer_ae_lower_mm2": 13.041135870823743,
+        "outer_ae_clipped_mm2": 14.657727870161837,
+        "outer_strict_faces": 747,
+        "outer_boundary_faces": 143,
+        "inner_ac_5deg_mm2": 4.465074208286621,
+        "inner_5deg_faces": 255,
+        "kgeo_5deg": 2.920698573524494,
+        "source_manifest": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T061631Z_440e44e5_iop5_to50_step5/iop50/run/run_manifest.csv",
+        "source_attempt": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T061631Z_440e44e5_iop5_to50_step5/iop50/run/eyelid_1p25mm_indent_0p28mm/attempt_1",
+        "source_rst": "/home/xuanyu/PROJECT/ziyu/blueknow-data/high_iop_mechanical_transfer_t1p25_c0p60/20260730T061631Z_440e44e5_iop5_to50_step5/iop50/run/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.rst",
+        "source_git_commit": "440e44e523e87d8248b8eea0a614dc77138c0471",
+        "mapdl_returncode": 0
+      },
+      "images": {
+        "eyelid_1p25mm_indent_0p28mm007.png": "fe05f479a4ae283905183be920a27da74451d825347da71c5420b5a1e6fa660b"
+      },
+      "post_out_sha256": "974aebbcf382d42c9e9bb44799daf84ee12f8e5eacb0e4476143c1a948eb3990",
+      "mapdl_error_count": 0,
+      "run_completed": true
+    }
+  ],
+  "artifact_scope": "paper central-section selection only",
+  "source_manifest_location_5090d": "/home/xuanyu/PROJECT/ziyu/blueknow-data/paper_mechanical_contours/20260807_forward_results/manifest.json",
+  "selection_policy": "Use only central-section view 007; complete material-isolated views are excluded from the paper figure."
+}

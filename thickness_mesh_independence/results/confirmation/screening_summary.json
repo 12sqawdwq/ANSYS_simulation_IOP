@@ -1,0 +1,56 @@
+{
+  "generated_at_utc": "2026-08-09T11:53:37+00:00",
+  "status": "three_mesh_confirmation_complete",
+  "screening_root": "iop0=/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T171738Z_cef09f9_mesh0p20_confirmation_bounded_np4/iop0; iop20=/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260808T084727Z_cef09f9_mesh0p20_iop20_sequential/iop20",
+  "baseline": "analysis/outputs/thickness_iop_predictions.csv",
+  "baseline_solver_inventory": "thickness_mesh_independence/results/baseline_mesh_inventory.csv",
+  "intermediate_comparison": "thickness_mesh_independence/results/screening/mesh_comparison.csv",
+  "source_git_commit": "cef09f91ca328cc39488b55047afaf9e078a980a",
+  "mesh_sizes_mm": [
+    0.3,
+    0.24,
+    0.2
+  ],
+  "eyelid_thicknesses_mm": [
+    1.6,
+    1.8,
+    2.0
+  ],
+  "all_pairs_qc_pass": true,
+  "thick_end_order_preserved": true,
+  "refinement_direction_consistent_at_each_thickness": true,
+  "maximum_absolute_q_change_from_0p30_percent": 22.763476807415593,
+  "maximum_absolute_q_change_from_previous_mesh_percent": 12.312655812588014,
+  "screening_limit_percent": 2.0,
+  "latest_mesh_change_within_limit": false,
+  "mesh_refinement_ratios_from_previous_mesh": {
+    "h_1.6_elements": 1.6719668164535084,
+    "h_1.8_elements": 1.647427107615213,
+    "h_2.0_elements": 1.6737744463293769,
+    "h_1.6_nodes": 1.6691048127818329,
+    "h_1.8_nodes": 1.6449174610555686,
+    "h_2.0_nodes": 1.670103338874253
+  },
+  "q_drop_1p6_to_2p0_percent": {
+    "mesh_0p30": -7.764766246168642,
+    "mesh_0p24": -9.320564236485996,
+    "mesh_0p20": -10.357827128530229
+  },
+  "post_hoc_shape_diagnostic": {
+    "q_contrast_1p6_minus_2p0_mmhg": {
+      "mesh_0p30": 0.5724176791441185,
+      "mesh_0p24": 0.6156029594925894,
+      "mesh_0p20": 0.6068208637233745
+    },
+    "latest_contrast_change_percent": -1.4265843972636971,
+    "latest_refinement_q_shift_mmhg": {
+      "h_1.6": -0.7462091109008675,
+      "h_1.8": -0.7446283456948155,
+      "h_2.0": -0.7374270151316527
+    },
+    "latest_refinement_q_shift_range_mmhg": 0.008782095769214848,
+    "interpretation_boundary": "Exploratory common-mode/shape diagnostic only; it was not the preregistered 2% absolute-q decision criterion."
+  },
+  "decision": "thick_end_order_robust_but_amplitude_not_mesh_independent",
+  "claim_boundary": "The three tested meshes preserve the sampled thick-end order, but the absolute q amplitude does not meet the 2% mesh-independence criterion; neither a converged magnitude nor a physical threshold in real tissue is established."
+}

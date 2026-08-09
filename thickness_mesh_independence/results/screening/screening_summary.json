@@ -1,0 +1,39 @@
+{
+  "generated_at_utc": "2026-08-07T16:23:49+00:00",
+  "status": "screening_complete_not_final_mesh_independence",
+  "screening_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T113236Z_cef09f9_mesh0p24_screening_bounded",
+  "baseline": "analysis/outputs/thickness_iop_predictions.csv",
+  "baseline_solver_inventory": "thickness_mesh_independence/results/baseline_mesh_inventory.csv",
+  "intermediate_comparison": null,
+  "source_git_commit": "cef09f91ca328cc39488b55047afaf9e078a980a",
+  "mesh_sizes_mm": [
+    0.3,
+    0.24
+  ],
+  "eyelid_thicknesses_mm": [
+    1.6,
+    1.8,
+    2.0
+  ],
+  "all_pairs_qc_pass": true,
+  "thick_end_order_preserved": true,
+  "refinement_direction_consistent_at_each_thickness": null,
+  "maximum_absolute_q_change_from_0p30_percent": 11.918277479691142,
+  "maximum_absolute_q_change_from_previous_mesh_percent": 11.918277479691142,
+  "screening_limit_percent": 2.0,
+  "latest_mesh_change_within_limit": false,
+  "mesh_refinement_ratios_from_previous_mesh": {
+    "h_1.6_elements": 1.9083239335351816,
+    "h_1.8_elements": 1.9377053140096618,
+    "h_2.0_elements": 1.9385428535971752,
+    "h_1.6_nodes": 1.8989806509733265,
+    "h_1.8_nodes": 1.9270835666951929,
+    "h_2.0_nodes": 1.92802751372339
+  },
+  "q_drop_1p6_to_2p0_percent": {
+    "mesh_0p30": -7.764766246168642,
+    "mesh_0p24": -9.320564236485996
+  },
+  "decision": "proceed_to_0p20_for_three_mesh_confirmation",
+  "claim_boundary": "The 0.24-mm result is a screen only; it cannot establish mesh independence without the third mesh."
+}
