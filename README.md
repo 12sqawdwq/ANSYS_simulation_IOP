@@ -1,60 +1,142 @@
-# Blueknow 眼压计仿真
+# Transpalpebral Tonometry: FEM Experiments and Reproducibility Notes
 
-本仓库统一管理经眼睑眼压测量的可复现模型、运行代码、分析文档和轻量结果。原始 ANSYS 求解文件保存在 5090d 外部数据区，不进入 Git 历史。
+**A reproducible finite-element modeling and validation repository for transpalpebral intraocular-pressure measurement.**
 
-## 当前核心结论
+This is a working research repository, not a production calibration package. It contains parameterized ANSYS/APDL models, controlled sweeps, solver-state extraction, data provenance, lightweight results, and analysis code for studying how eyelid mechanics and measurement geometry affect probe response.
 
-- 7 点三维厚度扫描已完成：眼睑厚度从 0.80 mm 增加到 2.00 mm 时，固定 0.80 mm 推进的探头反力从 0.6127 N 增至 1.4253 N，外侧接触面积基本不变。严格几何 `Ae/Ac` 对角度和粗网格敏感，未复现旧占位资料的单调上升曲线。
-- 旧厚度参数扫描仍保留用于追溯实验假设；真实仿体完成后将以受控内压、力/位移和双相机内外面积数据形成正式 IOP 修正。
-- 偏心量在 0-1 mm 时半经验面积比变化较小；2 mm 时内部有效面积和三维接触范围明显下降。3D 模型的接触单元代理从 351 降至 180，眼睑峰值应力从 27.15 kPa 增至 37.83 kPa。
-- 算法统一展示为三个版本：版本一按有效压平面积比换算 `PIOP=(Ap/Ac)·Pprobe`，版本二采用经验分式 `PIOP=a·Pprobe/(1-b·Pprobe)`，版本三采用力学传递模型 `PIOP=ηeff·KA·Pprobe=KA·Pprobe/Tmech`。三个版本目前均不是生产硬件标定。
-- `Kgeo,5°=Ae/Ac,5°`只用于冻结的几何材料筛选；版本一已因高压系统性低估而关闭为完整算法。当前主方向是版本三，必须区分面积项 `KA=Ap/Ac` 与力学传递比/修正，不得将面积比、直接界面传力或同源重参数化单独包装为生产算法。
-- 高眼压固定配置的 0–50 mmHg 分式模型样本内 RMSE 约 0.954 mmHg，但冻结参数后的 52.5–60 mmHg 独立外推 RMSE 约 4.782 mmHg，60 mmHg 高估约 6.964 mmHg；当前不构成生产硬件标定。
-- 厚度敏感性分析表明，除 1.25 mm 外只有 0/20 mmHg 端点，不能逐厚度识别分式参数；20 mmHg 组合增益稳定只能作为 0.30 mm 网格上的代理描述。0.30/0.24/0.20 mm 三级审计均保留 1.60→2.00 mm 的下降次序，但最细两级的绝对输出仍变化最多 12.31%，因此方向稳健、幅值未达到网格无关，1.60 mm 不是已验证的物理阈值。
+Both useful results and results that did not survive later checks are kept visible. In particular, the current model is not mesh independent, several parameters are not identifiable from the available sweeps, and a frozen high-pressure fit did not extrapolate adequately.
 
-## 目录
+![Central-section stress contours from the finite-element workflow](paper/figures/central_section_stress_contours.png)
 
-- `algorithms/`：IOP 修正算法的三版本分类、历史来源、当前框架和机器可读文件清单。
-- `baseline/`：无偏心基线图表、说明与本地 Workbench 工程入口。
-- `offset/`：偏心研究的报告、轻量数据、图表与本地 Workbench 工程入口。
-- `thick/`：厚度项目的实验协议、占位结果、真实实验数据契约、处理脚本与报告。
-- `high_iop_mechanical_transfer_t1p25_c0p60/`：0–60 mmHg 高眼压实验的分层配置、脚本、结论和无损实验记录。
-- `analysis/`：厚度敏感性与参数可识别性分析管线及可复现输出。
-- `thickness_mesh_independence/`：1.60–2.00 mm 厚端响应的定向网格无关性设计、服务器入口、轻量结果和结论；[`DETAILED_REPORT.md`](thickness_mesh_independence/DETAILED_REPORT.md) 含三级实际网格、原生/统一 0–60 kPa 结果剖面截图和 18 个接收终点的逐项耗时。
-- `paper/`：基于冻结有限元和算法证据形成的论文初稿、投稿前核对项及数据溯源。
-- `models/apdl/`：参数化 APDL 模型、后处理宏和测试输入。
-- `src/runners/`：当前可复现的批量运行入口。
-- `src/postprocess/`：共享状态提取、汇总、面积/接触/力学分析和绘图工具。
-- `docs/analysis/`：共享分析说明；项目报告分别位于各模块 `docs/`。
-- `docs/DATA_PROVENANCE.md`：模型层级、参数差异和结论适用范围。
-- `docs/INDENTATION_SWEEP.md`：连续三载荷步扫描、状态判定、质检和分阶段运行协议。
-- `docs/IOP修正算法全局方向.md`：面积变化、力传递分解和分式 IOP 反演的全局方向。
-- `algorithms/README.md`：统一展示面积换算、经验分式和力学传递三个版本，并逐文件标注归属。
-- `docs/SCRIPT_INDEX.md`：全仓库脚本职责索引。
-- `docs/CHANGELOG.md`：按 Git 提交记录时间和完整文件清单的系统日志。
-- `docs/DOCUMENTATION_POLICY.md`：主要结论、工程配置、索引、日志和中间结论的治理规则。
-- `results/summary/`：机器可读汇总和外部结果校验清单。
-- `ops/`：本地、5090d 和 arch 的仓库初始化与同步脚本。
+## Research question
 
-## 三端角色
+A transpalpebral tonometer measures through the eyelid rather than contacting the cornea directly. The observed probe response can therefore depend on intraocular pressure (IOP), eyelid thickness and stiffness, corneal/scleral response, probe offset, contact evolution, indentation depth, and mesh resolution.
 
-- 本地：完整开发副本。
-- 5090d：中心 bare 仓库、完整工作副本和外部求解数据区。
-- arch：`blob:none` 部分克隆，只检出文档、汇总、图和报告脚本。
+The repository asks:
 
-详细同步命令见 [docs/SYNC_GUIDE.md](docs/SYNC_GUIDE.md)。数据解释和限制见 [docs/DATA_PROVENANCE.md](docs/DATA_PROVENANCE.md)。
+1. Which simulated observables remain sensitive to IOP under these coupled effects?
+2. Can geometric area terms and mechanical load transfer be separated into a defensible correction model?
+3. Which parameters are identifiable from the current sweep design?
+4. Which conclusions survive mesh and extrapolation checks?
 
-## 版本管理
+## Model and workflow
 
-- 工作树只保留一套当前模型、运行入口和后处理脚本。
-- 历史实现通过 Git commit、branch 或 tag 查询；工作树不保留历史代码目录，也不在流程脚本名中添加版本数字、`final`、`old` 或 `backup` 后缀。
-- 每次批量求解在 `run_manifest.csv` 中记录 Git commit 和工作区是否有未提交修改；未提交状态只用于调试，不作为正式结果来源。
-- 大型实验按主要结论、系统工程、脚本索引、更改日志、完整实验记录和中间结论分层；规范见 [docs/DOCUMENTATION_POLICY.md](docs/DOCUMENTATION_POLICY.md)。
+```text
+parameterized APDL model
+        │
+        ├── baseline and eccentric probe cases
+        ├── eyelid-thickness sweeps
+        ├── high-IOP mechanical-transfer sweep
+        └── targeted mesh-sensitivity study
+        │
+        ▼
+solver artifacts + run_manifest.csv
+        │
+        ▼
+state extraction and quality checks
+        │
+        ▼
+machine-readable summaries + figures
+        │
+        ▼
+identifiability, sensitivity, and model-limit analysis
+```
 
-## 扫描入口
+Formal runs record the Git revision and working-tree state in a manifest. Large native ANSYS solver files remain in external storage; the Git repository keeps models, launchers, lightweight summaries, figures, provenance records, and checks needed to review the analysis.
 
-5090d 上使用 `ops/launch-indentation-sweep-5090d.sh smoke` 启动四个代表性算例。当前名义压入上限为 0.8 mm；只有 smoke 质检通过并人工确认后，才依次使用 `coarse` 和 `full`，脚本不会自动跨阶段推进。
+## Current findings
 
-眼睑厚度有限元实验使用 `ops/launch-thickness-sweep-5090d.sh`，固定中心推进 0.8 mm，扫描眼睑厚度 0.8-2.0 mm、步长 0.2 mm。当前正式模型采用 IOP 预载、几何初接触和正式压入的连续三载荷步，并使用自动产物保留策略。
+These findings describe the present model and discretization. They are not clinical performance claims.
 
-当前正式 smoke 的 manifest、汇总、QC、元数据和趋势图使用 `results/summary/indentation_smoke*` 这一组固定名称更新；历史版本只通过 Git 提交查询。
+### Eyelid-thickness response
+
+- A seven-point 3D thickness sweep is complete.
+- With fixed 0.80 mm probe advancement, simulated reaction force rises from **0.6127 N at 0.80 mm eyelid thickness** to **1.4253 N at 2.00 mm**.
+- Outer contact area changes little over that sweep.
+- The strict geometric ratio `Ae/Ac` is sensitive to angle definition and coarse discretization; it does not reproduce the monotonic trend assumed in earlier placeholder material.
+
+### Probe eccentricity
+
+- The semi-empirical area ratio changes only slightly from 0 to 1 mm offset in the current model.
+- At 2 mm offset, internal effective area and the 3D contact extent decrease materially.
+- The contact-element proxy falls from 351 to 180 while peak eyelid stress rises from 27.15 kPa to 37.83 kPa.
+
+### Calibration and extrapolation
+
+Three algorithm families are kept separate:
+
+1. **Area conversion:** `PIOP = (Ap/Ac) · Pprobe`.
+2. **Empirical rational fit:** `PIOP = a · Pprobe / (1 - b · Pprobe)`.
+3. **Mechanical-transfer model:** `PIOP = ηeff · KA · Pprobe = KA · Pprobe / Tmech`.
+
+The first family is no longer treated as a complete algorithm because it systematically underestimates high pressure. The second achieves an in-sample RMSE of approximately **0.954 mmHg** over the frozen 0–50 mmHg configuration, but independent frozen-parameter extrapolation to 52.5–60 mmHg reaches approximately **4.782 mmHg RMSE** and overestimates 60 mmHg by approximately **6.964 mmHg**. This failed calibration test is retained rather than tuned away.
+
+The third family is the current hypothesis being explored. It keeps the geometric area term `KA = Ap/Ac` distinct from the mechanical transmission term. An area ratio, direct interface-force ratio, or algebraic reparameterization is not presented as a validated standalone calibration.
+
+## Limitations and negative results
+
+These limitations are part of the research record:
+
+- **Mesh independence has not been demonstrated.** The 0.30/0.24/0.20 mm audit preserves the direction of the 1.60→2.00 mm response change, but absolute outputs at the two finest levels still differ by as much as **12.31%**.
+- **The 1.60 mm feature is not a validated physical threshold.** Its direction is stable in the audited cases; its magnitude remains discretization-dependent.
+- **Thickness-specific rational parameters are not identifiable.** Only the 1.25 mm eyelid has a full multi-IOP curve; other thicknesses currently have independent 0 and 20 mmHg endpoints.
+- **The high-pressure rational model does not extrapolate adequately.** Frozen-parameter failure is documented rather than tuned away.
+- **No algorithm in this repository is a production hardware calibration.** Controlled phantom and hardware measurements are still required.
+- **Simulation credibility is bounded by the current geometry, constitutive assumptions, contact formulation, loading path, and available validation data.**
+
+## Reproducibility
+
+The read-only thickness-sensitivity analysis is configured in [`analysis/config.yaml`](analysis/config.yaml). From the repository root:
+
+```powershell
+python analysis\run_all.py
+```
+
+It writes only below `analysis/outputs/` and writes `output_manifest.csv` last. The manifest records output sizes and SHA-256 hashes. Local ignored solver runs cannot silently enter the formal input inventory.
+
+Run repository tests with:
+
+```bash
+python -m pytest -q
+```
+
+ANSYS solves are intentionally staged. Smoke cases must pass quality review before coarse or full sweeps are launched; scripts do not advance automatically between stages.
+
+Key reproducibility records:
+
+- [`docs/DATA_PROVENANCE.md`](docs/DATA_PROVENANCE.md) — model levels, parameter differences, and evidence scope.
+- [`docs/INDENTATION_SWEEP.md`](docs/INDENTATION_SWEEP.md) — load steps, state decisions, QC, and staged execution.
+- [`docs/SCRIPT_INDEX.md`](docs/SCRIPT_INDEX.md) — script responsibilities across the repository.
+- [`docs/DOCUMENTATION_POLICY.md`](docs/DOCUMENTATION_POLICY.md) — governance for conclusions, configuration, indexes, logs, and intermediate findings.
+- [`thickness_mesh_independence/DETAILED_REPORT.md`](thickness_mesh_independence/DETAILED_REPORT.md) — three mesh levels, fixed-scale contour evidence, and audited solver timing.
+
+## Repository map
+
+| Path | Purpose |
+| --- | --- |
+| `models/apdl/` | Parameterized APDL models, post-processing macros, and test inputs |
+| `src/runners/` | Batch-run entry points and staged sweep orchestration |
+| `src/postprocess/` | State extraction, summaries, force/area analysis, and plotting |
+| `baseline/` | Centered baseline results and Workbench entry points |
+| `offset/` | Eccentricity studies, figures, and reports |
+| `thick/` | Eyelid-thickness protocol, data contracts, scripts, and reports |
+| `high_iop_mechanical_transfer_t1p25_c0p60/` | Frozen high-IOP configuration, scripts, records, and conclusions |
+| `thickness_mesh_independence/` | Targeted mesh-sensitivity design, evidence, and conclusions |
+| `analysis/` | Identifiability and thickness-sensitivity analysis pipeline |
+| `algorithms/` | Versioned algorithm taxonomy and machine-readable registry |
+| `results/summary/` | Lightweight formal summaries and external-result checks |
+| `paper/` | Manuscript draft, figures, claim review, and provenance links |
+| `tests/` | Regression and pipeline-integrity tests |
+| `ops/` | Local/solver-host/partial-clone synchronization tooling |
+
+## Data and storage policy
+
+- Raw ANSYS solver projects and large intermediate fields remain outside Git history.
+- Public Git content should contain only data that can be redistributed and reviewed safely.
+- Do not add patient-identifiable, private clinical, credential, or device-secret material.
+- Historical implementations belong in Git commits, branches, or tags—not duplicate `old`, `final`, or backup directories in the working tree.
+- Formal result names stay stable; historical revisions are recovered from Git.
+
+## Status
+
+The repository currently supports reproducible model development, sweep review, and evidence-bounded algorithm research. It does **not** support clinical diagnosis, production calibration, or claims of mesh-converged predictive accuracy.
