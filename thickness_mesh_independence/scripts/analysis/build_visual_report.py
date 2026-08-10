@@ -278,6 +278,12 @@ def build_composites(repo_root: Path, raw_dir: Path | None = None, output_dir: P
     }
     build_composite(raw_dir, output_dir / "mesh_sections_comparison.png", "section", h2)
     build_composite(raw_dir, output_dir / "stress_sections_comparison.png", "stress", h2)
+    build_composite(
+        raw_dir,
+        output_dir / "stress_sections_fixed_scale_comparison.png",
+        "stress_fixed_0_60kpa",
+        h2,
+    )
     build_composite(raw_dir, output_dir / "contact_zone_mesh_comparison.png", "section", h2, crop=(600, 570, 1543, 1100))
 
 

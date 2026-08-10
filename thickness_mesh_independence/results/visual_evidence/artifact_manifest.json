@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "artifact_count": 14,
+  "artifact_count": 19,
   "artifacts": [
     {
       "path": "thickness_mesh_independence/results/visual_evidence/baseline_timing_source.csv",
@@ -11,6 +11,11 @@
       "path": "thickness_mesh_independence/results/visual_evidence/contact_zone_mesh_comparison.png",
       "size_bytes": 1282161,
       "sha256": "1095e7374c4f7caba55adc441b06d70786f64d6c8a6f46427afda5e73a277c26"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/fixed_scale_source_manifest.json",
+      "size_bytes": 8614,
+      "sha256": "026feed74e38aa57084866d9432db2707af3f9b91a0eab3c0f7a24a1147cd634"
     },
     {
       "path": "thickness_mesh_independence/results/visual_evidence/mesh_sections_comparison.png",
@@ -28,6 +33,11 @@
       "sha256": "9b368ac4b6d71b4235908b2234ad1192e16f6a7184f121f597269df7658bb167"
     },
     {
+      "path": "thickness_mesh_independence/results/visual_evidence/raw/mesh_0p20_stress_fixed_0_60kpa.png",
+      "size_bytes": 214196,
+      "sha256": "75af37e865a25af86a0a7608ae9f5617fcf812858c48b431789f0c56e6800a55"
+    },
+    {
       "path": "thickness_mesh_independence/results/visual_evidence/raw/mesh_0p24_section.png",
       "size_bytes": 179930,
       "sha256": "86abe4c4772d045d1e7bab1b4e62dd0fcd2fd5c823ce716a051da727f00ffa17"
@@ -38,6 +48,11 @@
       "sha256": "ef23b06533886877413aa657e9e408eed5f9c135929a4fe8698ffc39b0a1fa02"
     },
     {
+      "path": "thickness_mesh_independence/results/visual_evidence/raw/mesh_0p24_stress_fixed_0_60kpa.png",
+      "size_bytes": 202927,
+      "sha256": "2a1de626df4c0d0521877f8eaf25c4d697ab945032fff71bf75fdf8725602680"
+    },
+    {
       "path": "thickness_mesh_independence/results/visual_evidence/raw/mesh_0p30_section.png",
       "size_bytes": 166589,
       "sha256": "c59197f5589edf859126ce9179ce648ed2ed3cd13eecdf8d3280447643030e7f"
@@ -46,6 +61,11 @@
       "path": "thickness_mesh_independence/results/visual_evidence/raw/mesh_0p30_stress.png",
       "size_bytes": 193735,
       "sha256": "52b8f478c7c7c2ba8a5cbca3c7edb733ba7ded81e316c3a476464007589f1c47"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/raw/mesh_0p30_stress_fixed_0_60kpa.png",
+      "size_bytes": 186379,
+      "sha256": "685a502d8f07e401b4efb3690507d24cf0e55962d77d105bccb8a68a72a5777a"
     },
     {
       "path": "thickness_mesh_independence/results/visual_evidence/resource_preflight_timing.csv",
@@ -66,6 +86,11 @@
       "path": "thickness_mesh_independence/results/visual_evidence/stress_sections_comparison.png",
       "size_bytes": 1139622,
       "sha256": "7c968987782587dd99fc68a8f50ba85945faeacf37e83df2b0c4df3834969027"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/stress_sections_fixed_scale_comparison.png",
+      "size_bytes": 1110534,
+      "sha256": "891838dd4bd401f0875a064f72428b0f201a150f465ea1e4d2cee3d633a55073"
     },
     {
       "path": "thickness_mesh_independence/results/visual_evidence/timing_summary.json",
