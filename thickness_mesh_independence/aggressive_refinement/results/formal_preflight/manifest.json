@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "status": "formal_committed_mesh_only_preflight_complete",
+  "source_git_commit": "8768e6ec6afb41225d729c21aac80b467c266897",
+  "external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T152200Z_8768e6ec_aggressive_mesh_preflight",
+  "nonlinear_solution_started": false,
+  "cases": {
+    "G015": {
+      "status": "complete",
+      "background_mesh_mm": 0.15,
+      "nominal_local_target_mm": 0.15,
+      "refinement_level": 0,
+      "selected_parent_elements": 0,
+      "solid_elements_before": 1292705,
+      "solid_elements_after": 1292705,
+      "solid_nodes_before": 1813547,
+      "solid_nodes_after": 1813547,
+      "mapdl_error_count": 0,
+      "mapdl_warning_count": 2,
+      "shape_warning_elements": 14,
+      "shape_error_elements": 0,
+      "run_completed": true,
+      "wall_seconds": 18.9,
+      "maximum_rss_kib": 3983120,
+      "external_db": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T152200Z_8768e6ec_aggressive_mesh_preflight/G015/G015.db",
+        "size_bytes": 880214016,
+        "sha256": "447aefb87e36ffa664c6d786d3a1f36722dcd2b39b256181d0ce95a7567c01c5"
+      }
+    },
+    "L010": {
+      "status": "complete",
+      "background_mesh_mm": 0.2,
+      "nominal_local_target_mm": 0.1,
+      "refinement_level": 1,
+      "selected_parent_elements": 44812,
+      "solid_elements_before": 538725,
+      "solid_elements_after": 817237,
+      "solid_nodes_before": 769607,
+      "solid_nodes_after": 1160408,
+      "mapdl_error_count": 0,
+      "mapdl_warning_count": 1,
+      "shape_warning_elements": 32,
+      "shape_error_elements": 0,
+      "run_completed": true,
+      "wall_seconds": 20.6,
+      "maximum_rss_kib": 3001528,
+      "external_db": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T152200Z_8768e6ec_aggressive_mesh_preflight/L010/L010.db",
+        "size_bytes": 559546368,
+        "sha256": "2789e1dd89bb0f20fdbe7ddcf648287d3dd41167bcb762f43ac090f816bf6bc5"
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "path": "CAMPAIGN_COMPLETE",
+      "size_bytes": 9,
+      "sha256": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1"
+    },
+    {
+      "path": "campaign_status.csv",
+      "size_bytes": 331,
+      "sha256": "2a875ac7f5b0369d682778313477394f7b5a9b03f0bebab2a781ed0ce3f6c2ba"
+    },
+    {
+      "path": "CONCLUSION.md",
+      "size_bytes": 2085,
+      "sha256": "d449578a22f21605518e77083c5c0cae8b777dc9b991a806609bb3af413071e1"
+    },
+    {
+      "path": "G015/aggressive_mesh_inventory.csv",
+      "size_bytes": 270,
+      "sha256": "4786989d4e1b8fe8878aa70e842f8417ebb7442313987143d918706d39104c01"
+    },
+    {
+      "path": "G015/driver.dat",
+      "size_bytes": 113,
+      "sha256": "ba3a8a8a6bc1841ffc8d2c98c5a8e7f0f4d00e611c6c1099be9ec164d5de0356"
+    },
+    {
+      "path": "G015/mesh_log.txt",
+      "size_bytes": 26266,
+      "sha256": "1d98c4648119b811e22b89285da8cb2110b8081a15cd987c224da9214d3b6cca"
+    },
+    {
+      "path": "G015/PREFLIGHT_COMPLETE",
+      "size_bytes": 9,
+      "sha256": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1"
+    },
+    {
+      "path": "G015/resource_time.txt",
+      "size_bytes": 812,
+      "sha256": "fdf66cf451d5f58a32483e998c4a5852839f3b0b08b4e63573cf3a7527a9ee0c"
+    },
+    {
+      "path": "L010/aggressive_mesh_inventory.csv",
+      "size_bytes": 270,
+      "sha256": "394773fc3285135c72c8fa1ca574e519119e98156fec685ca2f446b36117600b"
+    },
+    {
+      "path": "L010/driver.dat",
+      "size_bytes": 113,
+      "sha256": "45d1f02d3fdae2b09abe1fbd703c0bfed7c8c3353cf720dd527afcb29c5734c8"
+    },
+    {
+      "path": "L010/mesh_log.txt",
+      "size_bytes": 27126,
+      "sha256": "5673a5b09a01acaad3919180fa640fe597c673a5f7895d0de1e0cf48d04e2bc7"
+    },
+    {
+      "path": "L010/PREFLIGHT_COMPLETE",
+      "size_bytes": 9,
+      "sha256": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1"
+    },
+    {
+      "path": "L010/resource_time.txt",
+      "size_bytes": 811,
+      "sha256": "0d6f113b0c527acaa2f4d56da9058a8885c08d97ea7fb738f02c131e674df3ef"
+    },
+    {
+      "path": "preflight_manifest.csv",
+      "size_bytes": 1031,
+      "sha256": "6255e497cc8964bf86d1f7eb8e08a317ec076ab899298422881ec189aac09df7"
+    },
+    {
+      "path": "source_git_commit.txt",
+      "size_bytes": 41,
+      "sha256": "246f819cab511814184797d33c9af01a62d6029bb096452d271e9e74abf16b34"
+    },
+    {
+      "path": "source_sha256.txt",
+      "size_bytes": 86,
+      "sha256": "39a7fda9d183316850eae3367cf58312e60c6d6ab2d7f9c8eab269789a240416"
+    }
+  ],
+  "decision": {
+    "G015": "mesh-only complete; more expensive than L010 while coarser in the target interfaces",
+    "L010": "mesh-only complete and eligible for a separately authorized 2.00-mm 0/20-mmHg anchor pair",
+    "L005": "development mesh-only evidence rejects a nonlinear solve under current resources; not part of formal P0"
+  },
+  "claim_boundary": "P0 validates committed mesh construction and planning resources only. It contains no force, q, or nonlinear convergence endpoint."
+}

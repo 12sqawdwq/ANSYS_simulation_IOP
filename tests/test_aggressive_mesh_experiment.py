@@ -30,6 +30,8 @@ def sha256(path: Path) -> str:
 def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     config = json.loads(CONFIG.read_text(encoding="utf-8"))
     assert config["git_branch"] == "aggressive-contact-mesh-experiment-20260810"
+    assert config["status"] == "formal_p0_mesh_preflight_complete_p1_not_started"
+    assert config["formal_preflight_source_commit"] == "8768e6ec6afb41225d729c21aac80b467c266897"
     assert config["hard_budget"]["wall_clock_hours"] == 72
     assert config["hard_budget"]["maximum_simultaneous_mapdl_cases"] == 1
     strategies = {item["id"]: item for item in config["candidate_strategies"]}
@@ -95,6 +97,35 @@ def test_development_preflight_is_mesh_only_and_hash_complete():
     assert "RUN COMPLETED" in solve_text
     assert "NUMBER OF ERROR   MESSAGES ENCOUNTERED=          0" in solve_text
     assert "SOLUTION OPTIONS" not in solve_text
+
+
+def test_formal_preflight_is_commit_pinned_mesh_only_and_hash_complete():
+    root = EXPERIMENT / "results" / "formal_preflight"
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "formal_committed_mesh_only_preflight_complete"
+    assert manifest["source_git_commit"] == "8768e6ec6afb41225d729c21aac80b467c266897"
+    assert manifest["nonlinear_solution_started"] is False
+    assert set(manifest["cases"]) == {"G015", "L010"}
+    g015, l010 = manifest["cases"]["G015"], manifest["cases"]["L010"]
+    assert g015["solid_elements_after"] == 1292705
+    assert g015["solid_nodes_after"] == 1813547
+    assert l010["solid_elements_after"] == 817237
+    assert l010["solid_nodes_after"] == 1160408
+    for case in (g015, l010):
+        assert case["status"] == "complete"
+        assert case["mapdl_error_count"] == 0
+        assert case["shape_error_elements"] == 0
+        assert case["run_completed"] is True
+        assert case["external_db"]["path"].startswith("/home/xuanyu/")
+        assert len(case["external_db"]["sha256"]) == 64
+    assert g015["solid_elements_after"] > l010["solid_elements_after"] * 1.5
+    for item in manifest["artifacts"]:
+        path = root / item["path"]
+        assert path.stat().st_size == item["size_bytes"]
+        assert sha256(path) == item["sha256"]
+    conclusion = (root / "CONCLUSION.md").read_text(encoding="utf-8")
+    assert "压力对尚未启动" in conclusion
+    assert "不能计算 \\(q\\)" in conclusion
 
 
 def test_resource_projection_is_reproducible(tmp_path: Path):

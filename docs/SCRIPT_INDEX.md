@@ -28,6 +28,7 @@
 |`thickness_mesh_independence/aggressive_refinement/scripts/server/launch_mesh_preflight_5090d.sh`|在 clean commit 上串行构建 G015/L010 及可选 L005 mesh-only 资源预检|
 |`thickness_mesh_independence/aggressive_refinement/scripts/server/launch_aggressive_anchor_5090d.sh`|局部 0.10 mm 压力对单任务串行求解，含 72 h 阶段化策略、运行中内存/磁盘保护和不接收部分端点边界|
 |`thickness_mesh_independence/aggressive_refinement/scripts/analysis/collect_mesh_preflight.py`|收集 mesh-only 单元/节点增长、MAPDL 状态、墙钟、RSS、DB 大小与哈希|
+|`thickness_mesh_independence/aggressive_refinement/scripts/analysis/build_formal_preflight_manifest.py`|为正式 committed P0 构建轻量产物与外部 DB SHA-256 provenance manifest|
 |`thickness_mesh_independence/aggressive_refinement/scripts/analysis/estimate_resource_envelope.py`|由既有三级网格和开发期构网格计数生成全局/局部资源投影|
 |`thickness_mesh_independence/aggressive_refinement/scripts/analysis/evaluate_aggressive_refinement.py`|校验局部细化 0/20 mmHg 配对并计算冻结定义的零基线输出与策略变化|
 

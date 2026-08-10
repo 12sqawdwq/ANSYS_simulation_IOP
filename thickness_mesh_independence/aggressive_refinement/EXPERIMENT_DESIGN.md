@@ -4,7 +4,7 @@
 
 本实验在独立 Git 分支 `aggressive-contact-mesh-experiment-20260810` 上设计，用于回答：在 5090d 当前资源条件下，能否在约 2–3 天墙钟预算内，把决定探头反力的中央接触与界面区域从 0.20 mm 进一步细化到名义 0.10 mm，并判断绝对零基线输出 \(q\) 是否开始收敛。
 
-当前状态是 **方案和代码已建立、开发期 mesh-only 试验已完成、正式 clean-commit campaign 尚未启动**。开发期试验不包含非线性求解，也不产生可进入 \(q\) 比较的端点。
+当前状态是 **方案和代码已建立、正式 clean-commit P0 mesh-only 已完成、P1 非线性压力对尚未启动**。P0 不包含非线性求解，也不产生可进入 \(q\) 比较的端点。
 
 本实验不把“局部目标尺寸 0.10 mm”自动等同于网格无关。`EREFINE` 给出的是父四面体的一次局部细分，正式后处理仍必须审计实际边长分布、单元质量、接触表面密度和求解器规模。
 
@@ -79,6 +79,8 @@
 
 P0 必须保存实际单元/节点增长、DB 大小、MAPDL warning/error、墙钟、最大 RSS、源 commit 和宏 SHA-256。L005 只有设置 `RUN_EXTREME=1` 才会构网格；即使成功，也不会自动进入求解。
 
+commit `8768e6ec6afb41225d729c21aac80b467c266897` 上的正式 P0 已完成：G015 为 1,292,705 个实体单元、1,813,547 个节点，L010 为 817,237 个实体单元、1,160,408 个节点；两者均 `RUN COMPLETED`、MAPDL error 0、shape error 0。G015 比 L010 多约 58.2% 实体单元和 56.3% 节点，同时目标界面更粗，因此不进入优先求解；L010 获得 P1 资源审查资格。详见 `results/formal_preflight/CONCLUSION.md`。
+
 ### P1：2.00 mm 锚点压力对
 
 在 P0 通过后，仅运行：
@@ -152,10 +154,10 @@ q_{20}(h)=\frac{F(h,20,0.28)-F(h,0,0.28)}{A_{probe}},
 
 ## 7. 推荐执行顺序
 
-1. 将本分支提交并同步到 5090d；
-2. 运行 P0 的 G015 和 L010；
-3. 审核 `preflight_manifest.csv`、实际 DB 规模、shape warning 和资源投影；
-4. 若 P0 通过，运行 P1 的 2.00 mm 压力对；
+1. 本分支已提交并同步到 5090d；
+2. G015 和 L010 的正式 P0 已完成；
+3. 已审核 `preflight_manifest.csv`、实际 DB 规模、shape warning 和资源投影；
+4. 若另行授权，下一步是 P1 的 2.00 mm 压力对；
 5. P1 完成后运行 `evaluate_aggressive_refinement.py`，在读取 P2 前冻结是否继续；
 6. 只有预算和磁盘门限均通过才运行 P2；
 7. L005 保持 mesh-only；当前资源快照下明确拒绝非线性求解，除非迁移资源并另行授权；
@@ -166,6 +168,7 @@ q_{20}(h)=\frac{F(h,20,0.28)-F(h,0,0.28)}{A_{probe}},
 - 配置：`config/experiment.json`
 - 资源投影：`results/resource_projection.csv`、`resource_projection.json`
 - 开发期 mesh-only 证据：`results/development_preflight/manifest.json`
+- 正式 P0 结论与 provenance：`results/formal_preflight/CONCLUSION.md`、`results/formal_preflight/manifest.json`
 - P0 启动器：`scripts/server/launch_mesh_preflight_5090d.sh`
 - P1/P2 单阶段启动器：`scripts/server/launch_aggressive_anchor_5090d.sh`
 - P0 收集器：`scripts/analysis/collect_mesh_preflight.py`

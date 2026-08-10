@@ -17,4 +17,5 @@
 *.jpg binary
 *.jpeg binary
 *.pdf binary
+thickness_mesh_independence/aggressive_refinement/results/formal_preflight/** text eol=lf
 

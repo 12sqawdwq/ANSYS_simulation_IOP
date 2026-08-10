@@ -8,13 +8,13 @@
 - **主方案 L010**：0.20 mm 背景 + 1.80 mm 中央半宽 + 两个 0.80 mm 界面带 + 一级 `EREFINE`，局部名义目标 0.10 mm；
 - **极限方案 L005**：同一区域二级细化至名义 0.05 mm；开发期 mesh-only 得到约 288 万实体单元、399 万节点，预计约 1139 万方程和 63.13 GiB RST/端点，因此当前服务器只保留构网格证据并拒绝非线性求解；
 - **先锚点、后扩展**：先做 2.00 mm 的 0/20 mmHg 压力对，资源和 QC 通过后才考虑 1.60/1.80 mm；
-- **当前尚未启动正式求解**：开发期 mesh-only 数据不进入 \(q\) 比较。
+- **正式 P0 已完成，P1 尚未启动**：commit `8768e6ec...` 上的 G015/L010 mesh-only 均通过；没有启动非线性载荷步，仍无可进入 \(q\) 比较的新端点。
 
 详尽依据、资源表、阶段矩阵和判据见 [`EXPERIMENT_DESIGN.md`](EXPERIMENT_DESIGN.md)。
 
 ## 正式 P0 mesh-only 预检
 
-必须先提交本分支并在 5090d 检出同一 commit。示例：
+首次正式 P0 已完成，结论见 [`results/formal_preflight/CONCLUSION.md`](results/formal_preflight/CONCLUSION.md)。以下命令用于在新的 commit 或服务器状态下重跑；必须先提交本分支并在 5090d 检出同一 commit：
 
 ```bash
 export EXPECTED_COMMIT='<full-commit-sha>'
@@ -65,6 +65,7 @@ python thickness_mesh_independence/aggressive_refinement/scripts/analysis/estima
 - `config/experiment.json`：冻结的设计、阶段门限和 claim boundary；
 - `results/resource_projection.*`：基于既有三级网格与开发期 mesh-only 计数的规划投影；
 - `results/development_preflight/`：不作为正式端点的开发期构网格证据；
+- `results/formal_preflight/`：commit `8768e6ec...` 上 G015/L010 的正式 P0 轻量结果、外部 DB 哈希和结论；
 - `scripts/server/`：5090d 启动器；
 - `scripts/analysis/`：资源收集、估算和压力对评估。
 

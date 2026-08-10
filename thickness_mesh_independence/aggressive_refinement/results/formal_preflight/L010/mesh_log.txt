@@ -1,0 +1,785 @@
+
+ Ansys Mechanical Enterprise
+
+
+ *------------------------------------------------------------------*
+ |                                                                  |
+ |   W E L C O M E   T O   T H E   A N S Y S (R)  P R O G R A M     |
+ |                                                                  |
+ *------------------------------------------------------------------*
+
+
+
+
+ ***************************************************************
+ *         ANSYS MAPDL 2025 R2          LEGAL NOTICES          *
+ ***************************************************************
+ *                                                             *
+ * Copyright 1971-2025 Ansys, Inc.  All rights reserved.       *
+ * Unauthorized use, distribution or duplication is            *
+ * prohibited.                                                 *
+ *                                                             *
+ * Ansys is a registered trademark of Ansys, Inc. or its       *
+ * subsidiaries in the United States or other countries.       *
+ * See the Ansys, Inc. online documentation or the Ansys, Inc. *
+ * documentation CD or online help for the complete Legal      *
+ * Notice.                                                     *
+ *                                                             *
+ ***************************************************************
+ *                                                             *
+ * THIS ANSYS SOFTWARE PRODUCT AND PROGRAM DOCUMENTATION       *
+ * INCLUDE TRADE SECRETS AND CONFIDENTIAL AND PROPRIETARY      *
+ * PRODUCTS OF ANSYS, INC., ITS SUBSIDIARIES, OR LICENSORS.    *
+ * The software products and documentation are furnished by    *
+ * Ansys, Inc. or its subsidiaries under a software license    *
+ * agreement that contains provisions concerning               *
+ * non-disclosure, copying, length and nature of use,          *
+ * compliance with exporting laws, warranties, disclaimers,    *
+ * limitations of liability, and remedies, and other           *
+ * provisions.  The software products and documentation may be *
+ * used, disclosed, transferred, or copied only in accordance  *
+ * with the terms and conditions of that software license      *
+ * agreement.                                                  *
+ *                                                             *
+ * Ansys, Inc. is a UL registered                              *
+ * ISO 9001:2015 company.                                      *
+ *                                                             *
+ ***************************************************************
+ *                                                             *
+ * This product is subject to U.S. laws governing export and   *
+ * re-export.                                                  *
+ *                                                             *
+ * For U.S. Government users, except as specifically granted   *
+ * by the Ansys, Inc. software license agreement, the use,     *
+ * duplication, or disclosure by the United States Government  *
+ * is subject to restrictions stated in the Ansys, Inc.        *
+ * software license agreement and FAR 12.212 (for non-DOD      *
+ * licenses).                                                  *
+ *                                                             *
+ ***************************************************************
+
+ 2025 R2
+
+ Point Releases and Patches installed:
+
+ Ansys, Inc. License Manager 2025 R2
+ Additive 2025 R2
+ Core WB Files 2025 R2
+ BladeModeler 2025 R2
+ CFX (includes CFD-Post) 2025 R2
+ CFD-Post only 2025 R2
+ Chemkin 2025 R2
+ EnSight 2025 R2
+ FENSAP-ICE 2025 R2
+ Fluent (includes CFD-Post) 2025 R2
+ Polyflow (includes CFD-Post) 2025 R2
+ Forte (includes EnSight) 2025 R2
+ ICEM CFD 2025 R2
+ TurboGrid 2025 R2
+ Dynamic Reporting 2025 R2
+ Remote Solve Manager Standalone Services 2025 R2
+ Aqwa 2025 R2
+ Autodyn 2025 R2
+ Customization Files for User Programmable Features 2025 R2
+ LS-DYNA 2025 R2
+ Mechanical Products 2025 R2
+ Motion 2025 R2
+ Sherlock 2025 R2
+ ACIS Geometry Interface 2025 R2
+ AutoCAD Geometry Interface 2025 R2
+ Catia, Version 4 Geometry Interface 2025 R2
+ Catia, Version 5 Geometry Interface 2025 R2
+ Catia, Version 6 Geometry Interface 2025 R2
+ Creo Parametric Geometry Interface 2025 R2
+ Inventor Geometry Interface 2025 R2
+ JTOpen Geometry Interface 2025 R2
+ NX Geometry Interface 2025 R2
+ Parasolid Geometry Interface 2025 R2
+ Solid Edge Geometry Interface 2025 R2
+ SOLIDWORKS Geometry Interface 2025 R2
+
+
+          *****  MAPDL COMMAND LINE ARGUMENTS  *****
+  INITIAL JOBNAME              = L010
+  BATCH MODE REQUESTED (-b)    = LIST
+  INPUT FILE COPY MODE (-c)    = COPY
+       1 PARALLEL PROCESSES REQUESTED WITH SINGLE THREAD PER PROCESS
+    TOTAL OF     1 CORES REQUESTED
+  INPUT FILE NAME              = /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T152200Z_8768e6ec_aggressive_mesh_preflight/L010/driver.dat
+  OUTPUT FILE NAME             = /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T152200Z_8768e6ec_aggressive_mesh_preflight/L010/mesh.out
+
+ RELEASE= 2025 R2              BUILD= 25.2      UP20250519   VERSION=LINUX x64
+ CURRENT JOBNAME=L010  23:24:11  AUG 10, 2026 CP=      0.222
+
+     1  /batch
+     2  /filname,L010
+     3  *use,param_eye_sweep.mac,0,0.00028,110,0.00020,0.00200,2666.447368421,1.0,0.75,0.00030
+     4  /eof
+
+ RUN SETUP PROCEDURE FROM FILE= /ansys_inc/v252/ansys/apdl/start.ans
+
+ /INPUT FILE= /ansys_inc/v252/ansys/apdl/start.ans  LINE=       0
+
+ CURRENT JOBNAME REDEFINED AS L010
+
+ USE MACRO FILE  param_eye_sweep.mac
+ ARGS=   0.0000      0.28000E-03   110.00      0.20000E-03  0.20000E-02
+         2666.4       1.0000      0.75000      0.30000E-03
+
+ CLEAR DATABASE AND RERUN START.ANS
+
+ RUN SETUP PROCEDURE FROM FILE= /ansys_inc/v252/ansys/apdl/start.ans
+
+ Ansys Mechanical Enterprise
+
+ /INPUT FILE= /ansys_inc/v252/ansys/apdl/start.ans  LINE=       0
+
+ *** MAPDL - ENGINEERING ANALYSIS SYSTEM  RELEASE 2025 R2          25.2     ***
+ Ansys Mechanical Enterprise
+ 20120530  VERSION=LINUX x64     23:24:11  AUG 10, 2026 CP=      0.292
+
+
+
+
+
+          ***** MAPDL ANALYSIS DEFINITION (PREP7) *****
+
+ PARAMETER RC =    0.7800000000E-02
+
+ PARAMETER TC =    0.6000000000E-03
+
+ PARAMETER TE =    0.2000000000E-02
+
+ *IF  te  ( =  0.200000E-02 )  LE
+      0  ( =   0.00000     )  THEN
+
+ *ENDIF
+
+ *IF  te  ( =  0.200000E-02 )  LT
+      0.8e-3  ( =  0.800000E-03 )  THEN
+
+ *ENDIF
+
+ *IF  te  ( =  0.200000E-02 )  GT
+      2.0e-3  ( =  0.200000E-02 )  THEN
+
+ *ENDIF
+
+ PARAMETER RPROBE =    0.2160000000E-02
+
+ PARAMETER GAP0 =    0.3000000000E-03
+
+ *IF  gap0  ( =  0.300000E-03 )  LE
+      0  ( =   0.00000     )  THEN
+
+ *ENDIF
+
+ PARAMETER INDENT =    0.2800000000E-03
+
+ PARAMETER ENCODED_MODE =     110.0000000
+
+ PARAMETER MESH_ONLY_PREFLIGHT =     0.000000000
+
+ *IF  encoded_mode  ( =   110.000     )  GE
+      100  ( =   100.000     )  THEN
+
+ PARAMETER MESH_ONLY_PREFLIGHT =     1.000000000
+
+ PARAMETER ENCODED_MODE =     10.00000000
+
+ *ENDIF
+
+ PARAMETER LOCAL_REFINE_LEVEL =     0.000000000
+
+ *IF  encoded_mode  ( =   10.0000     )  GE
+      20  ( =   20.0000     )  THEN
+
+ *ELSE
+
+ *IF  encoded_mode  ( =   10.0000     )  GE
+      10  ( =   10.0000     )  THEN
+
+ PARAMETER LOCAL_REFINE_LEVEL =     1.000000000
+
+ *ENDIF
+
+ *ENDIF
+
+ PARAMETER RETRY_MODE =     0.000000000
+
+ PARAMETER LOCAL_REFINE_HALFWIDTH =    0.1800000000E-02
+
+ PARAMETER MESH_SIZE =    0.2000000000E-03
+
+ PARAMETER INDENT_LIMIT =    0.8000000000E-03
+
+ *IF  indent  ( =  0.280000E-03 )  LT
+      0  ( =   0.00000     )  THEN
+
+ *ENDIF
+
+ *IF  indent  ( =  0.280000E-03 )  GT
+      indent_limit  ( =  0.800000E-03 )  THEN
+
+ *ENDIF
+
+ *IF  mesh_size  ( =  0.200000E-03 )  LE
+      0  ( =   0.00000     )  THEN
+
+ *ENDIF
+
+ PARAMETER IOP =     2666.447368
+
+ *IF  iop  ( =   2666.45     )  LT
+      0  ( =   0.00000     )  THEN
+
+ *ENDIF
+
+ PARAMETER EYELID_MATERIAL_SCALE =     1.000000000
+
+ *IF  eyelid_material_scale  ( =   1.00000     )  LE
+      0  ( =   0.00000     )  THEN
+
+ *ENDIF
+
+ PARAMETER CORNEA_MATERIAL_SCALE =    0.7500000000
+
+ *IF  cornea_material_scale  ( =  0.750000     )  LE
+      0  ( =   0.00000     )  THEN
+
+ *ENDIF
+
+ PARAMETER RMAX =    0.6000000000E-02
+
+ PARAMETER XOFF =     0.000000000
+
+ *IF  local_refine_level  ( =   1.00000     )  LT
+      0  ( =   0.00000     )  THEN
+
+ *ENDIF
+
+ *IF  local_refine_level  ( =   1.00000     )  GT
+      2  ( =   2.00000     )  THEN
+
+ *ENDIF
+
+ *IF  retry_mode  ( =   0.00000     )  LT
+      0  ( =   0.00000     )  THEN
+
+ *ENDIF
+
+ *IF  retry_mode  ( =   0.00000     )  GT
+      1  ( =   1.00000     )  THEN
+
+ *ENDIF
+
+ *IF  mesh_only_preflight  ( =   1.00000     )  LT
+      0  ( =   0.00000     )  THEN
+
+ *ENDIF
+
+ *IF  mesh_only_preflight  ( =   1.00000     )  GT
+      1  ( =   1.00000     )  THEN
+
+ *ENDIF
+
+ ELEMENT TYPE          1 IS SOLID187     3-D 10-NODE STRUCTURAL SOLID
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE          2 IS TARGE170     3-D TARGET SEGMENT
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE          3 IS CONTA174     3D 8-NODE SURF-SURF CONTACT
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ
+  THREE-DIMENSIONAL MODEL
+
+   MOONEY-RIVLIN HYPERELASTIC MATERIAL  OPTION FOR MATERIAL 1
+ DATA FOR  HYPE  TABLE FOR MATERIAL   1 AT TEMPERATURE=  0.0000
+ LOC=  1 8.25000e+04     1.87500e+04     1.00000e-07
+
+
+   MOONEY-RIVLIN HYPERELASTIC MATERIAL  OPTION FOR MATERIAL 2
+ DATA FOR  HYPE  TABLE FOR MATERIAL   2 AT TEMPERATURE=  0.0000
+ LOC=  1 7.60000e+04     1.00000e+04     1.00000e-07
+
+
+ MATERIAL          3     EX   =  0.3500000E+10
+
+ MATERIAL          3     NUXY =  0.3300000
+
+ ACTIVE COORDINATE SYSTEM SET TO          0  (CARTESIAN)
+
+ PARAMETER KCEN =   -0.7800000000E-02
+
+ PARAMETER RCI =    0.7200000000E-02
+
+ KEYPOINT        1                  X,Y,Z=   0.00000       0.00000       0.00000      IN CSYS=        0
+
+ KEYPOINT        2                  X,Y,Z=  0.600000E-02 -0.281603E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT        3                  X,Y,Z=   0.00000     -0.600000E-03   0.00000      IN CSYS=        0
+
+ KEYPOINT        4                  X,Y,Z=  0.553846E-02 -0.319941E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT      100                  X,Y,Z=   0.00000     -0.780000E-02   0.00000      IN CSYS=        0
+
+ ARC BETWEEN KEYPOINTS     1 AND     2  ORIENTATION KEYPOINT=   100
+  RADIUS=  0.78000E-02
+  LINE NO.=     1  KP1=      1  TAN1=   -1.0000   0.0000   0.0000
+                   KP2=      2  TAN2=    0.6390  -0.7692   0.0000
+
+ LINE CONNECTS KEYPOINTS      2     4
+  LINE NO.=     2  KP1=      2  TAN1=    0.7692   0.6390   0.0000
+                   KP2=      4  TAN2=   -0.7692  -0.6390   0.0000
+
+ ARC BETWEEN KEYPOINTS     3 AND     4  ORIENTATION KEYPOINT=   100
+  RADIUS=  0.72000E-02
+  LINE NO.=     3  KP1=      3  TAN1=   -1.0000   0.0000   0.0000
+                   KP2=      4  TAN2=    0.6390  -0.7692   0.0000
+
+ LINE CONNECTS KEYPOINTS      1     3
+  LINE NO.=     4  KP1=      1  TAN1=    0.0000   1.0000   0.0000
+                   KP2=      3  TAN2=    0.0000  -1.0000   0.0000
+
+ DEFINE AREA BY LIST OF LINES
+      LINE LIST =     1    2    3    4
+      (TRAVERSED IN SAME DIRECTION AS LINE     1)
+
+     AREA NUMBER =      1
+
+ PARAMETER RCE =    0.9800000000E-02
+
+ KEYPOINT        5                  X,Y,Z=   0.00000      0.200000E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT        6                  X,Y,Z=  0.753846E-02 -0.153808E-02   0.00000      IN CSYS=        0
+
+ ARC BETWEEN KEYPOINTS     5 AND     6  ORIENTATION KEYPOINT=   100
+  RADIUS=  0.98000E-02
+  LINE NO.=     5  KP1=      5  TAN1=   -1.0000  -0.0000   0.0000
+                   KP2=      6  TAN2=    0.6390  -0.7692   0.0000
+
+ LINE CONNECTS KEYPOINTS      6     2
+  LINE NO.=     6  KP1=      6  TAN1=    0.7692   0.6390   0.0000
+                   KP2=      2  TAN2=   -0.7692  -0.6390   0.0000
+
+ LINE CONNECTS KEYPOINTS      1     5
+  LINE NO.=     7  KP1=      1  TAN1=    0.0000  -1.0000   0.0000
+                   KP2=      5  TAN2=    0.0000   1.0000   0.0000
+
+ DEFINE AREA BY LIST OF LINES
+      LINE LIST =     5    6    1    7
+      (TRAVERSED IN SAME DIRECTION AS LINE     5)
+
+     AREA NUMBER =      2
+
+ PARAMETER PY =    0.2300000000E-02
+
+ KEYPOINT       10                  X,Y,Z=   0.00000      0.230000E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT       11                  X,Y,Z=  0.216000E-02  0.230000E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT       12                  X,Y,Z=  0.216000E-02  0.630000E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT       13                  X,Y,Z=   0.00000      0.630000E-02   0.00000      IN CSYS=        0
+
+ LINE CONNECTS KEYPOINTS     10    11
+  LINE NO.=     8  KP1=     10  TAN1=   -1.0000   0.0000   0.0000
+                   KP2=     11  TAN2=    1.0000   0.0000   0.0000
+
+ LINE CONNECTS KEYPOINTS     11    12
+  LINE NO.=     9  KP1=     11  TAN1=    0.0000  -1.0000   0.0000
+                   KP2=     12  TAN2=    0.0000   1.0000   0.0000
+
+ LINE CONNECTS KEYPOINTS     12    13
+  LINE NO.=    10  KP1=     12  TAN1=    1.0000   0.0000   0.0000
+                   KP2=     13  TAN2=   -1.0000   0.0000   0.0000
+
+ LINE CONNECTS KEYPOINTS     13    10
+  LINE NO.=    11  KP1=     13  TAN1=    0.0000   1.0000   0.0000
+                   KP2=     10  TAN2=    0.0000  -1.0000   0.0000
+
+ DEFINE AREA BY LIST OF LINES
+      LINE LIST =     8    9   10   11
+      (TRAVERSED IN SAME DIRECTION AS LINE     8)
+
+     AREA NUMBER =      3
+
+ KEYPOINT      200                  X,Y,Z=   0.00000      -1.00000       0.00000      IN CSYS=        0
+
+ KEYPOINT      201                  X,Y,Z=   0.00000       1.00000       0.00000      IN CSYS=        0
+
+ *** NOTE ***                            CP =       0.296   TIME= 23:24:11
+ There are no VOLUMES defined.  Parameter VOL_BEFORE on the *GET command
+ will be set to zero.
+
+ *GET  VOL_BEFORE  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  0.00000000
+
+ SELECT       FOR ITEM=AREA COMPONENT=
+  IN RANGE         1 TO          1 STEP          1
+
+        1  AREAS (OF        3  DEFINED) SELECTED BY  ASEL  COMMAND.
+
+ ROTATE AREAS
+        1,
+      ABOUT THE AXIS DEFINED BY KEYPOINTS    200   201
+     DEGREES OF ARC=   360.00   NUMBER OF SEGMENTS=   4
+
+ *GET  VOL_AFTER  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  4.00000000
+
+ SELECT       FOR ITEM=VOLU COMPONENT=
+  IN RANGE         1 TO          4 STEP          1
+
+        4  VOLUMES (OF        4  DEFINED) SELECTED BY  VSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = VCORNEA   ENTITY=VOLU
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ *GET  VOL_BEFORE  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  4.00000000
+
+ SELECT       FOR ITEM=AREA COMPONENT=
+  IN RANGE         2 TO          2 STEP          1
+
+        1  AREAS (OF       18  DEFINED) SELECTED BY  ASEL  COMMAND.
+
+ ROTATE AREAS
+        2,
+      ABOUT THE AXIS DEFINED BY KEYPOINTS    200   201
+     DEGREES OF ARC=   360.00   NUMBER OF SEGMENTS=   4
+
+ *GET  VOL_AFTER  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  8.00000000
+
+ SELECT       FOR ITEM=VOLU COMPONENT=
+  IN RANGE         5 TO          8 STEP          1
+
+        4  VOLUMES (OF        8  DEFINED) SELECTED BY  VSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = VEYELID   ENTITY=VOLU
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ *GET  VOL_BEFORE  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  8.00000000
+
+ SELECT       FOR ITEM=AREA COMPONENT=
+  IN RANGE         3 TO          3 STEP          1
+
+        1  AREAS (OF       33  DEFINED) SELECTED BY  ASEL  COMMAND.
+
+ ROTATE AREAS
+        3,
+      ABOUT THE AXIS DEFINED BY KEYPOINTS    200   201
+     DEGREES OF ARC=   360.00   NUMBER OF SEGMENTS=   4
+
+ *GET  VOL_AFTER  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  12.0000000
+
+ SELECT       FOR ITEM=VOLU COMPONENT=
+  IN RANGE         9 TO         12 STEP          1
+
+        4  VOLUMES (OF       12  DEFINED) SELECTED BY  VSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = VPROBE    ENTITY=VOLU
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT VPROBE
+
+ MOVE ORIGINAL VOLUMES
+   SET IS ALL SELECTED VOLUMES
+   DX,DY,DZ=    0.00        0.00        0.00           CSYS=  0
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ DEFAULT ELEMENT DIVISIONS PER LINE BASED ON ELEMENT SIZE =  0.200E-03
+ PRODUCE ALL TETRAHEDRAL ELEMENTS IN 3D.
+
+ SELECT      COMPONENT VCORNEA
+
+ SET ATTRIBUTES FOR ALL SELECTED VOLUMES
+      MAT =    1   REAL =       0   TYPE =    1   ESYS =    0   SECT =    0
+
+ ATTRIBUTES SET FOR      4 VOLUMES (OUT OF      4 SELECTED)
+
+ GENERATE NODES AND ELEMENTS   IN  ALL  SELECTED VOLUMES
+
+ NUMBER OF VOLUMES MESHED   =         4
+ MAXIMUM NODE NUMBER        =    140100
+ MAXIMUM ELEMENT NUMBER     =     91177
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT VEYELID
+
+ SET ATTRIBUTES FOR ALL SELECTED VOLUMES
+      MAT =    2   REAL =       0   TYPE =    1   ESYS =    0   SECT =    0
+
+ ATTRIBUTES SET FOR      4 VOLUMES (OUT OF      4 SELECTED)
+
+ GENERATE NODES AND ELEMENTS   IN  ALL  SELECTED VOLUMES
+
+ NUMBER OF VOLUMES MESHED   =         4
+ MAXIMUM NODE NUMBER        =    692521
+ MAXIMUM ELEMENT NUMBER     =    484256
+
+ ------------------------------------------------------------------------------
+            <<<<<<          SHAPE TESTING SUMMARY           >>>>>>
+            <<<<<<       FOR NEW OR MODIFIED ELEMENTS       >>>>>>
+ ------------------------------------------------------------------------------
+                    --------------------------------------
+                    |  Element count    393079 SOLID187  |
+                    --------------------------------------
+
+  Test                Number tested  Warning count  Error count    Warn+Err %
+  ----                -------------  -------------  -----------    ----------
+  Aspect Ratio             393079              0             0         0.00 %
+  Maximum Angle            393079             32             0         0.01 %
+  Jacobian Ratio           393079              0             0         0.00 %
+
+  Any                      393079             32             0         0.01 %
+ ------------------------------------------------------------------------------
+
+ *** WARNING ***                         CP =       4.012   TIME= 23:24:15
+ Shape testing revealed that 32 of the 393079 new or modified elements
+ violate shape warning limits.  To review test results, please see the
+ output file or issue the CHECK command.
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT VPROBE
+
+ SET ATTRIBUTES FOR ALL SELECTED VOLUMES
+      MAT =    3   REAL =       0   TYPE =    1   ESYS =    0   SECT =    0
+
+ ATTRIBUTES SET FOR      4 VOLUMES (OUT OF      4 SELECTED)
+
+ GENERATE NODES AND ELEMENTS   IN  ALL  SELECTED VOLUMES
+
+ NUMBER OF VOLUMES MESHED   =         4
+ MAXIMUM NODE NUMBER        =    769607
+ MAXIMUM ELEMENT NUMBER     =    538725
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ *GET  SOLID_ELEMENTS_BEFORE_REFINE  FROM  ELEM  ITEM=COUN           VALUE=  538725.000
+
+ *GET  SOLID_NODES_BEFORE_REFINE  FROM  NODE  ITEM=COUN       VALUE=  769607.000
+
+ PARAMETER SELECTED_ELEMENTS_FOR_REFINE =     0.000000000
+
+ PARAMETER REFINE_LAYER_HALFHEIGHT =    0.4000000000E-03
+
+ *IF  local_refine_level  ( =   1.00000     )  GT
+      0  ( =   0.00000     )  THEN
+
+ *DO LOOP ON PARAMETER= REFINE_PASS FROM  1.0000     TO  1.0000     BY  1.0000
+
+ SELECT       FOR ITEM=TYPE COMPONENT=
+  IN RANGE         1 TO          1 STEP          1
+
+     538725  ELEMENTS (OF     538725  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ SELECT      ALL NODES HAVING ANY ELEMENT IN ELEMENT SET.
+
+     769607 NODES (OF     769607  DEFINED) SELECTED FROM
+   538725 SELECTED ELEMENTS BY NSLE COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=X     BETWEEN-0.18000E-02 AND  0.18000E-02
+   KABS=  0.  TOLERANCE= 0.360000E-10
+
+     343754  NODES (OF     769607  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Z     BETWEEN-0.18000E-02 AND  0.18000E-02
+   KABS=  0.  TOLERANCE= 0.360000E-10
+
+     155987  NODES (OF     769607  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = AM_CENTRAL_NODES  ENTITY=NODE
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Y     BETWEEN-0.40000E-03 AND  0.40000E-03
+   KABS=  0.  TOLERANCE= 0.800000E-11
+
+      32036  NODES (OF     769607  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = AM_INTERFACE_NODES  ENTITY=NODE
+
+ SELECT      COMPONENT AM_CENTRAL_NODES
+
+ PARAMETER REFINE_CONTACT_YMIN =    0.1600000000E-02
+
+ PARAMETER REFINE_CONTACT_YMAX =    0.2700000000E-02
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Y     BETWEEN 0.16000E-02 AND  0.27000E-02
+   KABS=  0.  TOLERANCE= 0.110000E-10
+
+      20027  NODES (OF     769607  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ ALSO SELECT COMPONENT AM_INTERFACE_NODES
+
+ SELECT      ALL ELEMENTS HAVING ANY NODE IN NODAL SET.
+
+      44812 ELEMENTS (OF     538725  DEFINED) SELECTED FROM
+    52063 SELECTED NODES BY  ESLN COMMAND.
+
+ *GET  SELECTED_ELEMENTS_THIS_PASS  FROM  ELEM  ITEM=COUN           VALUE=  44812.0000
+
+ DELETE COMPONENT AM_CENTRAL_NODES
+
+ DELETE COMPONENT AM_INTERFACE_NODES
+
+ *IF  selected_elements_this_pass  ( =   44812.0     )  LT
+      1  ( =   1.00000     )  THEN
+
+ *ENDIF
+
+ PARAMETER SELECTED_ELEMENTS_FOR_REFINE =     44812.00000
+
+   REFINE ELEMENTS   AT  ALL  SELECTED ELEMENTS
+
+ *** NOTE ***                            CP =       7.172   TIME= 23:24:18
+ The initial memory allocation (-m) has been exceeded.
+  Supplemental memory allocations are being used.
+
+ Additional Nodes    =  390801
+ Additional Elements =  278512
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ *ENDDO  INDEX= REFINE_PASS
+
+ *ENDIF
+
+ *GET  SOLID_ELEMENTS_AFTER_REFINE  FROM  ELEM  ITEM=COUN           VALUE=  817237.000
+
+ *GET  SOLID_NODES_AFTER_REFINE  FROM  NODE  ITEM=COUN       VALUE=  1160408.00
+
+ PARAMETER LOCAL_TARGET_SIZE =    0.1000000000E-03
+
+ PARAMETER WRITE_AGGRESSIVE_INVENTORY =     2.000000000
+
+ *IF  write_aggressive_inventory  ( =   2.00000     )  GT
+      0  ( =   0.00000     )  THEN
+
+ OPENED FILE= aggressive_mesh_inventory.csv FOR COMMAND FILE DATA
+
+
+ PARAMETER AM_BM =    0.2000000000E-03
+
+ PARAMETER AM_TM =    0.1000000000E-03
+
+ PARAMETER AM_HW =    0.1800000000E-02
+
+ PARAMETER AM_LV =     1.000000000
+
+ PARAMETER AM_SP =     44812.00000
+
+ PARAMETER AM_E0 =     538725.0000
+
+ PARAMETER AM_E1 =     817237.0000
+
+ PARAMETER AM_N0 =     769607.0000
+
+ PARAMETER AM_N1 =     1160408.000
+
+  COMMAND FILE CLOSED
+
+
+ *ENDIF
+
+ *IF  mesh_only_preflight  ( =   1.00000     )  EQ
+      1  ( =   1.00000     )  THEN
+
+ ALL CURRENT MAPDL DATA WRITTEN TO FILE NAME= L010.db
+  FOR POSSIBLE RESUME FROM THIS POINT
+
+
+ ***** ROUTINE COMPLETED *****  CP =        15.364
+
+
+
+ EXIT MAPDL WITHOUT SAVING DATABASE
+
+
+ NUMBER OF WARNING MESSAGES ENCOUNTERED=          1
+ NUMBER OF ERROR   MESSAGES ENCOUNTERED=          0
+
++--------------------- M A P D L   S T A T I S T I C S ------------------------+
+
+Release: 2025 R2            Build: 25.2       Update: UP20250519   Platform: LINUX x64
+Date Run: 08/10/2026   Time: 23:24     Process ID: 353242
+Operating System: Ubuntu 24.04.3 LTS
+
+Processor Model: AMD Ryzen 9 9950X 16-Core Processor
+
+Compiler: Intel(R) Fortran Compiler Classic Version 2021.9  (Build: 20230302)
+          Intel(R) C/C++ Compiler Classic Version 2021.9  (Build: 20230302)
+          AOCL-BLAS 5.0.1 Build 20250320
+
+Number of machines requested            :    1
+Total number of cores available         :   32
+Number of physical cores available      :   16
+Number of processes requested           :    1
+Number of threads per process requested :    1
+Total number of cores requested         :    1 (Shared Memory Parallel)
+
+GPU Acceleration: Not Requested
+
+Job Name: L010
+Input File: driver.dat
+Working Directory: /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T152200Z_8768e6ec_aggressive_mesh_preflight/L010
+
+Total CPU time for main thread                    :       15.4 seconds
+Total CPU time summed for all threads             :       15.7 seconds
+
+Elapsed time spent obtaining a license            :        1.2 seconds
+Elapsed time spent pre-processing model (/PREP7)  :       15.1 seconds
+Elapsed time spent solution - preprocessing       :        0.0 seconds
+Elapsed time spent computing solution             :        0.0 seconds
+Elapsed time spent solution - postprocessing      :        0.0 seconds
+Elapsed time spent post-processing model (/POST1) :        0.0 seconds
+
+
+Sum of disk space used on all processes           :      533.6 MB
+
+Sum of memory used on all processes               :     2061.0 MB
+Sum of memory allocated on all processes          :     2816.0 MB
+Physical memory available                         :        123 GB
+Total amount of I/O written to disk               :        0.5 GB
+Total amount of I/O read from disk                :        0.0 GB
+
++------------------ E N D   M A P D L   S T A T I S T I C S -------------------+
+
+
+ *-----------------------------------------------------------------------------*
+ |                                                                             |
+ |                               RUN COMPLETED                                 |
+ |                                                                             |
+ |-----------------------------------------------------------------------------|
+ |                                                                             |
+ |  Ansys MAPDL 2025 R2         Build 25.2         UP20250519    LINUX x64     |
+ |                                                                             |
+ |-----------------------------------------------------------------------------|
+ |                                                                             |
+ |  Database Requested(-db)     1024 MB     Scratch Memory Requested   1024 MB |
+ |  Max Database Used(Master)    956 MB     Max Scratch Used(Master)   1105 MB |
+ |  Max Database Used(Workers)     0 MB     Max Scratch Used(Workers)     0 MB |
+ |  Sum Database Used(All)       956 MB     Sum Scratch Used(All)      1105 MB |
+ |                                                                             |
+ |-----------------------------------------------------------------------------|
+ |                                                                             |
+ |        CP Time      (sec) =         15.680       Time  =  23:24:28          |
+ |        Elapsed Time (sec) =         19.000       Date  =  08/10/2026        |
+ |                                                                             |
+ *-----------------------------------------------------------------------------*
