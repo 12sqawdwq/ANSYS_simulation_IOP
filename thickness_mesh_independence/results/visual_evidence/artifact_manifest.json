@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "artifact_count": 14,
+  "artifacts": [
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/baseline_timing_source.csv",
+      "size_bytes": 1844,
+      "sha256": "672c7b1a542c41aad5c470c0d319ea6be1d8e43546c68932083838e66300405b"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/contact_zone_mesh_comparison.png",
+      "size_bytes": 1282161,
+      "sha256": "1095e7374c4f7caba55adc441b06d70786f64d6c8a6f46427afda5e73a277c26"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/mesh_sections_comparison.png",
+      "size_bytes": 1062733,
+      "sha256": "5b93d8150cb0376aa06abdbe5471adee460c871ecffe8ea4659d3c15a8a85686"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/raw/mesh_0p20_section.png",
+      "size_bytes": 187458,
+      "sha256": "4553104fc5e646627d35f03501d35ced029585dc6429eabcfe9ccee116006c5e"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/raw/mesh_0p20_stress.png",
+      "size_bytes": 217259,
+      "sha256": "9b368ac4b6d71b4235908b2234ad1192e16f6a7184f121f597269df7658bb167"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/raw/mesh_0p24_section.png",
+      "size_bytes": 179930,
+      "sha256": "86abe4c4772d045d1e7bab1b4e62dd0fcd2fd5c823ce716a051da727f00ffa17"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/raw/mesh_0p24_stress.png",
+      "size_bytes": 211650,
+      "sha256": "ef23b06533886877413aa657e9e408eed5f9c135929a4fe8698ffc39b0a1fa02"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/raw/mesh_0p30_section.png",
+      "size_bytes": 166589,
+      "sha256": "c59197f5589edf859126ce9179ce648ed2ed3cd13eecdf8d3280447643030e7f"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/raw/mesh_0p30_stress.png",
+      "size_bytes": 193735,
+      "sha256": "52b8f478c7c7c2ba8a5cbca3c7edb733ba7ded81e316c3a476464007589f1c47"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/resource_preflight_timing.csv",
+      "size_bytes": 1205,
+      "sha256": "3da50797d909722b2cbee8b24dd75e48d000a63e23894e08c36b47ee8f1becf4"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/simulation_timing.csv",
+      "size_bytes": 7759,
+      "sha256": "dbb2ff0b49e8cc3aa06e8667097f39abec7b198a50f0aa3c4018f7d4dd5e79a7"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/source_manifest.json",
+      "size_bytes": 8704,
+      "sha256": "031560773c28d657d08c6fc6eb5487978c0ea513bb23736239fea1df5758e2c1"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/stress_sections_comparison.png",
+      "size_bytes": 1139622,
+      "sha256": "7c968987782587dd99fc68a8f50ba85945faeacf37e83df2b0c4df3834969027"
+    },
+    {
+      "path": "thickness_mesh_independence/results/visual_evidence/timing_summary.json",
+      "size_bytes": 3660,
+      "sha256": "95f32afd9de78ec574160db6777d41002eaf1c8d813823eac972d8050a7c2c47"
+    }
+  ]
+}

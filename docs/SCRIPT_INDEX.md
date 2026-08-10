@@ -1,6 +1,6 @@
 # 全局脚本索引
 
-> 最后核对：2026-08-06
+> 最后核对：2026-08-10
 > 版本规则：脚本文件名描述职责，不使用 `v1/v2/final/latest/old/copy` 表示状态；版本、回滚和并行开发由 Git commit、tag 和 branch 管理。
 
 ## 1. 统一有限元模型
@@ -9,6 +9,7 @@
 |---|---|
 |`models/apdl/param_eye_sweep.mac`|统一眼球、角膜、眼睑和探头参数化模型；IOP 预载、几何初接触和正式压入三载荷步|
 |`models/apdl/plot_sweep_views.mac`|批量工况几何/变形多视图|
+|`models/apdl/plot_mesh_independence_sections.mac`|从既有 RST 统一输出网格审计的变形后实际比例中央网格剖面和带单元边等效应力剖面|
 |`models/apdl/plot_thickness_eyelid_strain.mac`|眼睑厚度扫描应变图|
 |`models/apdl/post_sweep.mac`|通用扫描状态后处理|
 |`models/apdl/post_thickness_geometry.mac`|厚度研究几何、接触、位移、压力和界面量导出|
@@ -127,8 +128,9 @@ high_iop_mechanical_transfer_t1p25_c0p60/scripts/server/launch_interface_force_i
 |`thickness_mesh_independence/scripts/server/launch_mesh_campaign_5090d.sh`|在 5090d 对 1.60、1.80、2.00 mm 执行网格筛查或三级确认；`PRESSURES` 可限定 0/20 mmHg 压力子集以实现资源受控串行|
 |`thickness_mesh_independence/scripts/analysis/collect_baseline_inventory.py`|从保留的 0.30 mm manifest 与求解日志提取网格规模和接触 QC 清单|
 |`thickness_mesh_independence/scripts/analysis/evaluate_mesh_independence.py`|汇总 0.30/0.24/0.20 mm 结果，检查 QC、厚端次序、前一级相对变化和三级网格判定|
+|`thickness_mesh_independence/scripts/analysis/build_visual_report.py`|汇总 18 个接收终点和资源预检耗时，生成机器可读时间表、三级实际网格/应力拼版及轻量产物哈希|
 
-配置、证据等级和大文件边界见 `thickness_mesh_independence/README.md`。
+配置、证据等级和大文件边界见 `thickness_mesh_independence/README.md`；实际截图和时间统计见 `thickness_mesh_independence/DETAILED_REPORT.md`。
 
 ## 7. 数据构建
 

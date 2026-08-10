@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "accepted_endpoint_count": 18,
+  "per_mesh": {
+    "0.30": {
+      "accepted_endpoint_count": 6,
+      "sum_case_wall_hours": 2.5232591666666666,
+      "median_case_wall_hours": 0.36609555555555556,
+      "minimum_case_wall_hours": 0.26342333333333334,
+      "maximum_case_wall_hours": 0.7364583333333333,
+      "sum_rank_hours": 13.975938,
+      "case_wall_hours_by_pressure": {
+        "0": 0.9707255555555556,
+        "20": 1.5525336111111112
+      },
+      "np_values": [
+        4,
+        8
+      ],
+      "element_range": [
+        151599,
+        177278
+      ],
+      "equation_range": [
+        575145,
+        679716
+      ],
+      "accepted_campaign_calendar_hours": null,
+      "calendar_note": "The six endpoints came from heterogeneous historical campaigns; no single campaign makespan is valid."
+    },
+    "0.24": {
+      "accepted_endpoint_count": 6,
+      "sum_case_wall_hours": 8.880753888888888,
+      "median_case_wall_hours": 1.2666570833333335,
+      "minimum_case_wall_hours": 0.8908027777777777,
+      "maximum_case_wall_hours": 2.2125225,
+      "sum_rank_hours": 71.046031,
+      "case_wall_hours_by_pressure": {
+        "0": 4.2865725,
+        "20": 4.594181388888889
+      },
+      "np_values": [
+        8
+      ],
+      "element_range": [
+        289300,
+        343661
+      ],
+      "equation_range": [
+        1087947,
+        1306563
+      ],
+      "accepted_campaign_calendar_hours": 4.595833333333333
+    },
+    "0.20": {
+      "accepted_endpoint_count": 6,
+      "sum_case_wall_hours": 30.182746944444443,
+      "median_case_wall_hours": 4.3061976388888885,
+      "minimum_case_wall_hours": 2.6532205555555555,
+      "maximum_case_wall_hours": 8.702368888888888,
+      "sum_rank_hours": 120.730988,
+      "case_wall_hours_by_pressure": {
+        "0": 15.21288861111111,
+        "20": 14.969858333333333
+      },
+      "np_values": [
+        4
+      ],
+      "element_range": [
+        483700,
+        575211
+      ],
+      "equation_range": [
+        1831785,
+        2198547
+      ],
+      "accepted_pressure_campaign_hours": {
+        "iop0_campaign": 15.215,
+        "iop20_campaign": 14.972222222222221,
+        "sum": 30.18722222222222
+      }
+    }
+  },
+  "nonaccepted_resource_events": {
+    "count": 3,
+    "sum_event_wall_hours": 11.509722222222223,
+    "maximum_rank_hour_upper_bound": 83.1288888888889,
+    "numerical_endpoints_used": 0
+  },
+  "existing_rst_postprocessing": {
+    "0.30": {
+      "mapdl": "Mechanical APDL 2025 R2",
+      "np": 1,
+      "returncode": 0,
+      "run_completed": true,
+      "ansys_error_count": 0,
+      "wall_time": "0:08.38",
+      "maximum_rss_kbytes": 1341512
+    },
+    "0.24": {
+      "mapdl": "Mechanical APDL 2025 R2",
+      "np": 1,
+      "returncode": 0,
+      "run_completed": true,
+      "ansys_error_count": 0,
+      "wall_time": "0:10.50",
+      "maximum_rss_kbytes": 2928252
+    },
+    "0.20": {
+      "mapdl": "Mechanical APDL 2025 R2",
+      "np": 1,
+      "returncode": 0,
+      "run_completed": true,
+      "ansys_error_count": 0,
+      "wall_time": "0:14.20",
+      "maximum_rss_kbytes": 5813156
+    }
+  },
+  "timing_interpretation": [
+    "elapsed_seconds is subprocess wall-clock time, not CPU time.",
+    "Rank-hours are elapsed time multiplied by requested MPI ranks and are not a measured CPU-utilization value.",
+    "The 0.30 mm rows use mixed 4-rank and 8-rank historical campaigns; cross-mesh wall-time ratios are not controlled speedup benchmarks.",
+    "The 0.20 mm IOP0 1.60 mm endpoint overlapped an aborted IOP20 branch and is retained as actual history but is not representative of exclusive-resource runtime."
+  ]
+}

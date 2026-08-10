@@ -39,3 +39,5 @@ $$
 若需要定量使用厚端 $q$，下一步应优先采用接触区局部细化、跨厚度尽量一致的表面拓扑和更严格的力收敛设置，而不是直接把当前全局网格继续缩小。新的收敛方案应预先冻结，并同时检查绝对 $q$、归一化厚端下降、接触面积、峰值压力、穿透和自由度增长。
 
 机器可读结果见 `mesh_comparison.csv` 和 `screening_summary.json`；外部求解文件、来源路径与 SHA-256 见 `external_artifact_manifest.json`。
+
+实际网格、统一条件下的中央剖面应力云图、18 个接收终点的逐项墙钟时间及未接收资源预检开销，见 [`../../DETAILED_REPORT.md`](../../DETAILED_REPORT.md) 和 [`../visual_evidence/`](../visual_evidence/)。
