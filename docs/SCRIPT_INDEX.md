@@ -9,7 +9,8 @@
 |---|---|
 |`models/apdl/param_eye_sweep.mac`|统一眼球、角膜、眼睑和探头参数化模型；IOP 预载、几何初接触和正式压入三载荷步|
 |`models/apdl/plot_sweep_views.mac`|批量工况几何/变形多视图|
-|`models/apdl/plot_mesh_independence_sections.mac`|从既有 RST 统一输出网格审计的变形后实际比例中央网格剖面和带单元边等效应力剖面|
+|`models/apdl/plot_mesh_independence_sections.mac`|从既有 RST 统一输出网格审计的变形后实际比例中央网格剖面和保留原生自动色标的带单元边等效应力剖面|
+|`models/apdl/plot_mesh_independence_fixed_scale.mac`|在相同视角下输出固定 0–60 kPa 色标的等效应力中央剖面，仅用于跨网格同色同值辅助定位|
 |`models/apdl/plot_thickness_eyelid_strain.mac`|眼睑厚度扫描应变图|
 |`models/apdl/post_sweep.mac`|通用扫描状态后处理|
 |`models/apdl/post_thickness_geometry.mac`|厚度研究几何、接触、位移、压力和界面量导出|

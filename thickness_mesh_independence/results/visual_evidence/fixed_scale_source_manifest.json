@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "status": "existing_rst_postprocessing_only",
+  "evidence_role": "fixed_scale_auxiliary_visual_localization",
+  "created_at_utc": "2026-08-10T07:53:43.733545+00:00",
+  "external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T074933Z_mesh_fixed_scale_visual_aid",
+  "fixed_scale": {
+    "minimum_pa": 0.0,
+    "maximum_pa": 60000.0,
+    "range_kpa": [
+      0.0,
+      60.0
+    ],
+    "selection_reason": "Rounded upper bound above the largest native-auto legend maximum of 55.606 kPa; no displayed value is intentionally clipped."
+  },
+  "postprocessing_macro": {
+    "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T074933Z_mesh_fixed_scale_visual_aid/plot_mesh_independence_fixed_scale.mac",
+    "size_bytes": 675,
+    "mtime_utc": "2026-08-10T07:50:53.485122+00:00",
+    "sha256": "4ecba830feb685a69af7939b315e60a9632381e9cba31365902eb61e7a4f88fe"
+  },
+  "driver": {
+    "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T074933Z_mesh_fixed_scale_visual_aid/driver.dat",
+    "size_bytes": 104,
+    "mtime_utc": "2026-08-10T07:50:54.875121+00:00",
+    "sha256": "0296828a89d3fd1b02b2e472ad53745cf677546770ce12de21a2fcaca76da5ce"
+  },
+  "cases": {
+    "mesh0p30": {
+      "mesh_size_mm": 0.3,
+      "source_git_commit": "371ed27d6a624be7352eb57688f978cbe4b03e2c",
+      "model_apdl_git_blob": "cc2d6fb4abcd7d637d0d74844c41649acd96cdf7",
+      "source_attempt": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260724_371ed27_geometry_zero_smoke/eyelid_2p00mm_indent_0p28mm/attempt_1",
+      "condition": {
+        "eyelid_thickness_mm": 2.0,
+        "iop_mmhg": 20.0,
+        "indent_mm": 0.28,
+        "cornea_thickness_mm": 0.6,
+        "eyelid_material_scale": 1.0,
+        "cornea_material_scale": 0.75,
+        "result_load_step": 3,
+        "result_time": 3.0
+      },
+      "source_db": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260724_371ed27_geometry_zero_smoke/eyelid_2p00mm_indent_0p28mm/attempt_1/eyelid_2p00mm_indent_0p28mm.db",
+        "size_bytes": 126615552,
+        "mtime_utc": "2026-07-24T11:43:08.345845+00:00",
+        "sha256": "3bdb1c3908740c4d639c0a699b90655997cde2ca2d9c2e02b0bacb47ea16c744"
+      },
+      "source_rst": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_sweep/20260724_371ed27_geometry_zero_smoke/eyelid_2p00mm_indent_0p28mm/attempt_1/eyelid_2p00mm_indent_0p28mm.rst",
+        "size_bytes": 3964338176,
+        "mtime_utc": "2026-07-24T11:42:43.615657+00:00",
+        "sha256": "c158861da96fd2586717366ac2549c1eb60d2d42d3e14fa50d975d46a0c3b984"
+      },
+      "postprocess": {
+        "mapdl": "Mechanical APDL 2025 R2",
+        "np": 1,
+        "returncode": 0,
+        "run_completed": true,
+        "ansys_error_count": 0,
+        "wall_time": "0:07.18",
+        "maximum_rss_kbytes": 1280544
+      },
+      "fixed_contour": {
+        "quantity": "equivalent_stress",
+        "unit": "Pa",
+        "minimum": 0.0,
+        "maximum": 60000.0,
+        "contour_count": 9,
+        "purpose": "cross_mesh_visual_localization_only"
+      },
+      "output": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T074933Z_mesh_fixed_scale_visual_aid/mesh0p30/mesh0p30000.png",
+        "size_bytes": 186379,
+        "mtime_utc": "2026-08-10T07:51:00.387117+00:00",
+        "sha256": "685a502d8f07e401b4efb3690507d24cf0e55962d77d105bccb8a68a72a5777a"
+      }
+    },
+    "mesh0p24": {
+      "mesh_size_mm": 0.24,
+      "source_git_commit": "cef09f91ca328cc39488b55047afaf9e078a980a",
+      "model_apdl_git_blob": "04f7b6e798844a1cd7809f77dbcfb5ceca59b12f",
+      "source_attempt": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T113236Z_cef09f9_mesh0p24_screening_bounded/iop20/eyelid_2p00mm_indent_0p28mm/attempt_1",
+      "condition": {
+        "eyelid_thickness_mm": 2.0,
+        "iop_mmhg": 20.0,
+        "indent_mm": 0.28,
+        "cornea_thickness_mm": 0.6,
+        "eyelid_material_scale": 1.0,
+        "cornea_material_scale": 0.75,
+        "result_load_step": 3,
+        "result_time": 3.0
+      },
+      "source_db": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T113236Z_cef09f9_mesh0p24_screening_bounded/iop20/eyelid_2p00mm_indent_0p28mm/attempt_1/eyelid_2p00mm_indent_0p28mm.db",
+        "size_bytes": 243531776,
+        "mtime_utc": "2026-08-07T16:09:19.504071+00:00",
+        "sha256": "8b065c1c6358cd997a512c6c16009a994ef01123c72e291eef5a3d2ae55b686b"
+      },
+      "source_rst": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260807T113236Z_cef09f9_mesh0p24_screening_bounded/iop20/eyelid_2p00mm_indent_0p28mm/attempt_1/eyelid_2p00mm_indent_0p28mm.rst",
+        "size_bytes": 7780892672,
+        "mtime_utc": "2026-08-07T16:08:54.038928+00:00",
+        "sha256": "d0779b3e7d4bd924f3f52e94d5bad426d07be27a3e17d805ef3f97ac6272d6b2"
+      },
+      "postprocess": {
+        "mapdl": "Mechanical APDL 2025 R2",
+        "np": 1,
+        "returncode": 0,
+        "run_completed": true,
+        "ansys_error_count": 0,
+        "wall_time": "0:07.89",
+        "maximum_rss_kbytes": 2927832
+      },
+      "fixed_contour": {
+        "quantity": "equivalent_stress",
+        "unit": "Pa",
+        "minimum": 0.0,
+        "maximum": 60000.0,
+        "contour_count": 9,
+        "purpose": "cross_mesh_visual_localization_only"
+      },
+      "output": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T074933Z_mesh_fixed_scale_visual_aid/mesh0p24/mesh0p24000.png",
+        "size_bytes": 202927,
+        "mtime_utc": "2026-08-10T07:51:09.311111+00:00",
+        "sha256": "2a1de626df4c0d0521877f8eaf25c4d697ab945032fff71bf75fdf8725602680"
+      }
+    },
+    "mesh0p20": {
+      "mesh_size_mm": 0.2,
+      "source_git_commit": "cef09f91ca328cc39488b55047afaf9e078a980a",
+      "model_apdl_git_blob": "04f7b6e798844a1cd7809f77dbcfb5ceca59b12f",
+      "source_attempt": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260808T084727Z_cef09f9_mesh0p20_iop20_sequential/iop20/eyelid_2p00mm_indent_0p28mm/attempt_1",
+      "condition": {
+        "eyelid_thickness_mm": 2.0,
+        "iop_mmhg": 20.0,
+        "indent_mm": 0.28,
+        "cornea_thickness_mm": 0.6,
+        "eyelid_material_scale": 1.0,
+        "cornea_material_scale": 0.75,
+        "result_load_step": 3,
+        "result_time": 3.0
+      },
+      "source_db": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260808T084727Z_cef09f9_mesh0p20_iop20_sequential/iop20/eyelid_2p00mm_indent_0p28mm/attempt_1/eyelid_2p00mm_indent_0p28mm.db",
+        "size_bytes": 405012480,
+        "mtime_utc": "2026-08-08T23:46:35.282174+00:00",
+        "sha256": "4e5a109b267f748a97961e6a1eea6fb5520c373bab6cf5f9c2adbe6e31040ef3"
+      },
+      "source_rst": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260808T084727Z_cef09f9_mesh0p20_iop20_sequential/iop20/eyelid_2p00mm_indent_0p28mm/attempt_1/eyelid_2p00mm_indent_0p28mm.rst",
+        "size_bytes": 13086556160,
+        "mtime_utc": "2026-08-08T23:45:44.017586+00:00",
+        "sha256": "550ebe3f79eb5c7e16945cb508ed9f12113d965fe71e2477df900eb48104294a"
+      },
+      "postprocess": {
+        "mapdl": "Mechanical APDL 2025 R2",
+        "np": 1,
+        "returncode": 0,
+        "run_completed": true,
+        "ansys_error_count": 0,
+        "wall_time": "0:12.60",
+        "maximum_rss_kbytes": 5813120
+      },
+      "fixed_contour": {
+        "quantity": "equivalent_stress",
+        "unit": "Pa",
+        "minimum": 0.0,
+        "maximum": 60000.0,
+        "contour_count": 9,
+        "purpose": "cross_mesh_visual_localization_only"
+      },
+      "output": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T074933Z_mesh_fixed_scale_visual_aid/mesh0p20/mesh0p20000.png",
+        "size_bytes": 214196,
+        "mtime_utc": "2026-08-10T07:51:20.120103+00:00",
+        "sha256": "75af37e865a25af86a0a7608ae9f5617fcf812858c48b431789f0c56e6800a55"
+      }
+    }
+  },
+  "interpretation_boundary": "Use equal colours to localize equal stress intervals across meshes. Do not use this auxiliary plot to replace integrated-force convergence, native-auto evidence, or the frozen 2-percent q criterion.",
+  "large_artifact_policy": "DB and RST remain on 5090d; only lightweight PNG and manifest copies are stored in Git."
+}

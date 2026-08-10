@@ -1,0 +1,35 @@
+! Fixed-scale auxiliary view for cross-mesh field localization.
+! PNG suffix 000 = deformed central-section equivalent stress, common 0-60 kPa scale.
+/post1
+post_time = arg1
+fixed_stress_max_pa = 60000
+*if,post_time,gt,0,then
+set,,,,,post_time
+*else
+set,last
+*endif
+/show,png
+/gfile,1600
+/plopts,info,3
+/plopts,leg1,0
+/plopts,date,0
+/plopts,file,0
+/number,0
+
+! Match the native-auto evidence view exactly; only the contour limits differ.
+allsel
+wpcsys,-1,0
+/cplane,1
+/type,1,7
+/view,1,0,0,1
+/dscale,1,1
+/edge,1,1
+/contour,1,9,0,,fixed_stress_max_pa
+/title,DEFORMED CENTRAL SECTION STRESS - COMMON SCALE 0 TO 60 kPa
+plnsol,s,eqv
+
+/show,close
+/type,1,6
+/edge,1,0
+allsel
+finish

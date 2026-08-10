@@ -142,6 +142,32 @@ def test_visual_evidence_has_three_real_meshes_and_audited_rst_provenance():
             assert hashlib.sha256(path.read_bytes()).hexdigest() == output["sha256"]
 
 
+def test_fixed_scale_auxiliary_views_use_one_unclipped_range_and_keep_separate_provenance():
+    visual = EXPERIMENT / "results" / "visual_evidence"
+    source = json.loads((visual / "fixed_scale_source_manifest.json").read_text(encoding="utf-8"))
+    assert source["status"] == "existing_rst_postprocessing_only"
+    assert source["evidence_role"] == "fixed_scale_auxiliary_visual_localization"
+    assert source["fixed_scale"]["range_kpa"] == [0.0, 60.0]
+    assert source["fixed_scale"]["maximum_pa"] > 55606
+    macro = ROOT / "models" / "apdl" / "plot_mesh_independence_fixed_scale.mac"
+    assert hashlib.sha256(macro.read_bytes()).hexdigest() == source["postprocessing_macro"]["sha256"]
+    names = {
+        "mesh0p30": "mesh_0p30_stress_fixed_0_60kpa.png",
+        "mesh0p24": "mesh_0p24_stress_fixed_0_60kpa.png",
+        "mesh0p20": "mesh_0p20_stress_fixed_0_60kpa.png",
+    }
+    assert set(source["cases"]) == set(names)
+    for key, name in names.items():
+        case = source["cases"][key]
+        assert case["fixed_contour"]["minimum"] == pytest.approx(0.0)
+        assert case["fixed_contour"]["maximum"] == pytest.approx(60000.0)
+        assert case["postprocess"]["run_completed"] is True
+        assert case["postprocess"]["ansys_error_count"] == 0
+        path = visual / "raw" / name
+        assert path.stat().st_size == case["output"]["size_bytes"]
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == case["output"]["sha256"]
+
+
 def test_visual_timing_table_covers_all_accepted_endpoints_and_keeps_preflights_separate():
     visual = EXPERIMENT / "results" / "visual_evidence"
     rows = read_csv(visual / "simulation_timing.csv")
@@ -192,12 +218,15 @@ def test_visual_report_embeds_composites_and_preserves_plot_interpretation_bound
         "contact_zone_mesh_comparison.png",
         "mesh_sections_comparison.png",
         "stress_sections_comparison.png",
+        "stress_sections_fixed_scale_comparison.png",
     ):
         assert (visual / name).is_file()
     report = (EXPERIMENT / "DETAILED_REPORT.md").read_text(encoding="utf-8")
     assert "contact_zone_mesh_comparison.png" in report
     assert "stress_sections_comparison.png" in report
+    assert "stress_sections_fixed_scale_comparison.png" in report
     assert "MAPDL 原生自动色标" in report
+    assert "同色同值的空间定位" in report
     assert "不能仅凭颜色" in report
     assert "绝对幅值尚未网格无关" in report
     macro = (ROOT / "models" / "apdl" / "plot_mesh_independence_sections.mac").read_text(

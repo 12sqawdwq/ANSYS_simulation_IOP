@@ -2,7 +2,14 @@
 
 本日志是仓库级可读索引：按 Git 提交逆时间排列，保存每个提交的时间、主题和完整 `name-status` 文件清单。科学结论应读取各模块主要结论文档；运行时环境与外部求解日志读取 launch metadata/manifest。完整差异仍以 `git show <commit>` 为唯一真源。
 
-## Unreleased（分支 `mesh-independence-visual-report-20260809`）
+## Unreleased（分支 `mesh-fixed-scale-visual-aid-20260810`）
+
+- 保留三级网格原生自动色标图不变，新增固定 0–60 kPa 色标的同工况中央剖面，用于跨网格同色同值空间定位；
+- 60 kPa 高于既有最大原生图例上限 55.606 kPa，不通过截断极值制造视觉一致性；
+- 增加三张原始固定色标 PNG、三级拼版、独立外部 provenance manifest、构建脚本支持和报告解读；
+- 明确统一色标只能辅助比较高应力区位置和范围，不能替代积分力、接触 QC、2% 幅值判据或原生自动色标证据。
+
+## 2026-08-10 · `3a5b003` · Merge mesh visual evidence and timing audit
 
 - 为三级网格审计增加统一 MAPDL 后处理宏，在同一 2.00 mm、20 mmHg、0.28 mm 工况下输出 0.30/0.24/0.20 mm 的实际比例中央网格剖面和带单元边等效应力云图；
 - 新增三级网格截图拼版、原始 PNG、外部 DB/RST/PNG SHA-256 provenance 和 Git 轻量产物哈希；

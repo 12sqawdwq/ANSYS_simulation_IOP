@@ -80,7 +80,7 @@ A_{\mathrm{probe}}=14.65741468458854\ \mathrm{mm^2}.
 - 探头、眼睑和角膜区域的剖面边密度随 0.30 → 0.24 → 0.20 mm 单调增加；
 - 眼睑—角膜界面及中央接触区的表面离散同步加密；
 - 当前方案是全局尺寸细化，不是只在接触区局部细化；
-- 即使 0.20 mm 网格已经超过 57 万体单元，接触输出绝对幅值仍未满足 2% 标准。
+- 即使 0.20 mm 网格已经超过 57 万求解器单元，接触输出绝对幅值仍未满足 2% 标准。
 
 ### 3.2 完整实际比例剖面
 
@@ -112,17 +112,34 @@ RST 仅保存在 5090d；Git 中只保留 PNG、CSV、JSON、宏和文档。
 4. 跨网格的定量结论使用积分探头力得到的 \(q\)、接触 QC 和明确的相对变化，而不是只比较云图颜色；
 5. 该图证明实际结果场已被读取和统一后处理，但视觉相似性不能替代网格无关判据。
 
+### 4.1 0–60 kPa 统一色标辅助定位
+
+![三级网格统一色标等效应力中央剖面对比](results/visual_evidence/stress_sections_fixed_scale_comparison.png)
+
+**图 3B。** 与图 3 完全相同的 DB/RST、结果状态、中央剖面、视角、变形比例和单元边，仅将三个子图的等效应力色标统一固定为 0–60 kPa。60 kPa 高于三张原生自动色标中的最大上限 55.606 kPa，因此没有为了统一显示而故意截断现有极值。统一分界依次为 `0、6.667、13.333、20、26.667、33.333、40、46.667、53.333、60 kPa`；此图中同一种颜色才对应同一个应力区间。
+
+统一色标后的辅助定位表明：
+
+- 三个网格的探头中央高应力团均主要位于约 33–40 kPa 区间，位置和总体尺度相近；原生自动色标图中粗网格的红色与细网格的黄色差异主要来自色标重映射；
+- 眼睑中央主体主要处于约 20–33 kPa，左右对称的偏应力区在三个网格中均存在，细网格只是用更多单元解析其边界；
+- 眼睑—角膜中央界面的窄梯度带在三个网格中位置一致，角膜大部分区域仍位于较低的蓝—青色区间；
+- 可见中央剖面没有形成大面积 53.333–60 kPa 红色区。原生自动图中的 55.606 kPa 上限可能由很小的局部区域或当前剖面中不易辨认的极值控制，不能代表大范围组织均处于该水平；
+- 统一色标强化了“总体场形态和高应力区位置相近”的证据，但不改变积分输出从 6.7996 降至 5.9892、再降至 5.2518 mmHg 的事实，也不改变 12.31% 未通过 2% 判据的结论。
+
+图 3B 仅用于**同色同值的空间定位**。图 3 的原生自动色标仍保留为未经统一范围压缩的原始结果证据；跨网格的正式定量判断仍以积分力、接触 QC 和冻结判据为准。
+
 ## 5. 原始 MAPDL 截图与可追溯路径
 
-| 网格 | 原始网格剖面 | 原始应力剖面 |
-|---:|---|---|
-| 0.30 mm | [PNG](results/visual_evidence/raw/mesh_0p30_section.png) | [PNG](results/visual_evidence/raw/mesh_0p30_stress.png) |
-| 0.24 mm | [PNG](results/visual_evidence/raw/mesh_0p24_section.png) | [PNG](results/visual_evidence/raw/mesh_0p24_stress.png) |
-| 0.20 mm | [PNG](results/visual_evidence/raw/mesh_0p20_section.png) | [PNG](results/visual_evidence/raw/mesh_0p20_stress.png) |
+| 网格 | 原始网格剖面 | 原生自动色标应力 | 0–60 kPa 统一色标应力 |
+|---:|---|---|---|
+| 0.30 mm | [PNG](results/visual_evidence/raw/mesh_0p30_section.png) | [PNG](results/visual_evidence/raw/mesh_0p30_stress.png) | [PNG](results/visual_evidence/raw/mesh_0p30_stress_fixed_0_60kpa.png) |
+| 0.24 mm | [PNG](results/visual_evidence/raw/mesh_0p24_section.png) | [PNG](results/visual_evidence/raw/mesh_0p24_stress.png) | [PNG](results/visual_evidence/raw/mesh_0p24_stress_fixed_0_60kpa.png) |
+| 0.20 mm | [PNG](results/visual_evidence/raw/mesh_0p20_section.png) | [PNG](results/visual_evidence/raw/mesh_0p20_stress.png) | [PNG](results/visual_evidence/raw/mesh_0p20_stress_fixed_0_60kpa.png) |
 
 外部后处理根目录为：
 
-`/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T063320Z_mesh_visual_evidence`
+- 原生自动色标和网格图：`/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T063320Z_mesh_visual_evidence`
+- 0–60 kPa 统一色标辅助图：`/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T074933Z_mesh_fixed_scale_visual_aid`
 
 关键 provenance：
 
@@ -130,7 +147,8 @@ RST 仅保存在 5090d；Git 中只保留 PNG、CSV、JSON、宏和文档。
 - MAPDL：2025 R2；
 - 三组 `post.out` 均含 `RUN COMPLETED`；
 - 三组 MAPDL error count 均为 0；
-- DB、RST、PNG、宏及 driver 的路径、大小和 SHA-256：`results/visual_evidence/source_manifest.json`；
+- DB、RST、原生 PNG、宏及 driver 的路径、大小和 SHA-256：`results/visual_evidence/source_manifest.json`；
+- 统一色标范围、固定色标 PNG、宏及外部来源 SHA-256：`results/visual_evidence/fixed_scale_source_manifest.json`；
 - Git 内轻量文件 SHA-256：`results/visual_evidence/artifact_manifest.json`。
 
 0.30 mm 的 20 mmHg 图来自历史提交 `371ed27d...`，0.24/0.20 mm 图来自 `cef09f91...`。两提交间与该正压力图相关的模型宏差异只有零压力回退条件由 `LE` 改为 `LT`；对于正的 20 mmHg 输入，该差异不改变显示工况。该历史差异已显式保留，没有伪装为同一 Git SHA。
@@ -220,7 +238,7 @@ RST 仅保存在 5090d；Git 中只保留 PNG、CSV、JSON、宏和文档。
 | 0.24 mm | 7.247 GiB | 10.50 s | 2.79 GiB |
 | 0.20 mm | 12.188 GiB | 14.20 s | 5.54 GiB |
 
-后处理时间与求解时间分开统计，不能相加后称为“求解耗时”。
+后处理时间与求解时间分开统计，不能相加后称为“求解耗时”。新增 0–60 kPa 统一色标时同样只读取既有 RST，三档单 rank 后处理分别耗时 7.18、7.89 和 12.60 s，MAPDL error 均为 0。
 
 ## 8. QC 与证据边界
 
@@ -258,9 +276,11 @@ RST 仅保存在 5090d；Git 中只保留 PNG、CSV、JSON、宏和文档。
 - 本报告时间明细：`results/visual_evidence/simulation_timing.csv`
 - 时间汇总：`results/visual_evidence/timing_summary.json`
 - 未接收资源事件：`results/visual_evidence/resource_preflight_timing.csv`
-- 外部 DB/RST 与图片 provenance：`results/visual_evidence/source_manifest.json`
+- 外部 DB/RST 与原生图片 provenance：`results/visual_evidence/source_manifest.json`
+- 统一 0–60 kPa 色标 provenance：`results/visual_evidence/fixed_scale_source_manifest.json`
 - Git 轻量文件哈希：`results/visual_evidence/artifact_manifest.json`
 - 后处理脚本：`scripts/analysis/build_visual_report.py`
-- MAPDL 统一截图宏：`../models/apdl/plot_mesh_independence_sections.mac`
+- MAPDL 原生截图宏：`../models/apdl/plot_mesh_independence_sections.mac`
+- MAPDL 统一色标宏：`../models/apdl/plot_mesh_independence_fixed_scale.mac`
 
 本报告的结论仍限定为：**厚端下降方向在当前有限元模型内具有网格稳健性；绝对幅值尚未网格无关。**
