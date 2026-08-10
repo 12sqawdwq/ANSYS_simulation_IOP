@@ -17,7 +17,15 @@
 - `confirmation/mesh_independence_screening.png/.svg`：三级网格图；
 - `confirmation/CONCLUSION.md`：结论与 claim boundary；
 - `confirmation/iop*_run_manifest.csv`、`iop*_run_metadata.json` 和 source campaign status：被接收的 0.20 mm 端点来源；
-- `confirmation/external_artifact_manifest.json`：5090d 源文件路径、大小和 SHA-256。
+- `confirmation/external_artifact_manifest.json`：5090d 源文件路径、大小和 SHA-256；
+- `visual_evidence/raw/*.png`：0.30/0.24/0.20 mm 的原始 MAPDL 网格与等效应力中央剖面；
+- `visual_evidence/*_comparison.png`：统一条件下的三级截图拼版；
+- `visual_evidence/simulation_timing.csv`：18 个接收终点的逐项墙钟时间、MPI ranks 和求解规模；
+- `visual_evidence/resource_preflight_timing.csv`：未接收资源预检的时间成本；
+- `visual_evidence/source_manifest.json`：外部 DB/RST、后处理宏和 PNG 的路径、大小及 SHA-256；
+- `visual_evidence/timing_summary.json` 和 `artifact_manifest.json`：时间汇总与 Git 轻量文件哈希。
+
+实际截图和时间解释见 [`../DETAILED_REPORT.md`](../DETAILED_REPORT.md)。
 
 大体积 DB/RST、面场 CSV 和完整 MAPDL 文件继续位于配置登记的 5090d 外部数据目录，不进入 Git。资源预检中止的 20 mmHg 端点没有进入三级比较；相应中止和清理标记保留在 `confirmation/`。
 

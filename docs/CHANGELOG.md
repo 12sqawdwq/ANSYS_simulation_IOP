@@ -2,7 +2,14 @@
 
 本日志是仓库级可读索引：按 Git 提交逆时间排列，保存每个提交的时间、主题和完整 `name-status` 文件清单。科学结论应读取各模块主要结论文档；运行时环境与外部求解日志读取 launch metadata/manifest。完整差异仍以 `git show <commit>` 为唯一真源。
 
-## Unreleased（分支 `manuscript-rational-iop-fitting-20260807`）
+## Unreleased（分支 `mesh-independence-visual-report-20260809`）
+
+- 为三级网格审计增加统一 MAPDL 后处理宏，在同一 2.00 mm、20 mmHg、0.28 mm 工况下输出 0.30/0.24/0.20 mm 的实际比例中央网格剖面和带单元边等效应力云图；
+- 新增三级网格截图拼版、原始 PNG、外部 DB/RST/PNG SHA-256 provenance 和 Git 轻量产物哈希；
+- 汇总 18 个接收终点的逐项墙钟时间、MPI ranks、rank·h、单元/节点/方程规模，并单列三次未接收资源预检和既有 RST 图片后处理时间；
+- 新增 `thickness_mesh_independence/DETAILED_REPORT.md`，严格区分厚端次序稳健与绝对幅值未网格无关，并披露自动色标、历史异构 rank 数和 0.20 mm 资源竞争边界。
+
+## 2026-08-09 · `136fae6` · Merge rational IOP manuscript and mesh audit
 
 - 新建 `paper/` 论文目录；
 - 基于本地冻结 CSV/JSON 数据撰写以第二版本经验分式为唯一拟合 claim 的高眼压外推和厚度可识别性中文完整初稿；

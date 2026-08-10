@@ -1,0 +1,46 @@
+! Mesh-independence visual evidence at the retained result state.
+! PNG suffix order: 000 = actual FE mesh; 001 = deformed stress with mesh edges.
+/post1
+post_time = arg1
+*if,post_time,gt,0,then
+set,,,,,post_time
+*else
+set,last
+*endif
+/show,png
+/gfile,1600
+/plopts,info,3
+/plopts,leg1,0
+/plopts,date,0
+/plopts,file,0
+/number,0
+
+! Use the same actual-scale central section and front view for every mesh.
+allsel
+wpcsys,-1,0
+/cplane,1
+/type,1,7
+/view,1,0,0,1
+/dscale,1,1
+/edge,1,1
+
+! 000: actual deformed SOLID187 discretization with one display-only contour band.
+esel,s,type,,1
+/eshape,1
+/pnum,mat,0
+/edge,1,1
+/contour,1,1,0,,1.0e6
+/title,CENTRAL SECTION FE MESH - display colour nonphysical - actual scale
+plnsol,s,eqv
+
+! 001: final deformed equivalent-stress field with element edges visible.
+allsel
+/contour,1,9
+/title,DEFORMED CENTRAL SECTION STRESS WITH MESH - actual scale
+plnsol,s,eqv
+
+/show,close
+/type,1,6
+/edge,1,0
+allsel
+finish

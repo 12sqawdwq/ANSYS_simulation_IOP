@@ -13,14 +13,17 @@
 
 ```text
 thickness_mesh_independence/
+├── DETAILED_REPORT.md
 ├── config/experiment.json
 ├── scripts/
 │   ├── analysis/evaluate_mesh_independence.py
+│   ├── analysis/build_visual_report.py
 │   └── server/launch_mesh_campaign_5090d.sh
 └── results/
     ├── baseline_mesh_inventory.csv
     ├── screening/
-    └── confirmation/
+    ├── confirmation/
+    └── visual_evidence/
 ```
 
 大体积 DB/RST 保存在 5090d：
@@ -82,3 +85,4 @@ $$
 - `0.20 mm` 三级验证：已完成，6/6 正式端点及全部配对 QC 通过；`np=8 × 2` 和 `np=4 × 2` 资源预检曾显示 183 万方程模型受内存/I/O 限制，所有不完整端点均未接收，最终采用单压力、单算例 `np=4 × 1` 串行完成；
 - 三级结果：`0.20 mm` 的 1.60、1.80、2.00 mm 厚度 $q$ 分别为 `5.8586、5.6457、5.2518 mmHg`；三个网格均保持 `1.60 > 1.80 > 2.00 mm`，但 0.20 mm 相对 0.24 mm 的最大变化仍为 `12.31%`；
 - 最终判定：厚端下降的方向和次序在当前模型的三个测试网格上稳健，但绝对幅值未达到 2% 网格无关判据；不把 1.60 mm 升级为真实物理阈值。机器可读结果和边界见 [`results/confirmation/`](results/confirmation/)。
+- 实际网格截图、统一剖面云图、18 个接收终点逐项耗时和资源预检成本见 [`DETAILED_REPORT.md`](DETAILED_REPORT.md)。
