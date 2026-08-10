@@ -2,13 +2,17 @@
 ! PARAMETRIC 3D TONOMETER SWEEP
 ! ARG1 = X offset in m
 ! ARG2 = nominal indentation after the initial gap in m
-! ARG3 = solver retry mode (0=standard, 1=smaller initial steps)
-! ARG4 = mesh size in m (default 0.3 mm)
+! ARG3 = encoded execution mode:
+!        units = solver retry mode (0=standard, 1=smaller initial steps)
+!        tens = experimental local tetra refinement level (0, 1, or 2)
+!        hundreds = mesh-only preflight flag (0=solve, 1=stop after mesh)
+! ARG4 = background mesh size in m (default 0.3 mm)
 ! ARG5 = eyelid thickness in m (default 1.0 mm)
 ! ARG6 = IOP in Pa (0 Pa is a valid zero-IOP case; negative uses 20 mmHg default)
 ! ARG7 = eyelid C10/C01 scale (default 1.0)
 ! ARG8 = cornea C10/C01 scale (default 1.0)
 ! ARG9 = unloaded probe-apex gap in m (default 0.30 mm)
+! Experimental local-refinement half-width is frozen at 1.80 mm.
 ! Known-working config: tet + flat probe + bonded eyelid-cornea
 ! + IOP preload, geometry-based probe approach, then indentation.
 ! ============================================================
@@ -36,7 +40,22 @@ gap0   = ARG9
 gap0 = 0.30e-3         ! keeps the probe clear during IOP preload
 *endif
 indent = ARG2
-retry_mode = ARG3
+encoded_mode = ARG3
+mesh_only_preflight = 0
+*if,encoded_mode,ge,100,then
+mesh_only_preflight = 1
+encoded_mode = encoded_mode-100
+*endif
+local_refine_level = 0
+*if,encoded_mode,ge,20,then
+local_refine_level = 2
+*else
+*if,encoded_mode,ge,10,then
+local_refine_level = 1
+*endif
+*endif
+retry_mode = encoded_mode-10*local_refine_level
+local_refine_halfwidth = 1.8e-3
 mesh_size = ARG4
 indent_limit = 0.8e-3
 *if,indent,lt,0,then
@@ -64,6 +83,30 @@ cornea_material_scale = 1.0
 *endif
 rmax   = 6.0e-3
 xoff   = ARG1
+*if,local_refine_level,lt,0,then
+/com,ERROR: local refinement level must be 0, 1, or 2
+/exit,nosave
+*endif
+*if,local_refine_level,gt,2,then
+/com,ERROR: local refinement level must be 0, 1, or 2
+/exit,nosave
+*endif
+*if,retry_mode,lt,0,then
+/com,ERROR: decoded retry mode must be 0 or 1
+/exit,nosave
+*endif
+*if,retry_mode,gt,1,then
+/com,ERROR: decoded retry mode must be 0 or 1
+/exit,nosave
+*endif
+*if,mesh_only_preflight,lt,0,then
+/com,ERROR: decoded mesh-only flag must be 0 or 1
+/exit,nosave
+*endif
+*if,mesh_only_preflight,gt,1,then
+/com,ERROR: decoded mesh-only flag must be 0 or 1
+/exit,nosave
+*endif
 
 et,1,187              ! SOLID187 tet
 et,2,170
@@ -149,6 +192,72 @@ mshape,1,3d
 cmsel,s,vcornea $ vatt,1,,1 $ vmesh,all $ allsel
 cmsel,s,veyelid $ vatt,2,,1 $ vmesh,all $ allsel
 cmsel,s,vprobe  $ vatt,3,,1 $ vmesh,all $ allsel
+
+! Experimental local refinement is deliberately applied before any nodal
+! constraints, contact elements, or persistent node components are created.
+! A 1.80 mm central box is intersected with two 0.80 mm-thick Y bands around
+! the eyelid-cornea and probe-eyelid paths.  This targets both interfaces and
+! the lower probe without refining the full tissue thickness or 6 mm dome.
+*get,solid_elements_before_refine,elem,0,count
+*get,solid_nodes_before_refine,node,0,count
+selected_elements_for_refine = 0
+refine_layer_halfheight = 0.40e-3
+*if,local_refine_level,gt,0,then
+*do,refine_pass,1,local_refine_level
+esel,s,type,,1
+nsle,s
+nsel,r,loc,x,-local_refine_halfwidth,local_refine_halfwidth
+nsel,r,loc,z,-local_refine_halfwidth,local_refine_halfwidth
+cm,am_central_nodes,node
+nsel,r,loc,y,-refine_layer_halfheight,refine_layer_halfheight
+cm,am_interface_nodes,node
+cmsel,s,am_central_nodes
+refine_contact_ymin = te-refine_layer_halfheight
+refine_contact_ymax = te+gap0+refine_layer_halfheight
+nsel,r,loc,y,refine_contact_ymin,refine_contact_ymax
+cmsel,a,am_interface_nodes
+esln,s,0
+*get,selected_elements_this_pass,elem,0,count
+cmdele,am_central_nodes
+cmdele,am_interface_nodes
+*if,selected_elements_this_pass,lt,1,then
+/com,ERROR: local refinement selected no solid elements
+/exit,nosave
+*endif
+selected_elements_for_refine=selected_elements_for_refine+selected_elements_this_pass
+erefine,all,1,1
+allsel
+*enddo
+*endif
+*get,solid_elements_after_refine,elem,0,count
+*get,solid_nodes_after_refine,node,0,count
+local_target_size = mesh_size/(2**local_refine_level)
+
+write_aggressive_inventory=local_refine_level+mesh_only_preflight
+*if,write_aggressive_inventory,gt,0,then
+*cfopen,aggressive_mesh_inventory,csv
+*vwrite
+('bg_m,target_m,half_m,level,parents,elem_b,elem_a,node_b,node_a')
+am_bm=mesh_size
+am_tm=local_target_size
+am_hw=local_refine_halfwidth
+am_lv=local_refine_level
+am_sp=selected_elements_for_refine
+am_e0=solid_elements_before_refine
+am_e1=solid_elements_after_refine
+am_n0=solid_nodes_before_refine
+am_n1=solid_nodes_after_refine
+*vwrite,am_bm,am_tm,am_hw,am_lv,am_sp,am_e0,am_e1,am_n0,am_n1
+(8(E22.14,','),E22.14)
+*cfclos
+*endif
+
+*if,mesh_only_preflight,eq,1,then
+save
+finish
+/exit,nosave
+*endif
+
 cmsel,s,vprobe
 nslv,s,1
 cm,probe_nodes,node

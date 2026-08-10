@@ -7,7 +7,7 @@
 
 |路径|职责|
 |---|---|
-|`models/apdl/param_eye_sweep.mac`|统一眼球、角膜、眼睑和探头参数化模型；IOP 预载、几何初接触和正式压入三载荷步|
+|`models/apdl/param_eye_sweep.mac`|统一眼球、角膜、眼睑和探头参数化模型；IOP 预载、几何初接触和正式压入三载荷步；默认关闭、显式编码启用的实验局部四面体细化与 mesh-only 预检|
 |`models/apdl/plot_sweep_views.mac`|批量工况几何/变形多视图|
 |`models/apdl/plot_mesh_independence_sections.mac`|从既有 RST 统一输出网格审计的变形后实际比例中央网格剖面和保留原生自动色标的带单元边等效应力剖面|
 |`models/apdl/plot_mesh_independence_fixed_scale.mac`|在相同视角下输出固定 0–60 kPa 色标的等效应力中央剖面，仅用于跨网格同色同值辅助定位|
@@ -23,8 +23,13 @@
 
 |路径|职责|
 |---|---|
-|`src/runners/run_indentation_sweep.py`|参数化压入批量运行、隔离尝试、重试、QC、清理、manifest 和元数据|
+|`src/runners/run_indentation_sweep.py`|参数化压入批量运行、隔离尝试、重试、QC、清理、manifest 和元数据；`--local-refine-level` 仅供预注册实验显式启用|
 |`src/runners/run_thickness_calibration.py`|眼睑厚度校准矩阵调度|
+|`thickness_mesh_independence/aggressive_refinement/scripts/server/launch_mesh_preflight_5090d.sh`|在 clean commit 上串行构建 G015/L010 及可选 L005 mesh-only 资源预检|
+|`thickness_mesh_independence/aggressive_refinement/scripts/server/launch_aggressive_anchor_5090d.sh`|局部 0.10 mm 压力对单任务串行求解，含 72 h 阶段化策略、运行中内存/磁盘保护和不接收部分端点边界|
+|`thickness_mesh_independence/aggressive_refinement/scripts/analysis/collect_mesh_preflight.py`|收集 mesh-only 单元/节点增长、MAPDL 状态、墙钟、RSS、DB 大小与哈希|
+|`thickness_mesh_independence/aggressive_refinement/scripts/analysis/estimate_resource_envelope.py`|由既有三级网格和开发期构网格计数生成全局/局部资源投影|
+|`thickness_mesh_independence/aggressive_refinement/scripts/analysis/evaluate_aggressive_refinement.py`|校验局部细化 0/20 mmHg 配对并计算冻结定义的零基线输出与策略变化|
 
 所有正式实验应复用运行器，不在实验目录复制一个带版本后缀的新 runner。
 

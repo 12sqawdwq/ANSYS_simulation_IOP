@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "status": "planning_projection_not_solver_benchmark",
+  "inputs": {
+    "config": "D:\\PROJECT\\blueknow\\simulation_new\\whole\\thickness_mesh_independence\\aggressive_refinement\\config\\experiment.json",
+    "timing": "D:\\PROJECT\\blueknow\\simulation_new\\whole\\thickness_mesh_independence\\results\\visual_evidence\\simulation_timing.csv",
+    "accepted_0p20_endpoints": 6,
+    "baseline_six_endpoint_wall_hours": 30.182746944444443,
+    "baseline_2mm_anchor_pair_wall_hours": 11.126105833333334
+  },
+  "global_count_fits": {
+    "elements": {
+      "coefficient": 5387.8498832743235,
+      "exponent": -2.9052220059877922
+    },
+    "nodes": {
+      "coefficient": 7429.592385737413,
+      "exponent": -2.8861880401069233
+    },
+    "equations": {
+      "coefficient": 20837.518874274803,
+      "exponent": -2.89636563177941
+    },
+    "rst_gib": {
+      "coefficient": 0.10663172831737656,
+      "exponent": -2.9482963018612924
+    }
+  },
+  "local_mesh_only_ratios": {
+    "L010_elements": 1.5169836187294075,
+    "L010_nodes": 1.5077929384737925,
+    "L005_nodes": 5.179447432260881
+  },
+  "rows": [
+    {
+      "strategy": "global_0.15",
+      "background_mesh_mm": 0.15,
+      "nominal_local_target_mm": 0.15,
+      "predicted_elements": 1333685,
+      "predicted_nodes": 1773865,
+      "predicted_equations": 5072090,
+      "predicted_rst_gib_per_endpoint": 28.643,
+      "predicted_anchor_pair_wall_hours_lower": 25.67,
+      "predicted_anchor_pair_wall_hours_upper": 42.39,
+      "predicted_six_endpoint_wall_hours_lower": 69.63,
+      "predicted_six_endpoint_wall_hours_upper": 114.98,
+      "evidence": "log-log count fit; wall time is an unvalidated planning envelope"
+    },
+    {
+      "strategy": "global_0.12",
+      "background_mesh_mm": 0.12,
+      "nominal_local_target_mm": 0.12,
+      "predicted_elements": 2550342,
+      "predicted_nodes": 3377700,
+      "predicted_equations": 9679965,
+      "predicted_rst_gib_per_endpoint": 55.301,
+      "predicted_anchor_pair_wall_hours_lower": 48.99,
+      "predicted_anchor_pair_wall_hours_upper": 119.21,
+      "predicted_six_endpoint_wall_hours_lower": 132.89,
+      "predicted_six_endpoint_wall_hours_upper": 323.4,
+      "evidence": "log-log count fit; wall time is an unvalidated planning envelope"
+    },
+    {
+      "strategy": "global_0.10",
+      "background_mesh_mm": 0.1,
+      "nominal_local_target_mm": 0.1,
+      "predicted_elements": 4331492,
+      "predicted_nodes": 5716800,
+      "predicted_equations": 16413895,
+      "predicted_rst_gib_per_endpoint": 94.664,
+      "predicted_anchor_pair_wall_hours_lower": 83.07,
+      "predicted_anchor_pair_wall_hours_upper": 277.5,
+      "predicted_six_endpoint_wall_hours_lower": 225.34,
+      "predicted_six_endpoint_wall_hours_upper": 752.8,
+      "evidence": "log-log count fit; wall time is an unvalidated planning envelope"
+    },
+    {
+      "strategy": "layered_local_0.10",
+      "background_mesh_mm": 0.2,
+      "nominal_local_target_mm": 0.1,
+      "predicted_elements": 817237,
+      "predicted_nodes": 1160408,
+      "predicted_equations": 3314954,
+      "predicted_rst_gib_per_endpoint": 18.377,
+      "predicted_anchor_pair_wall_hours_lower": 16.78,
+      "predicted_anchor_pair_wall_hours_upper": 21.46,
+      "predicted_six_endpoint_wall_hours_lower": 45.51,
+      "predicted_six_endpoint_wall_hours_upper": 58.22,
+      "evidence": "exploratory mesh-only count ratio; full solve not yet measured"
+    },
+    {
+      "strategy": "layered_local_0.05",
+      "background_mesh_mm": 0.2,
+      "nominal_local_target_mm": 0.05,
+      "predicted_elements": 2880653,
+      "predicted_nodes": 3986139,
+      "predicted_equations": 11387259,
+      "predicted_rst_gib_per_endpoint": 63.127,
+      "predicted_anchor_pair_wall_hours_lower": 57.63,
+      "predicted_anchor_pair_wall_hours_upper": 154.6,
+      "predicted_six_endpoint_wall_hours_lower": 156.33,
+      "predicted_six_endpoint_wall_hours_upper": 419.38,
+      "evidence": "two-pass mesh-only count ratio; nonlinear solve rejected by resource gate"
+    }
+  ],
+  "decision_boundary": {
+    "global_0p10": "reject before nonlinear solve under the recorded 123-GiB RAM / 148-GiB free-disk snapshot",
+    "layered_local_0p10": "eligible only for committed P0 mesh preflight and then a sequential 2.00-mm anchor pair",
+    "layered_local_0p05": "mesh-only feasible but nonlinear anchor rejected under current memory, disk, and 72-hour limits",
+    "full_six_endpoint_matrix": "conditional; upper wall-time and retained-RST storage can exceed the 72-hour / free-disk envelope"
+  }
+}

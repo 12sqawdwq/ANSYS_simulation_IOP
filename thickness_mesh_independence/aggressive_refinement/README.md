@@ -1,0 +1,71 @@
+# 激进接触区网格实验
+
+本目录是独立实验分支 `aggressive-contact-mesh-experiment-20260810` 的入口。目标是在 72 h 墙钟预算内优先细化决定探头积分反力的两条中央界面，而不是直接启动资源上不可接受的全局 0.10 mm 矩阵。
+
+## 当前决策
+
+- **拒绝直接求解全局 0.10 mm**：预计约 433 万单元、1641 万方程、单端点约 94.7 GiB RST；
+- **主方案 L010**：0.20 mm 背景 + 1.80 mm 中央半宽 + 两个 0.80 mm 界面带 + 一级 `EREFINE`，局部名义目标 0.10 mm；
+- **极限方案 L005**：同一区域二级细化至名义 0.05 mm；开发期 mesh-only 得到约 288 万实体单元、399 万节点，预计约 1139 万方程和 63.13 GiB RST/端点，因此当前服务器只保留构网格证据并拒绝非线性求解；
+- **先锚点、后扩展**：先做 2.00 mm 的 0/20 mmHg 压力对，资源和 QC 通过后才考虑 1.60/1.80 mm；
+- **当前尚未启动正式求解**：开发期 mesh-only 数据不进入 \(q\) 比较。
+
+详尽依据、资源表、阶段矩阵和判据见 [`EXPERIMENT_DESIGN.md`](EXPERIMENT_DESIGN.md)。
+
+## 正式 P0 mesh-only 预检
+
+必须先提交本分支并在 5090d 检出同一 commit。示例：
+
+```bash
+export EXPECTED_COMMIT='<full-commit-sha>'
+export CAMPAIGN_ROOT="/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/$(date -u +%Y%m%dT%H%M%SZ)_${EXPECTED_COMMIT:0:8}_aggressive_mesh_preflight"
+bash thickness_mesh_independence/aggressive_refinement/scripts/server/launch_mesh_preflight_5090d.sh
+```
+
+默认只构建 G015 和 L010。若只想评估 0.05 mm 二级局部网格规模，可另行设置：
+
+```bash
+export RUN_EXTREME=1
+```
+
+这不会启动 L005 非线性求解；当前资源快照下该求解已被明确拒绝。
+
+## 正式 P1 锚点压力对
+
+P0 审核通过后：
+
+```bash
+export EXPECTED_COMMIT='<full-commit-sha>'
+export CAMPAIGN_ROOT="/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/$(date -u +%Y%m%dT%H%M%SZ)_${EXPECTED_COMMIT:0:8}_L010_h2p00_anchor"
+export THICKNESSES='2.0'
+export PRESSURES='0 20'
+bash thickness_mesh_independence/aggressive_refinement/scripts/server/launch_aggressive_anchor_5090d.sh
+```
+
+启动器采用 4 ranks、单任务、压力串行，并在低内存或低磁盘时主动中止。被中止的部分载荷步不得进入比较。
+
+## 评估
+
+```bash
+python thickness_mesh_independence/aggressive_refinement/scripts/analysis/evaluate_aggressive_refinement.py \
+  --campaign-root "$CAMPAIGN_ROOT" \
+  --reference thickness_mesh_independence/results/confirmation/mesh_comparison.csv \
+  --output-dir /tmp/aggressive_mesh_evaluation
+```
+
+资源估算可重复生成：
+
+```bash
+python thickness_mesh_independence/aggressive_refinement/scripts/analysis/estimate_resource_envelope.py \
+  --output-dir thickness_mesh_independence/aggressive_refinement/results
+```
+
+## 目录
+
+- `config/experiment.json`：冻结的设计、阶段门限和 claim boundary；
+- `results/resource_projection.*`：基于既有三级网格与开发期 mesh-only 计数的规划投影；
+- `results/development_preflight/`：不作为正式端点的开发期构网格证据；
+- `scripts/server/`：5090d 启动器；
+- `scripts/analysis/`：资源收集、估算和压力对评估。
+
+大体积 DB/RST 只能保存在新建的 5090d campaign root，不进入 Git。

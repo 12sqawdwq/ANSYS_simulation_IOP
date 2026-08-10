@@ -43,6 +43,7 @@ THICKNESS_MM = tuple(round(0.8 + 0.2 * index, 1) for index in range(7))
 FULL_INDENTS_MM = tuple(i / 5 for i in range(5))
 COARSE_INDENTS_MM = (0.0, 0.4, 0.8)
 INITIAL_GAP_M = 0.30e-3
+LOCAL_REFINE_HALFWIDTH_MM = 1.80
 PA_PER_MMHG = 133.32236842105263
 EYELID_C10_MPA = 0.076
 EYELID_C01_MPA = 0.010
@@ -91,6 +92,9 @@ MANIFEST_FIELDS = (
     "eyelid_thickness_mm",
     "cornea_thickness_mm",
     "mesh_size_mm",
+    "local_refine_level",
+    "local_refine_halfwidth_mm",
+    "local_target_mesh_size_mm",
     "iop_mmhg",
     "eyelid_material_scale",
     "cornea_material_scale",
@@ -190,6 +194,7 @@ class RunConfig:
     cornea_material_scale: float = 1.0
     view_policy: str = "all"
     initial_gap_mm: float = 0.30
+    local_refine_level: int = 0
 
 
 @dataclass
@@ -571,18 +576,20 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
     for filename in APDL_FILES:
         shutil.copy2(MODEL_DIR / filename, attempt_dir / filename)
     retry_mode = 1 if attempt_number > 1 else 0
+    encoded_mode = retry_mode + 10 * config.local_refine_level
     driver = attempt_dir / "driver.dat"
     driver_text = (
         f"xoff={case.offset_mm / 1000:.12g}\n"
         f"indent={case.indent_mm / 1000:.12g}\n"
         f"retry_mode={retry_mode}\n"
+        f"encoded_mode={encoded_mode}\n"
         f"mesh_size={config.mesh_size_mm / 1000:.12g}\n"
         f"eyelid_thickness={case.eyelid_thickness_mm / 1000:.12g}\n"
         f"iop_pa={config.iop_mmhg * PA_PER_MMHG:.12g}\n"
         f"eyelid_material_scale={config.eyelid_material_scale:.12g}\n"
         f"cornea_material_scale={config.cornea_material_scale:.12g}\n"
         f"initial_gap={config.initial_gap_mm / 1000:.12g}\n"
-        "*use,param_eye_sweep.mac,xoff,indent,retry_mode,mesh_size,eyelid_thickness,"
+        "*use,param_eye_sweep.mac,xoff,indent,encoded_mode,mesh_size,eyelid_thickness,"
         "iop_pa,eyelid_material_scale,cornea_material_scale,initial_gap\n"
         f"resume,{case.name},db\n"
         f"/filname,{case.name}\n"
@@ -643,7 +650,12 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
     atomic_json(attempt_dir / "attempt.json", {
         "attempt": attempt_number,
         "retry_mode": retry_mode,
+        "encoded_mode": encoded_mode,
         "np": np_used,
+        "local_refine_level": config.local_refine_level,
+        "local_refine_halfwidth_mm": (
+            LOCAL_REFINE_HALFWIDTH_MM if config.local_refine_level > 0 else 0.0
+        ),
         "command": command,
         "started_at_utc": started_at,
         "ended_at_utc": utc_now(),
@@ -695,6 +707,11 @@ def run_case(case: CaseSpec, config: RunConfig) -> dict:
         "eyelid_thickness_mm": case.eyelid_thickness_mm,
         "cornea_thickness_mm": 0.6,
         "mesh_size_mm": config.mesh_size_mm,
+        "local_refine_level": config.local_refine_level,
+        "local_refine_halfwidth_mm": (
+            LOCAL_REFINE_HALFWIDTH_MM if config.local_refine_level > 0 else 0.0
+        ),
+        "local_target_mesh_size_mm": config.mesh_size_mm / (2 ** config.local_refine_level),
         "iop_mmhg": config.iop_mmhg,
         "eyelid_material_scale": config.eyelid_material_scale,
         "cornea_material_scale": config.cornea_material_scale,
@@ -813,6 +830,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--timeout-seconds", type=float, default=7200)
     parser.add_argument("--retry-count", type=int, choices=(0, 1), default=1)
     parser.add_argument("--mesh-size-mm", type=float, default=0.3)
+    parser.add_argument("--local-refine-level", type=int, choices=(0, 1, 2), default=0)
     parser.add_argument("--iop-mmhg", type=float, default=20.0)
     parser.add_argument("--eyelid-material-scale", type=float, default=1.0)
     parser.add_argument("--cornea-material-scale", type=float, default=1.0)
@@ -833,7 +851,10 @@ def main() -> int:
         or cli.eyelid_material_scale <= 0 or cli.cornea_material_scale <= 0
         or cli.initial_gap_mm <= 0
     ):
-        parser.error("IOP must be non-negative; workers, np, timeout, mesh size, material scales, and initial gap must be positive")
+        parser.error(
+            "IOP must be non-negative; workers, np, timeout, mesh size, material scales, "
+            "and initial gap must be positive"
+        )
     profile, cases = choose_cases(parser, cli)
     git_commit, git_dirty = git_provenance()
     if git_dirty and not cli.allow_dirty:
@@ -857,7 +878,7 @@ def main() -> int:
         run_root, profile, cli.np, cli.timeout_seconds, cli.retry_count,
         ansys_bin, cli.mesh_size_mm, git_commit, git_dirty,
         cli.iop_mmhg, cli.eyelid_material_scale, cli.cornea_material_scale,
-        cli.view_policy, cli.initial_gap_mm,
+        cli.view_policy, cli.initial_gap_mm, cli.local_refine_level,
     )
     materials = absolute_materials(config)
     metadata = {
@@ -875,6 +896,11 @@ def main() -> int:
         "timeout_seconds": cli.timeout_seconds,
         "retry_count": cli.retry_count,
         "mesh_size_mm": cli.mesh_size_mm,
+        "local_refine_level": cli.local_refine_level,
+        "local_refine_halfwidth_mm": (
+            LOCAL_REFINE_HALFWIDTH_MM if cli.local_refine_level > 0 else 0.0
+        ),
+        "local_target_mesh_size_mm": cli.mesh_size_mm / (2 ** cli.local_refine_level),
         "iop_mmhg": cli.iop_mmhg,
         "iop_pa": cli.iop_mmhg * PA_PER_MMHG,
         "pa_per_mmhg": PA_PER_MMHG,

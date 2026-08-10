@@ -6,6 +6,7 @@
 *.ps1 text eol=lf
 *.mac text eol=lf
 *.dat text eol=lf
+*.txt text eol=lf
 *.md text eol=lf
 *.csv text eol=lf
 *.json text eol=lf

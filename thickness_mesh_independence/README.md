@@ -14,6 +14,7 @@
 ```text
 thickness_mesh_independence/
 ├── DETAILED_REPORT.md
+├── aggressive_refinement/         # 独立分支上的局部 0.10/0.05 mm 实验设计
 ├── config/experiment.json
 ├── scripts/
 │   ├── analysis/evaluate_mesh_independence.py
@@ -86,3 +87,4 @@ $$
 - 三级结果：`0.20 mm` 的 1.60、1.80、2.00 mm 厚度 $q$ 分别为 `5.8586、5.6457、5.2518 mmHg`；三个网格均保持 `1.60 > 1.80 > 2.00 mm`，但 0.20 mm 相对 0.24 mm 的最大变化仍为 `12.31%`；
 - 最终判定：厚端下降的方向和次序在当前模型的三个测试网格上稳健，但绝对幅值未达到 2% 网格无关判据；不把 1.60 mm 升级为真实物理阈值。机器可读结果和边界见 [`results/confirmation/`](results/confirmation/)。
 - 实际网格截图、原生自动色标与 0–60 kPa 统一色标辅助剖面、18 个接收终点逐项耗时和资源预检成本见 [`DETAILED_REPORT.md`](DETAILED_REPORT.md)。
+- 针对绝对幅值尚未收敛的问题，新的 72 h 资源约束局部细化方案见 [`aggressive_refinement/EXPERIMENT_DESIGN.md`](aggressive_refinement/EXPERIMENT_DESIGN.md)；它当前处于正式 P0/P1 尚未启动的实验设计阶段。

@@ -20,7 +20,7 @@
 - `thick/`：厚度项目的实验协议、占位结果、真实实验数据契约、处理脚本与报告。
 - `high_iop_mechanical_transfer_t1p25_c0p60/`：0–60 mmHg 高眼压实验的分层配置、脚本、结论和无损实验记录。
 - `analysis/`：厚度敏感性与参数可识别性分析管线及可复现输出。
-- `thickness_mesh_independence/`：1.60–2.00 mm 厚端响应的定向网格无关性设计、服务器入口、轻量结果和结论；[`DETAILED_REPORT.md`](thickness_mesh_independence/DETAILED_REPORT.md) 含三级实际网格、原生/统一 0–60 kPa 结果剖面截图和 18 个接收终点的逐项耗时。
+- `thickness_mesh_independence/`：1.60–2.00 mm 厚端响应的定向网格无关性设计、服务器入口、轻量结果和结论；[`DETAILED_REPORT.md`](thickness_mesh_independence/DETAILED_REPORT.md) 含三级实际网格、原生/统一 0–60 kPa 结果剖面截图和 18 个接收终点的逐项耗时；[`aggressive_refinement/`](thickness_mesh_independence/aggressive_refinement/) 是 2–3 天预算内局部 0.10 mm 及更激进 mesh-only 方案的独立实验入口。
 - `paper/`：基于冻结有限元和算法证据形成的论文初稿、投稿前核对项及数据溯源。
 - `models/apdl/`：参数化 APDL 模型、后处理宏和测试输入。
 - `src/runners/`：当前可复现的批量运行入口。

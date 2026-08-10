@@ -1,0 +1,6 @@
+strategy,background_mesh_mm,nominal_local_target_mm,predicted_elements,predicted_nodes,predicted_equations,predicted_rst_gib_per_endpoint,predicted_anchor_pair_wall_hours_lower,predicted_anchor_pair_wall_hours_upper,predicted_six_endpoint_wall_hours_lower,predicted_six_endpoint_wall_hours_upper,evidence
+global_0.15,0.15,0.15,1333685,1773865,5072090,28.643,25.67,42.39,69.63,114.98,log-log count fit; wall time is an unvalidated planning envelope
+global_0.12,0.12,0.12,2550342,3377700,9679965,55.301,48.99,119.21,132.89,323.4,log-log count fit; wall time is an unvalidated planning envelope
+global_0.10,0.1,0.1,4331492,5716800,16413895,94.664,83.07,277.5,225.34,752.8,log-log count fit; wall time is an unvalidated planning envelope
+layered_local_0.10,0.2,0.1,817237,1160408,3314954,18.377,16.78,21.46,45.51,58.22,exploratory mesh-only count ratio; full solve not yet measured
+layered_local_0.05,0.2,0.05,2880653,3986139,11387259,63.127,57.63,154.6,156.33,419.38,two-pass mesh-only count ratio; nonlinear solve rejected by resource gate

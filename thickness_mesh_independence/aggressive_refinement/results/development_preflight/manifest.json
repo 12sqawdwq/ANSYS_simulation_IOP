@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "status": "development_mesh_only_preflight_not_formal_numerical_endpoint",
+  "started_from_git_commit": "3661f681c0ea938025afab9d749aa781be3c5aa3",
+  "git_branch": "aggressive-contact-mesh-experiment-20260810",
+  "git_worktree_was_dirty": true,
+  "archival_normalization": "mesh.out was copied to mesh_log.txt with trailing whitespace removed and LF endings; numerical text and all status lines were preserved.",
+  "source_macro": {
+    "path": "models/apdl/param_eye_sweep.mac",
+    "sha256": "77da25630bf9d713d8ae340c710aedb1d25f5465681c2bf76e065f01fde6d74c",
+    "size_bytes": 9728
+  },
+  "condition": {
+    "strategy": "L010",
+    "eyelid_thickness_mm": 2.0,
+    "background_mesh_mm": 0.2,
+    "nominal_local_target_mm": 0.1,
+    "local_refine_halfwidth_mm": 1.8,
+    "interface_band_total_height_mm": 0.8,
+    "mesh_only": true,
+    "nonlinear_solution_started": false
+  },
+  "result": {
+    "mapdl_release": "2025 R2",
+    "returncode": 0,
+    "run_completed": true,
+    "ansys_error_count": 0,
+    "ansys_warning_count": 1,
+    "solid_elements_before": 538725,
+    "solid_elements_after": 817237,
+    "solid_nodes_before": 769607,
+    "solid_nodes_after": 1160408,
+    "selected_parent_elements": 44812,
+    "wall_seconds": 25.82,
+    "maximum_rss_kib": 3001248
+  },
+  "extreme_result": {
+    "condition": {
+      "strategy": "L005",
+      "nominal_local_target_mm": 0.05,
+      "explicit_refinement_passes": 2,
+      "mesh_only": true,
+      "nonlinear_solution_started": false
+    },
+    "returncode": 0,
+    "run_completed": true,
+    "ansys_error_count": 0,
+    "ansys_warning_count": 2,
+    "shape_warning_elements_initial_mesh": 32,
+    "shape_warning_elements_second_refinement": 18,
+    "shape_error_elements": 0,
+    "cumulative_selected_parent_elements": 351312,
+    "solid_elements_after": 2880653,
+    "solid_nodes_after": 3986139,
+    "wall_seconds": 96.08,
+    "maximum_rss_kib": 17659084,
+    "decision": "mesh_only_feasible_nonlinear_solve_rejected_under_current_resources"
+  },
+  "artifacts": [
+    {
+      "path": "L010_2p00mm/aggressive_mesh_inventory.csv",
+      "size_bytes": 270,
+      "sha256": "394773fc3285135c72c8fa1ca574e519119e98156fec685ca2f446b36117600b"
+    },
+    {
+      "path": "L010_2p00mm/driver.dat",
+      "size_bytes": 126,
+      "sha256": "493758ff740300027e871d78f3efe876468aefc0cc3ff2e5abaab1ce360cc9c5"
+    },
+    {
+      "path": "L010_2p00mm/mesh_log.txt",
+      "size_bytes": 26993,
+      "sha256": "ab19f614dcc9ba72f87e6cbce6a6b30e3d2eb04a2b915b4d9f44c2a0f6b9a4a9"
+    },
+    {
+      "path": "L010_2p00mm/resource_time.txt",
+      "size_bytes": 831,
+      "sha256": "4ea735318e834fb215948d28d68e550b801196709f24faf4ca885b7a9aced3ec"
+    },
+    {
+      "path": "L005_2p00mm/aggressive_mesh_inventory.csv",
+      "size_bytes": 270,
+      "sha256": "a67450491443e0ee21c13ce20569bad14bb3aa48e9622818fd01c46aff29df3d"
+    },
+    {
+      "path": "L005_2p00mm/driver.dat",
+      "size_bytes": 126,
+      "sha256": "39c209d97890a5d0e7d749226033709b04ccf00a280dc9426a37d24f7881d28d"
+    },
+    {
+      "path": "L005_2p00mm/mesh_log.txt",
+      "size_bytes": 27163,
+      "sha256": "c183f130067badf71f30e4a1b50a12139a32ef74e21e792c8990a07302bbf418"
+    },
+    {
+      "path": "L005_2p00mm/resource_time.txt",
+      "size_bytes": 833,
+      "sha256": "9a0c7305ea78bfe699ddf6994ecda7f81ab7b1fdeec7768cfeec53e56b25b486"
+    }
+  ],
+  "claim_boundary": "This run proves only that the development macro can build the intended mesh. Because it preceded a clean committed source freeze, it cannot be accepted as a formal campaign or a numerical q endpoint."
+}

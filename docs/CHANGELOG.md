@@ -2,7 +2,15 @@
 
 本日志是仓库级可读索引：按 Git 提交逆时间排列，保存每个提交的时间、主题和完整 `name-status` 文件清单。科学结论应读取各模块主要结论文档；运行时环境与外部求解日志读取 launch metadata/manifest。完整差异仍以 `git show <commit>` 为唯一真源。
 
-## Unreleased（分支 `mesh-fixed-scale-visual-aid-20260810`）
+## Unreleased（分支 `aggressive-contact-mesh-experiment-20260810`）
+
+- 评估全局 0.10/0.12/0.15 mm 的单元、方程、RST 和墙钟资源包络，拒绝在当前 123 GiB RAM、148 GiB 空闲磁盘条件下直接启动全局 0.10 mm 非线性矩阵；
+- 在统一 APDL 模型中增加显式 opt-in 的局部四面体细化：0.20 mm 背景、1.80 mm 中央半宽、两条 0.80 mm 界面带，一级名义目标 0.10 mm，默认生产路径保持不变；
+- 建立 P0 mesh-only、P1 2.00 mm 压力对、条件 P2 厚端扩展和仅 mesh-only 的 0.05 mm P3 四级设计；开发期 L005 已达到约 288 万实体单元、399 万节点，当前资源下明确拒绝其非线性求解；
+- 新增 clean-commit/server-capacity 守卫、压力串行 launcher、运行中内存/磁盘保护、资源投影和配对评估脚本；
+- 保留开发期 mesh-only 审计和失败尝试边界；正式非线性 campaign 尚未启动，开发结果不进入 $q$ 比较。
+
+## 2026-08-10 · `3661f68` · Merge fixed-scale mesh stress visual aid
 
 - 保留三级网格原生自动色标图不变，新增固定 0–60 kPa 色标的同工况中央剖面，用于跨网格同色同值空间定位；
 - 60 kPa 高于既有最大原生图例上限 55.606 kPa，不通过截断极值制造视觉一致性；

@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "experiment_id": "aggressive_contact_mesh_refinement",
+  "status": "planned_preflight_not_started",
+  "git_branch": "aggressive-contact-mesh-experiment-20260810",
+  "source_commit_policy": "A formal campaign must provide EXPECTED_COMMIT explicitly and use a clean 5090d worktree at that exact commit.",
+  "scientific_question": "Can contact-focused refinement reduce the remaining absolute q discretization error without exceeding a 72-hour wall-clock envelope?",
+  "hard_budget": {
+    "wall_clock_hours": 72,
+    "maximum_simultaneous_mapdl_cases": 1,
+    "np_per_case": 4,
+    "minimum_available_memory_gib_before_launch": 70,
+    "minimum_free_disk_gib_anchor_pair": 80,
+    "automatic_full_matrix_launch": false
+  },
+  "server_snapshot_2026_08_10": {
+    "cpu": "AMD Ryzen 9 9950X, 16 physical cores, 32 logical CPUs",
+    "memory_total_gib": 123,
+    "memory_available_gib": 78,
+    "swap_total_gib": 8,
+    "data_filesystem_free_gib": 148,
+    "note": "This is a point-in-time capacity snapshot, not a reserved allocation. Every launch must repeat the checks."
+  },
+  "fixed_physics": {
+    "eyelid_thicknesses_mm": [1.6, 1.8, 2.0],
+    "pressures_mmhg": [0.0, 20.0],
+    "indent_mm": 0.28,
+    "initial_gap_mm": 0.3,
+    "cornea_thickness_mm": 0.6,
+    "eyelid_material_scale": 1.0,
+    "cornea_material_scale": 0.75,
+    "element": "SOLID187",
+    "probe_radius_mm": 2.16,
+    "probe_area_mm2": 14.65741468458854,
+    "interface": "bonded eyelid-cornea",
+    "load_steps": ["IOP preload", "geometry-based first touch", "0.28-mm indentation"]
+  },
+  "existing_global_mesh_evidence_2mm_20mmhg": [
+    {"mesh_mm": 0.3, "elements": 177278, "nodes": 239008, "equations": 679716, "rst_gib": 3.692},
+    {"mesh_mm": 0.24, "elements": 343661, "nodes": 460814, "equations": 1306563, "rst_gib": 7.247},
+    {"mesh_mm": 0.2, "elements": 575211, "nodes": 769607, "equations": 2198547, "rst_gib": 12.188}
+  ],
+  "contact_extent_basis": {
+    "source": "accepted 0.20-mm 0/20-mmHg manifests",
+    "equivalent_contact_radius_range_mm": [1.4391, 1.5308],
+    "frozen_refinement_halfwidth_mm": 1.8,
+    "margin_above_largest_equivalent_radius_percent": 17.58,
+    "selection_shape": "Cartesian central box in x-z; one transition layer is added by EREFINE",
+    "vertical_extent": "two 0.80-mm-thick bands centered on the eyelid-cornea path and the probe-eyelid path",
+    "limitation": "The box is a deterministic mesh-control region, not a measured circular contact boundary."
+  },
+  "candidate_strategies": [
+    {
+      "id": "G010",
+      "background_mesh_mm": 0.1,
+      "local_refine_level": 0,
+      "nominal_local_target_mm": 0.1,
+      "role": "global brute-force reference only",
+      "decision": "reject_before_solve_unless_server_storage_and_memory_change"
+    },
+    {
+      "id": "G015",
+      "background_mesh_mm": 0.15,
+      "local_refine_level": 0,
+      "nominal_local_target_mm": 0.15,
+      "role": "mesh-only fallback feasibility point",
+      "decision": "preflight_only"
+    },
+    {
+      "id": "L010",
+      "background_mesh_mm": 0.2,
+      "local_refine_level": 1,
+      "nominal_local_target_mm": 0.1,
+      "refinement_halfwidth_mm": 1.8,
+      "role": "primary aggressive anchor",
+      "decision": "mesh-only preflight, then one 2.00-mm 0/20-mmHg anchor pair if gates pass"
+    },
+    {
+      "id": "L005",
+      "background_mesh_mm": 0.2,
+      "local_refine_level": 2,
+      "nominal_local_target_mm": 0.05,
+      "refinement_halfwidth_mm": 1.8,
+      "role": "extreme second local level",
+      "decision": "mesh-only feasible, but nonlinear solve rejected under the recorded memory, disk, and 72-hour envelope; any future solve requires separate resources and authorization"
+    }
+  ],
+  "exploratory_mesh_only_observation": {
+    "formal_result": false,
+    "reason": "Measured during branch development before the source commit was frozen; it is used only to size the formal preflight.",
+    "manifest": "thickness_mesh_independence/aggressive_refinement/results/development_preflight/manifest.json",
+    "strategy": "L010",
+    "condition": "2.00-mm geometry, 0.20-mm background, one local refinement pass, 1.80-mm half-width, two 0.80-mm-thick interface bands",
+    "solid_elements_before": 538725,
+    "solid_nodes_before": 769607,
+    "selected_parent_elements": 44812,
+    "solid_elements_after": 817237,
+    "solid_nodes_after": 1160408,
+    "mesh_only_wall_seconds": 25.82,
+    "mesh_only_maximum_rss_kib": 3001248,
+    "mapdl_error_count": 0,
+    "shape_warning_elements_initial_mesh": 32,
+    "shape_warning_elements_refinement": 0,
+    "interpretation": "The layered local 0.10-mm target increases the node count by about 51% rather than causing the approximately sevenfold global 0.10-mm growth. A committed clean-worktree preflight is still mandatory."
+  },
+  "extreme_mesh_only_observation": {
+    "formal_result": false,
+    "reason": "Measured during branch development before the source commit was frozen; no nonlinear solve was started.",
+    "manifest": "thickness_mesh_independence/aggressive_refinement/results/development_preflight/manifest.json",
+    "strategy": "L005",
+    "condition": "2.00-mm geometry, 0.20-mm background, two explicit local refinement passes, 1.80-mm half-width, two 0.80-mm-thick interface bands",
+    "solid_elements_before": 538725,
+    "solid_nodes_before": 769607,
+    "cumulative_selected_parent_elements": 351312,
+    "solid_elements_after": 2880653,
+    "solid_nodes_after": 3986139,
+    "mesh_only_wall_seconds": 96.08,
+    "mesh_only_maximum_rss_kib": 17659084,
+    "mapdl_error_count": 0,
+    "mapdl_warning_count": 2,
+    "shape_warning_elements_initial_mesh": 32,
+    "shape_warning_elements_second_refinement": 18,
+    "shape_error_elements": 0,
+    "projected_equations": 11387259,
+    "projected_rst_gib_per_endpoint": 63.127,
+    "decision": "Do not launch L005 nonlinear endpoints on the current server snapshot. An anchor pair alone would consume about 126 GiB in projected RST before DB and scratch."
+  },
+  "stages": [
+    {
+      "stage": "P0",
+      "purpose": "Committed mesh-only inventory",
+      "strategies": ["G015", "L010"],
+      "solve": false,
+      "pass_gates": ["MAPDL errors = 0", "mesh inventory exists", "no shape errors", "projected anchor pair fits memory, disk, and 36-hour stage cap"]
+    },
+    {
+      "stage": "P1",
+      "purpose": "Primary scalar anchor",
+      "strategy": "L010",
+      "eyelid_thicknesses_mm": [2.0],
+      "pressures_mmhg": [0.0, 20.0],
+      "solve": true,
+      "hard_stage_cap_hours": 36,
+      "launch_policy": "pressure sequential, one MAPDL process at a time"
+    },
+    {
+      "stage": "P2",
+      "purpose": "Thick-end ordering extension",
+      "strategy": "L010",
+      "eyelid_thicknesses_mm": [1.6, 1.8],
+      "pressures_mmhg": [0.0, 20.0],
+      "solve": true,
+      "conditional": "Only after P1 passes all QC, at least 36 campaign hours remain, projected completion is within 72 hours, and enough storage is explicitly reserved."
+    },
+    {
+      "stage": "P3",
+      "purpose": "Second-level convergence anchor",
+      "strategy": "L005",
+      "eyelid_thicknesses_mm": [2.0],
+      "pressures_mmhg": [0.0, 20.0],
+      "solve": false,
+      "conditional": "Mesh-only by default. A nonlinear solve requires a separate authorization after measured P0/P1 resource review."
+    }
+  ],
+  "acceptance": {
+    "case_qc": {
+      "status": "complete",
+      "returncode": 0,
+      "required_converged_load_steps": 3,
+      "maximum_ansys_error_count": 0,
+      "maximum_penetration_mm": 0.03,
+      "maximum_absolute_approach_probe_force_n": 0.001,
+      "same_mesh_pairing_required": true
+    },
+    "primary_scalar": "q20(h) = (F(h,20,0.28)-F(h,0,0.28))/A_probe",
+    "amplitude_screen_percent": 2.0,
+    "trend_order": "q(1.60) > q(1.80) > q(2.00)",
+    "convergence_claim_rule": "L010 versus global 0.20 mm is a strategy comparison, not sufficient by itself for mesh independence. A converged absolute anchor requires L005 versus L010 to change q by no more than 2% with all QC passing.",
+    "additional_diagnostics": ["total probe force at both pressures", "contact area", "peak contact pressure", "maximum penetration", "element/node/equation count", "wall time", "maximum RSS if available", "RST size"]
+  },
+  "data_policy": {
+    "git": "configuration, launch/evaluation scripts, CSV/JSON summaries, manifests, hashes, and lightweight figures",
+    "external": "DB, RST, complete solve.out, scratch diagnostics, and postprocessed fields remain under a new 5090d campaign root",
+    "no_automatic_deletion": "No accepted DB/RST is deleted to make room for later stages. P2 requires storage reservation or separate authorization.",
+    "aborted_preflight": "No partial endpoint from a timeout, resource stop, or mesh-only run enters numerical q comparison."
+  }
+}
