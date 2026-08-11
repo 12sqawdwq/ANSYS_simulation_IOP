@@ -54,3 +54,16 @@
 - 厚端 1.60→2.00 mm 降幅：0.30/0.24/0.20 mm 依次为 `7.76%、9.32%、10.36%`。
 - 事后形状诊断：0.24→0.20 mm 的三个厚度 $q$ 偏移约为 `-0.74 mmHg`，偏移极差 `0.0088 mmHg`；1.60–2.00 mm 对比差变化 `-1.43%`。该项不替代预设绝对 $q$ 判据。
 - 判定：`thick_end_order_robust_but_amplitude_not_mesh_independent`。下降方向和次序在三个测试网格上一致，但绝对幅值未收敛，1.60 mm 不得称为真实物理阈值。
+
+## 2026-08-11：L010首次 P1 资源中止与保护器修订
+
+- 外部目录：`/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T022100Z_d334fd1_L010_t2p00_iop0_20_anchor_serial_np4`。
+- 源 commit：`d334fd124b768cbb53365fb19f383fa34ec9dbf7`；L010、2.00 mm、0 mmHg、0.28 mm、`np=4`、`workers=1`；20 mmHg 未启动。
+- 实测规模：817,237 个实体单元、1,160,408 个节点、3,370,950 个方程；MAPDL 采用 out-of-core，四 ranks 合计 in-core 需求 73.775 GB、out-of-core 需求 14.499 GB、总分配 26.041 GB。
+- 资源：`MemAvailable` 从 77,680,088 KiB 降至 12,058,648 KiB；旧 15 GiB 保护线于 `2026-08-11T02:26:03Z` 触发。
+- 数值边界：载荷步 1 的 8 个子步完成，载荷步 2 已开始；载荷步 3、`RUN COMPLETED` 和完整端点均不存在；中止前未发现 MAPDL error。该事件是资源/进程包含失败，不是数值不收敛结论。
+- 进程缺陷：旧 launcher 只终止 runner process group，`SID=439551` 的 MAPDL/MPI 树继续运行；完整 session 于 `2026-08-11T04:24:15Z` 停止。
+- 清理：按文件清单和哈希删除失败 attempt 的 47 个 DB/RST/scratch，表观 90,442,977,929 bytes、实际 83,147,467,776 bytes；没有删除接收结果。
+- 判定：`resource_guard_abort_with_orphan_process_cleanup`；0 mmHg 不接收，不能计算 $q$，旧二进制不可续算。
+- 修订：launcher 改用 user-systemd cgroup + 随机 campaign token，强制每 campaign 只运行一个压力，启动/中止门限改为内存 90/30 GiB、磁盘 150/100 GiB，监控间隔 10 s，并执行 TERM→KILL及零残留核验。
+- 开发期保护器测试：三个不同 SID/PGID 的嵌套进程中，模拟 MAPDL/Hydra 的进程忽略 TERM；2 s 后 KILL，最终残留 0。正式求解前仍需 clean-commit测试和新 campaign root。

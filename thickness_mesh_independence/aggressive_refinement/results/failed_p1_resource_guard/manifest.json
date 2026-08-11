@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "status": "resource_guard_abort_with_orphan_process_cleanup",
+  "source_git_commit": "d334fd124b768cbb53365fb19f383fa34ec9dbf7",
+  "external_campaign_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T022100Z_d334fd1_L010_t2p00_iop0_20_anchor_serial_np4",
+  "condition": {
+    "strategy": "L010",
+    "eyelid_thickness_mm": 2.0,
+    "iop_mmhg_started": [
+      0.0
+    ],
+    "iop_mmhg_not_started": [
+      20.0
+    ],
+    "indent_mm": 0.28,
+    "mpi_ranks": 4,
+    "workers": 1
+  },
+  "endpoint_acceptance": {
+    "iop0_complete": false,
+    "iop20_started": false,
+    "partial_endpoint_accepted": false,
+    "q_calculable": false,
+    "restart_from_old_binary_possible": false
+  },
+  "resource_abort": {
+    "utc": "2026-08-11T02:26:03Z",
+    "old_memory_floor_gib": 15,
+    "minimum_mem_available_kib": 12058648,
+    "minimum_mem_available_gib": 11.5,
+    "minimum_free_disk_kib": 112750848,
+    "minimum_free_disk_gib": 107.53
+  },
+  "solver": {
+    "ansys_version": "2025 R2",
+    "equations": 3370950,
+    "solver_mode": "out_of_core",
+    "in_core_required_gb_all_ranks": 73.775,
+    "out_of_core_required_gb_all_ranks": 14.499,
+    "total_allocated_gb_all_ranks": 26.041,
+    "last_complete_load_step": 1,
+    "last_started_load_step": 2,
+    "run_completed": false,
+    "mapdl_error_observed_before_stop": false
+  },
+  "orphan_cleanup": {
+    "escaped_session_id": 439551,
+    "stopped_at_utc": "2026-08-11T04:24:15Z",
+    "deleted_transient_files": 47,
+    "deleted_apparent_bytes": 90442977929,
+    "deleted_allocated_bytes": 83147467776,
+    "accepted_binary_deleted": false
+  },
+  "launcher_defect": "old process-group termination did not contain the nested MAPDL/MPI session tree",
+  "restart_authorized": false,
+  "artifacts": [
+    {
+      "path": "ABORTED_TRANSIENT_CLEANUP.txt",
+      "size_bytes": 297,
+      "sha256": "3667bf8893a70dd25140696425937b8748df4266b7388516a976f73c88382c31",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "ABORTED_TRANSIENT_CLEANUP.txt",
+      "external_sha256": "3667bf8893a70dd25140696425937b8748df4266b7388516a976f73c88382c31"
+    },
+    {
+      "path": "ABORTED_TRANSIENT_FILE_INVENTORY.tsv",
+      "size_bytes": 11646,
+      "sha256": "ac708e81022d20a8715e2b247b60da5e1841e9173bd7e89d6778d96a3ad19d30",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "ABORTED_TRANSIENT_FILE_INVENTORY.tsv",
+      "external_sha256": "ac708e81022d20a8715e2b247b60da5e1841e9173bd7e89d6778d96a3ad19d30"
+    },
+    {
+      "path": "aggressive_mesh_inventory.csv",
+      "size_bytes": 270,
+      "sha256": "394773fc3285135c72c8fa1ca574e519119e98156fec685ca2f446b36117600b",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "iop0/eyelid_2p00mm_indent_0p28mm/attempt_1/aggressive_mesh_inventory.csv",
+      "external_sha256": "394773fc3285135c72c8fa1ca574e519119e98156fec685ca2f446b36117600b"
+    },
+    {
+      "path": "campaign_status.csv",
+      "size_bytes": 283,
+      "sha256": "a590f4eabd2053a0f9ae25c59a98bdeda42b4cb5468d5560b766b4d9e2be79c1",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "campaign_status.csv",
+      "external_sha256": "a590f4eabd2053a0f9ae25c59a98bdeda42b4cb5468d5560b766b4d9e2be79c1"
+    },
+    {
+      "path": "external_selected_sha256.txt",
+      "size_bytes": 1640,
+      "sha256": "e4e323d13e7eecc3936f76c2bfe151ba2df45727249ecf4ddb6c93cf75d4e859",
+      "role": "repository_summary_or_hash_inventory"
+    },
+    {
+      "path": "FINAL_ABORT_STATUS.txt",
+      "size_bytes": 904,
+      "sha256": "a24b045040055b373e4d6c4f817c21c784f3e0d4de3e2488c8992771791aca88",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "FINAL_ABORT_STATUS.txt",
+      "external_sha256": "a24b045040055b373e4d6c4f817c21c784f3e0d4de3e2488c8992771791aca88"
+    },
+    {
+      "path": "FINAL_LIGHTWEIGHT_EVIDENCE_SHA256.txt",
+      "size_bytes": 2295,
+      "sha256": "ef1ebeea3afe01511f0cf358c40039ad8f890fe82f10a38be531f39643210200",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "FINAL_LIGHTWEIGHT_EVIDENCE_SHA256.txt",
+      "external_sha256": "ef1ebeea3afe01511f0cf358c40039ad8f890fe82f10a38be531f39643210200"
+    },
+    {
+      "path": "iop0/run_manifest.csv",
+      "size_bytes": 2021,
+      "sha256": "0d7c5175d9c7259dc6ba4be4bd29c7a7f9585d6d8f81752102d1478dab48dd82",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "iop0/run_manifest.csv",
+      "external_sha256": "0d7c5175d9c7259dc6ba4be4bd29c7a7f9585d6d8f81752102d1478dab48dd82"
+    },
+    {
+      "path": "iop0/run_metadata.json",
+      "size_bytes": 3496,
+      "sha256": "83a89567433be57e361a1f47600d74adcbdd68d7f0741c02b2d0438bc2841233",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "iop0/run_metadata.json",
+      "external_sha256": "83a89567433be57e361a1f47600d74adcbdd68d7f0741c02b2d0438bc2841233"
+    },
+    {
+      "path": "launch_provenance_sha256.txt",
+      "size_bytes": 883,
+      "sha256": "b5ed2403f7bbd0fb22d33092abea0a17227f19d09b777836f4fe8a8d99133b33",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "launch_provenance_sha256.txt",
+      "external_sha256": "b5ed2403f7bbd0fb22d33092abea0a17227f19d09b777836f4fe8a8d99133b33"
+    },
+    {
+      "path": "launch_request.txt",
+      "size_bytes": 645,
+      "sha256": "e24fc9ec26680ab02c312964c30d108d3546c3ec896aec278426f01c28ae7cad",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "launch_request.txt",
+      "external_sha256": "e24fc9ec26680ab02c312964c30d108d3546c3ec896aec278426f01c28ae7cad"
+    },
+    {
+      "path": "ORPHAN_RESOURCE_ABORT_DIAGNOSTIC.txt",
+      "size_bytes": 5073,
+      "sha256": "40dad4cd7810b6d760828147ef1bc543653ea487dbe3c95860c3017fc1816286",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "ORPHAN_RESOURCE_ABORT_DIAGNOSTIC.txt",
+      "external_sha256": "40dad4cd7810b6d760828147ef1bc543653ea487dbe3c95860c3017fc1816286"
+    },
+    {
+      "path": "ORPHAN_RESOURCE_ABORT_SHA256.txt",
+      "size_bytes": 1130,
+      "sha256": "dff68fc312a37c76bec1886ce729b7377653eb1e2b2c8539a4a135d7b3c69af0",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "ORPHAN_RESOURCE_ABORT_SHA256.txt",
+      "external_sha256": "dff68fc312a37c76bec1886ce729b7377653eb1e2b2c8539a4a135d7b3c69af0"
+    },
+    {
+      "path": "ORPHAN_SOLVER_STOPPED",
+      "size_bytes": 131,
+      "sha256": "137a2e8643fc06c15de04a8ed897d88d3afb976cc267aa658a3bd8c65772b29e",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "ORPHAN_SOLVER_STOPPED",
+      "external_sha256": "137a2e8643fc06c15de04a8ed897d88d3afb976cc267aa658a3bd8c65772b29e"
+    },
+    {
+      "path": "README.md",
+      "size_bytes": 2887,
+      "sha256": "553d90e8a0db917b9bb45226867d1b54e2be3a0a4015845ccdf26a64083b40f5",
+      "role": "repository_summary_or_hash_inventory"
+    },
+    {
+      "path": "resource_abort.csv",
+      "size_bytes": 47,
+      "sha256": "9c35cd0649d86a8a3551c9d853dffe827d237d488bd5d193d7792cf0c3a15704",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "resource_abort.csv",
+      "external_sha256": "9c35cd0649d86a8a3551c9d853dffe827d237d488bd5d193d7792cf0c3a15704"
+    },
+    {
+      "path": "resource_gates.csv",
+      "size_bytes": 90,
+      "sha256": "c8b61827a39659a273c5db1df0c1579096f9ad822df4c314d7a7a29d99bb508d",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "resource_gates.csv",
+      "external_sha256": "c8b61827a39659a273c5db1df0c1579096f9ad822df4c314d7a7a29d99bb508d"
+    },
+    {
+      "path": "resource_monitor.csv",
+      "size_bytes": 225,
+      "sha256": "3fc537515d0ae62993405d4e6dd240a1dc16c92fd4f4cea05640c8964d11a205",
+      "role": "copied_external_lightweight_evidence",
+      "external_relative_path": "resource_monitor.csv",
+      "external_sha256": "3fc537515d0ae62993405d4e6dd240a1dc16c92fd4f4cea05640c8964d11a205"
+    },
+    {
+      "path": "solver_resource_extract.txt",
+      "size_bytes": 909,
+      "sha256": "a8a7a15f4c24a9b820e7f999d57351c05670c178a89a0bd00754848b9f4cc7fc",
+      "role": "repository_summary_or_hash_inventory"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+requested_at_utc,2026-08-11T02:21:00Z
+source_git_commit,d334fd124b768cbb53365fb19f383fa34ec9dbf7
+git_branch,aggressive-contact-mesh-experiment-20260810
+campaign_root,/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T022100Z_d334fd1_L010_t2p00_iop0_20_anchor_serial_np4
+strategy,L010
+background_mesh_mm,0.20
+local_refine_level,1
+nominal_local_target_mm,0.10
+local_refine_halfwidth_mm,1.80
+thickness_mm,2.00
+pressures_mmhg,0 20
+pressure_execution,strictly_serial
+workers,1
+np_per_case,4
+case_timeout_seconds,86400
+campaign_deadline_seconds,129600
+mem_available_kib_at_request,83114952
+free_disk_kib_at_request,154321408

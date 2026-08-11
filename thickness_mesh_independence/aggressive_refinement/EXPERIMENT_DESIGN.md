@@ -4,7 +4,7 @@
 
 本实验在独立 Git 分支 `aggressive-contact-mesh-experiment-20260810` 上设计，用于回答：在 5090d 当前资源条件下，能否在约 2–3 天墙钟预算内，把决定探头反力的中央接触与界面区域从 0.20 mm 进一步细化到名义 0.10 mm，并判断绝对零基线输出 \(q\) 是否开始收敛。
 
-当前状态是 **方案和代码已建立、正式 clean-commit P0 mesh-only 已完成、P1 非线性压力对尚未启动**。P0 不包含非线性求解，也不产生可进入 \(q\) 比较的端点。
+当前状态是 **正式 clean-commit P0 mesh-only 已完成；首次 P1 的 0 mmHg 算例因资源保护中止并被拒绝；20 mmHg 未启动；cgroup session guard 已实现但等待 clean-commit 正式验证**。P0 不包含非线性求解。失败 P1 没有完整端点，也不产生可进入 \(q\) 比较的数据。
 
 本实验不把“局部目标尺寸 0.10 mm”自动等同于网格无关。`EREFINE` 给出的是父四面体的一次局部细分，正式后处理仍必须审计实际边长分布、单元质量、接触表面密度和求解器规模。
 
@@ -29,7 +29,7 @@
 
 墙钟上限只是按方程增长施加超线性惩罚后的规划范围，不是受控速度标定。0.30/0.24/0.20 mm 历史算例使用了不同 ranks 和 I/O 条件，因此不能把该表当作 MAPDL 性能保证。
 
-服务器评估快照为 16 个物理核、123 GiB 总内存、约 78 GiB 可用内存、8 GiB swap 和约 148 GiB可用数据盘。全局 0.10 mm 的单个 RST 就预计接近 95 GiB，且方程数超过现有 0.20 mm 的七倍；它不满足当前内存、存储或 72 h 预算，应在求解前拒绝。
+初始服务器评估快照为 16 个物理核、123 GiB 总内存、约 78 GiB 可用内存、8 GiB swap 和约 148 GiB可用数据盘。全局 0.10 mm 的单个 RST 就预计接近 95 GiB，且方程数超过现有 0.20 mm 的七倍；它不满足当前内存、存储或 72 h 预算，应在求解前拒绝。2026-08-11 清理后 `/home` 空闲约 450 GiB；临时将 ZFS ARC 限制为 16 GiB 后 `MemAvailable` 约 100.33 GiB。后者只是运行时管理员调优，不是资源预留或持久配置。
 
 开发期间一次未形成端点的普通 0.20 mm 资源诊断显示，约 219.9 万方程的单 rank 稀疏直接解法报告总分配 49.473 GB、in-core 需求 41.896 GB。该诊断被主动中止并清理，不能作为数值结果，但进一步说明 1641 万方程的全局 0.10 mm 不宜直接启动。
 
@@ -88,7 +88,9 @@ commit `8768e6ec6afb41225d729c21aac80b467c266897` 上的正式 P0 已完成：G0
 - 2.00 mm × 0 mmHg × L010；
 - 2.00 mm × 20 mmHg × L010。
 
-两压力严格串行、每次一个 MAPDL、4 ranks、无重试。阶段硬上限 36 h，单算例上限 24 h。P1 是资源和绝对幅值的共同锚点，不在一开始同时提交六个大算例。
+首次 P1 在 commit `d334fd124b768cbb53365fb19f383fa34ec9dbf7` 上启动 0 mmHg 后被资源保护中止。实测模型为 3,370,950 方程；四 ranks 合计 in-core 需求 73.775 GB、out-of-core 需求 14.499 GB，MAPDL 采用 out-of-core。`MemAvailable` 最低 11.50 GiB；旧 launcher 返回 143，但 MAPDL/MPI 的独立 session 未随 runner process group 退出。孤儿 session 停止后，失败 attempt 的 47 个 DB/RST/scratch 经清单和哈希审计删除。载荷步 1 完成、载荷步 2 开始，但载荷步 3 和 `RUN COMPLETED` 不存在，因此不接收端点。
+
+修订后两压力不能在同一 campaign 自动串行：每个 campaign 强制恰好一个压力、每次一个 MAPDL、4 ranks、1 worker、无重试。先从新 root 重算 0 mmHg；只有其三个载荷步、ANSYS error、资源和零残留人工 QC 全部通过后，才允许另建 20 mmHg campaign。单算例上限 24 h。P1 是资源和绝对幅值的共同锚点，不在一开始同时提交六个大算例。
 
 ### P2：厚端次序扩展
 
@@ -111,14 +113,18 @@ L005 需要对同一区域连续调用两次 `EREFINE`。开发期 mesh-only 已
 - 必须显式提供 `EXPECTED_COMMIT`；
 - 5090d 工作树必须干净且恰好位于该 commit；
 - campaign root 必须预先不存在；
-- 启动前至少 70 GiB `MemAvailable` 和 80 GiB 空闲磁盘；
-- 运行中每 60 s 记录可用内存和磁盘；
-- 可用内存低于 15 GiB或空闲磁盘低于 30 GiB时，主动终止整个 runner process group；
-- 一次只运行一个压力流，不并行 0/20 mmHg；
-- campaign 总硬上限默认 36 h，不能通过重试静默延长；
+- user systemd manager 和 cgroup v2 必须可用，否则在求解前拒绝；
+- 启动前至少 90 GiB `MemAvailable` 和 150 GiB 空闲磁盘；
+- 运行中每 10 s 记录可用内存和磁盘；
+- 可用内存低于 30 GiB或空闲磁盘低于 100 GiB时，主动终止完整 service cgroup；
+- 每个 campaign 强制恰好一个压力，0/20 mmHg 不自动串联；
+- MAPDL/MPI 即使创建嵌套 `setsid`，仍由 user-systemd cgroup 包含；随机 `BLUEKNOW_CAMPAIGN_TOKEN` 用于检出任何异常脱离 cgroup的同 campaign 进程；
+- 中止先向完整 cgroup/token 集合发 TERM，等待后升级 KILL，并保存 PID、PPID、SID、PGID 与命令快照；
+- 信号或 launcher 异常退出通过 EXIT trap 使用同一清理路径；任何残留使 campaign 硬失败；
+- 单算例上限 24 h，不能通过重试静默延长；
 - 被资源保护中止的部分载荷步不进入数值比较。
 
-当前磁盘只能勉强容纳预计约 110 GiB 的六个 L010 RST，尚未计入 DB、日志、临时矩阵和其他用户增长。因此 P2 不是自动阶段；如果 P1 的实际 RST 明显超过约 18–20 GiB/端点，应先停止并重新评估存储。
+清理后磁盘已不再是当前首要阻塞，但正式运行仍保留 150/100 GiB 两级门限，避免约 83.15 GiB 的失败 attempt 临时分配峰值再次耗尽文件系统。P2 仍不是自动阶段；必须按新端点的实际 RST、DB、scratch、墙钟和内存重新评估。
 
 ## 6. 数值与物理验收
 
@@ -154,14 +160,18 @@ q_{20}(h)=\frac{F(h,20,0.28)-F(h,0,0.28)}{A_{probe}},
 
 ## 7. 推荐执行顺序
 
-1. 本分支已提交并同步到 5090d；
-2. G015 和 L010 的正式 P0 已完成；
-3. 已审核 `preflight_manifest.csv`、实际 DB 规模、shape warning 和资源投影；
-4. 若另行授权，下一步是 P1 的 2.00 mm 压力对；
-5. P1 完成后运行 `evaluate_aggressive_refinement.py`，在读取 P2 前冻结是否继续；
-6. 只有预算和磁盘门限均通过才运行 P2；
-7. L005 保持 mesh-only；当前资源快照下明确拒绝非线性求解，除非迁移资源并另行授权；
-8. 最终将轻量 CSV/JSON、运行 manifest、配置、源 SHA 和结论纳入 Git，大体积 DB/RST 留在 5090d。
+1. G015 和 L010 的正式 P0 已完成；
+2. 首次 P1 失败 attempt 已归档为资源中止，没有接收端点；
+3. 提交并同步 cgroup session guard，在 5090d 干净工作树上运行不涉及 ANSYS 的嵌套 `setsid` TERM→KILL 回归测试；
+4. 回读临时 ARC 上限、`MemAvailable>=90 GiB`、空闲磁盘、swap和活动求解器；
+5. 使用新 root 只运行 L010、2.00 mm、0 mmHg；
+6. 人工审核三个载荷步、`RUN COMPLETED`、ANSYS error 0、资源、文件规模和零残留；
+7. 只有第 6 步通过后，才另建 root 并单独授权 20 mmHg；
+8. P1 压力对完成后运行 `evaluate_aggressive_refinement.py`，在读取 P2 前冻结是否继续；
+9. 只有预算和磁盘门限均通过才运行 P2；
+10. L005 保持 mesh-only；当前资源快照下明确拒绝非线性求解，除非迁移资源并另行授权；
+11. 最终将轻量 CSV/JSON、运行 manifest、配置、源 SHA 和结论纳入 Git，大体积 DB/RST 留在 5090d；
+12. 求解全部结束后由管理员把临时 `zfs_arc_max` 恢复为 `0`。
 
 ## 8. 入口
 
@@ -169,8 +179,12 @@ q_{20}(h)=\frac{F(h,20,0.28)-F(h,0,0.28)}{A_{probe}},
 - 资源投影：`results/resource_projection.csv`、`resource_projection.json`
 - 开发期 mesh-only 证据：`results/development_preflight/manifest.json`
 - 正式 P0 结论与 provenance：`results/formal_preflight/CONCLUSION.md`、`results/formal_preflight/manifest.json`
+- 失败 P1 轻量证据：`results/failed_p1_resource_guard/README.md`、`results/failed_p1_resource_guard/manifest.json`
 - P0 启动器：`scripts/server/launch_mesh_preflight_5090d.sh`
-- P1/P2 单阶段启动器：`scripts/server/launch_aggressive_anchor_5090d.sh`
+- P1/P2 单压力启动器：`scripts/server/launch_aggressive_anchor_5090d.sh`
+- cgroup/session guard：`scripts/server/session_guard.sh`
+- session guard 回归测试：`scripts/server/test_session_guard_5090d.sh`
+- 完整 launcher 信号回归测试：`scripts/server/test_anchor_launcher_signal_5090d.sh`
 - P0 收集器：`scripts/analysis/collect_mesh_preflight.py`
 - 资源估算：`scripts/analysis/estimate_resource_envelope.py`
 - 压力对评估：`scripts/analysis/evaluate_aggressive_refinement.py`

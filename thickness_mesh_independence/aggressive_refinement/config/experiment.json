@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "experiment_id": "aggressive_contact_mesh_refinement",
-  "status": "formal_p0_mesh_preflight_complete_p1_not_started",
+  "status": "failed_p1_audited_session_guard_implemented_formal_validation_pending",
   "formal_preflight_completed_at_utc": "2026-08-10T15:24:30Z",
   "formal_preflight_source_commit": "8768e6ec6afb41225d729c21aac80b467c266897",
   "formal_preflight_external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T152200Z_8768e6ec_aggressive_mesh_preflight",
@@ -9,12 +9,39 @@
   "git_branch": "aggressive-contact-mesh-experiment-20260810",
   "source_commit_policy": "A formal campaign must provide EXPECTED_COMMIT explicitly and use a clean 5090d worktree at that exact commit.",
   "scientific_question": "Can contact-focused refinement reduce the remaining absolute q discretization error without exceeding a 72-hour wall-clock envelope?",
+  "failed_p1_resource_attempt": {
+    "source_commit": "d334fd124b768cbb53365fb19f383fa34ec9dbf7",
+    "external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T022100Z_d334fd1_L010_t2p00_iop0_20_anchor_serial_np4",
+    "lightweight_manifest": "thickness_mesh_independence/aggressive_refinement/results/failed_p1_resource_guard/manifest.json",
+    "classification": "resource_guard_abort_with_orphan_process_cleanup",
+    "iop0_complete": false,
+    "iop20_started": false,
+    "partial_endpoint_accepted": false,
+    "q_calculable": false,
+    "equations": 3370950,
+    "solver_mode": "out_of_core",
+    "in_core_required_gb_all_ranks": 73.775,
+    "out_of_core_required_gb_all_ranks": 14.499,
+    "total_allocated_gb_all_ranks": 26.041,
+    "minimum_mem_available_gib": 11.50,
+    "deleted_rejected_transient_allocated_bytes": 83147467776,
+    "launcher_defect": "The old process-group stop did not contain the nested MAPDL/MPI session tree.",
+    "restart_from_old_binary_possible": false,
+    "restart_authorized": false
+  },
   "hard_budget": {
     "wall_clock_hours": 72,
     "maximum_simultaneous_mapdl_cases": 1,
+    "maximum_pressures_per_campaign": 1,
     "np_per_case": 4,
-    "minimum_available_memory_gib_before_launch": 70,
-    "minimum_free_disk_gib_anchor_pair": 80,
+    "workers": 1,
+    "retry_count": 0,
+    "case_timeout_hours": 24,
+    "minimum_available_memory_gib_before_launch": 90,
+    "abort_available_memory_gib": 30,
+    "minimum_free_disk_gib_before_launch": 150,
+    "abort_free_disk_gib": 100,
+    "monitor_interval_seconds": 10,
     "automatic_full_matrix_launch": false
   },
   "server_snapshot_2026_08_10": {
@@ -24,6 +51,15 @@
     "swap_total_gib": 8,
     "data_filesystem_free_gib": 148,
     "note": "This is a point-in-time capacity snapshot, not a reserved allocation. Every launch must repeat the checks."
+  },
+  "server_snapshot_2026_08_11_after_cleanup_and_temporary_arc_cap": {
+    "captured_at_utc": "2026-08-11T05:55:46Z",
+    "memory_available_gib": 100.33,
+    "zfs_arc_size_gib": 15.68,
+    "zfs_arc_max_bytes": 17179869184,
+    "data_filesystem_free_bytes": 483193782272,
+    "active_solver_processes": 0,
+    "note": "The ARC cap is a temporary administrator setting, not a resource reservation or repository-controlled persistent configuration."
   },
   "fixed_physics": {
     "eyelid_thicknesses_mm": [1.6, 1.8, 2.0],
@@ -77,7 +113,7 @@
       "nominal_local_target_mm": 0.1,
       "refinement_halfwidth_mm": 1.8,
       "role": "primary aggressive anchor",
-      "decision": "formal mesh-only P0 complete; eligible for a separately authorized 2.00-mm 0/20-mmHg anchor pair, which has not started"
+      "decision": "formal mesh-only P0 complete; the first nonlinear IOP0 attempt was rejected after a resource-guard abort and orphan-session cleanup; any restart must use the cgroup guard, a new campaign root, and one pressure only"
     },
     {
       "id": "L005",
@@ -145,7 +181,7 @@
       "pressures_mmhg": [0.0, 20.0],
       "solve": true,
       "hard_stage_cap_hours": 36,
-      "launch_policy": "pressure sequential, one MAPDL process at a time"
+      "launch_policy": "one pressure per campaign; run IOP0 first with one MAPDL process, then require manual QC and separate authorization before a new IOP20 campaign"
     },
     {
       "stage": "P2",
@@ -186,6 +222,7 @@
     "git": "configuration, launch/evaluation scripts, CSV/JSON summaries, manifests, hashes, and lightweight figures",
     "external": "DB, RST, complete solve.out, scratch diagnostics, and postprocessed fields remain under a new 5090d campaign root",
     "no_automatic_deletion": "No accepted DB/RST is deleted to make room for later stages. P2 requires storage reservation or separate authorization.",
-    "aborted_preflight": "No partial endpoint from a timeout, resource stop, or mesh-only run enters numerical q comparison."
+    "aborted_preflight": "No partial endpoint from a timeout, resource stop, orphan-session cleanup, or mesh-only run enters numerical q comparison.",
+    "failed_attempt_binary_policy": "Rejected DB/RST/scratch may be removed only after path, size, mtime, status, and SHA-256 inventory; lightweight logs, manifests, cleanup records, and provenance remain."
   }
 }

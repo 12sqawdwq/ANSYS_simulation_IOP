@@ -1,0 +1,10 @@
+started_at_utc,2026-08-11T02:21:00Z
+thicknesses_mm,2.0
+pressures_mmhg,0 20
+np_per_case,4
+case_timeout_seconds,86400
+campaign_deadline_seconds,129600
+iop0_started_at_utc,2026-08-11T02:21:00Z
+iop0_returncode,143
+iop0_ended_at_utc,2026-08-11T02:26:03Z
+ended_at_utc,2026-08-11T02:26:03Z

@@ -1,0 +1,8 @@
+cleanup_started_at_utc,2026-08-11T04:25:10Z
+reason,resource_guard_abort_orphan_solver_partial_endpoint_rejected
+files_selected,47
+apparent_bytes_selected,90442977929
+allocated_bytes_selected,83147467776
+partial_endpoint_accepted,false
+iop20_started,false
+cleanup_ended_at_utc,2026-08-11T04:25:10Z

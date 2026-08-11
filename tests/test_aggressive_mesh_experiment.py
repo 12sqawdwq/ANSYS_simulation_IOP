@@ -29,11 +29,29 @@ def sha256(path: Path) -> str:
 
 def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     config = json.loads(CONFIG.read_text(encoding="utf-8"))
+    assert config["schema_version"] == 2
     assert config["git_branch"] == "aggressive-contact-mesh-experiment-20260810"
-    assert config["status"] == "formal_p0_mesh_preflight_complete_p1_not_started"
+    assert config["status"] == "failed_p1_audited_session_guard_implemented_formal_validation_pending"
     assert config["formal_preflight_source_commit"] == "8768e6ec6afb41225d729c21aac80b467c266897"
     assert config["hard_budget"]["wall_clock_hours"] == 72
     assert config["hard_budget"]["maximum_simultaneous_mapdl_cases"] == 1
+    assert config["hard_budget"]["maximum_pressures_per_campaign"] == 1
+    assert config["hard_budget"]["np_per_case"] == 4
+    assert config["hard_budget"]["workers"] == 1
+    assert config["hard_budget"]["retry_count"] == 0
+    assert config["hard_budget"]["minimum_available_memory_gib_before_launch"] == 90
+    assert config["hard_budget"]["abort_available_memory_gib"] == 30
+    assert config["hard_budget"]["minimum_free_disk_gib_before_launch"] == 150
+    assert config["hard_budget"]["abort_free_disk_gib"] == 100
+    failed = config["failed_p1_resource_attempt"]
+    assert failed["classification"] == "resource_guard_abort_with_orphan_process_cleanup"
+    assert failed["source_commit"] == "d334fd124b768cbb53365fb19f383fa34ec9dbf7"
+    assert failed["equations"] == 3370950
+    assert failed["iop0_complete"] is False
+    assert failed["iop20_started"] is False
+    assert failed["partial_endpoint_accepted"] is False
+    assert failed["restart_from_old_binary_possible"] is False
+    assert failed["restart_authorized"] is False
     strategies = {item["id"]: item for item in config["candidate_strategies"]}
     assert strategies["G010"]["decision"].startswith("reject_before_solve")
     assert strategies["L010"]["background_mesh_mm"] == pytest.approx(0.20)
@@ -182,8 +200,12 @@ def test_mesh_preflight_collector_reads_development_fixture(tmp_path: Path):
 
 
 def test_launchers_require_commit_pin_and_keep_extreme_mesh_only():
-    preflight = (EXPERIMENT / "scripts" / "server" / "launch_mesh_preflight_5090d.sh").read_text()
-    solve = (EXPERIMENT / "scripts" / "server" / "launch_aggressive_anchor_5090d.sh").read_text()
+    server = EXPERIMENT / "scripts" / "server"
+    preflight = (server / "launch_mesh_preflight_5090d.sh").read_text()
+    solve = (server / "launch_aggressive_anchor_5090d.sh").read_text()
+    guard = (server / "session_guard.sh").read_text()
+    guard_test = (server / "test_session_guard_5090d.sh").read_text()
+    launcher_signal_test = (server / "test_anchor_launcher_signal_5090d.sh").read_text()
     for text in (preflight, solve):
         assert "EXPECTED_COMMIT:?" in text
         assert "status --porcelain" in text
@@ -192,6 +214,76 @@ def test_launchers_require_commit_pin_and_keep_extreme_mesh_only():
     assert "L005:0.00020:120:1800" in preflight
     assert "*use,param_eye_sweep.mac" in preflight
     assert "--local-refine-level 1" in solve
-    assert "maximum_simultaneous" not in solve
+    assert 'PRESSURES="${PRESSURES:-0}"' in solve
+    assert "exactly one pressure" in solve
+    assert 'MIN_AVAILABLE_MEMORY_GIB="${MIN_AVAILABLE_MEMORY_GIB:-90}"' in solve
+    assert 'ABORT_AVAILABLE_MEMORY_GIB="${ABORT_AVAILABLE_MEMORY_GIB:-30}"' in solve
+    assert 'MIN_FREE_DISK_GIB="${MIN_FREE_DISK_GIB:-150}"' in solve
+    assert 'ABORT_FREE_DISK_GIB="${ABORT_FREE_DISK_GIB:-100}"' in solve
+    assert 'MONITOR_INTERVAL_SECONDS="${MONITOR_INTERVAL_SECONDS:-10}"' in solve
+    assert "NP_PER_CASE > 4" in solve
+    assert "guard_start_unit" in solve
+    assert "guard_stop_unit_tree" in solve
+    assert "guard_finalize_unit" in solve
+    assert 'kill -TERM -- "-$run_pid"' not in solve
     assert "resource_guard_abort" in solve
     assert "THICKNESSES:-2.0" in solve
+    assert "systemd-run --user" in guard
+    assert "KillMode=control-group" in guard
+    assert "BLUEKNOW_CAMPAIGN_TOKEN" in guard
+    assert "--kill-whom=all" in guard
+    assert "guard_signal_all \"$unit\" \"$token\" TERM" in guard
+    assert "guard_signal_all \"$unit\" \"$token\" KILL" in guard
+    assert "residual_detected" in guard
+    assert "setsid bash" in guard_test
+    assert "mapdl-session-guard-test" in guard_test
+    assert "hydra-pmi-session-guard-test" in guard_test
+    assert "SESSION_GUARD_TEST_PASS" in guard_test
+    assert "mapdl-anchor-launcher-test" in launcher_signal_test
+    assert "hydra-anchor-launcher-test" in launcher_signal_test
+    assert "kill -TERM \"$launcher_pid\"" in launcher_signal_test
+    assert "launcher_rc\" -ne 143" in launcher_signal_test
+    assert "CAMPAIGN_INCOMPLETE" in launcher_signal_test
+    assert "ANCHOR_LAUNCHER_SIGNAL_TEST_PASS" in launcher_signal_test
+
+
+def test_failed_p1_resource_abort_is_lightweight_hash_complete_and_not_an_endpoint():
+    root = EXPERIMENT / "results" / "failed_p1_resource_guard"
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "resource_guard_abort_with_orphan_process_cleanup"
+    assert manifest["source_git_commit"] == "d334fd124b768cbb53365fb19f383fa34ec9dbf7"
+    assert manifest["endpoint_acceptance"] == {
+        "iop0_complete": False,
+        "iop20_started": False,
+        "partial_endpoint_accepted": False,
+        "q_calculable": False,
+        "restart_from_old_binary_possible": False,
+    }
+    assert manifest["solver"]["equations"] == 3370950
+    assert manifest["solver"]["solver_mode"] == "out_of_core"
+    assert manifest["solver"]["in_core_required_gb_all_ranks"] == pytest.approx(73.775)
+    assert manifest["resource_abort"]["minimum_mem_available_gib"] == pytest.approx(11.50)
+    assert manifest["orphan_cleanup"]["escaped_session_id"] == 439551
+    assert manifest["orphan_cleanup"]["deleted_transient_files"] == 47
+    assert manifest["orphan_cleanup"]["deleted_allocated_bytes"] == 83147467776
+    assert manifest["restart_authorized"] is False
+    for item in manifest["artifacts"]:
+        path = root / item["path"]
+        assert path.is_file()
+        assert path.stat().st_size == item["size_bytes"]
+        assert sha256(path) == item["sha256"]
+        if "external_sha256" in item:
+            assert item["external_sha256"] == item["sha256"]
+
+    rows = list(csv.DictReader((root / "iop0" / "run_manifest.csv").open(encoding="utf-8")))
+    assert rows == []
+    status = (root / "FINAL_ABORT_STATUS.txt").read_text(encoding="utf-8")
+    assert "partial_endpoint_accepted,false" in status
+    assert "iop20_started,false" in status
+    assert "restart_authorized,false" in status
+    cleanup = (root / "ABORTED_TRANSIENT_CLEANUP.txt").read_text(encoding="utf-8")
+    assert "files_selected,47" in cleanup
+    assert "allocated_bytes_selected,83147467776" in cleanup
+    extract = (root / "solver_resource_extract.txt").read_text(encoding="utf-8")
+    assert "source_sha256,c8eb688d0b8a0367ad061f2b3661e86ce556b4b0f4a54d4454933504c9c43010" in extract
+    assert "run_completed_observed,false" in extract

@@ -1,6 +1,6 @@
 # 全局脚本索引
 
-> 最后核对：2026-08-10
+> 最后核对：2026-08-11
 > 版本规则：脚本文件名描述职责，不使用 `v1/v2/final/latest/old/copy` 表示状态；版本、回滚和并行开发由 Git commit、tag 和 branch 管理。
 
 ## 1. 统一有限元模型
@@ -26,7 +26,10 @@
 |`src/runners/run_indentation_sweep.py`|参数化压入批量运行、隔离尝试、重试、QC、清理、manifest 和元数据；`--local-refine-level` 仅供预注册实验显式启用|
 |`src/runners/run_thickness_calibration.py`|眼睑厚度校准矩阵调度|
 |`thickness_mesh_independence/aggressive_refinement/scripts/server/launch_mesh_preflight_5090d.sh`|在 clean commit 上串行构建 G015/L010 及可选 L005 mesh-only 资源预检|
-|`thickness_mesh_independence/aggressive_refinement/scripts/server/launch_aggressive_anchor_5090d.sh`|局部 0.10 mm 压力对单任务串行求解，含 72 h 阶段化策略、运行中内存/磁盘保护和不接收部分端点边界|
+|`thickness_mesh_independence/aggressive_refinement/scripts/server/launch_aggressive_anchor_5090d.sh`|局部 0.10 mm 单压力求解；要求 clean commit、新 campaign root、user-systemd cgroup，采用 4 ranks/1 worker/零重试、10 s资源监测和完整 TERM→KILL零残留边界|
+|`thickness_mesh_independence/aggressive_refinement/scripts/server/session_guard.sh`|以 user-systemd service/cgroup 和随机 campaign token 包含嵌套 MAPDL/MPI session，记录进程快照并执行 TERM→KILL升级与残留核验|
+|`thickness_mesh_independence/aggressive_refinement/scripts/server/test_session_guard_5090d.sh`|不启动 ANSYS，构造不同 SID/PGID 且忽略 TERM 的 MAPDL/Hydra 模拟进程，验证 session guard 的 KILL升级和零残留|
+|`thickness_mesh_independence/aggressive_refinement/scripts/server/test_anchor_launcher_signal_5090d.sh`|使用假 solver 驱动完整 anchor launcher，向 launcher 发 TERM并验证 campaign incomplete、完整cgroup清理和零嵌套进程残留|
 |`thickness_mesh_independence/aggressive_refinement/scripts/analysis/collect_mesh_preflight.py`|收集 mesh-only 单元/节点增长、MAPDL 状态、墙钟、RSS、DB 大小与哈希|
 |`thickness_mesh_independence/aggressive_refinement/scripts/analysis/build_formal_preflight_manifest.py`|为正式 committed P0 构建轻量产物与外部 DB SHA-256 provenance manifest|
 |`thickness_mesh_independence/aggressive_refinement/scripts/analysis/estimate_resource_envelope.py`|由既有三级网格和开发期构网格计数生成全局/局部资源投影|
