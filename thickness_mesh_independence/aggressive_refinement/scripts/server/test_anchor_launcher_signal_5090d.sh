@@ -22,6 +22,10 @@ wait
 FAKE
 chmod 700 "$fake_python"
 
+fixture_pids() {
+  ps -eo pid=,args= | awk \
+    '$2=="mapdl-anchor-launcher-test" || $2=="hydra-anchor-launcher-test" {print $1}'
+}
 cleanup() {
   set +e
   if [[ -n "${launcher_pid:-}" ]] && kill -0 "$launcher_pid" 2>/dev/null; then
@@ -29,7 +33,7 @@ cleanup() {
     sleep 1
     kill -KILL "$launcher_pid" 2>/dev/null || true
   fi
-  pgrep -f 'mapdl-anchor-launcher-test|hydra-anchor-launcher-test' | xargs -r kill -KILL 2>/dev/null || true
+  fixture_pids | xargs -r kill -KILL 2>/dev/null || true
 }
 trap cleanup EXIT INT TERM
 
@@ -57,8 +61,7 @@ ready=0
 for _ in $(seq 1 30); do
   if [[ -f "$campaign/campaign_status.csv" ]] \
       && grep -q '^iop0_systemd_unit,' "$campaign/campaign_status.csv" \
-      && pgrep -f 'mapdl-anchor-launcher-test' >/dev/null \
-      && pgrep -f 'hydra-anchor-launcher-test' >/dev/null; then
+      && [[ "$(fixture_pids | wc -l)" -ge 2 ]]; then
     ready=1
     break
   fi
@@ -84,7 +87,7 @@ if [[ "$launcher_rc" -ne 143 ]]; then
 fi
 fixture_empty=0
 for _ in $(seq 1 5); do
-  if ! pgrep -f 'mapdl-anchor-launcher-test|hydra-anchor-launcher-test' >/dev/null; then
+  if [[ -z "$(fixture_pids)" ]]; then
     fixture_empty=1
     break
   fi
