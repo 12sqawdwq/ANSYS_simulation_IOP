@@ -5,6 +5,7 @@ import hashlib
 import importlib.util
 import json
 import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -117,8 +118,17 @@ def test_development_preflight_is_mesh_only_and_hash_complete():
     assert manifest["extreme_result"]["solid_nodes_after"] == 3986139
     assert manifest["extreme_result"]["condition"]["nonlinear_solution_started"] is False
     assert "nonlinear_solve_rejected" in manifest["extreme_result"]["decision"]
-    assert sha256(MODEL) == manifest["source_macro"]["sha256"]
-    assert MODEL.stat().st_size == manifest["source_macro"]["size_bytes"]
+    source_commit = "8768e6ec6afb41225d729c21aac80b467c266897"
+    source = subprocess.run(
+        ["git", "show", f"{source_commit}:models/apdl/param_eye_sweep.mac"],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+    )
+    if source.returncode != 0:
+        pytest.skip("historical source macro is unavailable in this checkout")
+    assert hashlib.sha256(source.stdout).hexdigest() == manifest["source_macro"]["sha256"]
+    assert len(source.stdout) == manifest["source_macro"]["size_bytes"]
     for item in manifest["artifacts"]:
         path = root / item["path"]
         assert path.stat().st_size == item["size_bytes"]

@@ -2,6 +2,7 @@
 
 ## 固定物理假设
 
+- 普通压入和偏心实验的眼睑厚度统一采用 1.25 mm 全局基线；只有预注册的厚度变量实验可显式覆盖，并记录实际厚度与原因。基线真源见 [`../config/model_baseline.json`](../config/model_baseline.json)。
 - 眼睑—角膜完全 bonded，不考虑滑移、摩擦和黏弹性。
 - 主扫描使用 0.3 mm 均匀网格。
 - 载荷步 1 将 IOP 从 0 增加到 2666.4 Pa，同时固定探针顶部。
@@ -17,7 +18,7 @@ ops/launch-indentation-sweep-5090d.sh coarse
 ops/launch-indentation-sweep-5090d.sh full
 ```
 
-`smoke` 为 `(0,0)`、`(0,0.8)`、`(2,0.4)`、`(2,0.8)` 四个代表性工况。`coarse` 为 4 个偏心量乘以 `0/0.4/0.8 mm`，共 12 个工况；`full` 使用 `0/0.2/0.4/0.6/0.8 mm`，共 20 个工况。每一阶段结束后人工检查 `qc_report.json`、`summary.csv` 和 `figures/`，不得自动启动下一阶段。
+`smoke` 为 `(0,0)`、`(0,0.8)`、`(2,0.4)`、`(2,0.8)` 四个代表性工况。`coarse` 为 4 个偏心量乘以 `0/0.4/0.8 mm`，共 12 个工况；`full` 使用 `0/0.2/0.4/0.6/0.8 mm`，共 20 个工况。三种普通 profile 默认都使用 1.25 mm 眼睑；`run_metadata.json` 同时记录全局基线、实际厚度模式和配置哈希。每一阶段结束后人工检查 `qc_report.json`、`summary.csv` 和 `figures/`，不得自动启动下一阶段。
 
 5090d 启动脚本固定使用 `/home/xuanyu/miniconda3/envs/grs-pilot/bin/python`，该环境已包含质量检查曲线所需的 Pillow。只有在明确验证其他兼容 Conda 环境时，才通过 `BLUEKNOW_PYTHON` 覆盖解释器路径。
 

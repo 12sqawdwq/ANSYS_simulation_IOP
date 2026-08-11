@@ -29,6 +29,12 @@ from src.postprocess.thickness_geometry import GEOMETRY_FIELDS as THICKNESS_GEOM
 from src.postprocess.thickness_geometry import analyze_files, write_results as write_geometry_results
 
 MODEL_DIR = REPO_ROOT / "models" / "apdl"
+GLOBAL_BASELINE_PATH = REPO_ROOT / "config" / "model_baseline.json"
+with GLOBAL_BASELINE_PATH.open(encoding="utf-8") as baseline_file:
+    GLOBAL_BASELINE = json.load(baseline_file)
+DEFAULT_EYELID_THICKNESS_MM = float(
+    GLOBAL_BASELINE["canonical_baseline"]["eyelid_thickness_mm"]
+)
 APDL_FILES = (
     "param_eye_sweep.mac",
     "post_sweep.mac",
@@ -39,6 +45,13 @@ OFFSETS_MM = (0.0, 0.5, 1.0, 2.0)
 MAX_INDENT_MM = 0.8
 MIN_EYELID_THICKNESS_MM = 0.8
 MAX_EYELID_THICKNESS_MM = 2.0
+if (
+    GLOBAL_BASELINE.get("schema_version") != 1
+    or not MIN_EYELID_THICKNESS_MM
+    <= DEFAULT_EYELID_THICKNESS_MM
+    <= MAX_EYELID_THICKNESS_MM
+):
+    raise RuntimeError(f"invalid global model baseline: {GLOBAL_BASELINE_PATH}")
 THICKNESS_MM = tuple(round(0.8 + 0.2 * index, 1) for index in range(7))
 FULL_INDENTS_MM = tuple(i / 5 for i in range(5))
 COARSE_INDENTS_MM = (0.0, 0.4, 0.8)
@@ -168,7 +181,7 @@ class CaseSpec:
     offset_mm: float
     indent_mm: float
     order: int
-    eyelid_thickness_mm: float = 1.0
+    eyelid_thickness_mm: float = DEFAULT_EYELID_THICKNESS_MM
     kind: str = "indentation"
 
     @property
@@ -758,6 +771,31 @@ def parse_case(value: str) -> tuple[float, float]:
 def choose_cases(parser: argparse.ArgumentParser, cli: argparse.Namespace) -> tuple[str, list[CaseSpec]]:
     custom_grid = cli.offsets is not None or cli.indents is not None
     thickness_grid = cli.eyelid_thicknesses is not None
+    if not (
+        MIN_EYELID_THICKNESS_MM - 1e-12
+        <= cli.baseline_eyelid_thickness_mm
+        <= MAX_EYELID_THICKNESS_MM + 1e-12
+    ):
+        parser.error(
+            f"baseline eyelid thickness must be within {MIN_EYELID_THICKNESS_MM:g}-"
+            f"{MAX_EYELID_THICKNESS_MM:g} mm"
+        )
+    baseline_overridden = not math.isclose(
+        cli.baseline_eyelid_thickness_mm,
+        DEFAULT_EYELID_THICKNESS_MM,
+        abs_tol=1e-12,
+    )
+    thickness_mode = thickness_grid or cli.profile == "thickness"
+    if baseline_overridden and thickness_mode:
+        parser.error(
+            "--baseline-eyelid-thickness-mm cannot change the global reference for a "
+            "thickness sweep; use --eyelid-thicknesses for actual cases"
+        )
+    if baseline_overridden and not cli.eyelid_thickness_override_reason:
+        parser.error(
+            "a non-baseline ordinary experiment requires "
+            "--eyelid-thickness-override-reason"
+        )
     selected_modes = sum((cli.profile is not None, bool(cli.case), custom_grid, thickness_grid))
     if selected_modes > 1:
         parser.error(
@@ -812,7 +850,15 @@ def choose_cases(parser: argparse.ArgumentParser, cli: argparse.Namespace) -> tu
     if any(indent > MAX_INDENT_MM + 1e-12 for _, indent in pairs):
         parser.error(f"indentation exceeds the validated {MAX_INDENT_MM:g} mm limit")
     unique_pairs = list(dict.fromkeys(pairs))
-    return profile, [CaseSpec(offset, indent, index) for index, (offset, indent) in enumerate(unique_pairs)]
+    return profile, [
+        CaseSpec(
+            offset,
+            indent,
+            index,
+            cli.baseline_eyelid_thickness_mm,
+        )
+        for index, (offset, indent) in enumerate(unique_pairs)
+    ]
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -822,6 +868,19 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--offsets", type=float, nargs="+")
     parser.add_argument("--indents", type=float, nargs="+")
     parser.add_argument("--eyelid-thicknesses", type=float, nargs="+")
+    parser.add_argument(
+        "--baseline-eyelid-thickness-mm",
+        type=float,
+        default=DEFAULT_EYELID_THICKNESS_MM,
+        help=(
+            "eyelid thickness for non-thickness experiments; defaults to the "
+            "repository-wide baseline from config/model_baseline.json"
+        ),
+    )
+    parser.add_argument(
+        "--eyelid-thickness-override-reason",
+        help="required when a non-thickness experiment overrides the 1.25-mm baseline",
+    )
     parser.add_argument("--thickness-indent-mm", type=float, default=0.28)
     parser.add_argument("--thickness-indents-mm", type=float, nargs="+")
     parser.add_argument("--run-root", type=Path)
@@ -901,6 +960,37 @@ def main() -> int:
             LOCAL_REFINE_HALFWIDTH_MM if cli.local_refine_level > 0 else 0.0
         ),
         "local_target_mesh_size_mm": cli.mesh_size_mm / (2 ** cli.local_refine_level),
+        "global_baseline": {
+            "config_path": str(GLOBAL_BASELINE_PATH.relative_to(REPO_ROOT)),
+            "config_sha256": sha256(GLOBAL_BASELINE_PATH),
+            "eyelid_thickness_mm": DEFAULT_EYELID_THICKNESS_MM,
+        },
+        "baseline_eyelid_thickness_mm": cli.baseline_eyelid_thickness_mm,
+        "eyelid_thickness_override_reason": cli.eyelid_thickness_override_reason or "",
+        "eyelid_thickness_mode": (
+            (
+                "explicit_cases_at_global_baseline"
+                if all(
+                    math.isclose(
+                        case.eyelid_thickness_mm,
+                        DEFAULT_EYELID_THICKNESS_MM,
+                        abs_tol=1e-12,
+                    )
+                    for case in cases
+                )
+                else "explicit_thickness_sweep"
+            )
+            if profile.startswith("thickness")
+            else (
+                "global_baseline"
+                if math.isclose(
+                    cli.baseline_eyelid_thickness_mm,
+                    DEFAULT_EYELID_THICKNESS_MM,
+                    abs_tol=1e-12,
+                )
+                else "explicit_baseline_override"
+            )
+        ),
         "iop_mmhg": cli.iop_mmhg,
         "iop_pa": cli.iop_mmhg * PA_PER_MMHG,
         "pa_per_mmhg": PA_PER_MMHG,

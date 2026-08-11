@@ -1,5 +1,10 @@
 {
   "experiment_id": "thickness_mesh_independence",
+  "global_baseline_reference": {
+    "eyelid_thickness_mm": 1.25,
+    "case_role": "explicit_thickness_override",
+    "override_reason": "This targeted experiment audits the sampled 1.60-2.00 mm thick-end response rather than the canonical baseline endpoint."
+  },
   "purpose": "Test whether the sampled thick-end decline in zero-referenced 20-mmHg probe output persists under mesh refinement.",
   "status": "three_mesh_confirmation_complete_amplitude_not_mesh_independent",
   "authorized_at_utc": "2026-08-08T08:47:27Z",

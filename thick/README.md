@@ -1,6 +1,6 @@
 # Thick Study
 
-眼睑厚度为主变量、角膜厚度为分层变量的独立研究项目。
+眼睑厚度为主变量、角膜厚度为分层变量的独立研究项目。仓库统一参考基线为 **1.25 mm 眼睑厚度**；本项目因直接研究厚度效应，可以显式使用其他厚度，但每个端点必须按实际厚度解释。基线定义和覆盖规则见 [`../docs/GLOBAL_BASELINE.md`](../docs/GLOBAL_BASELINE.md)。
 
 `data/placeholder/` 和 `figures/placeholder/` 保存当前参数扫描占位资料；它们用于实验设计，不是正式实验结论。真实仿体实验完成后，原始采集记录进入 `data/raw/` 的外部数据区，处理结果进入 `data/processed/`，并由 `code/process_experiment.py` 重新生成统计表、图和正式报告。
 

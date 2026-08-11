@@ -5,9 +5,12 @@
 
 ## 1. 统一有限元模型
 
+全局眼睑厚度参考由 `config/model_baseline.json` 唯一定义为 1.25 mm；普通实验读取该默认值，厚度变量实验显式记录覆盖。
+
 |路径|职责|
 |---|---|
-|`models/apdl/param_eye_sweep.mac`|统一眼球、角膜、眼睑和探头参数化模型；IOP 预载、几何初接触和正式压入三载荷步；默认关闭、显式编码启用的实验局部四面体细化与 mesh-only 预检|
+|`config/model_baseline.json`|所有新实验共同引用的机器可读模型基线；当前眼睑厚度为 1.25 mm，并定义显式厚度覆盖和历史结果不回写策略|
+|`models/apdl/param_eye_sweep.mac`|统一眼球、角膜、眼睑和探头参数化模型；IOP 预载、几何初接触和正式压入三载荷步；直接调用时眼睑厚度兜底为 1.25 mm；默认关闭、显式编码启用的实验局部四面体细化与 mesh-only 预检|
 |`models/apdl/plot_sweep_views.mac`|批量工况几何/变形多视图|
 |`models/apdl/plot_mesh_independence_sections.mac`|从既有 RST 统一输出网格审计的变形后实际比例中央网格剖面和保留原生自动色标的带单元边等效应力剖面|
 |`models/apdl/plot_mesh_independence_fixed_scale.mac`|在相同视角下输出固定 0–60 kPa 色标的等效应力中央剖面，仅用于跨网格同色同值辅助定位|
@@ -23,7 +26,7 @@
 
 |路径|职责|
 |---|---|
-|`src/runners/run_indentation_sweep.py`|参数化压入批量运行、隔离尝试、重试、QC、清理、manifest 和元数据；`--local-refine-level` 仅供预注册实验显式启用|
+|`src/runners/run_indentation_sweep.py`|参数化压入批量运行、隔离尝试、重试、QC、清理、manifest 和元数据；普通 profile 从全局配置读取 1.25 mm 眼睑基线；显式覆盖必须同时提供 `--baseline-eyelid-thickness-mm` 和 `--eyelid-thickness-override-reason`；`--local-refine-level` 仅供预注册实验显式启用|
 |`src/runners/run_thickness_calibration.py`|眼睑厚度校准矩阵调度|
 |`thickness_mesh_independence/aggressive_refinement/scripts/server/launch_mesh_preflight_5090d.sh`|在 clean commit 上串行构建 G015/L010 及可选 L005 mesh-only 资源预检|
 |`thickness_mesh_independence/aggressive_refinement/scripts/server/launch_aggressive_anchor_5090d.sh`|局部 0.10 mm 单压力求解；要求 clean commit、新 campaign root、user-systemd cgroup，采用 4 ranks/1 worker/零重试、10 s资源监测和完整 TERM→KILL零残留边界|

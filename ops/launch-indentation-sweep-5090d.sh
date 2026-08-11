@@ -19,6 +19,11 @@ if ! "$python_bin" -c 'import PIL' >/dev/null 2>&1; then
     exit 2
 fi
 
+baseline_file="$repo/config/model_baseline.json"
+baseline_eyelid_thickness_mm=$(
+    "$python_bin" -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["canonical_baseline"]["eyelid_thickness_mm"])' "$baseline_file"
+)
+
 commit=$(git -C "$repo" rev-parse --short=8 HEAD)
 timestamp=$(date -u +%Y%m%dT%H%M%SZ)
 run_root=${BLUEKNOW_RUN_ROOT:-/home/xuanyu/PROJECT/ziyu/blueknow-data/indentation_sweep/${timestamp}_${commit}_${profile}}
@@ -31,7 +36,11 @@ fi
 mkdir -p "$run_root"
 export BLUEKNOW_RUN_ROOT="$run_root"
 set +e
-"$python_bin" "$repo/src/runners/run_indentation_sweep.py" --profile "$profile" --workers 4 --np 4
+"$python_bin" "$repo/src/runners/run_indentation_sweep.py" \
+    --profile "$profile" \
+    --baseline-eyelid-thickness-mm "$baseline_eyelid_thickness_mm" \
+    --workers 4 \
+    --np 4
 solver_status=$?
 "$python_bin" "$repo/src/postprocess/summarize_indentation_sweep.py" "$run_root"
 summary_status=$?

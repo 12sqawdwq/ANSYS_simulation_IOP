@@ -1,5 +1,9 @@
 {
   "experiment_id": "high_iop_mechanical_transfer_t1p25_c0p60",
+  "global_baseline_reference": {
+    "eyelid_thickness_mm": 1.25,
+    "case_role": "canonical_baseline"
+  },
   "phase": "extension_iop_0_to_60_step2p5",
   "status_before_launch": "approved_by_user",
   "pressure_step_mmhg": 2.5,

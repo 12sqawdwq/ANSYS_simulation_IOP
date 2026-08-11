@@ -7,7 +7,7 @@
 !        tens = experimental local tetra refinement level (0, 1, or 2)
 !        hundreds = mesh-only preflight flag (0=solve, 1=stop after mesh)
 ! ARG4 = background mesh size in m (default 0.3 mm)
-! ARG5 = eyelid thickness in m (default 1.0 mm)
+! ARG5 = eyelid thickness in m (global baseline default 1.25 mm)
 ! ARG6 = IOP in Pa (0 Pa is a valid zero-IOP case; negative uses 20 mmHg default)
 ! ARG7 = eyelid C10/C01 scale (default 1.0)
 ! ARG8 = cornea C10/C01 scale (default 1.0)
@@ -24,7 +24,7 @@ Rc     = 7.8e-3
 tc     = 0.6e-3
 te     = ARG5
 *if,te,le,0,then
-te = 1.0e-3
+te = 1.25e-3          ! repository-wide eyelid-thickness baseline
 *endif
 *if,te,lt,0.8e-3,then
 /com,ERROR: eyelid thickness is below the validated 0.8 mm limit

@@ -2,7 +2,9 @@
 
 当前报告包含两类证据。`thick/code/generate_placeholder_report.py` 生成的参数扫描用于比较眼睑厚度和角膜厚度趋势，压力分布不是从 ANSYS rst 直接提取；它只作为真实仿体实验开始前的占位资料。当前参数化三维有限元统一使用 `models/apdl/param_eye_sweep.mac`、`src/runners/run_indentation_sweep.py`、`models/apdl/post_sweep.mac` 和 `models/apdl/plot_sweep_views.mac`。模型先建立 IOP 预应力，再保持 IOP 施加探针压入；外侧接触面积来自闭合 CONTA174 单元面积求和，不再使用节点凸包代理。探头—眼睑最大数值穿透来自闭合接触单元的 `CONT:PENE` 平均值最大值。
 
-| 项目 | 参数扫描 | 参数化 3D |
+自 2026-08-11 起，新实验的全局参考眼睑厚度统一为 **1.25 mm**，见 [`GLOBAL_BASELINE.md`](GLOBAL_BASELINE.md)。下表记录的是既有资料生成时的实际输入，其中参数化 3D 的 1.00 mm 是历史事实，不随新默认值追溯修改。
+
+| 项目 | 历史参数扫描 | 历史参数化 3D |
 |---|---:|---:|
 | IOP | 20 mmHg | 20 mmHg（2666.4 Pa） |
 | 位移 | 0.29 mm | 0.00-0.80 mm，每 0.20 mm 采样 |
