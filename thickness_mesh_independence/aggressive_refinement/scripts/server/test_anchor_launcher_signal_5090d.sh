@@ -82,7 +82,17 @@ if [[ "$launcher_rc" -ne 143 ]]; then
   printf 'Expected launcher signal exit 143, got %s\n' "$launcher_rc" >&2
   exit 1
 fi
-if pgrep -f 'mapdl-anchor-launcher-test|hydra-anchor-launcher-test' >/dev/null; then
+fixture_empty=0
+for _ in $(seq 1 5); do
+  if ! pgrep -f 'mapdl-anchor-launcher-test|hydra-anchor-launcher-test' >/dev/null; then
+    fixture_empty=1
+    break
+  fi
+  # Killed children can remain briefly as init-reapable zombies after the
+  # cgroup and token process sets are already empty.
+  sleep 1
+done
+if [[ "$fixture_empty" -ne 1 ]]; then
   printf 'Launcher signal path left residual nested processes\n' >&2
   exit 1
 fi
