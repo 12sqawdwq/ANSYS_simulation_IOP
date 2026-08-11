@@ -1,0 +1,13 @@
+status,formal_clean_commit_session_guard_validation_complete
+validated_at_utc,2026-08-11T06:33:21Z
+source_git_commit,c62987d795711052170f3538517e38fff5c0aa18
+source_worktree_clean,true
+ansys_started,false
+helper_test_pass,true
+launcher_signal_test_pass,true
+nested_setsid_tested,true
+term_to_kill_escalation_tested,true
+residual_processes,0
+active_blueknow_units_after,0
+cgroup_filesystem,cgroup2fs
+systemd_version,systemd 255 (255.4-1ubuntu8.14)

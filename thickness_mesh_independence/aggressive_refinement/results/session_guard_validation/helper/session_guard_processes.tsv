@@ -1,0 +1,7 @@
+utc	label	unit	event	process
+2026-08-11T06:33:16Z	test	blueknow-session-guard-test-487452.service	before_term	 487469   79036  487469  487469 xuanyu   bash            bash /tmp/blueknow-session-guard-test.WBWE0W/nested_worker.sh
+2026-08-11T06:33:16Z	test	blueknow-session-guard-test-487452.service	before_term	 487470  487469  487470  487470 xuanyu   sleep           mapdl-session-guard-test 300
+2026-08-11T06:33:16Z	test	blueknow-session-guard-test-487452.service	before_term	 487471  487469  487471  487471 xuanyu   sleep           hydra-pmi-session-guard-test 300
+2026-08-11T06:33:18Z	test	blueknow-session-guard-test-487452.service	before_kill	 487469   79036  487469  487469 xuanyu   bash            bash /tmp/blueknow-session-guard-test.WBWE0W/nested_worker.sh
+2026-08-11T06:33:18Z	test	blueknow-session-guard-test-487452.service	before_kill	 487470  487469  487470  487470 xuanyu   sleep           mapdl-session-guard-test 300
+2026-08-11T06:33:18Z	test	blueknow-session-guard-test-487452.service	before_kill	 487471  487469  487471  487471 xuanyu   sleep           hydra-pmi-session-guard-test 300

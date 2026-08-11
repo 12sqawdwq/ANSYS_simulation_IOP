@@ -1,0 +1,5 @@
+utc,label,unit,event,detail
+2026-08-11T06:33:16Z,test,blueknow-session-guard-test-487452.service,stop_requested,nested_setsid_term_kill
+2026-08-11T06:33:16Z,test,blueknow-session-guard-test-487452.service,term_sent,nested_setsid_term_kill
+2026-08-11T06:33:18Z,test,blueknow-session-guard-test-487452.service,kill_sent,nested_setsid_term_kill
+2026-08-11T06:33:18Z,test,blueknow-session-guard-test-487452.service,no_residual_processes,nested_setsid_term_kill

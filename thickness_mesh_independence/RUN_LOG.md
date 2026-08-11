@@ -66,4 +66,6 @@
 - 清理：按文件清单和哈希删除失败 attempt 的 47 个 DB/RST/scratch，表观 90,442,977,929 bytes、实际 83,147,467,776 bytes；没有删除接收结果。
 - 判定：`resource_guard_abort_with_orphan_process_cleanup`；0 mmHg 不接收，不能计算 $q$，旧二进制不可续算。
 - 修订：launcher 改用 user-systemd cgroup + 随机 campaign token，强制每 campaign 只运行一个压力，启动/中止门限改为内存 90/30 GiB、磁盘 150/100 GiB，监控间隔 10 s，并执行 TERM→KILL及零残留核验。
-- 开发期保护器测试：三个不同 SID/PGID 的嵌套进程中，模拟 MAPDL/Hydra 的进程忽略 TERM；2 s 后 KILL，最终残留 0。正式求解前仍需 clean-commit测试和新 campaign root。
+- 开发期保护器测试：三个不同 SID/PGID 的嵌套进程中，模拟 MAPDL/Hydra 的进程忽略 TERM；2 s 后 KILL，最终残留 0。
+- 正式保护器验证：clean commit `c62987d795711052170f3538517e38fff5c0aa18` 上同时通过 helper 和完整 launcher TERM 路径；完整 launcher 预期 return code 143、campaign incomplete、TERM→KILL、fixture残留 0、活动测试 unit 0，且未调用 ANSYS。外部根为 `/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T063315Z_c62987d7_session_guard_validation`。
+- 当前边界：旧失败二进制不可续算；只允许在新 commit、新 campaign root 和实时资源门通过后重算 0 mmHg。20 mmHg 仍未授权。

@@ -1,0 +1,2 @@
+SESSION_GUARD_TEST_PASS unit=blueknow-session-guard-test-487452.service contained_before=3 client_rc=255
+audit_dir=/tmp/blueknow-session-guard-test.WBWE0W

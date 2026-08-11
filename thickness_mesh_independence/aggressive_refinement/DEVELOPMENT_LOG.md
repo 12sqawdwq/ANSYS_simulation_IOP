@@ -85,7 +85,9 @@
 - 保存 TERM/KILL 前进程的 PID、PPID、SID、PGID 和命令；任何残留都会把 campaign 判为失败；
 - 信号和异常退出也通过 EXIT trap 清理完整 process set。
 
-开发期不涉及 ANSYS 的实机测试构造了三个不同 SID/PGID 的进程，其中模拟 MAPDL/Hydra 的两个子进程忽略 TERM。保护器在 2 s 后升级 KILL并确认残留为 0。另一次完整 launcher 测试以假 solver 通过 commit/resource gate、systemd unit和监控路径，再向 launcher 发 TERM；campaign 正确标记 incomplete，launcher return code 143，TERM→KILL 后 fixture 残留和活动 `blueknow-*` unit 均为 0。两项测试都必须在代码 commit 冻结后从5090d干净工作树再运行一次，才能把 launcher 状态升级为正式验证完成。
+开发期不涉及 ANSYS 的实机测试构造了三个不同 SID/PGID 的进程，其中模拟 MAPDL/Hydra 的两个子进程忽略 TERM。保护器在 2 s 后升级 KILL并确认残留为 0。另一次完整 launcher 测试以假 solver 通过 commit/resource gate、systemd unit和监控路径，再向 launcher 发 TERM；campaign 正确标记 incomplete，launcher return code 143，TERM→KILL 后 fixture 残留和活动 `blueknow-*` unit 均为 0。
+
+正式验证期间先后修复了两个仅属于测试 harness 的误判：KILL 后被 init 回收前的短暂进程状态，以及 `pgrep -f` 匹配上层 wrapper 命令行中的 fixture 字符串。两次不完整验证均未启动 ANSYS，外部目录保留 `VALIDATION_INCOMPLETE.txt` 和哈希。最终测试改为按 fixture 的精确 `argv[0]` 匹配，并在 clean commit `c62987d795711052170f3538517e38fff5c0aa18` 上完成：helper 和完整 launcher 信号测试均通过，残留进程 0、活动 `blueknow-*` unit 0。正式轻量证据位于 `results/session_guard_validation/`。
 
 ### 临时 ZFS ARC 调优
 

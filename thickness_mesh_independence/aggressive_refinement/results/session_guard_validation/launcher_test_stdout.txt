@@ -1,0 +1,2 @@
+ANCHOR_LAUNCHER_SIGNAL_TEST_PASS launcher_rc=143 unit=blueknow-l010-iop0-1786429998-488173.service
+audit_dir=/tmp/blueknow-anchor-launcher-test.RZsCEk

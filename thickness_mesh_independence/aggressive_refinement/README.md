@@ -10,7 +10,7 @@
 - **先锚点、后扩展**：先做 2.00 mm 的 0/20 mmHg 压力对，资源和 QC 通过后才考虑 1.60/1.80 mm；
 - **正式 P0 已完成**：commit `8768e6ec...` 上的 G015/L010 mesh-only 均通过；
 - **首次 P1 已被拒绝**：commit `d334fd1...` 上的 0 mmHg 算例因资源保护中止，20 mmHg 未启动；没有完整端点，也不能计算 \(q\)。旧 launcher 只终止 runner process group，MAPDL/MPI 独立 session 一度残留；失败二进制经审计后已清理；
-- **重启保护已重写，正式验证待冻结**：新 launcher 使用 user-systemd cgroup、随机 campaign token、TERM→KILL 升级和零残留核验；默认每个 campaign 只允许一个压力，0 mmHg 人工 QC 通过前不得启动 20 mmHg。
+- **重启保护已正式验证**：新 launcher 使用 user-systemd cgroup、随机 campaign token、TERM→KILL 升级和零残留核验；clean commit `c62987d...` 上的 helper 与完整 launcher 信号测试均通过且未调用 ANSYS。默认每个 campaign 只允许一个压力，0 mmHg 人工 QC 通过前不得启动 20 mmHg。
 
 详尽依据、资源表、阶段矩阵和判据见 [`EXPERIMENT_DESIGN.md`](EXPERIMENT_DESIGN.md)。
 
@@ -79,6 +79,7 @@ python thickness_mesh_independence/aggressive_refinement/scripts/analysis/estima
 - `results/development_preflight/`：不作为正式端点的开发期构网格证据；
 - `results/formal_preflight/`：commit `8768e6ec...` 上 G015/L010 的正式 P0 轻量结果、外部 DB 哈希和结论；
 - `results/failed_p1_resource_guard/`：首次 P1 资源中止、孤儿 session 和失败二进制清理的轻量审计；
+- `results/session_guard_validation/`：clean commit 上 helper 与完整 launcher TERM→KILL正式验证、进程快照和外部哈希；
 - `scripts/server/`：5090d 启动器、cgroup session guard 及其回归测试；
 - `scripts/analysis/`：资源收集、估算和压力对评估。
 

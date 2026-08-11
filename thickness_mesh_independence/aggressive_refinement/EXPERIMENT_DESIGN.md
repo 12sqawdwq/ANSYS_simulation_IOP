@@ -4,7 +4,7 @@
 
 本实验在独立 Git 分支 `aggressive-contact-mesh-experiment-20260810` 上设计，用于回答：在 5090d 当前资源条件下，能否在约 2–3 天墙钟预算内，把决定探头反力的中央接触与界面区域从 0.20 mm 进一步细化到名义 0.10 mm，并判断绝对零基线输出 \(q\) 是否开始收敛。
 
-当前状态是 **正式 clean-commit P0 mesh-only 已完成；首次 P1 的 0 mmHg 算例因资源保护中止并被拒绝；20 mmHg 未启动；cgroup session guard 已实现但等待 clean-commit 正式验证**。P0 不包含非线性求解。失败 P1 没有完整端点，也不产生可进入 \(q\) 比较的数据。
+当前状态是 **正式 clean-commit P0 mesh-only 已完成；首次 P1 的 0 mmHg 算例因资源保护中止并被拒绝；20 mmHg 未启动；cgroup session guard 已在 clean commit `c62987d...` 上正式验证**。P0 不包含非线性求解。失败 P1 没有完整端点，也不产生可进入 \(q\) 比较的数据。现在只允许在实时资源门再次通过后，从新 root 重算 0 mmHg。
 
 本实验不把“局部目标尺寸 0.10 mm”自动等同于网格无关。`EREFINE` 给出的是父四面体的一次局部细分，正式后处理仍必须审计实际边长分布、单元质量、接触表面密度和求解器规模。
 
@@ -162,8 +162,8 @@ q_{20}(h)=\frac{F(h,20,0.28)-F(h,0,0.28)}{A_{probe}},
 
 1. G015 和 L010 的正式 P0 已完成；
 2. 首次 P1 失败 attempt 已归档为资源中止，没有接收端点；
-3. 提交并同步 cgroup session guard，在 5090d 干净工作树上运行不涉及 ANSYS 的嵌套 `setsid` TERM→KILL 回归测试；
-4. 回读临时 ARC 上限、`MemAvailable>=90 GiB`、空闲磁盘、swap和活动求解器；
+3. cgroup session guard 已在 clean commit `c62987d...` 上完成不涉及 ANSYS 的嵌套 `setsid` 和完整 launcher TERM→KILL 正式回归测试；
+4. 每次正式启动前重新回读临时 ARC 上限、`MemAvailable>=90 GiB`、空闲磁盘、swap和活动求解器；
 5. 使用新 root 只运行 L010、2.00 mm、0 mmHg；
 6. 人工审核三个载荷步、`RUN COMPLETED`、ANSYS error 0、资源、文件规模和零残留；
 7. 只有第 6 步通过后，才另建 root 并单独授权 20 mmHg；

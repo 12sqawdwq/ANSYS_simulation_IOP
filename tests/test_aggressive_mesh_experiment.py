@@ -31,7 +31,7 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     config = json.loads(CONFIG.read_text(encoding="utf-8"))
     assert config["schema_version"] == 2
     assert config["git_branch"] == "aggressive-contact-mesh-experiment-20260810"
-    assert config["status"] == "failed_p1_audited_session_guard_implemented_formal_validation_pending"
+    assert config["status"] == "session_guard_formally_validated_iop0_restart_ready_not_started"
     assert config["formal_preflight_source_commit"] == "8768e6ec6afb41225d729c21aac80b467c266897"
     assert config["hard_budget"]["wall_clock_hours"] == 72
     assert config["hard_budget"]["maximum_simultaneous_mapdl_cases"] == 1
@@ -52,6 +52,18 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     assert failed["partial_endpoint_accepted"] is False
     assert failed["restart_from_old_binary_possible"] is False
     assert failed["restart_authorized"] is False
+    guard = config["session_guard_validation"]
+    assert guard["status"] == "formal_clean_commit_session_guard_validation_complete"
+    assert guard["source_commit"] == "c62987d795711052170f3538517e38fff5c0aa18"
+    assert guard["ansys_started"] is False
+    assert guard["nested_setsid_tested"] is True
+    assert guard["term_to_kill_escalation_tested"] is True
+    assert guard["launcher_signal_returncode"] == 143
+    assert guard["residual_processes"] == 0
+    readiness = config["restart_readiness"]
+    assert readiness["old_campaign_reusable"] is False
+    assert readiness["iop0_new_campaign_eligible"] is True
+    assert readiness["iop20_authorized"] is False
     strategies = {item["id"]: item for item in config["candidate_strategies"]}
     assert strategies["G010"]["decision"].startswith("reject_before_solve")
     assert strategies["L010"]["background_mesh_mm"] == pytest.approx(0.20)
@@ -287,3 +299,50 @@ def test_failed_p1_resource_abort_is_lightweight_hash_complete_and_not_an_endpoi
     extract = (root / "solver_resource_extract.txt").read_text(encoding="utf-8")
     assert "source_sha256,c8eb688d0b8a0367ad061f2b3661e86ce556b4b0f4a54d4454933504c9c43010" in extract
     assert "run_completed_observed,false" in extract
+
+
+def test_formal_session_guard_validation_is_clean_commit_hash_complete_and_non_numerical():
+    root = EXPERIMENT / "results" / "session_guard_validation"
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "formal_clean_commit_session_guard_validation_complete"
+    assert manifest["source_git_commit"] == "c62987d795711052170f3538517e38fff5c0aa18"
+    assert manifest["ansys_started"] is False
+    assert manifest["numerical_endpoint_created"] is False
+    assert manifest["tests"]["helper"] == {
+        "pass": True,
+        "contained_processes_before": 3,
+        "nested_setsid": True,
+        "term_to_kill": True,
+        "residual_processes": 0,
+    }
+    assert manifest["tests"]["launcher_signal"]["pass"] is True
+    assert manifest["tests"]["launcher_signal"]["expected_returncode"] == 143
+    assert manifest["tests"]["launcher_signal"]["campaign_incomplete"] is True
+    assert manifest["active_blueknow_units_after"] == 0
+    for item in manifest["artifacts"]:
+        path = root / item["path"]
+        assert path.is_file()
+        assert path.stat().st_size == item["size_bytes"]
+        assert sha256(path) == item["sha256"]
+        if "external_sha256" in item:
+            assert item["external_sha256"] == item["sha256"]
+
+    metadata = (root / "validation_metadata.csv").read_text(encoding="utf-8")
+    assert "source_worktree_clean,true" in metadata
+    assert "ansys_started,false" in metadata
+    assert "helper_test_pass,true" in metadata
+    assert "launcher_signal_test_pass,true" in metadata
+    residual = (root / "final_residual_check.txt").read_text(encoding="utf-8")
+    assert "remaining_fixture_processes=0" in residual
+    assert "active_blueknow_units=0" in residual
+    helper_events = (root / "helper" / "session_guard_events.csv").read_text(encoding="utf-8")
+    launcher_events = (root / "launcher" / "session_guard_events.csv").read_text(encoding="utf-8")
+    for text in (helper_events, launcher_events):
+        assert ",term_sent," in text
+        assert ",kill_sent," in text
+        assert ",no_residual_processes," in text
+    helper_processes = (root / "helper" / "session_guard_processes.tsv").read_text(encoding="utf-8")
+    assert "mapdl-session-guard-test" in helper_processes
+    assert "hydra-pmi-session-guard-test" in helper_processes
+    launcher_stdout = (root / "launcher_test_stdout.txt").read_text(encoding="utf-8")
+    assert "ANCHOR_LAUNCHER_SIGNAL_TEST_PASS launcher_rc=143" in launcher_stdout
