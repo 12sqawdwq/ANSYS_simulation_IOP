@@ -32,7 +32,7 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     config = json.loads(CONFIG.read_text(encoding="utf-8"))
     assert config["schema_version"] == 2
     assert config["git_branch"] == "l010-baseline-t1p25-experiment-20260813"
-    assert config["status"] == "t1p25_iop0_user_aborted_iop20_authorized_pending_launch"
+    assert config["status"] == "t1p25_iop0_user_aborted_iop20_guarded_campaign_running"
     assert config["formal_preflight_source_commit"] == "8768e6ec6afb41225d729c21aac80b467c266897"
     assert config["hard_budget"]["wall_clock_hours"] == 72
     assert config["hard_budget"]["maximum_simultaneous_mapdl_cases"] == 1
@@ -79,6 +79,8 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     assert baseline["iop0"]["scientific_result_available"] is False
     assert baseline["iop0"]["q_calculable"] is False
     assert baseline["iop20"]["authorized"] is True
+    assert baseline["iop20"]["status"] == "guarded_campaign_running_no_endpoint_yet"
+    assert baseline["iop20"]["source_commit"] == "5d3ece4bccf67e382bdfa639b0da80711c8008b8"
     assert baseline["iop20"]["scientific_result_available"] is False
     readiness = config["restart_readiness"]
     assert readiness["old_campaign_reusable"] is False
@@ -392,6 +394,38 @@ def test_t1p25_iop0_user_abort_is_hash_complete_and_not_an_endpoint():
         assert path.is_file()
         assert path.stat().st_size == item["size_bytes"]
         assert sha256(path) == item["sha256"]
+
+
+def test_t1p25_iop20_launch_record_freezes_single_pressure_and_baseline():
+    root = EXPERIMENT / "results" / "t1p25_iop20_launch"
+    metadata = json.loads((root / "iop20" / "run_metadata.json").read_text(encoding="utf-8"))
+    assert metadata["git_commit"] == "5d3ece4bccf67e382bdfa639b0da80711c8008b8"
+    assert metadata["git_dirty"] is False
+    assert metadata["iop_mmhg"] == pytest.approx(20.0)
+    assert metadata["np"] == 4
+    assert metadata["retry_count"] == 0
+    assert metadata["local_refine_level"] == 1
+    assert [case["eyelid_thickness_mm"] for case in metadata["cases"]] == [1.25]
+    status = (root / "campaign_status.csv").read_text(encoding="utf-8")
+    assert "thickness_mode,global_baseline" in status
+    assert "pressures_mmhg,20" in status
+    assert "pressures_mmhg,0" not in status
+    driver = (root / "iop20" / "eyelid_1p25mm_indent_0p28mm" / "attempt_1" / "driver.dat").read_text(encoding="utf-8")
+    assert "eyelid_thickness=0.00125" in driver
+    assert "iop_pa=2666.44736842" in driver
+
+
+def test_t1p25_iop20_failed_dispatch_never_started_solver():
+    root = EXPERIMENT / "results" / "t1p25_iop20_failed_dispatch"
+    audit = (root / "FAILED_DISPATCH_AUDIT.csv").read_text(encoding="utf-8")
+    assert "classification,dispatch_wrapper_failed_before_launcher" in audit
+    assert "outer_exit_code,126" in audit
+    assert "launcher_started,false" in audit
+    assert "ansys_started,false" in audit
+    assert "mpi_started,false" in audit
+    assert "solver_processes_after,0" in audit
+    assert "blueknow_running_units_after,0" in audit
+    assert "corrected_launch_requires_new_root,true" in audit
 
 
 def test_failed_p1_resource_abort_is_lightweight_hash_complete_and_not_an_endpoint():

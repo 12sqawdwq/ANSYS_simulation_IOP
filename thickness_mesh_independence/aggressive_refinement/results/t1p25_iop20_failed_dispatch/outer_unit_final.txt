@@ -1,0 +1,8 @@
+MainPID=0
+Result=exit-code
+ExecMainCode=1
+ExecMainStatus=126
+ControlGroup=
+Id=blueknow-l010-t1p25-iop20-campaign-20260813T034039Z.service
+ActiveState=failed
+SubState=failed

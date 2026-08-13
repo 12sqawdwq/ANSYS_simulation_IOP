@@ -1,0 +1,10 @@
+authorized_by,user_explicit_request
+authorization_utc,2026-08-13T03:40:39Z
+requested_action,stop_iop0_and_run_iop20_first
+scientific_boundary,iop20_alone_does_not_make_q_calculable
+source_commit,5d3ece4bccf67e382bdfa639b0da80711c8008b8
+mem_available_kib,112724644
+free_disk_kib,456996736
+zfs_arc_max,17179869184
+solver_processes_before,0
+blueknow_running_units_before,0

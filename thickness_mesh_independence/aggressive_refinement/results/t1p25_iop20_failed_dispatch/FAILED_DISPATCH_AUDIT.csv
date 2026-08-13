@@ -1,0 +1,11 @@
+classification,dispatch_wrapper_failed_before_launcher
+reason,direct_execution_permission_denied
+outer_exit_code,126
+launcher_started,false
+ansys_started,false
+mpi_started,false
+solver_processes_after,0
+blueknow_running_units_after,0
+root_reusable,false
+corrected_launch_requires_new_root,true
+audited_at_utc,2026-08-13T03:42:18Z
