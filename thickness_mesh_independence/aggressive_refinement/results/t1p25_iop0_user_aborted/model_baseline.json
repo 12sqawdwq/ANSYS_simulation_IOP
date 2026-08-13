@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "effective_date": "2026-08-11",
+  "canonical_baseline": {
+    "eyelid_thickness_mm": 1.25
+  },
+  "scope": {
+    "default_for_all_new_experiments": true,
+    "historical_results_are_immutable": true,
+    "changes_other_model_parameters": false
+  },
+  "override_policy": {
+    "explicit_actual_thickness_required": true,
+    "explicit_reason_required": true,
+    "allowed_experiment_roles": [
+      "eyelid_thickness_sweep",
+      "thickness_mesh_independence",
+      "thickness_boundary_or_sensitivity_test"
+    ]
+  }
+}

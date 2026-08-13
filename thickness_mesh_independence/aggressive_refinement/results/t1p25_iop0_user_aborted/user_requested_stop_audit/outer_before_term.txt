@@ -1,0 +1,8 @@
+MainPID=926053
+Result=success
+ExecMainCode=0
+ExecMainStatus=0
+ControlGroup=/user.slice/user-1000.slice/user@1000.service/app.slice/blueknow-l010-t1p25-iop0-campaign-20260813T025418Z.service
+Id=blueknow-l010-t1p25-iop0-campaign-20260813T025418Z.service
+ActiveState=active
+SubState=running

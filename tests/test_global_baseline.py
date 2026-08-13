@@ -131,7 +131,8 @@ def test_thick_end_mesh_experiments_declare_baseline_roles() -> None:
     assert reference["legacy_explicit_overrides_mm"] == [1.6, 1.8, 2.0]
     assert reference["override_reason"].strip()
     assert aggressive["baseline_t1p25_campaign"]["eyelid_thickness_mm"] == 1.25
-    assert aggressive["baseline_t1p25_campaign"]["iop20_authorized"] is False
+    assert aggressive["baseline_t1p25_campaign"]["iop20"]["authorized"] is True
+    assert aggressive["baseline_t1p25_campaign"]["iop20"]["scientific_result_available"] is False
 
 
 def test_standard_launcher_passes_the_global_baseline_explicitly() -> None:

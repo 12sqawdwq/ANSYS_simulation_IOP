@@ -1,0 +1,7 @@
+classification,user_requested_priority_switch_abort
+endpoint_complete,false
+endpoint_accepted,false
+partial_result_eligible_for_scientific_comparison,false
+mapdl_error_count,0
+completed_substeps,8
+run_completed_count,0

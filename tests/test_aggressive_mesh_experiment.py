@@ -32,7 +32,7 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     config = json.loads(CONFIG.read_text(encoding="utf-8"))
     assert config["schema_version"] == 2
     assert config["git_branch"] == "l010-baseline-t1p25-experiment-20260813"
-    assert config["status"] == "t1p25_mesh_preflight_complete_iop0_guarded_campaign_running"
+    assert config["status"] == "t1p25_iop0_user_aborted_iop20_authorized_pending_launch"
     assert config["formal_preflight_source_commit"] == "8768e6ec6afb41225d729c21aac80b467c266897"
     assert config["hard_budget"]["wall_clock_hours"] == 72
     assert config["hard_budget"]["maximum_simultaneous_mapdl_cases"] == 1
@@ -73,13 +73,17 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     assert baseline["mesh_preflight"]["status"] == "formal_t1p25_mesh_only_preflight_complete"
     assert baseline["mesh_preflight"]["mapdl_error_count"] == 0
     assert baseline["mesh_preflight"]["shape_error_elements"] == 0
-    assert baseline["iop0"]["status"] == "guarded_campaign_running_no_endpoint_yet"
+    assert baseline["iop0"]["status"] == "user_requested_priority_switch_abort_complete"
+    assert baseline["iop0"]["completed_substeps_at_stop"] == 8
+    assert baseline["iop0"]["run_completed"] is False
     assert baseline["iop0"]["scientific_result_available"] is False
-    assert baseline["iop20_authorized"] is False
+    assert baseline["iop0"]["q_calculable"] is False
+    assert baseline["iop20"]["authorized"] is True
+    assert baseline["iop20"]["scientific_result_available"] is False
     readiness = config["restart_readiness"]
     assert readiness["old_campaign_reusable"] is False
     assert readiness["iop0_new_campaign_eligible"] is True
-    assert readiness["iop20_authorized"] is False
+    assert readiness["iop20_authorized"] is True
     strategies = {item["id"]: item for item in config["candidate_strategies"]}
     assert strategies["G010"]["decision"].startswith("reject_before_solve")
     assert strategies["L010"]["background_mesh_mm"] == pytest.approx(0.20)
@@ -359,6 +363,35 @@ def test_t1p25_iop0_launch_record_freezes_baseline_and_single_pressure():
     assert "thickness_mode,global_baseline" in status
     assert "pressures_mmhg,0" in status
     assert "pressures_mmhg,20" not in status
+
+
+def test_t1p25_iop0_user_abort_is_hash_complete_and_not_an_endpoint():
+    root = EXPERIMENT / "results" / "t1p25_iop0_user_aborted"
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "user_requested_priority_switch_abort_complete"
+    assert manifest["classification"] == "user_requested_priority_switch_abort"
+    assert manifest["source_git_commit"] == "011c77e74e08fd7619cb9cda3d834cfe3b8506dd"
+    assert manifest["condition"]["eyelid_thickness_mm"] == pytest.approx(1.25)
+    assert manifest["condition"]["iop_mmhg"] == pytest.approx(0.0)
+    assert manifest["stop"]["launcher_exit_code"] == 143
+    assert manifest["stop"]["token_processes_after"] == 0
+    assert manifest["stop"]["solver_processes_after"] == 0
+    assert manifest["stop"]["active_blueknow_units_after"] == 0
+    numerical = manifest["numerical_state_at_stop"]
+    assert numerical["mapdl_error_count"] == 0
+    assert numerical["completed_substeps"] == 8
+    assert numerical["run_completed"] is False
+    assert numerical["accepted_endpoint"] is False
+    assert numerical["q_calculable"] is False
+    cleanup = manifest["cleanup"]
+    assert cleanup["files_deleted"] == 46
+    assert cleanup["apparent_bytes_deleted"] == 9372703404
+    assert cleanup["remaining_manifest_entries"] == 0
+    for item in manifest["artifacts"]:
+        path = root / item["path"]
+        assert path.is_file()
+        assert path.stat().st_size == item["size_bytes"]
+        assert sha256(path) == item["sha256"]
 
 
 def test_failed_p1_resource_abort_is_lightweight_hash_complete_and_not_an_endpoint():

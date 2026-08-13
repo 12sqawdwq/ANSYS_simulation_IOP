@@ -1,0 +1,15 @@
+xoff=0
+indent=0.00028
+retry_mode=0
+encoded_mode=10
+mesh_size=0.0002
+eyelid_thickness=0.00125
+iop_pa=0
+eyelid_material_scale=1
+cornea_material_scale=0.75
+initial_gap=0.0003
+*use,param_eye_sweep.mac,xoff,indent,encoded_mode,mesh_size,eyelid_thickness,iop_pa,eyelid_material_scale,cornea_material_scale,initial_gap
+resume,eyelid_1p25mm_indent_0p28mm,db
+/filname,eyelid_1p25mm_indent_0p28mm
+*use,post_sweep.mac
+*use,post_thickness_geometry.mac

@@ -1,0 +1,4 @@
+term_requested_at_utc,2026-08-13T03:29:50Z
+target_unit,blueknow-l010-t1p25-iop0-campaign-20260813T025418Z.service
+signal,TERM
+kill_whom,main

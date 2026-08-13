@@ -1,0 +1,7 @@
+MainPID=0
+Result=exit-code
+ExecMainCode=1
+ExecMainStatus=143
+ControlGroup=
+ActiveState=failed
+SubState=failed

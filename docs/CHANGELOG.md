@@ -6,7 +6,8 @@
 
 - 建立 `l010-baseline-t1p25-experiment-20260813` 独立实验分支，将L010 launcher和mesh-only预检改为默认读取1.25 mm全局基线，同时保留1.60/1.80/2.00 mm厚度研究的显式覆盖；
 - 接收commit `abf4175...` 上L010、2.00 mm、0 mmHg完整端点，纳入轻量manifest、资源曲线、接触QC图和外部RST/DB/日志SHA-256；明确该端点不是1.25 mm基线结果，且没有20 mmHg或 \(q\)；
-- 在clean commit `011c77e...` 上完成1.25 mm专用P0：L010为655,574个实体单元、940,688个节点，MAPDL error与shape error均为0；随后只启动1.25 mm、0 mmHg guarded campaign，271.16万方程采用in-core求解；20 mmHg未启动且未授权；
+- 在clean commit `011c77e...` 上完成1.25 mm专用P0：L010为655,574个实体单元、940,688个节点，MAPDL error与shape error均为0；随后启动1.25 mm、0 mmHg guarded campaign，271.16万方程采用in-core求解；
+- 按用户明确要求停止未完成的1.25 mm、0 mmHg并优先运行20 mmHg：外层launcher TERM返回143，内层cgroup、campaign token及ANSYS/MPI残留均为0；中止时MAPDL error 0、完成8个子步但无`RUN COMPLETED`，故不接收为端点；保存完整清理前哈希后删除46个失败二进制/scratch（表观9,372,703,404 bytes），授权20 mmHg使用新root单压力启动，同时保持$q$不可计算直至0 mmHg重跑并接收；
 - 将所有新实验的统一参考眼睑厚度冻结为 1.25 mm，新增 `config/model_baseline.json` 机器可读真源和仓库级叙述文档；
 - 普通压入/偏心 profile、5090d 标准 launcher 和 APDL 直接调用兜底统一读取或使用 1.25 mm，并在新运行元数据中记录基线配置哈希、实际厚度模式和显式覆盖原因；
 - 厚度扫描、厚端网格无关性及 L010 2.00 mm 锚点保留为预注册显式厚度覆盖，既有 1.00 mm/其他厚度结果不追溯改写，正在运行的 2.00 mm campaign 不改变输入；

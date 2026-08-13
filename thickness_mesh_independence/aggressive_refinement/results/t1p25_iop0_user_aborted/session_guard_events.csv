@@ -1,0 +1,4 @@
+utc,label,unit,event,detail
+2026-08-13T03:29:59Z,iop0,blueknow-l010-iop0-1786589658-926053.service,stop_requested,launcher_signal_TERM
+2026-08-13T03:30:00Z,iop0,blueknow-l010-iop0-1786589658-926053.service,term_sent,launcher_signal_TERM
+2026-08-13T03:30:02Z,iop0,blueknow-l010-iop0-1786589658-926053.service,no_residual_processes,launcher_signal_TERM

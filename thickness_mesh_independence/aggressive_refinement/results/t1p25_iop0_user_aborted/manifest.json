@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "status": "user_requested_priority_switch_abort_complete",
+  "classification": "user_requested_priority_switch_abort",
+  "source_git_commit": "011c77e74e08fd7619cb9cda3d834cfe3b8506dd",
+  "external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T025418Z_011c77e7_L010_h1p25_iop0_guarded_np4",
+  "condition": {
+    "eyelid_thickness_mm": 1.25,
+    "iop_mmhg": 0.0,
+    "local_refine_level": 1,
+    "np": 4,
+    "equations": 2711583,
+    "solver_mode": "in_core"
+  },
+  "stop": {
+    "launcher_signal": "TERM",
+    "launcher_exit_code": 143,
+    "inner_unit_final_state": "inactive/dead",
+    "token_processes_after": 0,
+    "solver_processes_after": 0,
+    "active_blueknow_units_after": 0
+  },
+  "numerical_state_at_stop": {
+    "mapdl_error_count": 0,
+    "completed_substeps": 8,
+    "run_completed": false,
+    "complete_endpoint": false,
+    "accepted_endpoint": false,
+    "eligible_for_scientific_comparison": false,
+    "q_calculable": false
+  },
+  "cleanup": {
+    "files_deleted": 46,
+    "apparent_bytes_deleted": 9372703404,
+    "remaining_manifest_entries": 0,
+    "policy": "Only incomplete RST/DB and solver scratch from attempt_1 were deleted after path, size, mtime, class, and SHA-256 capture."
+  },
+  "artifacts": [
+    {
+      "path": "CAMPAIGN_INCOMPLETE",
+      "size_bytes": 11,
+      "sha256": "2d0ffd0d61facda134ae7325f59317526607541e74443c1a45c224fb36bb2525"
+    },
+    {
+      "path": "campaign_status.csv",
+      "size_bytes": 697,
+      "sha256": "85d3683c16b2e568499341986166b8fac8eb7be8b8c36316eb8759dd582c8395"
+    },
+    {
+      "path": "experiment.json",
+      "size_bytes": 14619,
+      "sha256": "a8f11f656832beac036e339024556844bede2c7f9beb5c6d870514ef62c7fcff"
+    },
+    {
+      "path": "iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/aggressive_mesh_inventory.csv",
+      "size_bytes": 270,
+      "sha256": "837c084b8e7128bcd2af13572db4dee0880be8a0a2acf7532e688cf4c88ef5f7"
+    },
+    {
+      "path": "iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/driver.dat",
+      "size_bytes": 440,
+      "sha256": "b79387ccffe10f03ffdf16bfaa4ea5bb6bb665d48e18fc0c7b74eacbab144f5f"
+    },
+    {
+      "path": "iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/solve.out",
+      "size_bytes": 63613,
+      "sha256": "cd4f9521c02e36f7f6401a8fb7edc6e895b816ea522fe8385a4ab0117004364e"
+    },
+    {
+      "path": "iop0/run_manifest.csv",
+      "size_bytes": 2021,
+      "sha256": "0d7c5175d9c7259dc6ba4be4bd29c7a7f9585d6d8f81752102d1478dab48dd82"
+    },
+    {
+      "path": "iop0/run_metadata.json",
+      "size_bytes": 3826,
+      "sha256": "a2b8c192a7619e6a0380efe85a415b23e95975aeb4831efbe0e10c0f3d816e43"
+    },
+    {
+      "path": "model_baseline.json",
+      "size_bytes": 546,
+      "sha256": "569aea63f1320a59de250a090e23eee1c879ecd0efc59ff05b49e1de230cf60c"
+    },
+    {
+      "path": "model_baseline.sha256",
+      "size_bytes": 139,
+      "sha256": "e5053e2671d407289e3e0545a61b429bf667f0c99cb62968be8262dddfd2db4d"
+    },
+    {
+      "path": "resource_gates.csv",
+      "size_bytes": 91,
+      "sha256": "d7661723e5d72d8144c858e2200e59a4b8ebe031647dfd805d7f53226eb9d219"
+    },
+    {
+      "path": "resource_monitor.csv",
+      "size_bytes": 9592,
+      "sha256": "a701d04b95e41feb0ca49306b2f453298ad839899e0de1514eb52fd006dbcc33"
+    },
+    {
+      "path": "session_guard_events.csv",
+      "size_bytes": 351,
+      "sha256": "5246fb9c5537ca27b0bdfa995ad9b20092728e1e313a304c31f8a912fdf5cd42"
+    },
+    {
+      "path": "session_guard_processes.tsv",
+      "size_bytes": 9756,
+      "sha256": "79317bfc575e82855834f60b9b6f9b538875efec12ca9eca7a494b32e1d09234"
+    },
+    {
+      "path": "session_guard_unit_status.csv",
+      "size_bytes": 348,
+      "sha256": "a3c06ae316e24cb43422a0caee8bc49c42c2cc6326ab77f350ce6bb012e627bd"
+    },
+    {
+      "path": "source_git_commit.txt",
+      "size_bytes": 41,
+      "sha256": "40dea591ad909ebaad156403955cbb6f930426f4f3daed8eae1a418331987499"
+    },
+    {
+      "path": "user_requested_stop_audit/all_files_before_cleanup_sha256.tsv",
+      "size_bytes": 16086,
+      "sha256": "8eff4b002c999eca3a23850492d7ecaaee201dabc3b07ac8307552dcd6acd725"
+    },
+    {
+      "path": "user_requested_stop_audit/cleanup_summary.csv",
+      "size_bytes": 395,
+      "sha256": "b834a117a611f9511fc84d5060b5b0b86c73b5ca2f53e2d3044212890be1bfca"
+    },
+    {
+      "path": "user_requested_stop_audit/containment_before_cleanup.csv",
+      "size_bytes": 98,
+      "sha256": "2499ea3ca22a94708b845de99db3e22716bffe1bcd4f95a11970eecfc3561bb3"
+    },
+    {
+      "path": "user_requested_stop_audit/deleted_binary_manifest.tsv",
+      "size_bytes": 8563,
+      "sha256": "013e0fbf1bed182153fe5df0ff1e102f68d72f59b72cd7f38839bbc3c0e38c62"
+    },
+    {
+      "path": "user_requested_stop_audit/files_before_term.tsv",
+      "size_bytes": 21053,
+      "sha256": "c534a935b7035b6fe7f9101bf95d7485a4588500e2a451ba2d4da36196864bf0"
+    },
+    {
+      "path": "user_requested_stop_audit/final_lightweight_evidence_sha256.txt",
+      "size_bytes": 3806,
+      "sha256": "2238d2b68695c9dae25d57a2f010769d1e61f244757cc9b517960e6c9ce1cd01"
+    },
+    {
+      "path": "user_requested_stop_audit/final_status.csv",
+      "size_bytes": 219,
+      "sha256": "0a463ff5b135a78e0b2f7ec69c6925e5157bd322e8efff1eb1ec0a68b17c423f"
+    },
+    {
+      "path": "user_requested_stop_audit/inner_after_stop.txt",
+      "size_bytes": 106,
+      "sha256": "c0c0d89c3992d250af9153603968c67cd5d33704cee20d006a7653eb68c29ef1"
+    },
+    {
+      "path": "user_requested_stop_audit/inner_before_term.txt",
+      "size_bytes": 260,
+      "sha256": "47638f74a7e99f2d31056a4f9338c862bc4ea743914fe2ad2b2149699b6c04b2"
+    },
+    {
+      "path": "user_requested_stop_audit/outer_after_stop.txt",
+      "size_bytes": 110,
+      "sha256": "bce20fa40b71bc3f651a897f515fc189f5414bc066042fff9be153155be214ac"
+    },
+    {
+      "path": "user_requested_stop_audit/outer_before_term.txt",
+      "size_bytes": 288,
+      "sha256": "368753f3ce3b4bbcfc05e056a38a1176b61b4c7a5c06e0fa850b1e907cd7c35b"
+    },
+    {
+      "path": "user_requested_stop_audit/pre_term_lightweight_sha256.txt",
+      "size_bytes": 1418,
+      "sha256": "21fa36f21d0ca2954719d63b09850bc6fc50ffca97b38c5fcb3b86985a1d1a2c"
+    },
+    {
+      "path": "user_requested_stop_audit/processes_after_stop.txt",
+      "size_bytes": 1244,
+      "sha256": "4f150cc09db55bc93f5149a24f1f11c58f44b8088b80b5fc92abb8080a2d3bef"
+    },
+    {
+      "path": "user_requested_stop_audit/processes_before_term.txt",
+      "size_bytes": 11177,
+      "sha256": "ebbda067cf904634267f2459a58da2befbce67a20ab4b0f396fd7a68615bfab2"
+    },
+    {
+      "path": "user_requested_stop_audit/request.csv",
+      "size_bytes": 175,
+      "sha256": "45028b22516e2a47c7926389fec8e78fe19c517d97255a580bfec8fd70104d59"
+    },
+    {
+      "path": "user_requested_stop_audit/solver_status_before_term.csv",
+      "size_bytes": 63,
+      "sha256": "cc277cc506b267d4f0be2904763a2206475fd6f7b1be6d956cebc104f9e36c99"
+    },
+    {
+      "path": "user_requested_stop_audit/term_request.csv",
+      "size_bytes": 141,
+      "sha256": "af1efadf4f1fecc467a5ddad46104ba9d3da2d27e8fba15336fb803d3a0117f3"
+    }
+  ],
+  "decision": "The IOP0 run was actively stopped at the user's request to prioritize IOP20. It is not a numerical failure, accepted endpoint, baseline force, or member of a pressure pair; it must be rerun from a new root before q can be calculated."
+}
