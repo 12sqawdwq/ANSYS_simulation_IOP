@@ -1,0 +1,22 @@
+captured_at_utc,2026-08-13T14:12:09Z
+source_solve_out,/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T140838Z_6ef45199_L010_h1p25_iop20_ooc_last_np4/iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/solve.out
+1369:  Number of equations =     2711583,    Maximum wavefront =    537
+1374:  Equation solver memory allocated                     =     2.223 GB
+1375:  Equation solver memory required for in-core mode     =     8.602 GB
+1376:  Equation solver memory required for out-of-core mode =     2.142 GB
+1377:  Total (solver and non-solver) memory allocated       =     5.975 GB
+1382:  Equation solver memory allocated                     =     8.662 GB
+1383:  Equation solver memory required for in-core mode     =    48.900 GB
+1384:  Equation solver memory required for out-of-core mode =     8.350 GB
+1385:  Total (solver and non-solver) memory allocated       =    17.776 GB
+1388: The Distributed Sparse Matrix Solver is currently running in the        
+1389: out-of-core memory mode.  This memory mode may provide significantly    
+---database-output-controls---
+1334-       F       0.000       0.1000E-01   2      0.000    
+1335-   PRINT OUTPUT CONTROLS . . . . . . . . . . . . .NO PRINTOUT
+1336:   DATABASE OUTPUT CONTROLS
+1337-      ITEM     FREQUENCY   COMPONENT
+1338-       ALL       LAST               
+1339-
+1340-
+1341- SOLUTION MONITORING INFO IS WRITTEN TO FILE= eyelid_1p25mm_indent_0p28mm.mntr                                                                                                                                                                                                                                    

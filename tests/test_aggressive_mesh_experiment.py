@@ -32,7 +32,7 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     config = json.loads(CONFIG.read_text(encoding="utf-8"))
     assert config["schema_version"] == 2
     assert config["git_branch"] == "l010-baseline-t1p25-experiment-20260813"
-    assert config["status"] == "t1p25_iop20_resource_abort_archived_out_of_core_rerun_ready"
+    assert config["status"] == "t1p25_iop20_out_of_core_rerun_active_no_endpoint_yet"
     assert config["formal_preflight_source_commit"] == "8768e6ec6afb41225d729c21aac80b467c266897"
     assert config["hard_budget"]["wall_clock_hours"] == 72
     assert config["hard_budget"]["maximum_simultaneous_mapdl_cases"] == 1
@@ -87,6 +87,14 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     assert baseline["iop20"]["formal_f20_available"] is False
     assert baseline["iop20"]["q_calculable"] is False
     assert baseline["iop20"]["restart_from_old_binary_possible"] is False
+    rerun = baseline["iop20"]["out_of_core_rerun"]
+    assert rerun["status"] == "active_mode_verified_no_endpoint_yet"
+    assert rerun["source_commit"] == "6ef45199bec06139538c5a68a1538ae683ea1c3b"
+    assert rerun["solver_memory_mode_requested"] == "out-of-core"
+    assert rerun["solver_memory_mode_observed"] == "out-of-core"
+    assert rerun["result_output_frequency"] == "last"
+    assert rerun["run_completed"] is False
+    assert rerun["scientific_result_available"] is False
     readiness = config["restart_readiness"]
     assert readiness["old_campaign_reusable"] is False
     assert readiness["iop0_new_campaign_eligible"] is True
@@ -462,6 +470,34 @@ def test_t1p25_iop20_resource_abort_is_hash_complete_and_not_an_endpoint():
         assert path.is_file()
         assert path.stat().st_size == item["size_bytes"]
         assert sha256(path) == item["sha256"]
+
+
+def test_t1p25_iop20_out_of_core_launch_record_freezes_verified_strategy():
+    root = EXPERIMENT / "results" / "t1p25_iop20_ooc_launch"
+    metadata = json.loads((root / "run_metadata_at_launch.json").read_text(encoding="utf-8"))
+    assert metadata["git_commit"] == "6ef45199bec06139538c5a68a1538ae683ea1c3b"
+    assert metadata["git_dirty"] is False
+    assert metadata["iop_mmhg"] == pytest.approx(20.0)
+    assert metadata["solver_memory_mode"] == "out-of-core"
+    assert metadata["result_output_frequency"] == "last"
+    assert metadata["np"] == 4
+    assert metadata["retry_count"] == 0
+    assert [case["eyelid_thickness_mm"] for case in metadata["cases"]] == [1.25]
+    driver = (root / "driver.dat").read_text(encoding="utf-8")
+    assert "solver_out_of_core=1" in driver
+    assert "result_last_only=1" in driver
+    assert "encoded_mode=11010" in driver
+    mode = (root / "solver_mode_excerpt.txt").read_text(encoding="utf-8")
+    assert "Number of equations =     2711583" in mode
+    assert "Total (solver and non-solver) memory allocated       =    17.776 GB" in mode
+    assert "out-of-core memory mode" in mode
+    audit = (root / "solver_mode_audit.csv").read_text(encoding="utf-8")
+    assert ",iop20,solver_mode_verified,out-of-core" in audit
+    status = (root / "campaign_status_at_mode_verification.csv").read_text(encoding="utf-8")
+    assert "solver_memory_mode,out-of-core" in status
+    assert "result_output_frequency,last" in status
+    assert "pressures_mmhg,20" in status
+    assert "pressures_mmhg,0" not in status
 
 
 def test_t1p25_iop20_failed_dispatch_never_started_solver():

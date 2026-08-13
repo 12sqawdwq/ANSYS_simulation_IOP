@@ -1,0 +1,11 @@
+captured_at_utc,2026-08-13T14:12:09Z
+Result=success
+ExecMainStatus=0
+ActiveState=active
+SubState=running
+Result=success
+ExecMainStatus=0
+ActiveState=active
+SubState=running
+solver_processes,5
+2026-08-13T14:12:08Z,iop20,87462884,429605760
