@@ -1,0 +1,15 @@
+1369:  Number of equations =     2711583,    Maximum wavefront =    537
+1374:  Equation solver memory allocated                     =     2.223 GB
+1375:  Equation solver memory required for in-core mode     =     8.602 GB
+1376:  Equation solver memory required for out-of-core mode =     2.142 GB
+1377:  Total (solver and non-solver) memory allocated       =     5.975 GB
+1382:  Equation solver memory allocated                     =     8.662 GB
+1383:  Equation solver memory required for in-core mode     =    48.900 GB
+1384:  Equation solver memory required for out-of-core mode =     8.350 GB
+1385:  Total (solver and non-solver) memory allocated       =    17.776 GB
+1388: The Distributed Sparse Matrix Solver is currently running in the        
+1389: out-of-core memory mode.  This memory mode may provide significantly    
+3189: NUMBER OF WARNING MESSAGES ENCOUNTERED=         11
+3190: NUMBER OF ERROR   MESSAGES ENCOUNTERED=          0
+3257:Sum of disk space used on all processes           :    81018.4 MB
+3270: |                               RUN COMPLETED                                 |

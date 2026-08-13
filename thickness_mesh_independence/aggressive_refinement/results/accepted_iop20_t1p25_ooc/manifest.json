@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "status": "accepted_complete_l010_t1p25_iop20_out_of_core_endpoint",
+  "source_git_commit": "6ef45199bec06139538c5a68a1538ae683ea1c3b",
+  "source_campaign_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T140838Z_6ef45199_L010_h1p25_iop20_ooc_last_np4",
+  "condition": {
+    "eyelid_thickness_mm": 1.25,
+    "iop_mmhg": 20.0,
+    "indent_mm": 0.28,
+    "background_mesh_mm": 0.2,
+    "local_refine_level": 1,
+    "nominal_local_target_mm": 0.1,
+    "np": 4,
+    "solver_memory_mode": "out-of-core",
+    "result_output_frequency": "last"
+  },
+  "qc": {
+    "campaign_complete": true,
+    "runner_complete": true,
+    "run_completed": true,
+    "ansys_error_zero": true,
+    "three_load_steps_converged": true,
+    "all_29_substeps_completed": true,
+    "out_of_core_verified": true,
+    "last_only_results_verified": true,
+    "penetration_within_0p03_mm": true,
+    "preload_contact_absent": true,
+    "first_touch_force_within_1_mn": true,
+    "no_rejection_markers": true,
+    "no_residual_solver_session": true
+  },
+  "result": {
+    "probe_fy_n": -0.18100135590385,
+    "contact_area_mm2": 5.858317222134899,
+    "maximum_contact_pressure_kpa": 46.838321614583,
+    "maximum_penetration_mm": 0.0064352781616132,
+    "cornea_peak_kpa": 44.488354090264004,
+    "eyelid_peak_kpa": 27.088741188774,
+    "elapsed_seconds": 25418.533,
+    "completed_substeps": 29,
+    "cumulative_equilibrium_iterations": 56,
+    "ansys_warning_summary_count": 11,
+    "warning_message_occurrences": 12
+  },
+  "resources": {
+    "minimum_mem_available_kib": 73529580,
+    "minimum_mem_available_gib": 70.12327194213867,
+    "minimum_free_disk_kib": 383995392,
+    "minimum_free_disk_gib": 366.20654296875,
+    "solver_non_solver_allocated_gb_all_ranks": 17.776,
+    "pruned_files": 21,
+    "pruned_bytes": 10472771730
+  },
+  "warning_assessment": {
+    "accepted": true,
+    "shape_warning_elements": 9,
+    "shape_errors": 0,
+    "categories": [
+      "mesh shape warnings without shape error",
+      "known coincident contact/target node warning",
+      "known bonded initial offset warning",
+      "small reference-force convergence warning",
+      "expected out-of-core I/O performance warning"
+    ],
+    "decision": "Warnings are consistent with the preflight/contact formulation and the explicitly selected out-of-core strategy; no warning indicates endpoint nonconvergence or invalid load-path metrics."
+  },
+  "external_artifacts": [
+    {
+      "role": "rst",
+      "relative_path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.rst",
+      "size_bytes": 1788280832,
+      "allocated_bytes": 1355564032,
+      "sha256": "9cb58e16f9430696a533bf384fc858210659420a865dca144e8d2f7407715084"
+    },
+    {
+      "role": "db",
+      "relative_path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.db",
+      "size_bytes": 497614848,
+      "allocated_bytes": 169387008,
+      "sha256": "39487814335e50ddc1350dce40624d5336b5d345b4e817ea4ac305903d484889"
+    },
+    {
+      "role": "solve_out",
+      "relative_path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/solve.out",
+      "size_bytes": 136890,
+      "allocated_bytes": 50176,
+      "sha256": "997ef89d1bb9b18d98dc14f71943be08de66eb3b991e7d24e256e56d20554b12"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "aggressive_mesh_inventory.csv",
+      "size_bytes": 270,
+      "sha256": "837c084b8e7128bcd2af13572db4dee0880be8a0a2acf7532e688cf4c88ef5f7"
+    },
+    {
+      "path": "all_files_sha256.tsv",
+      "size_bytes": 8642,
+      "sha256": "0a0c4c34509a7eaa8c9660851c6a477ef5255138aca1453ab94efd9c179fef05"
+    },
+    {
+      "path": "applanation_boundary_qc.png",
+      "size_bytes": 79591,
+      "sha256": "0a3ee82c13f2f8c278277aa45298cacbaab006e74f190687d725c6122dfd1868"
+    },
+    {
+      "path": "attempt.json",
+      "size_bytes": 1316,
+      "sha256": "08247d5ce4f84fd11a6b6e3f8b36fc87efb7c22f096f99791e259c62a3cf50c0"
+    },
+    {
+      "path": "campaign_status.csv",
+      "size_bytes": 819,
+      "sha256": "1d1a6404ba40222f2a914ef53353e97b75d59460a4336a5b4eb1fdafb0963b85"
+    },
+    {
+      "path": "completed_substeps.txt",
+      "size_bytes": 2030,
+      "sha256": "683546f9bc8b6e1ba5970c38c484127fc2f834a11fefa06f3318453abe2729b6"
+    },
+    {
+      "path": "driver.dat",
+      "size_bytes": 495,
+      "sha256": "137e9e7cbdc4a482a40db7c3a4417e9b2f6313ab5c9ac17a7a60c1f9e8a6f8bf"
+    },
+    {
+      "path": "final_status.csv",
+      "size_bytes": 405,
+      "sha256": "74f33c98f8f60de30a49ce855786d2d0a1bba43dc5fb2457714e34cd4180d06f"
+    },
+    {
+      "path": "inner_unit_status.txt",
+      "size_bytes": 114,
+      "sha256": "eb6ac5ab37daab3500e9944688ce5ee6c031518331e01835aa3f7efd706fe6a3"
+    },
+    {
+      "path": "lightweight_sha256.txt",
+      "size_bytes": 5005,
+      "sha256": "913f492aeb36aee936e605beb570d66bd2b1814cc48fb4352139b126154f8ea7"
+    },
+    {
+      "path": "load_path.csv",
+      "size_bytes": 277,
+      "sha256": "acf22cf86d5276fafa31988652a55200985d9df961eaa46dca1a8e23b328ffef"
+    },
+    {
+      "path": "metrics.csv",
+      "size_bytes": 300,
+      "sha256": "87f003a5c0359e89c2b957da2afeba1e3fe45ff7c1a8fd260b39a07520fdcd54"
+    },
+    {
+      "path": "outer_unit_status.txt",
+      "size_bytes": 114,
+      "sha256": "eb6ac5ab37daab3500e9944688ce5ee6c031518331e01835aa3f7efd706fe6a3"
+    },
+    {
+      "path": "primary_external_artifacts.tsv",
+      "size_bytes": 525,
+      "sha256": "4acb76b16bba4c3a2d9b23763a0d6d5f6cf815c36444ed2334ce1ebd03a32b6f"
+    },
+    {
+      "path": "rejection_markers.txt",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "resource_extrema.csv",
+      "size_bytes": 214,
+      "sha256": "2de7af1f68dcc34b36cd0689c3bbf04978ca40469083ec6216e80fba21f9b92d"
+    },
+    {
+      "path": "resource_gates.csv",
+      "size_bytes": 91,
+      "sha256": "1cc2ba81136ed9f6515fec374c6e1a92f1d11283252bdafd9bac79c904a2e279"
+    },
+    {
+      "path": "run_manifest.csv",
+      "size_bytes": 3426,
+      "sha256": "766014bf4082c06e5814861f39e48d21b94cd35f81c91005aff86b742786b45a"
+    },
+    {
+      "path": "run_metadata.json",
+      "size_bytes": 4125,
+      "sha256": "2d6176b0a601739512a6c8a64085b2dcea2d94cd34e76a37f91e7db04776c576"
+    },
+    {
+      "path": "solution_status.csv",
+      "size_bytes": 70,
+      "sha256": "7da96f292a70ce50b53bf8a6e42b64ef8d06791b6cf1a984994e5203cd06cf01"
+    },
+    {
+      "path": "solver_mode_audit.csv",
+      "size_bytes": 60,
+      "sha256": "2d89ee018ef9066712b0f418855723865de8bdaf1140981f8a091beac2309f10"
+    },
+    {
+      "path": "solver_summary_excerpt.txt",
+      "size_bytes": 1101,
+      "sha256": "3891155b2d2f16065161bb621aecf46af095809e3e034caecfe498638a102a04"
+    },
+    {
+      "path": "thickness_geometry.csv",
+      "size_bytes": 778,
+      "sha256": "d7c479af13cffc930294b8fa5ffd9442fd7b493b893c1ec2afc064218b10beed"
+    },
+    {
+      "path": "warnings_with_context.txt",
+      "size_bytes": 6775,
+      "sha256": "01a3471008d042197d4229a43b80cdea655d4da930730fa9e3b5a92e90b3553a"
+    }
+  ],
+  "retention": {
+    "rst_status": "retained_externally_pending_final_field_and_pair_qc",
+    "db_status": "retained_externally_pending_final_field_and_pair_qc",
+    "failed_attempt_binary_status": "already_deleted_after_hash_audit"
+  },
+  "acceptance": "The 1.25-mm IOP20 endpoint is accepted as a complete out-of-core L010 endpoint. It provides F20 but does not provide q until a new-root 1.25-mm IOP0 endpoint is completed, accepted, and paired on the same configuration."
+}

@@ -1,0 +1,14 @@
+audited_at_utc,2026-08-13T21:14:25Z
+source_commit,6ef45199bec06139538c5a68a1538ae683ea1c3b
+solver_processes,0
+token_processes,0
+blueknow_running_units,0
+campaign_complete,1
+campaign_incomplete,0
+run_completed_count,1
+mapdl_error_count,0
+warning_message_count,12
+completed_substeps,29
+last_completed_state, *** LOAD STEP 3 SUBSTEP 13 COMPLETED. CUM ITER = 56
+solver_mode,out-of-core
+solver_mode_verified,1

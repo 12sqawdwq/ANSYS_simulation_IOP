@@ -32,7 +32,7 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     config = json.loads(CONFIG.read_text(encoding="utf-8"))
     assert config["schema_version"] == 2
     assert config["git_branch"] == "l010-baseline-t1p25-experiment-20260813"
-    assert config["status"] == "t1p25_iop20_out_of_core_rerun_active_no_endpoint_yet"
+    assert config["status"] == "t1p25_iop20_out_of_core_endpoint_accepted_iop0_rerun_required"
     assert config["formal_preflight_source_commit"] == "8768e6ec6afb41225d729c21aac80b467c266897"
     assert config["hard_budget"]["wall_clock_hours"] == 72
     assert config["hard_budget"]["maximum_simultaneous_mapdl_cases"] == 1
@@ -88,13 +88,16 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     assert baseline["iop20"]["q_calculable"] is False
     assert baseline["iop20"]["restart_from_old_binary_possible"] is False
     rerun = baseline["iop20"]["out_of_core_rerun"]
-    assert rerun["status"] == "active_mode_verified_no_endpoint_yet"
+    assert rerun["status"] == "accepted_complete_l010_t1p25_iop20_out_of_core_endpoint"
     assert rerun["source_commit"] == "6ef45199bec06139538c5a68a1538ae683ea1c3b"
     assert rerun["solver_memory_mode_requested"] == "out-of-core"
     assert rerun["solver_memory_mode_observed"] == "out-of-core"
     assert rerun["result_output_frequency"] == "last"
-    assert rerun["run_completed"] is False
-    assert rerun["scientific_result_available"] is False
+    assert rerun["run_completed"] is True
+    assert rerun["scientific_result_available"] is True
+    assert rerun["probe_fy_n"] == pytest.approx(-0.18100135590385)
+    assert rerun["maximum_penetration_mm"] == pytest.approx(0.0064352781616132)
+    assert rerun["q_calculable"] is False
     readiness = config["restart_readiness"]
     assert readiness["old_campaign_reusable"] is False
     assert readiness["iop0_new_campaign_eligible"] is True
@@ -498,6 +501,48 @@ def test_t1p25_iop20_out_of_core_launch_record_freezes_verified_strategy():
     assert "result_output_frequency,last" in status
     assert "pressures_mmhg,20" in status
     assert "pressures_mmhg,0" not in status
+
+
+def test_accepted_t1p25_iop20_out_of_core_endpoint_is_hash_complete():
+    root = EXPERIMENT / "results" / "accepted_iop20_t1p25_ooc"
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "accepted_complete_l010_t1p25_iop20_out_of_core_endpoint"
+    assert manifest["source_git_commit"] == "6ef45199bec06139538c5a68a1538ae683ea1c3b"
+    assert manifest["condition"] == {
+        "eyelid_thickness_mm": 1.25,
+        "iop_mmhg": 20.0,
+        "indent_mm": 0.28,
+        "background_mesh_mm": 0.2,
+        "local_refine_level": 1,
+        "nominal_local_target_mm": 0.1,
+        "np": 4,
+        "solver_memory_mode": "out-of-core",
+        "result_output_frequency": "last",
+    }
+    assert all(manifest["qc"].values())
+    result = manifest["result"]
+    assert result["probe_fy_n"] == pytest.approx(-0.18100135590385)
+    assert result["contact_area_mm2"] == pytest.approx(5.858317222134899)
+    assert result["maximum_contact_pressure_kpa"] == pytest.approx(46.838321614583)
+    assert result["maximum_penetration_mm"] == pytest.approx(0.0064352781616132)
+    assert result["completed_substeps"] == 29
+    assert result["cumulative_equilibrium_iterations"] == 56
+    assert manifest["resources"]["minimum_mem_available_kib"] == 73529580
+    assert manifest["resources"]["solver_non_solver_allocated_gb_all_ranks"] == pytest.approx(17.776)
+    assert manifest["warning_assessment"]["accepted"] is True
+    assert manifest["warning_assessment"]["shape_warning_elements"] == 9
+    assert manifest["warning_assessment"]["shape_errors"] == 0
+    assert manifest["retention"]["rst_status"] == "retained_externally_pending_final_field_and_pair_qc"
+    assert "does not provide q" in manifest["acceptance"]
+    external = {item["role"]: item for item in manifest["external_artifacts"]}
+    assert set(external) == {"rst", "db", "solve_out"}
+    assert external["rst"]["size_bytes"] == 1788280832
+    assert external["rst"]["sha256"] == "9cb58e16f9430696a533bf384fc858210659420a865dca144e8d2f7407715084"
+    for item in manifest["artifacts"]:
+        path = root / item["path"]
+        assert path.is_file()
+        assert path.stat().st_size == item["size_bytes"]
+        assert sha256(path) == item["sha256"]
 
 
 def test_t1p25_iop20_failed_dispatch_never_started_solver():

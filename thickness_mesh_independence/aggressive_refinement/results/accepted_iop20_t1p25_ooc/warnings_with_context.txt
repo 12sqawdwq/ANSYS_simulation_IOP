@@ -1,0 +1,119 @@
+623-  Any                      227478              4             0         0.00 %
+624- ------------------------------------------------------------------------------
+625-
+626: *** WARNING ***                         CP =       3.831   TIME= 22:08:45
+627- Shape testing revealed that 4 of the 227478 new or modified elements    
+628- violate shape warning limits.  To review test results, please see the   
+629- output file or issue the CHECK command.                                 
+630-
+631- SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+--
+744-  Any                      331031              5             0         0.00 %
+745- ------------------------------------------------------------------------------
+746-
+747: *** WARNING ***                         CP =      14.293   TIME= 22:08:54
+748- Shape testing revealed that 5 of the 331031 new or modified elements    
+749- violate shape warning limits.  To review test results, please see the   
+750- output file or issue the CHECK command.                                 
+751-
+752- SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+--
+1131-
+1132- *ENDIF
+1133-
+1134: *** WARNING ***                         CP =      22.023   TIME= 22:08:56
+1135- The MINREF field of the CNVTOL command has been assigned a default      
+1136- value of 1.0 for convergence on f.  Check results carefully.            
+1137-
+1138- CONVERGENCE ON F    BASED ON THE NORM OF THE N-R LOAD
+1139-   WITH A TOLERANCE OF 0.1000E-01 AND A MINIMUM REFERENCE VALUE OF  1.000    
+--
+1185- *** NOTE ***                            CP =      24.487   TIME= 22:08:57
+1186- There is no title defined for this analysis.                            
+1187-
+1188: *** WARNING ***                         CP =      25.780   TIME= 22:08:57
+1189- Previous testing revealed that 9 of the 706720 selected elements        
+1190- violate shape warning limits.  To review warning messages, please see   
+1191- the output or error file, or issue the CHECK command.                   
+1192-
+1193- *** NOTE ***                            CP =      25.780   TIME= 22:08:57
+--
+1232- accuracy issue.  Please verify element normal of connected target       
+1233- elements (e.g.673386 & 673433).                                         
+1234-
+1235: *** WARNING ***                         CP =      47.975   TIME= 22:09:13
+1236- Node 173 connects both contact element 677217 and target element        
+1237- 706200.  Please check the model carefully.                              
+1238-
+1239- *** NOTE ***                            CP =      48.328   TIME= 22:09:13
+1240- Deformable-deformable contact pair identified by real constant set 3    
+--
+1297- ****************************************
+1298-  
+1299-
+1300: *** WARNING ***                         CP =      48.328   TIME= 22:09:13
+1301- For certain bonded contact pairs (e.g.  Real ID 4), initial             
+1302- penetration/gap is included.  The program will resolve the initial      
+1303- offset in the very first substep which may affect solution              
+1304- convergence.  It is recommended to switch to KEYOPT(9)=1 if possible.   
+1305-  
+--
+1342- MAXIMUM NUMBER OF EQUILIBRIUM ITERATIONS HAS BEEN MODIFIED              
+1343-  TO BE, NEQIT = 25, BY SOLUTION CONTROL LOGIC.                          
+1344-
+1345: *** WARNING ***                         CP =      75.893   TIME= 22:09:31
+1346- Node 173 connects both contact element 677217 and target element        
+1347- 706200.  Please check the model carefully.                              
+1348-
+1349-
+1350- Range of element maximum matrix coefficients in global coordinates
+--
+1384-  Equation solver memory required for out-of-core mode =     8.350 GB
+1385-  Total (solver and non-solver) memory allocated       =    17.776 GB
+1386-
+1387: *** WARNING ***                         CP =      96.939   TIME= 22:09:52
+1388- The Distributed Sparse Matrix Solver is currently running in the        
+1389- out-of-core memory mode.  This memory mode may provide significantly    
+1390- worse performance compared to the in-core memory mode, depending on     
+1391- the amount of available system memory and I/O speed.  Please monitor    
+1392- the solver performance to ensure that the large amount of I/O to the    
+--
+1405-     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.1357E-06
+1406-     FORCE CONVERGENCE VALUE  =  0.1889E-06  CRITERION=  0.1000E-03 <<< CONVERGED
+1407-
+1408: *** WARNING ***                         CP =     722.404   TIME= 22:23:56
+1409- A reference force value times the tolerance is used by the              
+1410- Newton-Raphson method for checking convergence.  The calculated         
+1411- reference FORCE CONVERGENCE VALUE = 4.616144797E-04 is less than a      
+1412- threshold.  This threshold is internally calculated.  You can           
+1413- overwrite it by specifying MINREF on the CNVTOL command.  Check         
+--
+1593-     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.1233E-04
+1594-     FORCE CONVERGENCE VALUE  =  0.3389E-06  CRITERION=  0.1000E-03 <<< CONVERGED
+1595-
+1596: *** WARNING ***                         CP =    3119.421   TIME= 23:21:22
+1597- A reference force value times the tolerance is used by the              
+1598- Newton-Raphson method for checking convergence.  The calculated         
+1599- reference FORCE CONVERGENCE VALUE = 9.120975247E-03 is less than a      
+1600- threshold.  This threshold is internally calculated.  You can           
+1601- overwrite it by specifying MINREF on the CNVTOL command.  Check         
+--
+1779-     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.9026E-06
+1780-     FORCE CONVERGENCE VALUE  =  0.1668E-04  CRITERION=  0.1000E-03 <<< CONVERGED
+1781-
+1782: *** WARNING ***                         CP =    7790.498   TIME= 01:12:26
+1783- A reference force value times the tolerance is used by the              
+1784- Newton-Raphson method for checking convergence.  The calculated         
+1785- reference FORCE CONVERGENCE VALUE = 9.041148587E-03 is less than a      
+1786- threshold.  This threshold is internally calculated.  You can           
+1787- overwrite it by specifying MINREF on the CNVTOL command.  Check         
+--
+3189- NUMBER OF WARNING MESSAGES ENCOUNTERED=         11
+3190- NUMBER OF ERROR   MESSAGES ENCOUNTERED=          0
+3191-
+3192: *** WARNING ***                         CP =   17185.738   TIME= 05:12:18
+3193- During this session the elapsed time exceeds the CPU time by 54%.  This 
+3194- often indicates either a lack of physical memory (RAM) required to      
+3195- efficiently handle this simulation or a particularly slow hard drive    
+3196- configuration.  This simulation can be expected to run faster on        
+3197- identical hardware if additional RAM or a faster hard drive             

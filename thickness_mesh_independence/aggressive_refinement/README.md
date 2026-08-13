@@ -13,7 +13,8 @@
 - **重启保护已正式验证**：新 launcher 使用 user-systemd cgroup、随机 campaign token、TERM→KILL 升级和零残留核验；clean commit `c62987d...` 上的 helper 与完整 launcher 信号测试均通过且未调用 ANSYS。默认每个 campaign 只允许一个压力，0 mmHg 人工 QC 通过前不得启动 20 mmHg；
 - **2.00 mm、0 mmHg端点已接收**：commit `abf4175...` 的新campaign在约10.67 h后自然完成，三个载荷步、返回码、ANSYS error、穿透、资源和零残留均通过；轻量证据见 [`results/accepted_iop0_h2p00/`](results/accepted_iop0_h2p00/)。该端点是2.00 mm显式厚度覆盖，不是1.25 mm基线；
 - **当前新阶段为1.25 mm全局基线**：launcher默认从 `config/model_baseline.json` 读取1.25 mm；1.25 mm L010 mesh-only预检已通过。按用户优先级切换后，0 mmHg主动中止，第一次20 mmHg在伪时间2.928125、压入0.259875 mm后因30 GiB内存保护线中止。28个已完成子步均收敛，但没有正式端点；轻量证据见 [`results/t1p25_iop20_resource_aborted/`](results/t1p25_iop20_resource_aborted/)；
-- **IOP20重跑改为显式out-of-core**：全新root通过runner参数冻结`out-of-core`与每载荷步末态输出，launcher在运行早期检查`solve.out`必须实际出现out-of-core。资源线、4 ranks、单压力和物理条件不变。
+- **IOP20重跑已以显式out-of-core完成并接收**：全新root通过runner参数冻结`out-of-core`与每载荷步末态输出，launcher运行早期确认实际模式；29个子步、三个载荷步、`RUN COMPLETED`、MAPDL error 0、资源和零残留全部通过。正式$F_{20}=-0.18100135590385$ N，轻量证据见 [`results/accepted_iop20_t1p25_ooc/`](results/accepted_iop20_t1p25_ooc/)；
+- **压力对仍不完整**：1.25 mm IOP0尚无接收端点，所以不能计算$q$。IOP0必须沿用同一out-of-core/last-only策略从全新root单独重跑。
 
 详尽依据、资源表、阶段矩阵和判据见 [`EXPERIMENT_DESIGN.md`](EXPERIMENT_DESIGN.md)。
 
@@ -39,7 +40,7 @@ export RUN_EXTREME=1
 
 本阶段保持L010网格策略、材料、0.28 mm推进、0.30 mm初始间隙、4 ranks、1 worker和资源门不变，只把眼睑厚度切换为机器可读全局基线1.25 mm。由于几何变化会改变实际单元/节点数，非线性求解前必须先运行同一commit上的1.25 mm mesh-only预检；预检只验证构网格和shape error，不产生力学端点。
 
-新campaign仍强制一个压力。用户已明确授权先重跑20 mmHg；完成后必须人工检查三个载荷步、`RUN COMPLETED`、ANSYS error、穿透、资源、out-of-core实际模式和残留。即使20 mmHg完成，在0 mmHg从全新root重跑并接收前仍不能计算$q$。
+新campaign仍强制一个压力。20 mmHg已完成并通过三个载荷步、`RUN COMPLETED`、ANSYS error、穿透、资源、out-of-core实际模式和残留人工QC。在0 mmHg从全新root重跑并接收前仍不能计算$q$。
 
 ## 正式 P1 锚点压力对
 
@@ -90,6 +91,7 @@ python thickness_mesh_independence/aggressive_refinement/scripts/analysis/estima
 - `results/failed_p1_resource_guard/`：首次 P1 资源中止、孤儿 session 和失败二进制清理的轻量审计；
 - `results/session_guard_validation/`：clean commit 上 helper 与完整 launcher TERM→KILL正式验证、进程快照和外部哈希；
 - `results/t1p25_iop20_resource_aborted/`：1.25 mm IOP20近终点资源中止、数值状态和失败二进制清理的轻量审计；
+- `results/accepted_iop20_t1p25_ooc/`：已接收1.25 mm IOP20 out-of-core端点的标量、资源、warning、外部哈希和QC；
 - `scripts/server/`：5090d 启动器、cgroup session guard 及其回归测试；
 - `scripts/analysis/`：资源收集、估算和压力对评估。
 

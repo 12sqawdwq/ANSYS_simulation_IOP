@@ -7,7 +7,7 @@
     "legacy_explicit_overrides_mm": [1.6, 1.8, 2.0],
     "override_reason": "The retained 2.00 mm anchor and optional 1.60/1.80 mm cases audit thick-end discretization; the new campaign defaults to the canonical 1.25 mm baseline."
   },
-  "status": "t1p25_iop20_out_of_core_rerun_active_no_endpoint_yet",
+  "status": "t1p25_iop20_out_of_core_endpoint_accepted_iop0_rerun_required",
   "formal_preflight_completed_at_utc": "2026-08-10T15:24:30Z",
   "formal_preflight_source_commit": "8768e6ec6afb41225d729c21aac80b467c266897",
   "formal_preflight_external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T152200Z_8768e6ec_aggressive_mesh_preflight",
@@ -113,7 +113,7 @@
       "restart_from_old_binary_possible": false,
       "rerun_strategy": "new root; explicit out-of-core sparse solver; last result of each load step only; verify out-of-core from solve.out; unchanged resource floors",
       "out_of_core_rerun": {
-        "status": "active_mode_verified_no_endpoint_yet",
+        "status": "accepted_complete_l010_t1p25_iop20_out_of_core_endpoint",
         "source_commit": "6ef45199bec06139538c5a68a1538ae683ea1c3b",
         "external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T140838Z_6ef45199_L010_h1p25_iop20_ooc_last_np4",
         "lightweight_launch_record": "thickness_mesh_independence/aggressive_refinement/results/t1p25_iop20_ooc_launch/README.md",
@@ -121,10 +121,15 @@
         "solver_memory_mode_observed": "out-of-core",
         "result_output_frequency": "last",
         "total_allocated_gb_all_ranks": 17.776,
-        "run_completed": false,
-        "scientific_result_available": false
+        "run_completed": true,
+        "scientific_result_available": true,
+        "lightweight_acceptance_manifest": "thickness_mesh_independence/aggressive_refinement/results/accepted_iop20_t1p25_ooc/manifest.json",
+        "probe_fy_n": -0.18100135590385,
+        "maximum_penetration_mm": 0.0064352781616132,
+        "elapsed_seconds": 25418.533,
+        "q_calculable": false
       },
-      "claim_boundary": "The converged intermediate states do not provide a 0.28-mm endpoint. The out-of-core rerun is active but has no endpoint yet. Even a complete rerun will not provide q until IOP0 is rerun and accepted."
+      "claim_boundary": "The rejected in-core intermediate states do not provide a 0.28-mm endpoint. The out-of-core rerun is now an accepted IOP20 endpoint, but q remains unavailable until IOP0 is rerun from a new root and accepted on the same configuration."
     },
     "launch_sequence": "Archive and clean the rejected in-core IOP20 attempt, commit and test the out-of-core strategy, then launch only IOP20 from a new root after exact-commit, clean-worktree, ARC, memory, disk, and zero-active-solver gates pass."
 
