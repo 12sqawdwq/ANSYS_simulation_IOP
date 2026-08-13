@@ -1,0 +1,69 @@
+{
+  "definition": {
+    "status": "diagnostic_only",
+    "reference_state": "end of IOP preload (load step 1)",
+    "final_state": "requested probe-indentation state",
+    "angle_threshold_boundary": "central edge-connected deformed faces within the probe radius, with smoothed face normal at most 2 degrees from the probe axis and indentation displacement above an outer-annulus noise floor",
+    "angle_threshold_area": "diagnostic projected integral of the 2 degree region",
+    "angle_threshold_area_is_forced_to_probe": false,
+    "flatness_sensitivity_deg": [
+      1.0,
+      2.0,
+      3.0
+    ],
+    "diagnostic_area": "contact-status and radial-breakpoint areas are independent checks",
+    "radial_bin_m": 0.00015,
+    "relative_noise": 0.02,
+    "absolute_noise_m": 1e-06,
+    "probe_radius_m": 0.00216,
+    "fit_window_scales": [
+      0.9,
+      0.95,
+      1.0
+    ],
+    "legacy_definition": "5% displacement effect region filtered by 1, 2, and 3 degree face-normal limits"
+  },
+  "breakpoint_methods": {
+    "outer": "segmented_fit",
+    "inner": "segmented_fit"
+  },
+  "metrics": {
+    "inner_max_downward_m": 0.0002184210079458516,
+    "inner_effect_area_m2": 6.06448814155273e-05,
+    "inner_face_count": 14752,
+    "inner_area_1deg_m2": 2.836194141204444e-07,
+    "inner_area_2deg_m2": 1.0288924549711052e-06,
+    "inner_area_3deg_m2": 1.9990575131369254e-06,
+    "inner_area_smooth_2deg_m2": 9.70813157650667e-07,
+    "inner_smooth_2deg_face_count": 443,
+    "inner_flat_projected_area_1deg_m2": 2.803153454535088e-07,
+    "inner_flat_projected_area_2deg_m2": 9.708131576506675e-07,
+    "inner_flat_projected_area_3deg_m2": 2.0216658433777703e-06,
+    "inner_flat_surface_area_2deg_m2": 9.710934125257402e-07,
+    "inner_flat_face_count_2deg": 443,
+    "inner_flat_displacement_threshold_m": 1.0882328053333408e-05,
+    "inner_local_max_downward_m": 0.00021764656106666817,
+    "inner_surface_area_m2": 5.7234404477817665e-06,
+    "inner_projected_area_m2": 5.709760656207897e-06,
+    "inner_break_radius_m": 0.0013481314556204058,
+    "inner_break_method_code": 2,
+    "inner_threshold_m": 4.352931221333363e-06,
+    "inner_area_sensitivity_fraction": 0.18952164096049468,
+    "inner_diameter_sensitivity_m": 0.00026819792249994185,
+    "outer_flat_projected_area_1deg_m2": 6.959478868515678e-06,
+    "outer_flat_projected_area_2deg_m2": 7.613027858020263e-06,
+    "outer_flat_projected_area_3deg_m2": 8.070933604037665e-06,
+    "outer_flat_surface_area_2deg_m2": 7.613312823900244e-06,
+    "outer_flat_face_count_2deg": 4023,
+    "outer_flat_displacement_threshold_m": 1.314121894635484e-05,
+    "outer_local_max_downward_m": 0.0002628243789270968,
+    "outer_surface_area_m2": 8.439739166480167e-06,
+    "outer_projected_area_m2": 8.438280286746413e-06,
+    "outer_break_radius_m": 0.0016388977289184127,
+    "outer_break_method_code": 2,
+    "outer_threshold_m": 1.0810958340627819e-05,
+    "outer_area_sensitivity_fraction": 0.06026113754773679,
+    "outer_diameter_sensitivity_m": 0.00010013565257886454,
+    "outer_face_count": 20722
+  }
+}

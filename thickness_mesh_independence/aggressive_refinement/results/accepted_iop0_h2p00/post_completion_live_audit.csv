@@ -1,0 +1,10 @@
+field,value
+audited_at_utc,2026-08-13T02:36:34Z
+outer_unit_state,inactive
+inner_unit_state,inactive
+campaign_token_residual_processes,0
+named_solver_mpi_processes,0
+active_blueknow_units,0
+zfs_arc_max_bytes,17179869184
+mem_available_kib,106554244
+free_disk_kib,457334528

@@ -4,7 +4,7 @@
 
 本实验在独立 Git 分支 `aggressive-contact-mesh-experiment-20260810` 上设计，用于回答：在 5090d 当前资源条件下，能否在约 2–3 天墙钟预算内，把决定探头反力的中央接触与界面区域从 0.20 mm 进一步细化到名义 0.10 mm，并判断绝对零基线输出 \(q\) 是否开始收敛。
 
-当前状态是 **正式 clean-commit P0 mesh-only 已完成；首次 P1 的 0 mmHg 算例因资源保护中止并被拒绝；20 mmHg 未启动；cgroup session guard 已在 clean commit `c62987d...` 上正式验证**。P0 不包含非线性求解。失败 P1 没有完整端点，也不产生可进入 \(q\) 比较的数据。现在只允许在实时资源门再次通过后，从新 root 重算 0 mmHg。
+当前状态是 **正式 clean-commit P0 mesh-only已完成；首次P1因资源保护中止并被拒绝；cgroup session guard已正式验证；随后commit `abf4175...` 的L010、2.00 mm、0 mmHg新campaign已自然完成并通过人工QC**。该已接收端点只属于2.00 mm显式厚度覆盖，20 mmHg仍未启动，因而不能计算 \(q\)。当前新阶段以机器可读全局基线1.25 mm为目标：先在同一clean commit上做1.25 mm mesh-only预检，再仅运行1.25 mm、0 mmHg。
 
 本实验不把“局部目标尺寸 0.10 mm”自动等同于网格无关。`EREFINE` 给出的是父四面体的一次局部细分，正式后处理仍必须审计实际边长分布、单元质量、接触表面密度和求解器规模。
 
@@ -66,6 +66,12 @@
 同一开发源对 L005 连续执行两次细化后，实体单元增至 2,880,653、节点增至 3,986,139；mesh-only 墙钟 96.08 s、最大 RSS 17,659,084 KiB、MAPDL error 0。初始自由网格有 32 个 shape warning 单元，第二次细化有 18/2,373,301 个新建或修改单元触及 warning 限制，shape error 为 0。按节点比投影约为 1139 万方程和 63.13 GiB RST/端点，仅 2.00 mm 压力对就需要约 126 GiB RST，尚未包含 DB、scratch 和求解内存。因此 L005 **构网格可行，但当前服务器上非线性求解不可接受**。
 
 证据位于 `results/development_preflight/`。由于运行时工作树尚未提交，它只能用于资源评估；正式 P0 必须在 clean commit 上重跑。
+
+### 3.4 1.25 mm全局基线迁移
+
+`config/model_baseline.json` 将全局参考眼睑厚度冻结为1.25 mm。launcher在未提供`THICKNESSES`时必须读取该文件，不得静默回退至2.00 mm。厚度变化可能改变自由网格、局部父单元选择、接触离散和资源规模，因此1.25 mm非线性求解前需要新的clean-commit mesh-only预检；不能仅复用2.00 mm构网格计数。
+
+1.25 mm阶段保持0.20 mm背景、一级局部细化、1.80 mm半宽、0.28 mm推进、0.30 mm初始间隙、材料倍率、接触和三载荷步不变。它先建立新的0 mmHg端点；20 mmHg必须等待该端点人工QC后另建root并单独授权。
 
 ## 4. 分阶段实验矩阵
 

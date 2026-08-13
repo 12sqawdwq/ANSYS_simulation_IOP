@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "status": "accepted_complete_l010_h2p00_iop0_endpoint",
+  "source_git_commit": "abf4175de29eb2237f84b4151e362559d5634b85",
+  "source_campaign_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T064031Z_abf4175d_L010_h2p00_iop0_guarded_np4",
+  "condition": {
+    "eyelid_thickness_mm": 2.0,
+    "iop_mmhg": 0.0,
+    "indent_mm": 0.28,
+    "background_mesh_mm": 0.2,
+    "local_refine_level": 1,
+    "nominal_local_target_mm": 0.1,
+    "np": 4
+  },
+  "qc": {
+    "campaign_complete": true,
+    "runner_complete": true,
+    "run_completed": true,
+    "ansys_error_zero": true,
+    "three_load_steps_converged": true,
+    "penetration_within_0p03_mm": true,
+    "preload_contact_absent": true,
+    "first_touch_force_within_1_mn": true,
+    "no_residual_solver_session": true
+  },
+  "result": {
+    "probe_fy_n": -0.27251723724402,
+    "contact_area_mm2": 7.5722206302337005,
+    "maximum_contact_pressure_kpa": 55.393611979167,
+    "maximum_penetration_mm": 0.0071246231527766005,
+    "cornea_peak_kpa": 31.947377894181997,
+    "eyelid_peak_kpa": 31.473721420981,
+    "elapsed_seconds": 38410.982,
+    "ansys_warning_count": 9
+  },
+  "resources": {
+    "minimum_mem_available_kib": 58022644,
+    "minimum_free_disk_kib": 357277440,
+    "pruned_files": 21,
+    "pruned_bytes": 29730964210
+  },
+  "external_artifacts": [
+    {
+      "role": "rst",
+      "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T064031Z_abf4175d_L010_h2p00_iop0_guarded_np4/iop0/eyelid_2p00mm_indent_0p28mm/attempt_1/eyelid_2p00mm_indent_0p28mm.rst",
+      "size_bytes": 18945146880,
+      "allocated_bytes": 14636766208,
+      "mtime_utc": "2026-08-11T17:19:33Z",
+      "sha256": "b373ec7a912479c5ef2fe9b8b8fbc38e70af72ebe7e0ee215136ec45162f9ff2"
+    },
+    {
+      "role": "db",
+      "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T064031Z_abf4175d_L010_h2p00_iop0_guarded_np4/iop0/eyelid_2p00mm_indent_0p28mm/attempt_1/eyelid_2p00mm_indent_0p28mm.db",
+      "size_bytes": 609288192,
+      "allocated_bytes": 203322368,
+      "mtime_utc": "2026-08-11T17:20:41Z",
+      "sha256": "626af9ebefacbcd992d10287fe68e37b38112bcdd3bffe503afde5019185bb38"
+    },
+    {
+      "role": "solve_out",
+      "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T064031Z_abf4175d_L010_h2p00_iop0_guarded_np4/iop0/eyelid_2p00mm_indent_0p28mm/attempt_1/solve.out",
+      "size_bytes": 133574,
+      "allocated_bytes": 50176,
+      "mtime_utc": "2026-08-11T17:20:42Z",
+      "sha256": "becccb24109f830ddcaa202b26857a5fc2f3737af18ebf519b03a0a3e0620b35"
+    },
+    {
+      "role": "run_manifest",
+      "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T064031Z_abf4175d_L010_h2p00_iop0_guarded_np4/iop0/run_manifest.csv",
+      "size_bytes": 3429,
+      "allocated_bytes": 5120,
+      "mtime_utc": "2026-08-11T17:20:48Z",
+      "sha256": "c1e37ce145950f213d8189d05ae04a27b463f51903d819982003f662e81a1cf6"
+    },
+    {
+      "role": "run_metadata",
+      "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T064031Z_abf4175d_L010_h2p00_iop0_guarded_np4/iop0/run_metadata.json",
+      "size_bytes": 3572,
+      "allocated_bytes": 5120,
+      "mtime_utc": "2026-08-11T17:20:48Z",
+      "sha256": "4dd04e104075761caf05735c4668be7703d1f1309a20724ba3c4807d6977e477"
+    },
+    {
+      "role": "resource_monitor",
+      "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T064031Z_abf4175d_L010_h2p00_iop0_guarded_np4/resource_monitor.csv",
+      "size_bytes": 172808,
+      "allocated_bytes": 82944,
+      "mtime_utc": "2026-08-11T17:20:56Z",
+      "sha256": "3b44d44d9986f39c0d3731b956ebda44be0a255dc95894ef773c9942a3249a5a"
+    },
+    {
+      "role": "campaign_status",
+      "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T064031Z_abf4175d_L010_h2p00_iop0_guarded_np4/campaign_status.csv",
+      "size_bytes": 639,
+      "allocated_bytes": 5120,
+      "mtime_utc": "2026-08-11T17:20:56Z",
+      "sha256": "4c0d5c63f51c70c531d584d18588f81e2e16a1e36c42760655552dfa66268bdc"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "aggressive_mesh_inventory.csv",
+      "size_bytes": 270,
+      "sha256": "394773fc3285135c72c8fa1ca574e519119e98156fec685ca2f446b36117600b"
+    },
+    {
+      "path": "applanation_boundary_qc.png",
+      "size_bytes": 80853,
+      "sha256": "3a27719c484706e5e53b8b8a79730ebb4a8f9ca8957e997aebff976ea17fcdeb"
+    },
+    {
+      "path": "attempt.json",
+      "size_bytes": 1228,
+      "sha256": "779be03cbf5d76ab1b27a13adc70e5bbc9a1f10b3a3ca6fe593a6a208460cd1c"
+    },
+    {
+      "path": "external_artifacts.csv",
+      "size_bytes": 1973,
+      "sha256": "86d68f6e5a492e96eddc196648dc1d49ae0fdbcd42a8de1ffb5e2f19c77bca05"
+    },
+    {
+      "path": "iop0_run_manifest.csv",
+      "size_bytes": 3429,
+      "sha256": "c1e37ce145950f213d8189d05ae04a27b463f51903d819982003f662e81a1cf6"
+    },
+    {
+      "path": "iop0_run_metadata.json",
+      "size_bytes": 3572,
+      "sha256": "4dd04e104075761caf05735c4668be7703d1f1309a20724ba3c4807d6977e477"
+    },
+    {
+      "path": "load_path.csv",
+      "size_bytes": 277,
+      "sha256": "569738a88cffffbe237a6476c81721070cfab8e584b610e2c51ae145860830cd"
+    },
+    {
+      "path": "metrics.csv",
+      "size_bytes": 300,
+      "sha256": "b956f2ffd37b9bc5905019709b58354f619dba0d083e419b75a4b815a636f30e"
+    },
+    {
+      "path": "post_completion_live_audit.csv",
+      "size_bytes": 271,
+      "sha256": "99a39e69130ce829bdadc6a345eeab0a87d30e5b8cb308f4b3de8d094d8e0e10"
+    },
+    {
+      "path": "resource_gates.csv",
+      "size_bytes": 91,
+      "sha256": "ec417e15128d7524eec0e1216c581bdcc0d2749180e148dc399c2d7d0d91d99e"
+    },
+    {
+      "path": "resource_monitor.csv",
+      "size_bytes": 172808,
+      "sha256": "3b44d44d9986f39c0d3731b956ebda44be0a255dc95894ef773c9942a3249a5a"
+    },
+    {
+      "path": "solution_status.csv",
+      "size_bytes": 70,
+      "sha256": "7da96f292a70ce50b53bf8a6e42b64ef8d06791b6cf1a984994e5203cd06cf01"
+    },
+    {
+      "path": "source_campaign_status.csv",
+      "size_bytes": 639,
+      "sha256": "4c0d5c63f51c70c531d584d18588f81e2e16a1e36c42760655552dfa66268bdc"
+    },
+    {
+      "path": "thickness_geometry.csv",
+      "size_bytes": 778,
+      "sha256": "6f6d967ec282a207a6bcff9afc02788e02362d2eb7f6652ea727738d5e9276f6"
+    },
+    {
+      "path": "thickness_geometry.json",
+      "size_bytes": 3069,
+      "sha256": "bbb162152dadbb91b9445c7cb44b09ff54df7ab58f1b181e33faefbd833a7d59"
+    }
+  ],
+  "acceptance": "The IOP0 endpoint is accepted as a 2.00-mm explicit thickness override. It is not a 1.25-mm baseline endpoint and does not authorize or provide IOP20 or q."
+}

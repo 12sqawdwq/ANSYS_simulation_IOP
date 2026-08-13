@@ -11,7 +11,9 @@ PYTHON_BIN="${PYTHON_BIN:-/home/xuanyu/miniconda3/envs/grs-pilot/bin/python}"
 ANSYS_BIN="${ANSYS_BIN:-/ansys_inc/v252/ansys/bin/ansys252}"
 RUNNER="$REPO_ROOT/src/runners/run_indentation_sweep.py"
 CONFIG_SOURCE="${CONFIG_SOURCE:-$REPO_ROOT/thickness_mesh_independence/aggressive_refinement/config/experiment.json}"
-THICKNESSES="${THICKNESSES:-2.0}"
+BASELINE_SOURCE="${BASELINE_SOURCE:-$REPO_ROOT/config/model_baseline.json}"
+BASELINE_READER_PYTHON="${BASELINE_READER_PYTHON:-/usr/bin/python3}"
+THICKNESSES="${THICKNESSES:-}"
 # One pressure per campaign is mandatory. IOP20 requires a new campaign after manual IOP0 QC.
 PRESSURES="${PRESSURES:-0}"
 NP_PER_CASE="${NP_PER_CASE:-4}"
@@ -44,6 +46,16 @@ if [[ ! -f "$CONFIG_SOURCE" ]]; then
   printf 'Experiment config is missing: %s\n' "$CONFIG_SOURCE" >&2
   exit 2
 fi
+if [[ ! -f "$BASELINE_SOURCE" || ! -x "$BASELINE_READER_PYTHON" ]]; then
+  printf 'Global baseline config or its reader is missing.\n' >&2
+  exit 2
+fi
+global_baseline_eyelid_thickness_mm="$(
+  "$BASELINE_READER_PYTHON" -c \
+    'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["canonical_baseline"]["eyelid_thickness_mm"])' \
+    "$BASELINE_SOURCE"
+)"
+THICKNESSES="${THICKNESSES:-$global_baseline_eyelid_thickness_mm}"
 if [[ ! -f "$SESSION_GUARD_SOURCE" ]]; then
   printf 'Session guard is missing: %s\n' "$SESSION_GUARD_SOURCE" >&2
   exit 2
@@ -61,11 +73,17 @@ if [[ "${#thickness_list[@]}" -eq 0 || "${#pressure_list[@]}" -ne 1 ]]; then
   exit 2
 fi
 for thickness in "${thickness_list[@]}"; do
-  if [[ "$thickness" != 1.6 && "$thickness" != 1.8 && "$thickness" != 2.0 ]]; then
+  if [[ "$thickness" != "$global_baseline_eyelid_thickness_mm" \
+        && "$thickness" != 1.6 && "$thickness" != 1.8 && "$thickness" != 2.0 ]]; then
     printf 'Unsupported thickness: %s\n' "$thickness" >&2
     exit 2
   fi
 done
+thickness_mode=explicit_thickness_override
+if [[ "${#thickness_list[@]}" -eq 1 \
+      && "${thickness_list[0]}" == "$global_baseline_eyelid_thickness_mm" ]]; then
+  thickness_mode=global_baseline
+fi
 for pressure in "${pressure_list[@]}"; do
   if [[ "$pressure" != 0 && "$pressure" != 20 ]]; then
     printf 'Unsupported pressure: %s\n' "$pressure" >&2
@@ -129,13 +147,16 @@ mkdir -p "$CAMPAIGN_ROOT"
 cp "$0" "$CAMPAIGN_ROOT/launch_aggressive_anchor_5090d.sh"
 cp "$SESSION_GUARD_SOURCE" "$CAMPAIGN_ROOT/session_guard.sh"
 cp "$CONFIG_SOURCE" "$CAMPAIGN_ROOT/experiment.json"
+cp "$BASELINE_SOURCE" "$CAMPAIGN_ROOT/model_baseline.json"
 cp "$REPO_ROOT/models/apdl/param_eye_sweep.mac" "$CAMPAIGN_ROOT/param_eye_sweep.mac"
 printf '%s\n' "$actual_commit" > "$CAMPAIGN_ROOT/source_git_commit.txt"
+sha256sum "$BASELINE_SOURCE" > "$CAMPAIGN_ROOT/model_baseline.sha256"
 printf 'utc,label,unit,event,detail\n' > "$CAMPAIGN_ROOT/session_guard_events.csv"
 printf 'utc\tlabel\tunit\tevent\tprocess\n' > "$CAMPAIGN_ROOT/session_guard_processes.tsv"
 printf 'utc,label,unit,event,status\n' > "$CAMPAIGN_ROOT/session_guard_unit_status.csv"
-printf 'started_at_utc,%s\nthicknesses_mm,%s\npressures_mmhg,%s\nnp_per_case,%s\ncase_timeout_seconds,%s\ncampaign_deadline_seconds,%s\nmin_available_memory_gib,%s\nabort_available_memory_gib,%s\nmin_free_disk_gib,%s\nabort_free_disk_gib,%s\nmonitor_interval_seconds,%s\nsession_term_grace_seconds,%s\nsession_kill_grace_seconds,%s\npressure_policy,exactly_one_pressure_per_campaign\n' \
-  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$THICKNESSES" "$PRESSURES" "$NP_PER_CASE" \
+printf 'started_at_utc,%s\nglobal_baseline_eyelid_thickness_mm,%s\nthickness_mode,%s\nthicknesses_mm,%s\npressures_mmhg,%s\nnp_per_case,%s\ncase_timeout_seconds,%s\ncampaign_deadline_seconds,%s\nmin_available_memory_gib,%s\nabort_available_memory_gib,%s\nmin_free_disk_gib,%s\nabort_free_disk_gib,%s\nmonitor_interval_seconds,%s\nsession_term_grace_seconds,%s\nsession_kill_grace_seconds,%s\npressure_policy,exactly_one_pressure_per_campaign\n' \
+  "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$global_baseline_eyelid_thickness_mm" \
+  "$thickness_mode" "$THICKNESSES" "$PRESSURES" "$NP_PER_CASE" \
   "$CASE_TIMEOUT_SECONDS" "$CAMPAIGN_DEADLINE_SECONDS" "$MIN_AVAILABLE_MEMORY_GIB" \
   "$ABORT_AVAILABLE_MEMORY_GIB" "$MIN_FREE_DISK_GIB" "$ABORT_FREE_DISK_GIB" \
   "$MONITOR_INTERVAL_SECONDS" "$SESSION_TERM_GRACE_SECONDS" \

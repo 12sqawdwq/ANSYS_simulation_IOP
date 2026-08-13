@@ -31,8 +31,8 @@ def sha256(path: Path) -> str:
 def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     config = json.loads(CONFIG.read_text(encoding="utf-8"))
     assert config["schema_version"] == 2
-    assert config["git_branch"] == "aggressive-contact-mesh-experiment-20260810"
-    assert config["status"] == "session_guard_formally_validated_iop0_restart_ready_not_started"
+    assert config["git_branch"] == "l010-baseline-t1p25-experiment-20260813"
+    assert config["status"] == "h2p00_iop0_accepted_t1p25_baseline_iop0_preflight_ready"
     assert config["formal_preflight_source_commit"] == "8768e6ec6afb41225d729c21aac80b467c266897"
     assert config["hard_budget"]["wall_clock_hours"] == 72
     assert config["hard_budget"]["maximum_simultaneous_mapdl_cases"] == 1
@@ -61,6 +61,17 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     assert guard["term_to_kill_escalation_tested"] is True
     assert guard["launcher_signal_returncode"] == 143
     assert guard["residual_processes"] == 0
+    accepted = config["accepted_h2p00_iop0_endpoint"]
+    assert accepted["status"] == "accepted_complete_l010_h2p00_iop0_endpoint"
+    assert accepted["source_commit"] == "abf4175de29eb2237f84b4151e362559d5634b85"
+    assert accepted["eyelid_thickness_mm"] == pytest.approx(2.0)
+    assert accepted["three_load_steps_converged"] is True
+    assert accepted["ansys_error_count"] == 0
+    assert accepted["residual_processes"] == 0
+    baseline = config["baseline_t1p25_campaign"]
+    assert baseline["eyelid_thickness_mm"] == pytest.approx(1.25)
+    assert baseline["iop0_authorized_after_clean_commit_preflight"] is True
+    assert baseline["iop20_authorized"] is False
     readiness = config["restart_readiness"]
     assert readiness["old_campaign_reusable"] is False
     assert readiness["iop0_new_campaign_eligible"] is True
@@ -233,6 +244,9 @@ def test_launchers_require_commit_pin_and_keep_extreme_mesh_only():
         assert "status --porcelain" in text
         assert "Campaign root already exists" in text
     assert 'RUN_EXTREME="${RUN_EXTREME:-0}"' in preflight
+    assert 'EYELID_THICKNESS_MM="${EYELID_THICKNESS_MM:-}"' in preflight
+    assert 'EYELID_THICKNESS_MM="${EYELID_THICKNESS_MM:-$global_baseline_eyelid_thickness_mm}"' in preflight
+    assert "model_baseline.json" in preflight
     assert "L005:0.00020:120:1800" in preflight
     assert "*use,param_eye_sweep.mac" in preflight
     assert "--local-refine-level 1" in solve
@@ -249,7 +263,10 @@ def test_launchers_require_commit_pin_and_keep_extreme_mesh_only():
     assert "guard_finalize_unit" in solve
     assert 'kill -TERM -- "-$run_pid"' not in solve
     assert "resource_guard_abort" in solve
-    assert "THICKNESSES:-2.0" in solve
+    assert 'THICKNESSES="${THICKNESSES:-}"' in solve
+    assert 'THICKNESSES="${THICKNESSES:-$global_baseline_eyelid_thickness_mm}"' in solve
+    assert "model_baseline.json" in solve
+    assert 'thickness_mode=global_baseline' in solve
     assert "systemd-run --user" in guard
     assert "KillMode=control-group" in guard
     assert "BLUEKNOW_CAMPAIGN_TOKEN" in guard
@@ -267,6 +284,39 @@ def test_launchers_require_commit_pin_and_keep_extreme_mesh_only():
     assert "launcher_rc\" -ne 143" in launcher_signal_test
     assert "CAMPAIGN_INCOMPLETE" in launcher_signal_test
     assert "ANCHOR_LAUNCHER_SIGNAL_TEST_PASS" in launcher_signal_test
+
+
+def test_accepted_h2p00_iop0_is_hash_complete_and_not_a_baseline_endpoint():
+    root = EXPERIMENT / "results" / "accepted_iop0_h2p00"
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "accepted_complete_l010_h2p00_iop0_endpoint"
+    assert manifest["source_git_commit"] == "abf4175de29eb2237f84b4151e362559d5634b85"
+    assert manifest["condition"] == {
+        "eyelid_thickness_mm": 2.0,
+        "iop_mmhg": 0.0,
+        "indent_mm": 0.28,
+        "background_mesh_mm": 0.2,
+        "local_refine_level": 1,
+        "nominal_local_target_mm": 0.1,
+        "np": 4,
+    }
+    assert all(manifest["qc"].values())
+    assert manifest["result"]["probe_fy_n"] == pytest.approx(-0.27251723724402)
+    assert manifest["result"]["maximum_penetration_mm"] == pytest.approx(0.0071246231527766)
+    assert manifest["result"]["ansys_warning_count"] == 9
+    assert "not a 1.25-mm baseline endpoint" in manifest["acceptance"]
+    for item in manifest["artifacts"]:
+        path = root / item["path"]
+        assert path.is_file()
+        assert path.stat().st_size == item["size_bytes"]
+        assert sha256(path) == item["sha256"]
+    external = {item["role"]: item for item in manifest["external_artifacts"]}
+    assert set(external) == {
+        "rst", "db", "solve_out", "run_manifest", "run_metadata",
+        "resource_monitor", "campaign_status",
+    }
+    assert external["rst"]["size_bytes"] == 18945146880
+    assert external["rst"]["sha256"] == "b373ec7a912479c5ef2fe9b8b8fbc38e70af72ebe7e0ee215136ec45162f9ff2"
 
 
 def test_failed_p1_resource_abort_is_lightweight_hash_complete_and_not_an_endpoint():

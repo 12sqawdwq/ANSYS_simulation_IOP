@@ -115,16 +115,23 @@ def test_analysis_and_baseline_high_iop_configs_match_global_reference() -> None
         assert config["geometry"]["eyelid_thickness_mm"] == EXPECTED_EYELID_THICKNESS_MM
 
 
-def test_thick_end_mesh_experiments_declare_baseline_override() -> None:
-    for relative_path in (
-        "thickness_mesh_independence/config/experiment.json",
-        "thickness_mesh_independence/aggressive_refinement/config/experiment.json",
-    ):
-        config = load_json(relative_path)
-        reference = config["global_baseline_reference"]
-        assert reference["eyelid_thickness_mm"] == EXPECTED_EYELID_THICKNESS_MM
-        assert reference["case_role"] == "explicit_thickness_override"
-        assert reference["override_reason"].strip()
+def test_thick_end_mesh_experiments_declare_baseline_roles() -> None:
+    original = load_json("thickness_mesh_independence/config/experiment.json")
+    original_reference = original["global_baseline_reference"]
+    assert original_reference["eyelid_thickness_mm"] == EXPECTED_EYELID_THICKNESS_MM
+    assert original_reference["case_role"] == "explicit_thickness_override"
+    assert original_reference["override_reason"].strip()
+
+    aggressive = load_json(
+        "thickness_mesh_independence/aggressive_refinement/config/experiment.json"
+    )
+    reference = aggressive["global_baseline_reference"]
+    assert reference["eyelid_thickness_mm"] == EXPECTED_EYELID_THICKNESS_MM
+    assert reference["case_role"] == "canonical_baseline"
+    assert reference["legacy_explicit_overrides_mm"] == [1.6, 1.8, 2.0]
+    assert reference["override_reason"].strip()
+    assert aggressive["baseline_t1p25_campaign"]["eyelid_thickness_mm"] == 1.25
+    assert aggressive["baseline_t1p25_campaign"]["iop20_authorized"] is False
 
 
 def test_standard_launcher_passes_the_global_baseline_explicitly() -> None:

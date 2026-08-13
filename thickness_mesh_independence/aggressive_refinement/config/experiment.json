@@ -3,15 +3,16 @@
   "experiment_id": "aggressive_contact_mesh_refinement",
   "global_baseline_reference": {
     "eyelid_thickness_mm": 1.25,
-    "case_role": "explicit_thickness_override",
-    "override_reason": "The 2.00 mm anchor and optional 1.60/1.80 mm cases audit thick-end discretization; they are not baseline endpoints."
+    "case_role": "canonical_baseline",
+    "legacy_explicit_overrides_mm": [1.6, 1.8, 2.0],
+    "override_reason": "The retained 2.00 mm anchor and optional 1.60/1.80 mm cases audit thick-end discretization; the new campaign defaults to the canonical 1.25 mm baseline."
   },
-  "status": "session_guard_formally_validated_iop0_restart_ready_not_started",
+  "status": "h2p00_iop0_accepted_t1p25_baseline_iop0_preflight_ready",
   "formal_preflight_completed_at_utc": "2026-08-10T15:24:30Z",
   "formal_preflight_source_commit": "8768e6ec6afb41225d729c21aac80b467c266897",
   "formal_preflight_external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T152200Z_8768e6ec_aggressive_mesh_preflight",
   "formal_preflight_manifest": "thickness_mesh_independence/aggressive_refinement/results/formal_preflight/manifest.json",
-  "git_branch": "aggressive-contact-mesh-experiment-20260810",
+  "git_branch": "l010-baseline-t1p25-experiment-20260813",
   "source_commit_policy": "A formal campaign must provide EXPECTED_COMMIT explicitly and use a clean 5090d worktree at that exact commit.",
   "scientific_question": "Can contact-focused refinement reduce the remaining absolute q discretization error without exceeding a 72-hour wall-clock envelope?",
   "failed_p1_resource_attempt": {
@@ -46,12 +47,38 @@
     "residual_processes": 0,
     "active_blueknow_units_after": 0
   },
+  "accepted_h2p00_iop0_endpoint": {
+    "source_commit": "abf4175de29eb2237f84b4151e362559d5634b85",
+    "external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260811T064031Z_abf4175d_L010_h2p00_iop0_guarded_np4",
+    "lightweight_manifest": "thickness_mesh_independence/aggressive_refinement/results/accepted_iop0_h2p00/manifest.json",
+    "status": "accepted_complete_l010_h2p00_iop0_endpoint",
+    "eyelid_thickness_mm": 2.0,
+    "returncode": 0,
+    "three_load_steps_converged": true,
+    "run_completed": true,
+    "ansys_error_count": 0,
+    "maximum_penetration_mm": 0.0071246231527766,
+    "elapsed_seconds": 38410.982,
+    "minimum_mem_available_gib": 55.33,
+    "residual_processes": 0,
+    "claim_boundary": "This is an accepted 2.00-mm explicit thickness override endpoint. It is not the 1.25-mm global baseline endpoint and does not provide q without IOP20."
+  },
+  "baseline_t1p25_campaign": {
+    "eyelid_thickness_mm": 1.25,
+    "strategy": "L010",
+    "background_mesh_mm": 0.20,
+    "nominal_local_target_mm": 0.10,
+    "pressures_mmhg": [0.0, 20.0],
+    "iop0_authorized_after_clean_commit_preflight": true,
+    "iop20_authorized": false,
+    "launch_sequence": "Run a committed 1.25-mm mesh-only preflight, then launch only IOP0 from a new campaign root. IOP20 requires completed IOP0 manual QC and separate authorization."
+  },
   "restart_readiness": {
     "old_campaign_reusable": false,
     "iop0_new_campaign_eligible": true,
     "iop20_authorized": false,
-    "required_live_rechecks": ["clean exact source commit", "temporary ARC cap still active", "MemAvailable >= 90 GiB", "free disk >= 150 GiB", "no active solver/MPI process"],
-    "post_iop0_gate": "Do not launch IOP20 until IOP0 has three complete load steps, RUN COMPLETED, zero ANSYS errors, acceptable resource use, and no residual process."
+    "required_live_rechecks": ["clean exact source commit", "committed 1.25-mm mesh-only preflight passes", "temporary ARC cap still active", "MemAvailable >= 90 GiB", "free disk >= 150 GiB", "no active solver/MPI process"],
+    "post_iop0_gate": "Do not launch IOP20 until the 1.25-mm IOP0 endpoint has three complete load steps, RUN COMPLETED, zero ANSYS errors, acceptable resource use, and no residual process."
   },
   "hard_budget": {
     "wall_clock_hours": 72,
@@ -86,7 +113,8 @@
     "note": "The ARC cap is a temporary administrator setting, not a resource reservation or repository-controlled persistent configuration."
   },
   "fixed_physics": {
-    "eyelid_thicknesses_mm": [1.6, 1.8, 2.0],
+    "global_baseline_eyelid_thickness_mm": 1.25,
+    "eyelid_thicknesses_mm": [1.25, 1.6, 1.8, 2.0],
     "pressures_mmhg": [0.0, 20.0],
     "indent_mm": 0.28,
     "initial_gap_mm": 0.3,

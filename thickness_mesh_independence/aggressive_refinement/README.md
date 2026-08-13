@@ -10,7 +10,9 @@
 - **先锚点、后扩展**：先做 2.00 mm 的 0/20 mmHg 压力对，资源和 QC 通过后才考虑 1.60/1.80 mm；
 - **正式 P0 已完成**：commit `8768e6ec...` 上的 G015/L010 mesh-only 均通过；
 - **首次 P1 已被拒绝**：commit `d334fd1...` 上的 0 mmHg 算例因资源保护中止，20 mmHg 未启动；没有完整端点，也不能计算 \(q\)。旧 launcher 只终止 runner process group，MAPDL/MPI 独立 session 一度残留；失败二进制经审计后已清理；
-- **重启保护已正式验证**：新 launcher 使用 user-systemd cgroup、随机 campaign token、TERM→KILL 升级和零残留核验；clean commit `c62987d...` 上的 helper 与完整 launcher 信号测试均通过且未调用 ANSYS。默认每个 campaign 只允许一个压力，0 mmHg 人工 QC 通过前不得启动 20 mmHg。
+- **重启保护已正式验证**：新 launcher 使用 user-systemd cgroup、随机 campaign token、TERM→KILL 升级和零残留核验；clean commit `c62987d...` 上的 helper 与完整 launcher 信号测试均通过且未调用 ANSYS。默认每个 campaign 只允许一个压力，0 mmHg 人工 QC 通过前不得启动 20 mmHg；
+- **2.00 mm、0 mmHg端点已接收**：commit `abf4175...` 的新campaign在约10.67 h后自然完成，三个载荷步、返回码、ANSYS error、穿透、资源和零残留均通过；轻量证据见 [`results/accepted_iop0_h2p00/`](results/accepted_iop0_h2p00/)。该端点是2.00 mm显式厚度覆盖，不是1.25 mm基线；
+- **当前新阶段为1.25 mm全局基线**：launcher默认从 `config/model_baseline.json` 读取1.25 mm。先在clean commit上执行1.25 mm L010 mesh-only预检，再仅启动1.25 mm、0 mmHg；20 mmHg继续等待该端点完成和人工QC。
 
 详尽依据、资源表、阶段矩阵和判据见 [`EXPERIMENT_DESIGN.md`](EXPERIMENT_DESIGN.md)。
 
@@ -31,6 +33,12 @@ export RUN_EXTREME=1
 ```
 
 这不会启动 L005 非线性求解；当前资源快照下该求解已被明确拒绝。
+
+## 1.25 mm全局基线阶段
+
+本阶段保持L010网格策略、材料、0.28 mm推进、0.30 mm初始间隙、4 ranks、1 worker和资源门不变，只把眼睑厚度切换为机器可读全局基线1.25 mm。由于几何变化会改变实际单元/节点数，非线性求解前必须先运行同一commit上的1.25 mm mesh-only预检；预检只验证构网格和shape error，不产生力学端点。
+
+新campaign仍强制一个压力。先运行0 mmHg，完成后人工检查三个载荷步、`RUN COMPLETED`、ANSYS error、穿透、资源和残留；20 mmHg不是自动阶段，也未由本分支预先授权。
 
 ## 正式 P1 锚点压力对
 
