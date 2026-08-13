@@ -1,0 +1,7 @@
+
+ *** ERROR ***                           CP =   14160.278   TIME= 15:39:44
+ An unexpected error ( Segmentation Violation ) has occurred...  MAPDL   
+ internal data has been corrupted.  MAPDL is unable to recover and will  
+ terminate.  Previously saved files are unaffected.  Please send the     
+ data leading to this operation to your technical support provider, as   
+ this will allow ANSYS, Inc to improve the program.                      

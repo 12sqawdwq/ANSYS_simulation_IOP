@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import dataclasses
 import io
+import json
 import math
 import os
 import sys
@@ -72,6 +73,10 @@ class APDLContractTests(unittest.TestCase):
         self.assertIn("iop    = arg6", model)
         self.assertIn("eyelid_material_scale = arg7", model)
         self.assertIn("cornea_material_scale = arg8", model)
+        self.assertIn("thousands = sparse-solver memory mode", model)
+        self.assertIn("ten-thousands = result frequency", model)
+        self.assertIn("bcsoption,,outofcore", model)
+        self.assertIn("outres,all,last", model)
 
     def test_views_keep_contour_legend_and_explicit_scales(self) -> None:
         plot = (runner.MODEL_DIR / "plot_sweep_views.mac").read_text().lower()
@@ -346,6 +351,28 @@ class RunnerBehaviorTests(unittest.TestCase):
     def complete_outcome(self) -> runner.AttemptOutcome:
         return runner.AttemptOutcome("complete", "", 0, 1.0, 0, 9, {}, None)
 
+    def test_resource_control_encoding_is_explicit_and_reproducible(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            case = runner.CaseSpec(0.0, 0.28, 0, 1.25, "thickness")
+            config = dataclasses.replace(
+                self.config(root),
+                solver_memory_mode="out-of-core",
+                result_output_frequency="last",
+                local_refine_level=1,
+                view_policy="none",
+            )
+            with mock.patch.object(runner, "execute_command", return_value=(1, False, 0.1)):
+                runner.run_attempt(case, config, 1)
+            attempt = root / case.name / "attempt_1"
+            driver = (attempt / "driver.dat").read_text(encoding="ascii")
+            self.assertIn("solver_out_of_core=1", driver)
+            self.assertIn("result_last_only=1", driver)
+            self.assertIn("encoded_mode=11010", driver)
+            attempt_json = json.loads((attempt / "attempt.json").read_text(encoding="utf-8"))
+            self.assertEqual(attempt_json["solver_memory_mode"], "out-of-core")
+            self.assertEqual(attempt_json["result_output_frequency"], "last")
+
     def test_case_directory_is_cleaned_before_run(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -463,6 +490,10 @@ class ArtifactRetentionTests(unittest.TestCase):
             f"{job}.full": b"scratch",
             f"{job}.rdb": b"scratch",
             f"{job}.DSP": b"scratch",
+            f"{job}.DSPsymb": b"scratch",
+            f"{job}.DSPmatK": b"scratch",
+            f"{job}.DSPstack": b"scratch",
+            f"{job}.DSPtriU": b"scratch",
             "solve.out": b"diagnostic",
             "metrics.csv": b"metrics",
             f"{job}000.png": b"view",
@@ -476,7 +507,7 @@ class ArtifactRetentionTests(unittest.TestCase):
             job = "offset_0p00mm_indent_0p80mm"
             attempt = self.populate_attempt(Path(directory), job)
             stats = pruning.prune_attempt(attempt, job, keep_primary_results=True)
-            self.assertEqual(stats.files_selected, 7)
+            self.assertEqual(stats.files_selected, 11)
             self.assertTrue((attempt / f"{job}.rst").exists())
             self.assertTrue((attempt / f"{job}.db").exists())
             self.assertTrue((attempt / "solve.out").exists())
@@ -490,7 +521,7 @@ class ArtifactRetentionTests(unittest.TestCase):
             job = "offset_2p00mm_indent_0p80mm"
             attempt = self.populate_attempt(Path(directory), job)
             stats = pruning.prune_attempt(attempt, job, keep_primary_results=False)
-            self.assertEqual(stats.files_selected, 9)
+            self.assertEqual(stats.files_selected, 13)
             self.assertFalse((attempt / f"{job}.rst").exists())
             self.assertFalse((attempt / f"{job}.db").exists())
             self.assertTrue((attempt / "solve.out").exists())

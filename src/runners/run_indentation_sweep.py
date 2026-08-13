@@ -208,6 +208,8 @@ class RunConfig:
     view_policy: str = "all"
     initial_gap_mm: float = 0.30
     local_refine_level: int = 0
+    solver_memory_mode: str = "automatic"
+    result_output_frequency: str = "all"
 
 
 @dataclass
@@ -589,12 +591,21 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
     for filename in APDL_FILES:
         shutil.copy2(MODEL_DIR / filename, attempt_dir / filename)
     retry_mode = 1 if attempt_number > 1 else 0
-    encoded_mode = retry_mode + 10 * config.local_refine_level
+    solver_mode_code = 1 if config.solver_memory_mode == "out-of-core" else 0
+    result_frequency_code = 1 if config.result_output_frequency == "last" else 0
+    encoded_mode = (
+        retry_mode
+        + 10 * config.local_refine_level
+        + 1000 * solver_mode_code
+        + 10000 * result_frequency_code
+    )
     driver = attempt_dir / "driver.dat"
     driver_text = (
         f"xoff={case.offset_mm / 1000:.12g}\n"
         f"indent={case.indent_mm / 1000:.12g}\n"
         f"retry_mode={retry_mode}\n"
+        f"solver_out_of_core={solver_mode_code}\n"
+        f"result_last_only={result_frequency_code}\n"
         f"encoded_mode={encoded_mode}\n"
         f"mesh_size={config.mesh_size_mm / 1000:.12g}\n"
         f"eyelid_thickness={case.eyelid_thickness_mm / 1000:.12g}\n"
@@ -669,6 +680,8 @@ def run_attempt(case: CaseSpec, config: RunConfig, attempt_number: int) -> Attem
         "local_refine_halfwidth_mm": (
             LOCAL_REFINE_HALFWIDTH_MM if config.local_refine_level > 0 else 0.0
         ),
+        "solver_memory_mode": config.solver_memory_mode,
+        "result_output_frequency": config.result_output_frequency,
         "command": command,
         "started_at_utc": started_at,
         "ended_at_utc": utc_now(),
@@ -890,6 +903,17 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--retry-count", type=int, choices=(0, 1), default=1)
     parser.add_argument("--mesh-size-mm", type=float, default=0.3)
     parser.add_argument("--local-refine-level", type=int, choices=(0, 1, 2), default=0)
+    parser.add_argument(
+        "--solver-memory-mode",
+        choices=("automatic", "out-of-core"),
+        default="automatic",
+    )
+    parser.add_argument(
+        "--result-output-frequency",
+        choices=("all", "last"),
+        default="all",
+        help="store all converged substeps or only the last substep of each load step",
+    )
     parser.add_argument("--iop-mmhg", type=float, default=20.0)
     parser.add_argument("--eyelid-material-scale", type=float, default=1.0)
     parser.add_argument("--cornea-material-scale", type=float, default=1.0)
@@ -938,6 +962,7 @@ def main() -> int:
         ansys_bin, cli.mesh_size_mm, git_commit, git_dirty,
         cli.iop_mmhg, cli.eyelid_material_scale, cli.cornea_material_scale,
         cli.view_policy, cli.initial_gap_mm, cli.local_refine_level,
+        cli.solver_memory_mode, cli.result_output_frequency,
     )
     materials = absolute_materials(config)
     metadata = {
@@ -960,6 +985,8 @@ def main() -> int:
             LOCAL_REFINE_HALFWIDTH_MM if cli.local_refine_level > 0 else 0.0
         ),
         "local_target_mesh_size_mm": cli.mesh_size_mm / (2 ** cli.local_refine_level),
+        "solver_memory_mode": cli.solver_memory_mode,
+        "result_output_frequency": cli.result_output_frequency,
         "global_baseline": {
             "config_path": str(GLOBAL_BASELINE_PATH.relative_to(REPO_ROOT)),
             "config_sha256": sha256(GLOBAL_BASELINE_PATH),

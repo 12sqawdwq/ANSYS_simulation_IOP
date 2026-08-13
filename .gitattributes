@@ -22,4 +22,6 @@ thickness_mesh_independence/aggressive_refinement/results/formal_preflight/** te
 # Preserve archived failed-attempt bytes exactly where the external evidence used mixed endings.
 thickness_mesh_independence/aggressive_refinement/results/failed_p1_resource_guard/iop0/run_manifest.csv -text whitespace=cr-at-eol
 thickness_mesh_independence/aggressive_refinement/results/failed_p1_resource_guard/ORPHAN_SOLVER_STOPPED text eol=lf
+# Preserve the audited 1.25-mm IOP20 failed-attempt evidence byte-for-byte.
+thickness_mesh_independence/aggressive_refinement/results/t1p25_iop20_resource_aborted/** -text whitespace=-trailing-space
 

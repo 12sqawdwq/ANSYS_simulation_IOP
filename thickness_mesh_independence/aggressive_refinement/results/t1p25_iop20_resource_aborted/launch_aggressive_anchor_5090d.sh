@@ -24,7 +24,6 @@ MIN_FREE_DISK_GIB="${MIN_FREE_DISK_GIB:-150}"
 ABORT_AVAILABLE_MEMORY_GIB="${ABORT_AVAILABLE_MEMORY_GIB:-30}"
 ABORT_FREE_DISK_GIB="${ABORT_FREE_DISK_GIB:-100}"
 MONITOR_INTERVAL_SECONDS="${MONITOR_INTERVAL_SECONDS:-10}"
-SOLVER_MODE_CHECK_TIMEOUT_SECONDS="${SOLVER_MODE_CHECK_TIMEOUT_SECONDS:-1800}"
 SESSION_TERM_GRACE_SECONDS="${SESSION_TERM_GRACE_SECONDS:-30}"
 SESSION_KILL_GRACE_SECONDS="${SESSION_KILL_GRACE_SECONDS:-10}"
 : "${EXPECTED_COMMIT:?Set EXPECTED_COMMIT to the exact committed experiment source SHA.}"
@@ -93,8 +92,8 @@ for pressure in "${pressure_list[@]}"; do
 done
 for integer_name in NP_PER_CASE CASE_TIMEOUT_SECONDS CAMPAIGN_DEADLINE_SECONDS \
   MIN_AVAILABLE_MEMORY_GIB MIN_FREE_DISK_GIB ABORT_AVAILABLE_MEMORY_GIB \
-  ABORT_FREE_DISK_GIB MONITOR_INTERVAL_SECONDS SOLVER_MODE_CHECK_TIMEOUT_SECONDS \
-  SESSION_TERM_GRACE_SECONDS SESSION_KILL_GRACE_SECONDS; do
+  ABORT_FREE_DISK_GIB MONITOR_INTERVAL_SECONDS SESSION_TERM_GRACE_SECONDS \
+  SESSION_KILL_GRACE_SECONDS; do
   value="${!integer_name}"
   if [[ ! "$value" =~ ^[1-9][0-9]*$ ]]; then
     printf '%s must be a positive integer, got %s\n' "$integer_name" "$value" >&2
@@ -155,14 +154,13 @@ sha256sum "$BASELINE_SOURCE" > "$CAMPAIGN_ROOT/model_baseline.sha256"
 printf 'utc,label,unit,event,detail\n' > "$CAMPAIGN_ROOT/session_guard_events.csv"
 printf 'utc\tlabel\tunit\tevent\tprocess\n' > "$CAMPAIGN_ROOT/session_guard_processes.tsv"
 printf 'utc,label,unit,event,status\n' > "$CAMPAIGN_ROOT/session_guard_unit_status.csv"
-printf 'started_at_utc,%s\nglobal_baseline_eyelid_thickness_mm,%s\nthickness_mode,%s\nthicknesses_mm,%s\npressures_mmhg,%s\nnp_per_case,%s\ncase_timeout_seconds,%s\ncampaign_deadline_seconds,%s\nmin_available_memory_gib,%s\nabort_available_memory_gib,%s\nmin_free_disk_gib,%s\nabort_free_disk_gib,%s\nmonitor_interval_seconds,%s\nsolver_mode_check_timeout_seconds,%s\nsolver_memory_mode,out-of-core\nresult_output_frequency,last\nsession_term_grace_seconds,%s\nsession_kill_grace_seconds,%s\npressure_policy,exactly_one_pressure_per_campaign\n' \
+printf 'started_at_utc,%s\nglobal_baseline_eyelid_thickness_mm,%s\nthickness_mode,%s\nthicknesses_mm,%s\npressures_mmhg,%s\nnp_per_case,%s\ncase_timeout_seconds,%s\ncampaign_deadline_seconds,%s\nmin_available_memory_gib,%s\nabort_available_memory_gib,%s\nmin_free_disk_gib,%s\nabort_free_disk_gib,%s\nmonitor_interval_seconds,%s\nsession_term_grace_seconds,%s\nsession_kill_grace_seconds,%s\npressure_policy,exactly_one_pressure_per_campaign\n' \
   "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$global_baseline_eyelid_thickness_mm" \
   "$thickness_mode" "$THICKNESSES" "$PRESSURES" "$NP_PER_CASE" \
   "$CASE_TIMEOUT_SECONDS" "$CAMPAIGN_DEADLINE_SECONDS" "$MIN_AVAILABLE_MEMORY_GIB" \
   "$ABORT_AVAILABLE_MEMORY_GIB" "$MIN_FREE_DISK_GIB" "$ABORT_FREE_DISK_GIB" \
-  "$MONITOR_INTERVAL_SECONDS" "$SOLVER_MODE_CHECK_TIMEOUT_SECONDS" \
-  "$SESSION_TERM_GRACE_SECONDS" "$SESSION_KILL_GRACE_SECONDS" \
-  > "$CAMPAIGN_ROOT/campaign_status.csv"
+  "$MONITOR_INTERVAL_SECONDS" "$SESSION_TERM_GRACE_SECONDS" \
+  "$SESSION_KILL_GRACE_SECONDS" > "$CAMPAIGN_ROOT/campaign_status.csv"
 
 CURRENT_UNIT=""
 CURRENT_TOKEN=""
@@ -232,8 +230,6 @@ for pressure in "${pressure_list[@]}"; do
     --thickness-indent-mm 0.28
     --mesh-size-mm 0.20
     --local-refine-level 1
-    --solver-memory-mode out-of-core
-    --result-output-frequency last
     --iop-mmhg "$pressure"
     --eyelid-material-scale 1.0
     --cornea-material-scale 0.75
@@ -280,50 +276,12 @@ for pressure in "${pressure_list[@]}"; do
   CURRENT_RUN_PID="$run_pid"
   resource_abort=0
   residual_failure=0
-  strategy_failure=0
-  solver_mode_verified=0
-  solver_mode_deadline=$(( $(date +%s) + SOLVER_MODE_CHECK_TIMEOUT_SECONDS ))
   while kill -0 "$run_pid" 2>/dev/null; do
     sleep "$MONITOR_INTERVAL_SECONDS"
     available_kib="$(awk '/MemAvailable:/ {print $2}' /proc/meminfo)"
     free_disk_kib="$(df -Pk "$(dirname "$CAMPAIGN_ROOT")" | awk 'NR==2 {print $4}')"
     printf '%s,%s,%s,%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$label" \
       "$available_kib" "$free_disk_kib" >> "$CAMPAIGN_ROOT/resource_monitor.csv"
-    solve_out="$(find "$CAMPAIGN_ROOT/$label" -path '*/attempt_1/solve.out' -type f -print -quit 2>/dev/null || true)"
-    if [[ "$solver_mode_verified" -eq 0 && -n "$solve_out" ]]; then
-      observed_solver_mode="$(awk '
-        BEGIN {IGNORECASE=1}
-        /currently running in the[[:space:]]*$/ {
-          getline
-          if ($0 ~ /out-of-core memory mode/) print "out-of-core"
-          else if ($0 ~ /in-core memory mode/) print "in-core"
-          exit
-        }
-      ' "$solve_out")"
-      if [[ "$observed_solver_mode" == out-of-core ]]; then
-        solver_mode_verified=1
-        printf '%s,%s,solver_mode_verified,out-of-core\n' \
-          "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$label" \
-          >> "$CAMPAIGN_ROOT/solver_mode_audit.csv"
-      elif [[ "$observed_solver_mode" == in-core ]]; then
-        strategy_failure=1
-        printf '%s,%s,solver_mode_mismatch,in-core\n' \
-          "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$label" \
-          >> "$CAMPAIGN_ROOT/solver_mode_audit.csv"
-        guard_stop_unit_tree "$unit" "$campaign_token" "$CAMPAIGN_ROOT" "$label" \
-          solver_mode_mismatch || true
-        break
-      fi
-    fi
-    if [[ "$solver_mode_verified" -eq 0 && $(date +%s) -ge "$solver_mode_deadline" ]]; then
-      strategy_failure=1
-      printf '%s,%s,solver_mode_verification_timeout,not_observed\n' \
-        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$label" \
-        >> "$CAMPAIGN_ROOT/solver_mode_audit.csv"
-      guard_stop_unit_tree "$unit" "$campaign_token" "$CAMPAIGN_ROOT" "$label" \
-        solver_mode_verification_timeout || true
-      break
-    fi
     if (( available_kib < ABORT_AVAILABLE_MEMORY_GIB * 1024 * 1024 \
           || free_disk_kib < ABORT_FREE_DISK_GIB * 1024 * 1024 )); then
       resource_abort=1
@@ -344,17 +302,6 @@ for pressure in "${pressure_list[@]}"; do
   fi
   if [[ "$resource_abort" -eq 1 ]]; then
     rc=143
-  fi
-  if [[ "$rc" -eq 0 && "$solver_mode_verified" -ne 1 ]]; then
-    strategy_failure=1
-    printf '%s,%s,solver_mode_missing_at_completion,not_observed\n' \
-      "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$label" \
-      >> "$CAMPAIGN_ROOT/solver_mode_audit.csv"
-  fi
-  if [[ "$strategy_failure" -eq 1 ]]; then
-    rc=124
-    printf '%s_solver_mode_verification_failure,1\n' "$label" \
-      >> "$CAMPAIGN_ROOT/campaign_status.csv"
   fi
   if [[ "$residual_failure" -eq 1 ]]; then
     rc=125

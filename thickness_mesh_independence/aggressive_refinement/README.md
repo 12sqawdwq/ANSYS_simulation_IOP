@@ -12,7 +12,8 @@
 - **首次 P1 已被拒绝**：commit `d334fd1...` 上的 0 mmHg 算例因资源保护中止，20 mmHg 未启动；没有完整端点，也不能计算 \(q\)。旧 launcher 只终止 runner process group，MAPDL/MPI 独立 session 一度残留；失败二进制经审计后已清理；
 - **重启保护已正式验证**：新 launcher 使用 user-systemd cgroup、随机 campaign token、TERM→KILL 升级和零残留核验；clean commit `c62987d...` 上的 helper 与完整 launcher 信号测试均通过且未调用 ANSYS。默认每个 campaign 只允许一个压力，0 mmHg 人工 QC 通过前不得启动 20 mmHg；
 - **2.00 mm、0 mmHg端点已接收**：commit `abf4175...` 的新campaign在约10.67 h后自然完成，三个载荷步、返回码、ANSYS error、穿透、资源和零残留均通过；轻量证据见 [`results/accepted_iop0_h2p00/`](results/accepted_iop0_h2p00/)。该端点是2.00 mm显式厚度覆盖，不是1.25 mm基线；
-- **当前新阶段为1.25 mm全局基线**：launcher默认从 `config/model_baseline.json` 读取1.25 mm。先在clean commit上执行1.25 mm L010 mesh-only预检，再仅启动1.25 mm、0 mmHg；20 mmHg继续等待该端点完成和人工QC。
+- **当前新阶段为1.25 mm全局基线**：launcher默认从 `config/model_baseline.json` 读取1.25 mm；1.25 mm L010 mesh-only预检已通过。按用户优先级切换后，0 mmHg主动中止，第一次20 mmHg在伪时间2.928125、压入0.259875 mm后因30 GiB内存保护线中止。28个已完成子步均收敛，但没有正式端点；轻量证据见 [`results/t1p25_iop20_resource_aborted/`](results/t1p25_iop20_resource_aborted/)；
+- **IOP20重跑改为显式out-of-core**：全新root通过runner参数冻结`out-of-core`与每载荷步末态输出，launcher在运行早期检查`solve.out`必须实际出现out-of-core。资源线、4 ranks、单压力和物理条件不变。
 
 详尽依据、资源表、阶段矩阵和判据见 [`EXPERIMENT_DESIGN.md`](EXPERIMENT_DESIGN.md)。
 
@@ -38,7 +39,7 @@ export RUN_EXTREME=1
 
 本阶段保持L010网格策略、材料、0.28 mm推进、0.30 mm初始间隙、4 ranks、1 worker和资源门不变，只把眼睑厚度切换为机器可读全局基线1.25 mm。由于几何变化会改变实际单元/节点数，非线性求解前必须先运行同一commit上的1.25 mm mesh-only预检；预检只验证构网格和shape error，不产生力学端点。
 
-新campaign仍强制一个压力。先运行0 mmHg，完成后人工检查三个载荷步、`RUN COMPLETED`、ANSYS error、穿透、资源和残留；20 mmHg不是自动阶段，也未由本分支预先授权。
+新campaign仍强制一个压力。用户已明确授权先重跑20 mmHg；完成后必须人工检查三个载荷步、`RUN COMPLETED`、ANSYS error、穿透、资源、out-of-core实际模式和残留。即使20 mmHg完成，在0 mmHg从全新root重跑并接收前仍不能计算$q$。
 
 ## 正式 P1 锚点压力对
 
@@ -53,7 +54,7 @@ export NP_PER_CASE=4
 bash thickness_mesh_independence/aggressive_refinement/scripts/server/launch_aggressive_anchor_5090d.sh
 ```
 
-启动器要求 `MemAvailable>=90 GiB`、空闲磁盘 `>=150 GiB`，每 10 s 监测；30 GiB 内存或 100 GiB 磁盘保护线触发时终止完整 cgroup/token process set。只有 0 mmHg 的三个载荷步、`RUN COMPLETED`、ANSYS error 0、资源和零残留人工 QC 均通过后，才可另建 root、设置 `PRESSURES='20'` 并单独授权。
+启动器要求 `MemAvailable>=90 GiB`、空闲磁盘 `>=150 GiB`，每 10 s 监测；30 GiB 内存或 100 GiB 磁盘保护线触发时终止完整 cgroup/token process set。当前用户已单独授权先从全新root重跑20 mmHg，launcher还要求在30 min内从`solve.out`核实out-of-core。完成后仍需人工QC；0 mmHg稍后也必须从另一个全新root单独重跑并接收，才可形成压力对。
 
 不涉及 ANSYS 的 session-tree 回归测试入口为：
 
@@ -88,6 +89,7 @@ python thickness_mesh_independence/aggressive_refinement/scripts/analysis/estima
 - `results/formal_preflight/`：commit `8768e6ec...` 上 G015/L010 的正式 P0 轻量结果、外部 DB 哈希和结论；
 - `results/failed_p1_resource_guard/`：首次 P1 资源中止、孤儿 session 和失败二进制清理的轻量审计；
 - `results/session_guard_validation/`：clean commit 上 helper 与完整 launcher TERM→KILL正式验证、进程快照和外部哈希；
+- `results/t1p25_iop20_resource_aborted/`：1.25 mm IOP20近终点资源中止、数值状态和失败二进制清理的轻量审计；
 - `scripts/server/`：5090d 启动器、cgroup session guard 及其回归测试；
 - `scripts/analysis/`：资源收集、估算和压力对评估。
 

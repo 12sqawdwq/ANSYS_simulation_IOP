@@ -1,0 +1,92 @@
+! Nine stable, material-separated views. PNG suffix order is fixed by this macro.
+/post1
+post_time = arg1
+*if,post_time,gt,0,then
+set,,,,,post_time
+*else
+set,last
+*endif
+/show,png
+/gfile,1200
+/plopts,info,3
+/plopts,leg1,0
+/plopts,date,0
+/plopts,file,0
+/number,0
+
+! 0 geometry
+/dscale,1,off
+/view,1,1,0.3,0.5
+/pnum,mat,1
+/title,GEOMETRY - material IDs
+eplot
+
+! 1 outer contact pressure, top
+/pnum,mat,0
+allsel
+esel,s,real,,3
+esel,r,ename,,174
+/view,1,0,1,0
+/title,OUTER CONTACT PRESSURE - top
+plnsol,cont,pres
+
+! 2 outer contact pressure, front
+/view,1,0,0,1
+/title,OUTER CONTACT PRESSURE - front
+plnsol,cont,pres
+
+! 3 eyelid stress
+allsel
+esel,s,type,,1
+esel,r,mat,,2
+/view,1,0,0,1
+/title,EYELID VON MISES STRESS
+plnsol,s,eqv
+
+! 4 cornea stress
+allsel
+esel,s,type,,1
+esel,r,mat,,1
+/view,1,0,0,1
+/title,CORNEA VON MISES STRESS
+plnsol,s,eqv
+
+! 5 probe stress
+allsel
+esel,s,type,,1
+esel,r,mat,,3
+/view,1,0,0,1
+/title,PROBE VON MISES STRESS
+plnsol,s,eqv
+
+! 6 central section
+allsel
+wpcsys,-1,0
+/cplane,1
+/type,1,7
+/view,1,0,0,1
+/title,CENTRAL SECTION - stress
+plnsol,s,eqv
+/type,1,6
+
+! 7 actual-scale deformed central section without an overlay
+allsel
+wpcsys,-1,0
+/cplane,1
+/type,1,7
+/dscale,1,1
+/view,1,0,0,1
+/title,DEFORMED CENTRAL SECTION - actual scale
+plnsol,s,eqv
+/type,1,6
+
+! 8 numerical contact penetration, top
+allsel
+esel,s,real,,3
+esel,r,ename,,174
+/view,1,0,1,0
+/title,OUTER CONTACT PENETRATION - top
+plnsol,cont,pene
+/show,close
+allsel
+finish

@@ -1,0 +1,5 @@
+/COM,ANSYS RELEASE 2025 R2           BUILD 25.2      UP20250519       11:43:03
+
+ *** WARNING ***                         CP =       2.707   TIME= 11:43:39
+ Node 173 connects both contact element 677217 and target element        
+ 706200.  Please check the model carefully.                              

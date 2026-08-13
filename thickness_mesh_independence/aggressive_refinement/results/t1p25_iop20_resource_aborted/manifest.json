@@ -1,0 +1,351 @@
+{
+  "schema_version": 1,
+  "status": "resource_guard_abort_near_endpoint_with_converged_intermediate_states",
+  "classification": "resource_guard_abort_near_endpoint_with_converged_intermediate_states",
+  "source_git_commit": "5d3ece4bccf67e382bdfa639b0da80711c8008b8",
+  "external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T034259Z_5d3ece4b_L010_h1p25_iop20_guarded_np4",
+  "condition": {
+    "eyelid_thickness_mm": 1.25,
+    "iop_mmhg": 20.0,
+    "indent_mm": 0.28,
+    "background_mesh_mm": 0.2,
+    "local_refine_level": 1,
+    "nominal_local_target_mm": 0.1,
+    "np": 4,
+    "equations": 2711583,
+    "solver_mode": "in_core"
+  },
+  "resource_abort": {
+    "utc": "2026-08-13T07:39:44Z",
+    "reason": "available_memory_below_30_gib_floor",
+    "trigger_mem_available_kib": 30237892,
+    "trigger_mem_available_gib": 28.837100982666016,
+    "trigger_free_disk_kib": 442591744,
+    "launcher_returncode": 143,
+    "samples": 1420,
+    "first_utc": "2026-08-13T03:43:09Z",
+    "last_utc": "2026-08-13T07:39:44Z",
+    "minimum_mem_available_kib": 30237892,
+    "minimum_mem_available_gib": 28.837100982666016,
+    "minimum_free_disk_kib": 442591616,
+    "minimum_free_disk_gib": 422.0882568359375
+  },
+  "numerical_state_at_abort": {
+    "load_step_completed_substeps": {
+      "1": 8,
+      "2": 8,
+      "3": 12
+    },
+    "completed_substeps_total": 28,
+    "cumulative_equilibrium_iterations": 54,
+    "last_converged_pseudotime": 2.928125,
+    "last_converged_indentation_mm": 0.259875,
+    "remaining_indentation_mm": 0.020125,
+    "mapdl_error_count": 0,
+    "nonconvergence_markers": 0,
+    "bisection_markers": 0,
+    "cutback_markers": 0,
+    "negative_pivot_markers": 0,
+    "shape_error_markers": 0,
+    "shape_warning_elements": 9,
+    "warning_messages": 10,
+    "run_completed": false,
+    "complete_endpoint": false,
+    "accepted_endpoint": false,
+    "eligible_for_scientific_comparison": false,
+    "formal_f20_available": false,
+    "q_calculable": false
+  },
+  "containment": {
+    "inner_unit_final_state": "inactive/dead",
+    "solver_processes_after": 0,
+    "token_processes_after": 0,
+    "active_blueknow_units_after": 0
+  },
+  "cleanup": {
+    "files_deleted": 46,
+    "apparent_bytes_deleted": 21133517890,
+    "allocated_bytes_deleted": 14760343552,
+    "remaining_selected_files": 0,
+    "policy": "Only incomplete DB/RST and reproducible solver scratch from the failed attempt_1 were deleted after path, size, mtime, class, and SHA-256 capture."
+  },
+  "restart_decision": {
+    "old_binary_restart_authorized": false,
+    "same_in_core_strategy_authorized": false,
+    "new_root_required": true,
+    "strategy": "Explicit out-of-core sparse solve with only the last result of each load step stored; retain the existing resource floors and verify out-of-core from solve.out during the run."
+  },
+  "artifacts": [
+    {
+      "path": "CAMPAIGN_INCOMPLETE",
+      "size_bytes": 11,
+      "sha256": "2d0ffd0d61facda134ae7325f59317526607541e74443c1a45c224fb36bb2525"
+    },
+    {
+      "path": "campaign_status.csv",
+      "size_bytes": 721,
+      "sha256": "dff11a8d9616a54d8a9625d37f11956f5e96d59b9978bf467d837509d5c84b68"
+    },
+    {
+      "path": "experiment.json",
+      "size_bytes": 16266,
+      "sha256": "14aadf9801ee7ae0f25cf41d313e8b1ff6f08028ac403c56c80d1471048f23f7"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/aggressive_mesh_inventory.csv",
+      "size_bytes": 270,
+      "sha256": "837c084b8e7128bcd2af13572db4dee0880be8a0a2acf7532e688cf4c88ef5f7"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/cleanup-ansys-xuanyu-953326.sh",
+      "size_bytes": 398,
+      "sha256": "3aed9c4631a03f5bfb4db10c7bdfc6bc53b48d8ecdbc7ba04cdaeaf2ccbeca27"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/driver.dat",
+      "size_bytes": 452,
+      "sha256": "70160347091dd2bc9fe957fdbaeb509f7ae0a1dd5e0ffc5fc05eb64c76c7347d"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm0.bat",
+      "size_bytes": 467,
+      "sha256": "8f2ee63701a534298a5999fc81ccc192cb71b5c9b5657aae1c7da54d45089f35"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm0.err",
+      "size_bytes": 3577,
+      "sha256": "38ca5fb1f7f6bca2291ddb986fa127703e41193a6a171314148ca97e1571361a"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm0.log",
+      "size_bytes": 88,
+      "sha256": "346dd4d6dbf385cafc67b6faf1b5e324414f5be194c9179b59b3114a34e8da38"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm0.stat",
+      "size_bytes": 152,
+      "sha256": "214d18039b98ea5cddc5992e228bfd3a24ae369f5344820424531390c4fffbfe"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm1.err",
+      "size_bytes": 79,
+      "sha256": "a1e4e2baafaa5869e3567dc3eafc32fe3645ab6db3ea7e919b6aa1455349db80"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm1.log",
+      "size_bytes": 9,
+      "sha256": "6d78aa828b9c8cedd420adfc709d4b1980f2bf6020fcfbaa0d025e7c42d98184"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm1.out",
+      "size_bytes": 40942,
+      "sha256": "c131f1afe9f48f1297c9e61a073236b7125fd6ba7090e8a10f4da1384dac3f07"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm1.stat",
+      "size_bytes": 285,
+      "sha256": "8aae5d33749ddb0f5368a3ea77ae8e527765affe391525fb92a67c8306d6c1f1"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm2.err",
+      "size_bytes": 303,
+      "sha256": "4f48cfb71230d3963eb9270ebf7fa6995ca97d0b1f862188a5b8cd4394f534bb"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm2.log",
+      "size_bytes": 9,
+      "sha256": "6d78aa828b9c8cedd420adfc709d4b1980f2bf6020fcfbaa0d025e7c42d98184"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm2.out",
+      "size_bytes": 41353,
+      "sha256": "a94d3fbabef3203687b0bd0e9b4c8bf2b599b1ab21c2610d87914e4f18adaedd"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm2.stat",
+      "size_bytes": 285,
+      "sha256": "32d754e100bee5324a5642a867d88316dc02be457c550970131cec2a9c0c2355"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm3.err",
+      "size_bytes": 79,
+      "sha256": "a1e4e2baafaa5869e3567dc3eafc32fe3645ab6db3ea7e919b6aa1455349db80"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm3.log",
+      "size_bytes": 9,
+      "sha256": "6d78aa828b9c8cedd420adfc709d4b1980f2bf6020fcfbaa0d025e7c42d98184"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm3.out",
+      "size_bytes": 39404,
+      "sha256": "c4f7481cbb5b93cdf9503cc86d57c4e377eab6110ad6a788108c24c208deb06b"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm3.stat",
+      "size_bytes": 285,
+      "sha256": "532a1df2ed347f4aa620445e996eea428365587649731f59b7bcd5282206baa9"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/fort.19",
+      "size_bytes": 446,
+      "sha256": "1c8ffd4feb276174d4dea559e5a8426442142e732d4d2093060f1ce6ba926b2a"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/launcher.log",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/param_eye_sweep.mac",
+      "size_bytes": 9799,
+      "sha256": "3c0258d0b0c44a8bd7a5df362c728724d8c333d234cdddd2c5332a9018cb9d8a"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/plot_sweep_views.mac",
+      "size_bytes": 1452,
+      "sha256": "f3b6074851d76a23117d35d8db716bc73d32480ff82d45c8c82e62218cf9b6f4"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/post_sweep.mac",
+      "size_bytes": 3580,
+      "sha256": "6c0543c1043471a948fb11f549ab142b637641ba1c46fc6384a397032ba62a38"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/post_thickness_geometry.mac",
+      "size_bytes": 14673,
+      "sha256": "644a0b57cfdc6a28efd56396bd5d876eb830d8ef31aa9af790ca0683cf0e5bd7"
+    },
+    {
+      "path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/solve.out",
+      "size_bytes": 89198,
+      "sha256": "5aa0a638b052c5149b63cfaa92adaacfc1f719bc7955a2307cd7b28a1d60955d"
+    },
+    {
+      "path": "iop20/run_manifest.csv",
+      "size_bytes": 2021,
+      "sha256": "0d7c5175d9c7259dc6ba4be4bd29c7a7f9585d6d8f81752102d1478dab48dd82"
+    },
+    {
+      "path": "iop20/run_metadata.json",
+      "size_bytes": 3863,
+      "sha256": "4118843bb16ed54bd2096dda4dd8d4dbd4ff846c9bc53c8be39febe7bbcecff1"
+    },
+    {
+      "path": "iop20.log",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "launch_aggressive_anchor_5090d.sh",
+      "size_bytes": 13435,
+      "sha256": "1e7ea41083362b770b4d2d2ebf23aeb60d0121848a85f3762397b0f1f6a78b57"
+    },
+    {
+      "path": "model_baseline.json",
+      "size_bytes": 546,
+      "sha256": "569aea63f1320a59de250a090e23eee1c879ecd0efc59ff05b49e1de230cf60c"
+    },
+    {
+      "path": "model_baseline.sha256",
+      "size_bytes": 139,
+      "sha256": "e5053e2671d407289e3e0545a61b429bf667f0c99cb62968be8262dddfd2db4d"
+    },
+    {
+      "path": "param_eye_sweep.mac",
+      "size_bytes": 9799,
+      "sha256": "3c0258d0b0c44a8bd7a5df362c728724d8c333d234cdddd2c5332a9018cb9d8a"
+    },
+    {
+      "path": "resource_abort.csv",
+      "size_bytes": 67,
+      "sha256": "c0659458e541d45a87579a94ae693349f1942de942ea831782b2d53c67afb5d0"
+    },
+    {
+      "path": "resource_abort_audit/all_files_before_cleanup_sha256.tsv",
+      "size_bytes": 14724,
+      "sha256": "c8d8886f1a77e16c845184411d7ca78474238d92a9b505fa0a0ee906b526f916"
+    },
+    {
+      "path": "resource_abort_audit/audit_cleanup.lock",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "resource_abort_audit/cleanup_summary.csv",
+      "size_bytes": 266,
+      "sha256": "428ee14530fc3200c86e96840fc8e47a6131b42375a225db63dc8f0015d0897b"
+    },
+    {
+      "path": "resource_abort_audit/deleted_binary_manifest.tsv",
+      "size_bytes": 5913,
+      "sha256": "6535ba463f7f97126633f1b0dff3540281ed70ae41c5dda30f03546cc2b96d9b"
+    },
+    {
+      "path": "resource_abort_audit/final_lightweight_evidence_sha256.txt",
+      "size_bytes": 12746,
+      "sha256": "38d28e68a4603c37a08d1821c8e4e3d532b475f8529888b781e0c5706eb80581"
+    },
+    {
+      "path": "resource_abort_audit/final_status.csv",
+      "size_bytes": 225,
+      "sha256": "6a905aaeed37fc2ba481bdee52c382253ba846d47fa303699d2aeb50ace36baa"
+    },
+    {
+      "path": "resource_abort_audit/supplemental_cleanup_summary.csv",
+      "size_bytes": 230,
+      "sha256": "d5125db4d3390f5594266f452b449796304be2fcb5dcdf5a89516341dd7764fb"
+    },
+    {
+      "path": "resource_abort_audit/supplemental_deleted_binary_manifest.tsv",
+      "size_bytes": 893,
+      "sha256": "cfb77bf09efa0d8036f8e4f5cd990b1059d9f70d3f727dcf03980681cbd86201"
+    },
+    {
+      "path": "resource_abort_audit/supplemental_dsp_residual_cleanup_summary.csv",
+      "size_bytes": 184,
+      "sha256": "e7f83c889d5931df85eedbd9e8513ec5dcb5718f33e44269cfffcdb7ed927a58"
+    },
+    {
+      "path": "resource_abort_audit/supplemental_dsp_residual_deleted_manifest.tsv",
+      "size_bytes": 2384,
+      "sha256": "473b85d965cf9cbf6e978e5a3ed7b9894e1f507bb4d0f5afbc878376b377524a"
+    },
+    {
+      "path": "resource_gates.csv",
+      "size_bytes": 91,
+      "sha256": "73c30b299c7d6857f7841a1ee6cb64f56dfaeaa08669ed615122d888811024ee"
+    },
+    {
+      "path": "resource_monitor.csv",
+      "size_bytes": 65331,
+      "sha256": "c82b2e909373deb1e8af3e29eeeb5db483148ab2341fca3520d7b4596376572e"
+    },
+    {
+      "path": "session_guard.sh",
+      "size_bytes": 6620,
+      "sha256": "2509e779c53bd7db24912912d3cd26b9ed623cf43e985cf28a96b0c234547ecd"
+    },
+    {
+      "path": "session_guard_events.csv",
+      "size_bytes": 471,
+      "sha256": "daa3fb8f50d1f47b626e504406bf9a2c755ff0868e21e5dea8ccacedca11c619"
+    },
+    {
+      "path": "session_guard_processes.tsv",
+      "size_bytes": 9848,
+      "sha256": "953d5015ee72558be52decdf903b926a01d6f860c5c251cc50226e80a613a898"
+    },
+    {
+      "path": "session_guard_unit_status.csv",
+      "size_bytes": 474,
+      "sha256": "d126c75b8ee0f46e8a5ce4a279e667adb69a2ffe5781869b5e479ed167a8b7d4"
+    },
+    {
+      "path": "source_git_commit.txt",
+      "size_bytes": 41,
+      "sha256": "936b7236b4285845021a45dfabfaa9791be9862720e08ef9ab4de5be208e6f5b"
+    }
+  ],
+  "decision": "The intermediate states establish a stable converged path but not the 0.28-mm IOP20 endpoint. No formal F20 or q may be extracted. Rerun from a new root with the resource-controlled out-of-core strategy."
+}

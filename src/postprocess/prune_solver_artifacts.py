@@ -12,11 +12,15 @@ from pathlib import Path
 
 
 POLICY = "mapdl-auditable-results"
-POLICY_REVISION = 1
+POLICY_REVISION = 2
 SCRATCH_SUFFIXES = {
     ".cnd",
     ".dsp",
     ".dsptri",
+    ".dspmatk",
+    ".dspstack",
+    ".dspsymb",
+    ".dsptriu",
     ".dsub",
     ".emat",
     ".esav",

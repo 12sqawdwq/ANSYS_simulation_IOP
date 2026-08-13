@@ -92,3 +92,17 @@
 ### 临时 ZFS ARC 调优
 
 授权后将 `zfs_arc_max` 临时设为 17,179,869,184 bytes（16 GiB）。`2026-08-11T05:55:46Z` 回读 ARC 约 15.68 GiB、`MemAvailable` 约 100.33 GiB、无活动求解器。该系统参数不是 Git 管理的持久配置；正式运行前必须重新回读，求解结束后恢复动态值 `0`。
+
+## 2026-08-13
+
+### 1.25 mm IOP20近终点资源中止
+
+在clean commit `5d3ece4bccf67e382bdfa639b0da80711c8008b8`上运行1.25 mm、20 mmHg L010。模型为655,574个实体单元、940,688个节点、2,711,583个方程。MAPDL自动选择in-core：四rank合计in-core求解器需求48.900 GB、solver/non-solver分配60.353 GB。
+
+载荷步1和2均完成8个子步；载荷步3完成12个子步，累计54次平衡迭代，最后收敛伪时间2.928125（正式压入0.259875 mm）。全部28个完成子步收敛，MAPDL error、非收敛、二分、cutback、负主元和shape error均为0。`2026-08-13T07:39:44Z`可用内存降至30,237,892 KiB，触发30 GiB保护线；此时仍缺0.28 mm终点、`RUN COMPLETED`和完整RST，因此不接收为端点。
+
+session guard将完整树终止为零残留。按用户授权，先冻结路径、大小、allocated bytes、mtime、类别和SHA-256，再删除失败attempt的不完整DB/RST与可再生scratch；轻量证据位于`results/t1p25_iop20_resource_aborted/`。
+
+### 重跑策略
+
+原样in-core重跑被拒绝。runner增加显式solver memory mode和结果输出频率编码；L010 launcher固定请求out-of-core、只保存每个载荷步末态，并在运行早期读取`solve.out`确认实际模式。若观察到in-core或在限定时间内未观察到out-of-core，完整session tree会被受控终止。物理条件、4 ranks、单压力、90/30 GiB内存门和150/100 GiB磁盘门保持不变。

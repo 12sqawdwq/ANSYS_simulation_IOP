@@ -1,0 +1,5 @@
+utc,label,unit,event,detail
+2026-08-13T07:39:44Z,iop20,blueknow-l010-iop20-1786592579-952170.service,stop_requested,resource_guard_abort
+2026-08-13T07:39:44Z,iop20,blueknow-l010-iop20-1786592579-952170.service,term_sent,resource_guard_abort
+2026-08-13T07:39:45Z,iop20,blueknow-l010-iop20-1786592579-952170.service,no_residual_processes,resource_guard_abort
+2026-08-13T07:39:45Z,iop20,blueknow-l010-iop20-1786592579-952170.service,no_residual_processes,natural_completion

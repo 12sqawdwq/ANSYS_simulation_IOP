@@ -1,0 +1,4 @@
+ Element Formation     Element=    1000  Cum. Iter.=     55     CP= 13949.162
+ Time=  2.9281     Load Step=     3 Substep=    12 Equilibrium Iteration=    4
+    F Convergence Norm= 0.72197E-04  Previous Norm= 0.25256E-03
+    U Convergence Norm= 0.35200E-06  Previous Norm= 0.28583E-05

@@ -32,7 +32,7 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     config = json.loads(CONFIG.read_text(encoding="utf-8"))
     assert config["schema_version"] == 2
     assert config["git_branch"] == "l010-baseline-t1p25-experiment-20260813"
-    assert config["status"] == "t1p25_iop0_user_aborted_iop20_guarded_campaign_running"
+    assert config["status"] == "t1p25_iop20_resource_abort_archived_out_of_core_rerun_ready"
     assert config["formal_preflight_source_commit"] == "8768e6ec6afb41225d729c21aac80b467c266897"
     assert config["hard_budget"]["wall_clock_hours"] == 72
     assert config["hard_budget"]["maximum_simultaneous_mapdl_cases"] == 1
@@ -79,9 +79,14 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     assert baseline["iop0"]["scientific_result_available"] is False
     assert baseline["iop0"]["q_calculable"] is False
     assert baseline["iop20"]["authorized"] is True
-    assert baseline["iop20"]["status"] == "guarded_campaign_running_no_endpoint_yet"
+    assert baseline["iop20"]["status"] == "resource_guard_abort_near_endpoint_archived_out_of_core_rerun_ready"
     assert baseline["iop20"]["source_commit"] == "5d3ece4bccf67e382bdfa639b0da80711c8008b8"
+    assert baseline["iop20"]["completed_substeps"] == 28
+    assert baseline["iop20"]["last_converged_indentation_mm"] == pytest.approx(0.259875)
     assert baseline["iop20"]["scientific_result_available"] is False
+    assert baseline["iop20"]["formal_f20_available"] is False
+    assert baseline["iop20"]["q_calculable"] is False
+    assert baseline["iop20"]["restart_from_old_binary_possible"] is False
     readiness = config["restart_readiness"]
     assert readiness["old_campaign_reusable"] is False
     assert readiness["iop0_new_campaign_eligible"] is True
@@ -273,6 +278,10 @@ def test_launchers_require_commit_pin_and_keep_extreme_mesh_only():
     assert "guard_finalize_unit" in solve
     assert 'kill -TERM -- "-$run_pid"' not in solve
     assert "resource_guard_abort" in solve
+    assert "--solver-memory-mode out-of-core" in solve
+    assert "--result-output-frequency last" in solve
+    assert "solver_mode_verified" in solve
+    assert "out-of-core memory mode" in solve
     assert 'THICKNESSES="${THICKNESSES:-}"' in solve
     assert 'THICKNESSES="${THICKNESSES:-$global_baseline_eyelid_thickness_mm}"' in solve
     assert "model_baseline.json" in solve
@@ -413,6 +422,46 @@ def test_t1p25_iop20_launch_record_freezes_single_pressure_and_baseline():
     driver = (root / "iop20" / "eyelid_1p25mm_indent_0p28mm" / "attempt_1" / "driver.dat").read_text(encoding="utf-8")
     assert "eyelid_thickness=0.00125" in driver
     assert "iop_pa=2666.44736842" in driver
+
+
+def test_t1p25_iop20_resource_abort_is_hash_complete_and_not_an_endpoint():
+    root = EXPERIMENT / "results" / "t1p25_iop20_resource_aborted"
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "resource_guard_abort_near_endpoint_with_converged_intermediate_states"
+    assert manifest["source_git_commit"] == "5d3ece4bccf67e382bdfa639b0da80711c8008b8"
+    assert manifest["condition"]["eyelid_thickness_mm"] == pytest.approx(1.25)
+    assert manifest["condition"]["iop_mmhg"] == pytest.approx(20.0)
+    assert manifest["condition"]["solver_mode"] == "in_core"
+    abort = manifest["resource_abort"]
+    assert abort["launcher_returncode"] == 143
+    assert abort["trigger_mem_available_kib"] == 30237892
+    numerical = manifest["numerical_state_at_abort"]
+    assert numerical["load_step_completed_substeps"] == {"1": 8, "2": 8, "3": 12}
+    assert numerical["completed_substeps_total"] == 28
+    assert numerical["cumulative_equilibrium_iterations"] == 54
+    assert numerical["last_converged_pseudotime"] == pytest.approx(2.928125)
+    assert numerical["last_converged_indentation_mm"] == pytest.approx(0.259875)
+    assert numerical["mapdl_error_count"] == 0
+    assert numerical["run_completed"] is False
+    assert numerical["formal_f20_available"] is False
+    assert numerical["q_calculable"] is False
+    containment = manifest["containment"]
+    assert containment["solver_processes_after"] == 0
+    assert containment["token_processes_after"] == 0
+    assert containment["active_blueknow_units_after"] == 0
+    cleanup = manifest["cleanup"]
+    assert cleanup["files_deleted"] == 46
+    assert cleanup["apparent_bytes_deleted"] == 21133517890
+    assert cleanup["allocated_bytes_deleted"] == 14760343552
+    assert cleanup["remaining_selected_files"] == 0
+    assert manifest["restart_decision"]["old_binary_restart_authorized"] is False
+    assert manifest["restart_decision"]["same_in_core_strategy_authorized"] is False
+    assert manifest["restart_decision"]["new_root_required"] is True
+    for item in manifest["artifacts"]:
+        path = root / item["path"]
+        assert path.is_file()
+        assert path.stat().st_size == item["size_bytes"]
+        assert sha256(path) == item["sha256"]
 
 
 def test_t1p25_iop20_failed_dispatch_never_started_solver():

@@ -1,0 +1,58 @@
+/COM,ANSYS RELEASE 2025 R2           BUILD 25.2      UP20250519       11:43:03
+
+ *** WARNING ***                         CP =       3.851   TIME= 11:43:07
+ Shape testing revealed that 4 of the 227478 new or modified elements    
+ violate shape warning limits.  To review test results, please see the   
+ output file or issue the CHECK command.                                 
+
+ *** WARNING ***                         CP =      14.386   TIME= 11:43:15
+ Shape testing revealed that 5 of the 331031 new or modified elements    
+ violate shape warning limits.  To review test results, please see the   
+ output file or issue the CHECK command.                                 
+
+ *** WARNING ***                         CP =      22.247   TIME= 11:43:17
+ The MINREF field of the CNVTOL command has been assigned a default      
+ value of 1.0 for convergence on f.  Check results carefully.            
+
+ *** WARNING ***                         CP =      25.900   TIME= 11:43:18
+ Previous testing revealed that 9 of the 706720 selected elements        
+ violate shape warning limits.  To review warning messages, please see   
+ the output or error file, or issue the CHECK command.                   
+
+ *** WARNING ***                         CP =      48.145   TIME= 11:43:34
+ Node 173 connects both contact element 677217 and target element        
+ 706200.  Please check the model carefully.                              
+
+ *** WARNING ***                         CP =      48.499   TIME= 11:43:35
+ For certain bonded contact pairs (e.g.  Real ID 4), initial             
+ penetration/gap is included.  The program will resolve the initial      
+ offset in the very first substep which may affect solution              
+ convergence.  It is recommended to switch to KEYOPT(9)=1 if possible.   
+
+ *** WARNING ***                         CP =      75.836   TIME= 11:43:52
+ Node 173 connects both contact element 677217 and target element        
+ 706200.  Please check the model carefully.                              
+
+ *** WARNING ***                         CP =     600.500   TIME= 11:52:37
+ A reference force value times the tolerance is used by the              
+ Newton-Raphson method for checking convergence.  The calculated         
+ reference FORCE CONVERGENCE VALUE = 4.616144797E-04 is less than a      
+ threshold.  This threshold is internally calculated.  You can           
+ overwrite it by specifying MINREF on the CNVTOL command.  Check         
+ results carefully.                                                      
+
+ *** WARNING ***                         CP =    2651.473   TIME= 12:26:41
+ A reference force value times the tolerance is used by the              
+ Newton-Raphson method for checking convergence.  The calculated         
+ reference FORCE CONVERGENCE VALUE = 9.120975247E-03 is less than a      
+ threshold.  This threshold is internally calculated.  You can           
+ overwrite it by specifying MINREF on the CNVTOL command.  Check         
+ results carefully.                                                      
+
+ *** WARNING ***                         CP =    6575.757   TIME= 13:31:58
+ A reference force value times the tolerance is used by the              
+ Newton-Raphson method for checking convergence.  The calculated         
+ reference FORCE CONVERGENCE VALUE = 9.041148587E-03 is less than a      
+ threshold.  This threshold is internally calculated.  You can           
+ overwrite it by specifying MINREF on the CNVTOL command.  Check         
+ results carefully.                                                      

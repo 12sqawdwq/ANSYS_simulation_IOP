@@ -1,0 +1,4 @@
+utc,label,unit,event,status
+2026-08-13T07:39:44Z,iop20,blueknow-l010-iop20-1786592579-952170.service,before_term,success|0|0|/user.slice/user-1000.slice/user@1000.service/app.slice/blueknow-l010-iop20-1786592579-952170.service|active|running
+2026-08-13T07:39:45Z,iop20,blueknow-l010-iop20-1786592579-952170.service,after_stop,success|0|0||inactive|dead
+2026-08-13T07:39:45Z,iop20,blueknow-l010-iop20-1786592579-952170.service,client_wait_complete,success|0|0||inactive|dead

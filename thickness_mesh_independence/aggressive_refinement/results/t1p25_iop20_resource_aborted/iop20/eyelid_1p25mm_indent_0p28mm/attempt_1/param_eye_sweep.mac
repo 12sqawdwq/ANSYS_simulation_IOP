@@ -6,8 +6,6 @@
 !        units = solver retry mode (0=standard, 1=smaller initial steps)
 !        tens = experimental local tetra refinement level (0, 1, or 2)
 !        hundreds = mesh-only preflight flag (0=solve, 1=stop after mesh)
-!        thousands = sparse-solver memory mode (0=automatic, 1=out-of-core)
-!        ten-thousands = result frequency (0=all substeps, 1=load-step last)
 ! ARG4 = background mesh size in m (default 0.3 mm)
 ! ARG5 = eyelid thickness in m (global baseline default 1.25 mm)
 ! ARG6 = IOP in Pa (0 Pa is a valid zero-IOP case; negative uses 20 mmHg default)
@@ -43,16 +41,6 @@ gap0 = 0.30e-3         ! keeps the probe clear during IOP preload
 *endif
 indent = ARG2
 encoded_mode = ARG3
-result_last_only = 0
-*if,encoded_mode,ge,10000,then
-result_last_only = 1
-encoded_mode = encoded_mode-10000
-*endif
-solver_out_of_core = 0
-*if,encoded_mode,ge,1000,then
-solver_out_of_core = 1
-encoded_mode = encoded_mode-1000
-*endif
 mesh_only_preflight = 0
 *if,encoded_mode,ge,100,then
 mesh_only_preflight = 1
@@ -117,22 +105,6 @@ xoff   = ARG1
 *endif
 *if,mesh_only_preflight,gt,1,then
 /com,ERROR: decoded mesh-only flag must be 0 or 1
-/exit,nosave
-*endif
-*if,solver_out_of_core,lt,0,then
-/com,ERROR: decoded solver memory mode must be 0 or 1
-/exit,nosave
-*endif
-*if,solver_out_of_core,gt,1,then
-/com,ERROR: decoded solver memory mode must be 0 or 1
-/exit,nosave
-*endif
-*if,result_last_only,lt,0,then
-/com,ERROR: decoded result frequency must be 0 or 1
-/exit,nosave
-*endif
-*if,result_last_only,gt,1,then
-/com,ERROR: decoded result frequency must be 0 or 1
 /exit,nosave
 *endif
 
@@ -368,14 +340,7 @@ nlgeom,on
 nropt,full
 lnsrch,on
 stabilize,constant,energy,1.0e-4
-*if,solver_out_of_core,eq,1,then
-bcsoption,,outofcore
-*endif
-*if,result_last_only,eq,1,then
-outres,all,last
-*else
 outres,all,all
-*endif
 cnvtol,f,,0.01
 ncnv,1
 autots,on

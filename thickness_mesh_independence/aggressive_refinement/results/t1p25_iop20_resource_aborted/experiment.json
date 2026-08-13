@@ -7,7 +7,7 @@
     "legacy_explicit_overrides_mm": [1.6, 1.8, 2.0],
     "override_reason": "The retained 2.00 mm anchor and optional 1.60/1.80 mm cases audit thick-end discretization; the new campaign defaults to the canonical 1.25 mm baseline."
   },
-  "status": "t1p25_iop20_resource_abort_archived_out_of_core_rerun_ready",
+  "status": "t1p25_iop0_user_aborted_iop20_authorized_pending_launch",
   "formal_preflight_completed_at_utc": "2026-08-10T15:24:30Z",
   "formal_preflight_source_commit": "8768e6ec6afb41225d729c21aac80b467c266897",
   "formal_preflight_external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T152200Z_8768e6ec_aggressive_mesh_preflight",
@@ -95,35 +95,19 @@
     },
     "iop20": {
       "authorized": true,
-      "authorization_basis": "The user explicitly requested a rerun after reviewing and rejecting the incomplete in-core endpoint.",
-      "status": "resource_guard_abort_near_endpoint_archived_out_of_core_rerun_ready",
-      "source_commit": "5d3ece4bccf67e382bdfa639b0da80711c8008b8",
-      "external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T034259Z_5d3ece4b_L010_h1p25_iop20_guarded_np4",
-      "lightweight_launch_record": "thickness_mesh_independence/aggressive_refinement/results/t1p25_iop20_launch/README.md",
-      "lightweight_abort_manifest": "thickness_mesh_independence/aggressive_refinement/results/t1p25_iop20_resource_aborted/manifest.json",
-      "equations": 2711583,
-      "solver_mode": "in_core",
-      "completed_substeps": 28,
-      "last_converged_pseudotime": 2.928125,
-      "last_converged_indentation_mm": 0.259875,
-      "run_completed": false,
+      "authorization_basis": "Explicit user instruction on 2026-08-13 to stop IOP0 and run IOP20 first.",
+      "required_campaign_root": "new_and_pressure_specific",
       "scientific_result_available": false,
-      "formal_f20_available": false,
-      "q_calculable": false,
-      "restart_from_old_binary_possible": false,
-      "rerun_strategy": "new root; explicit out-of-core sparse solver; last result of each load step only; verify out-of-core from solve.out; unchanged resource floors",
-      "claim_boundary": "The converged intermediate states do not provide a 0.28-mm endpoint. Even a complete rerun will not provide q until IOP0 is rerun and accepted."
+      "claim_boundary": "Even a complete IOP20 endpoint will not provide q until IOP0 is rerun and accepted."
     },
-    "launch_sequence": "Archive and clean the rejected in-core IOP20 attempt, commit and test the out-of-core strategy, then launch only IOP20 from a new root after exact-commit, clean-worktree, ARC, memory, disk, and zero-active-solver gates pass."
-
+    "launch_sequence": "The incomplete IOP0 attempt was stopped and isolated. Launch only IOP20 from a new root after exact-commit, clean-worktree, ARC, memory, disk, and zero-active-solver gates pass."
   },
   "restart_readiness": {
     "old_campaign_reusable": false,
     "iop0_new_campaign_eligible": true,
     "iop20_authorized": true,
     "required_live_rechecks": ["clean exact source commit", "committed 1.25-mm mesh-only preflight passes", "temporary ARC cap still active", "MemAvailable >= 90 GiB", "free disk >= 150 GiB", "no active solver/MPI process"],
-    "pressure_priority_override": "The user explicitly chose IOP20 first and then authorized its out-of-core rerun. The incomplete IOP0 attempt remains rejected and must later be rerun from a new root before q is calculable.",
-    "required_iop20_rerun_strategy": ["solver_memory_mode=out-of-core", "result_output_frequency=last", "runtime solve.out mode verification"]
+    "pressure_priority_override": "The user explicitly chose IOP20 first. The incomplete IOP0 attempt remains rejected and must later be rerun from a new root before q is calculable."
   },
   "hard_budget": {
     "wall_clock_hours": 72,
@@ -138,10 +122,7 @@
     "minimum_free_disk_gib_before_launch": 150,
     "abort_free_disk_gib": 100,
     "monitor_interval_seconds": 10,
-    "automatic_full_matrix_launch": false,
-    "solver_memory_mode": "out-of-core",
-    "result_output_frequency": "last",
-    "solver_mode_runtime_verification_required": true
+    "automatic_full_matrix_launch": false
   },
   "server_snapshot_2026_08_10": {
     "cpu": "AMD Ryzen 9 9950X, 16 physical cores, 32 logical CPUs",
@@ -213,7 +194,7 @@
       "nominal_local_target_mm": 0.1,
       "refinement_halfwidth_mm": 1.8,
       "role": "primary aggressive anchor",
-      "decision": "formal mesh-only P0 complete; the 1.25-mm IOP20 in-core attempt was rejected near the endpoint by the 30-GiB memory floor; reruns must use the cgroup guard, a new campaign root, one pressure, explicit out-of-core mode, last-only load-step results, and runtime solver-mode verification"
+      "decision": "formal mesh-only P0 complete; the first nonlinear IOP0 attempt was rejected after a resource-guard abort and orphan-session cleanup; any restart must use the cgroup guard, a new campaign root, and one pressure only"
     },
     {
       "id": "L005",
@@ -323,6 +304,6 @@
     "external": "DB, RST, complete solve.out, scratch diagnostics, and postprocessed fields remain under a new 5090d campaign root",
     "no_automatic_deletion": "No accepted DB/RST is deleted to make room for later stages. P2 requires storage reservation or separate authorization.",
     "aborted_preflight": "No partial endpoint from a timeout, resource stop, orphan-session cleanup, or mesh-only run enters numerical q comparison.",
-    "failed_attempt_binary_policy": "Rejected DB/RST/scratch may be removed only after path, size, allocated bytes, mtime, status, and SHA-256 inventory; lightweight logs, manifests, cleanup records, and provenance remain."
+    "failed_attempt_binary_policy": "Rejected DB/RST/scratch may be removed only after path, size, mtime, status, and SHA-256 inventory; lightweight logs, manifests, cleanup records, and provenance remain."
   }
 }
