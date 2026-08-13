@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "status": "formal_t1p25_mesh_only_preflight_complete",
+  "source_git_commit": "011c77e74e08fd7619cb9cda3d834cfe3b8506dd",
+  "external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T025229Z_011c77e7_L010_h1p25_mesh_preflight",
+  "global_baseline_eyelid_thickness_mm": 1.25,
+  "nonlinear_solution_started": false,
+  "cases": {
+    "G015": {
+      "status": "complete",
+      "eyelid_thickness_mm": 1.25,
+      "background_mesh_mm": 0.15,
+      "nominal_local_target_mm": 0.15,
+      "refinement_level": 0,
+      "selected_parent_elements": 0,
+      "solid_elements_before": 875995,
+      "solid_elements_after": 875995,
+      "solid_nodes_before": 1250884,
+      "solid_nodes_after": 1250884,
+      "mapdl_error_count": 0,
+      "mapdl_warning_count": 2,
+      "shape_warning_elements": 51,
+      "shape_error_elements": 0,
+      "run_completed": true,
+      "wall_seconds": 14.62,
+      "maximum_rss_kib": 2463472,
+      "external_db": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T025229Z_011c77e7_L010_h1p25_mesh_preflight/G015/G015.db",
+        "size_bytes": 600637440,
+        "sha256": "e7031bc57dcdf0d02dd4bc101b59f6b7b90744ed31611df777e5634ff067ccff"
+      }
+    },
+    "L010": {
+      "status": "complete",
+      "eyelid_thickness_mm": 1.25,
+      "background_mesh_mm": 0.2,
+      "nominal_local_target_mm": 0.1,
+      "refinement_level": 1,
+      "selected_parent_elements": 45439,
+      "solid_elements_before": 373285,
+      "solid_elements_after": 655574,
+      "solid_nodes_before": 545045,
+      "solid_nodes_after": 940688,
+      "mapdl_error_count": 0,
+      "mapdl_warning_count": 2,
+      "shape_warning_elements": 9,
+      "shape_error_elements": 0,
+      "run_completed": true,
+      "wall_seconds": 16.5,
+      "maximum_rss_kib": 2310428,
+      "external_db": {
+        "path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T025229Z_011c77e7_L010_h1p25_mesh_preflight/L010/L010.db",
+        "size_bytes": 450822144,
+        "sha256": "1ea765c43c8fb07385de6affea389761ff324e23d3ec8fc6c20ba7ae31555a58"
+      }
+    }
+  },
+  "artifacts": [
+    {
+      "path": "campaign_status.csv",
+      "size_bytes": 398,
+      "sha256": "a14a290dc9d56c0865d503b267c4a39de0e1bfc27c280acafa877b28ca9394c0"
+    },
+    {
+      "path": "G015/aggressive_mesh_inventory.csv",
+      "size_bytes": 270,
+      "sha256": "15590862d79907b2fc684d25ce6a11a2c5363d7699c62a6aa1d6f790cc2a744f"
+    },
+    {
+      "path": "G015/driver.dat",
+      "size_bytes": 113,
+      "sha256": "e1f3121f4940aa4f693f5418f0e0b8c1a13185d594f0d76bcb89d0d34880e5bb"
+    },
+    {
+      "path": "G015/PREFLIGHT_COMPLETE",
+      "size_bytes": 9,
+      "sha256": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1"
+    },
+    {
+      "path": "L010/aggressive_mesh_inventory.csv",
+      "size_bytes": 270,
+      "sha256": "837c084b8e7128bcd2af13572db4dee0880be8a0a2acf7532e688cf4c88ef5f7"
+    },
+    {
+      "path": "L010/driver.dat",
+      "size_bytes": 113,
+      "sha256": "9c23ee4443e42abf0f46394e5dea55b173632a2ec9492720c3c7a1a7a55e2826"
+    },
+    {
+      "path": "L010/PREFLIGHT_COMPLETE",
+      "size_bytes": 9,
+      "sha256": "37a40f08d8548dba289b9b0bb35bcf63b359f6d37ee86044ebc6b6da080b9ec1"
+    },
+    {
+      "path": "model_baseline.json",
+      "size_bytes": 546,
+      "sha256": "569aea63f1320a59de250a090e23eee1c879ecd0efc59ff05b49e1de230cf60c"
+    },
+    {
+      "path": "preflight_manifest.csv",
+      "size_bytes": 1031,
+      "sha256": "79b0e67e8c31e50dc6865821822954c86357a96f4408f6703b05036b4e5629e1"
+    },
+    {
+      "path": "source_git_commit.txt",
+      "size_bytes": 41,
+      "sha256": "40dea591ad909ebaad156403955cbb6f930426f4f3daed8eae1a418331987499"
+    },
+    {
+      "path": "source_sha256.txt",
+      "size_bytes": 86,
+      "sha256": "1c683cdca2f63f68c43165899419c86565f33ce6362909b788b5d1c5547d6bb6"
+    }
+  ],
+  "decision": "The 1.25-mm L010 mesh is committed, complete, and has zero MAPDL and shape errors. It is eligible for the separately guarded IOP0 solve; this preflight itself is not a numerical endpoint."
+}

@@ -32,7 +32,7 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     config = json.loads(CONFIG.read_text(encoding="utf-8"))
     assert config["schema_version"] == 2
     assert config["git_branch"] == "l010-baseline-t1p25-experiment-20260813"
-    assert config["status"] == "h2p00_iop0_accepted_t1p25_baseline_iop0_preflight_ready"
+    assert config["status"] == "t1p25_mesh_preflight_complete_iop0_guarded_campaign_running"
     assert config["formal_preflight_source_commit"] == "8768e6ec6afb41225d729c21aac80b467c266897"
     assert config["hard_budget"]["wall_clock_hours"] == 72
     assert config["hard_budget"]["maximum_simultaneous_mapdl_cases"] == 1
@@ -70,7 +70,11 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     assert accepted["residual_processes"] == 0
     baseline = config["baseline_t1p25_campaign"]
     assert baseline["eyelid_thickness_mm"] == pytest.approx(1.25)
-    assert baseline["iop0_authorized_after_clean_commit_preflight"] is True
+    assert baseline["mesh_preflight"]["status"] == "formal_t1p25_mesh_only_preflight_complete"
+    assert baseline["mesh_preflight"]["mapdl_error_count"] == 0
+    assert baseline["mesh_preflight"]["shape_error_elements"] == 0
+    assert baseline["iop0"]["status"] == "guarded_campaign_running_no_endpoint_yet"
+    assert baseline["iop0"]["scientific_result_available"] is False
     assert baseline["iop20_authorized"] is False
     readiness = config["restart_readiness"]
     assert readiness["old_campaign_reusable"] is False
@@ -317,6 +321,44 @@ def test_accepted_h2p00_iop0_is_hash_complete_and_not_a_baseline_endpoint():
     }
     assert external["rst"]["size_bytes"] == 18945146880
     assert external["rst"]["sha256"] == "b373ec7a912479c5ef2fe9b8b8fbc38e70af72ebe7e0ee215136ec45162f9ff2"
+
+
+def test_t1p25_preflight_is_hash_complete_and_solver_free():
+    root = EXPERIMENT / "results" / "t1p25_preflight"
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "formal_t1p25_mesh_only_preflight_complete"
+    assert manifest["source_git_commit"] == "011c77e74e08fd7619cb9cda3d834cfe3b8506dd"
+    assert manifest["global_baseline_eyelid_thickness_mm"] == pytest.approx(1.25)
+    assert manifest["nonlinear_solution_started"] is False
+    l010 = manifest["cases"]["L010"]
+    assert l010["eyelid_thickness_mm"] == pytest.approx(1.25)
+    assert l010["solid_elements_after"] == 655574
+    assert l010["solid_nodes_after"] == 940688
+    assert l010["mapdl_error_count"] == 0
+    assert l010["shape_error_elements"] == 0
+    assert l010["run_completed"] is True
+    for item in manifest["artifacts"]:
+        path = root / item["path"]
+        assert path.is_file()
+        assert path.stat().st_size == item["size_bytes"]
+        assert sha256(path) == item["sha256"]
+
+
+def test_t1p25_iop0_launch_record_freezes_baseline_and_single_pressure():
+    root = EXPERIMENT / "results" / "t1p25_iop0_launch"
+    metadata = json.loads((root / "run_metadata_at_launch.json").read_text(encoding="utf-8"))
+    assert metadata["git_commit"] == "011c77e74e08fd7619cb9cda3d834cfe3b8506dd"
+    assert metadata["git_dirty"] is False
+    assert metadata["iop_mmhg"] == pytest.approx(0.0)
+    assert metadata["np"] == 4
+    assert metadata["retry_count"] == 0
+    assert metadata["local_refine_level"] == 1
+    assert [case["eyelid_thickness_mm"] for case in metadata["cases"]] == [1.25]
+    status = (root / "campaign_status_at_launch.csv").read_text(encoding="utf-8")
+    assert "global_baseline_eyelid_thickness_mm,1.25" in status
+    assert "thickness_mode,global_baseline" in status
+    assert "pressures_mmhg,0" in status
+    assert "pressures_mmhg,20" not in status
 
 
 def test_failed_p1_resource_abort_is_lightweight_hash_complete_and_not_an_endpoint():

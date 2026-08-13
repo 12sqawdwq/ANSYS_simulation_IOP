@@ -7,7 +7,7 @@
     "legacy_explicit_overrides_mm": [1.6, 1.8, 2.0],
     "override_reason": "The retained 2.00 mm anchor and optional 1.60/1.80 mm cases audit thick-end discretization; the new campaign defaults to the canonical 1.25 mm baseline."
   },
-  "status": "h2p00_iop0_accepted_t1p25_baseline_iop0_preflight_ready",
+  "status": "t1p25_mesh_preflight_complete_iop0_guarded_campaign_running",
   "formal_preflight_completed_at_utc": "2026-08-10T15:24:30Z",
   "formal_preflight_source_commit": "8768e6ec6afb41225d729c21aac80b467c266897",
   "formal_preflight_external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260810T152200Z_8768e6ec_aggressive_mesh_preflight",
@@ -69,9 +69,27 @@
     "background_mesh_mm": 0.20,
     "nominal_local_target_mm": 0.10,
     "pressures_mmhg": [0.0, 20.0],
-    "iop0_authorized_after_clean_commit_preflight": true,
+    "mesh_preflight": {
+      "status": "formal_t1p25_mesh_only_preflight_complete",
+      "source_commit": "011c77e74e08fd7619cb9cda3d834cfe3b8506dd",
+      "external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T025229Z_011c77e7_L010_h1p25_mesh_preflight",
+      "lightweight_manifest": "thickness_mesh_independence/aggressive_refinement/results/t1p25_preflight/manifest.json",
+      "l010_solid_elements": 655574,
+      "l010_solid_nodes": 940688,
+      "mapdl_error_count": 0,
+      "shape_error_elements": 0
+    },
+    "iop0": {
+      "status": "guarded_campaign_running_no_endpoint_yet",
+      "source_commit": "011c77e74e08fd7619cb9cda3d834cfe3b8506dd",
+      "external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T025418Z_011c77e7_L010_h1p25_iop0_guarded_np4",
+      "lightweight_launch_record": "thickness_mesh_independence/aggressive_refinement/results/t1p25_iop0_launch/README.md",
+      "equations": 2711583,
+      "solver_mode": "in_core",
+      "scientific_result_available": false
+    },
     "iop20_authorized": false,
-    "launch_sequence": "Run a committed 1.25-mm mesh-only preflight, then launch only IOP0 from a new campaign root. IOP20 requires completed IOP0 manual QC and separate authorization."
+    "launch_sequence": "IOP0 is running after the committed 1.25-mm mesh-only preflight. IOP20 requires completed IOP0 manual QC and separate authorization."
   },
   "restart_readiness": {
     "old_campaign_reusable": false,
