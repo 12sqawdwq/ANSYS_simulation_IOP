@@ -22,6 +22,10 @@ thickness_mesh_independence/aggressive_refinement/results/formal_preflight/** te
 # Preserve archived failed-attempt bytes exactly where the external evidence used mixed endings.
 thickness_mesh_independence/aggressive_refinement/results/failed_p1_resource_guard/iop0/run_manifest.csv -text whitespace=cr-at-eol
 thickness_mesh_independence/aggressive_refinement/results/failed_p1_resource_guard/ORPHAN_SOLVER_STOPPED text eol=lf
-# Preserve the audited 1.25-mm IOP20 failed-attempt evidence byte-for-byte.
-thickness_mesh_independence/aggressive_refinement/results/t1p25_iop20_resource_aborted/** -text whitespace=-trailing-space
+# Preserve audited endpoint/preflight/abort evidence byte-for-byte. The explicit
+# eol unset prevents the global extension rules from rewriting archived CSV bytes.
+thickness_mesh_independence/aggressive_refinement/results/accepted_iop0_h2p00/** -text -eol whitespace=-trailing-space
+thickness_mesh_independence/aggressive_refinement/results/t1p25_preflight/** -text -eol whitespace=-trailing-space
+thickness_mesh_independence/aggressive_refinement/results/t1p25_iop0_user_aborted/** -text -eol whitespace=-trailing-space
+thickness_mesh_independence/aggressive_refinement/results/t1p25_iop20_resource_aborted/** -text -eol whitespace=-trailing-space
 

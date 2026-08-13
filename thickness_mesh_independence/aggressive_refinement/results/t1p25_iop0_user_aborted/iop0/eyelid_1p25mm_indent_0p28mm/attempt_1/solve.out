@@ -1,0 +1,1516 @@
+
+ Ansys Mechanical Enterprise                       
+
+
+ *------------------------------------------------------------------*
+ |                                                                  |
+ |   W E L C O M E   T O   T H E   A N S Y S (R)  P R O G R A M     |
+ |                                                                  |
+ *------------------------------------------------------------------*
+
+
+
+
+ ***************************************************************
+ *         ANSYS MAPDL 2025 R2          LEGAL NOTICES          *
+ ***************************************************************
+ *                                                             *
+ * Copyright 1971-2025 Ansys, Inc.  All rights reserved.       *
+ * Unauthorized use, distribution or duplication is            *
+ * prohibited.                                                 *
+ *                                                             *
+ * Ansys is a registered trademark of Ansys, Inc. or its       *
+ * subsidiaries in the United States or other countries.       *
+ * See the Ansys, Inc. online documentation or the Ansys, Inc. *
+ * documentation CD or online help for the complete Legal      *
+ * Notice.                                                     *
+ *                                                             *
+ ***************************************************************
+ *                                                             *
+ * THIS ANSYS SOFTWARE PRODUCT AND PROGRAM DOCUMENTATION       *
+ * INCLUDE TRADE SECRETS AND CONFIDENTIAL AND PROPRIETARY      *
+ * PRODUCTS OF ANSYS, INC., ITS SUBSIDIARIES, OR LICENSORS.    *
+ * The software products and documentation are furnished by    *
+ * Ansys, Inc. or its subsidiaries under a software license    *
+ * agreement that contains provisions concerning               *
+ * non-disclosure, copying, length and nature of use,          *
+ * compliance with exporting laws, warranties, disclaimers,    *
+ * limitations of liability, and remedies, and other           *
+ * provisions.  The software products and documentation may be *
+ * used, disclosed, transferred, or copied only in accordance  *
+ * with the terms and conditions of that software license      *
+ * agreement.                                                  *
+ *                                                             *
+ * Ansys, Inc. is a UL registered                              *
+ * ISO 9001:2015 company.                                      *
+ *                                                             *
+ ***************************************************************
+ *                                                             *
+ * This product is subject to U.S. laws governing export and   *
+ * re-export.                                                  *
+ *                                                             *
+ * For U.S. Government users, except as specifically granted   *
+ * by the Ansys, Inc. software license agreement, the use,     *
+ * duplication, or disclosure by the United States Government  *
+ * is subject to restrictions stated in the Ansys, Inc.        *
+ * software license agreement and FAR 12.212 (for non-DOD      *
+ * licenses).                                                  *
+ *                                                             *
+ ***************************************************************
+
+ 2025 R2 
+     
+ Point Releases and Patches installed:   
+     
+ Ansys, Inc. License Manager 2025 R2 
+ Additive 2025 R2
+ Core WB Files 2025 R2   
+ BladeModeler 2025 R2
+ CFX (includes CFD-Post) 2025 R2 
+ CFD-Post only 2025 R2   
+ Chemkin 2025 R2 
+ EnSight 2025 R2 
+ FENSAP-ICE 2025 R2  
+ Fluent (includes CFD-Post) 2025 R2  
+ Polyflow (includes CFD-Post) 2025 R2
+ Forte (includes EnSight) 2025 R2
+ ICEM CFD 2025 R2
+ TurboGrid 2025 R2   
+ Dynamic Reporting 2025 R2   
+ Remote Solve Manager Standalone Services 2025 R2
+ Aqwa 2025 R2
+ Autodyn 2025 R2 
+ Customization Files for User Programmable Features 2025 R2  
+ LS-DYNA 2025 R2 
+ Mechanical Products 2025 R2 
+ Motion 2025 R2  
+ Sherlock 2025 R2
+ ACIS Geometry Interface 2025 R2 
+ AutoCAD Geometry Interface 2025 R2  
+ Catia, Version 4 Geometry Interface 2025 R2 
+ Catia, Version 5 Geometry Interface 2025 R2 
+ Catia, Version 6 Geometry Interface 2025 R2 
+ Creo Parametric Geometry Interface 2025 R2  
+ Inventor Geometry Interface 2025 R2 
+ JTOpen Geometry Interface 2025 R2   
+ NX Geometry Interface 2025 R2   
+ Parasolid Geometry Interface 2025 R2
+ Solid Edge Geometry Interface 2025 R2   
+ SOLIDWORKS Geometry Interface 2025 R2   
+
+
+          *****  MAPDL COMMAND LINE ARGUMENTS  *****
+  INITIAL JOBNAME              = eyelid_1p25mm_indent_0p28mm                                                                                                                                                                                                                             
+  BATCH MODE REQUESTED (-b)    = LIST
+  INPUT FILE COPY MODE (-c)    = COPY
+  INPUT FILE NAME              = /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T025418Z_011c77e7_L010_h1p25_iop0_guarded_np4/iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/driver.dat
+  OUTPUT FILE NAME             = /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T025418Z_011c77e7_L010_h1p25_iop0_guarded_np4/iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/solve.out
+  INITIAL DIRECTORY = /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T025418Z_011c77e7_L010_h1p25_iop0_guarded_np4/iop0/eyelid_1p25mm_indent_0p28mm/attempt_1
+
+ RELEASE= 2025 R2              BUILD= 25.2      UP20250519   VERSION=LINUX x64   
+ CURRENT JOBNAME=eyelid_1p25mm_indent_0p28mm0  10:54:24  AUG 13, 2026 CP=      0.224
+
+     1  xoff=0  
+     2  indent=0.00028  
+     3  retry_mode=0
+     4  encoded_mode=10 
+     5  mesh_size=0.0002
+     6  eyelid_thickness=0.00125
+     7  iop_pa=0
+     8  eyelid_material_scale=1 
+     9  cornea_material_scale=0.75  
+    10  initial_gap=0.0003  
+    11  *use,param_eye_sweep.mac,xoff,indent,encoded_mode,mesh_size,eyelid_thickness,iop_pa,eyelid_material_scale,cornea_material_scale,initial_gap 
+    12  resume,eyelid_1p25mm_indent_0p28mm,db   
+    13  /filname,eyelid_1p25mm_indent_0p28mm
+    14  *use,post_sweep.mac 
+    15  *use,post_thickness_geometry.mac
+
+ RUN SETUP PROCEDURE FROM FILE= /home/xuanyu/PROJECT/ziyu/SOFTWARE/ansys_inc/v252/ansys/apdl/start.ans
+
+ /INPUT FILE= /home/xuanyu/PROJECT/ziyu/SOFTWARE/ansys_inc/v252/ansys/apdl/start.ans  LINE=       0
+
+ PARAMETER XOFF =     0.000000000    
+
+ PARAMETER INDENT =    0.2800000000E-03
+
+ PARAMETER RETRY_MODE =     0.000000000    
+
+ PARAMETER ENCODED_MODE =     10.00000000    
+
+ PARAMETER MESH_SIZE =    0.2000000000E-03
+
+ PARAMETER EYELID_THICKNESS =    0.1250000000E-02
+
+ PARAMETER IOP_PA =     0.000000000    
+
+ PARAMETER EYELID_MATERIAL_SCALE =     1.000000000    
+
+ PARAMETER CORNEA_MATERIAL_SCALE =    0.7500000000    
+
+ PARAMETER INITIAL_GAP =    0.3000000000E-03
+
+ USE MACRO FILE  param_eye_sweep.mac
+ ARGS=   0.0000      0.28000E-03   10.000      0.20000E-03  0.12500E-02
+         0.0000       1.0000      0.75000      0.30000E-03
+
+ CLEAR DATABASE AND RERUN START.ANS
+
+ RUN SETUP PROCEDURE FROM FILE= /home/xuanyu/PROJECT/ziyu/SOFTWARE/ansys_inc/v252/ansys/apdl/start.ans
+
+ Ansys Mechanical Enterprise                       
+
+ /INPUT FILE= /home/xuanyu/PROJECT/ziyu/SOFTWARE/ansys_inc/v252/ansys/apdl/start.ans  LINE=       0
+
+ *** MAPDL - ENGINEERING ANALYSIS SYSTEM  RELEASE 2025 R2          25.2     ***
+ Ansys Mechanical Enterprise                       
+ 20120530  VERSION=LINUX x64     10:54:24  AUG 13, 2026 CP=      0.320
+
+                                                                               
+
+
+
+          ***** MAPDL ANALYSIS DEFINITION (PREP7) *****
+
+ PARAMETER RC =    0.7800000000E-02
+
+ PARAMETER TC =    0.6000000000E-03
+
+ PARAMETER TE =    0.1250000000E-02
+
+ *IF  te  ( =  0.125000E-02 )  LE  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ *IF  te  ( =  0.125000E-02 )  LT  
+      0.8e-3  ( =  0.800000E-03 )  THEN    
+
+ *ENDIF
+
+ *IF  te  ( =  0.125000E-02 )  GT  
+      2.0e-3  ( =  0.200000E-02 )  THEN    
+
+ *ENDIF
+
+ PARAMETER RPROBE =    0.2160000000E-02
+
+ PARAMETER GAP0 =    0.3000000000E-03
+
+ *IF  gap0  ( =  0.300000E-03 )  LE  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ PARAMETER INDENT =    0.2800000000E-03
+
+ PARAMETER ENCODED_MODE =     10.00000000    
+
+ PARAMETER MESH_ONLY_PREFLIGHT =     0.000000000    
+
+ *IF  encoded_mode  ( =   10.0000     )  GE  
+      100  ( =   100.000     )  THEN    
+
+ *ENDIF
+
+ PARAMETER LOCAL_REFINE_LEVEL =     0.000000000    
+
+ *IF  encoded_mode  ( =   10.0000     )  GE  
+      20  ( =   20.0000     )  THEN    
+
+ *ELSE
+
+ *IF  encoded_mode  ( =   10.0000     )  GE  
+      10  ( =   10.0000     )  THEN    
+
+ PARAMETER LOCAL_REFINE_LEVEL =     1.000000000    
+
+ *ENDIF
+
+ *ENDIF
+
+ PARAMETER RETRY_MODE =     0.000000000    
+
+ PARAMETER LOCAL_REFINE_HALFWIDTH =    0.1800000000E-02
+
+ PARAMETER MESH_SIZE =    0.2000000000E-03
+
+ PARAMETER INDENT_LIMIT =    0.8000000000E-03
+
+ *IF  indent  ( =  0.280000E-03 )  LT  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ *IF  indent  ( =  0.280000E-03 )  GT  
+      indent_limit  ( =  0.800000E-03 )  THEN    
+
+ *ENDIF
+
+ *IF  mesh_size  ( =  0.200000E-03 )  LE  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ PARAMETER IOP =     0.000000000    
+
+ *IF  iop  ( =   0.00000     )  LT  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ PARAMETER EYELID_MATERIAL_SCALE =     1.000000000    
+
+ *IF  eyelid_material_scale  ( =   1.00000     )  LE  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ PARAMETER CORNEA_MATERIAL_SCALE =    0.7500000000    
+
+ *IF  cornea_material_scale  ( =  0.750000     )  LE  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ PARAMETER RMAX =    0.6000000000E-02
+
+ PARAMETER XOFF =     0.000000000    
+
+ *IF  local_refine_level  ( =   1.00000     )  LT  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ *IF  local_refine_level  ( =   1.00000     )  GT  
+      2  ( =   2.00000     )  THEN    
+
+ *ENDIF
+
+ *IF  retry_mode  ( =   0.00000     )  LT  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ *IF  retry_mode  ( =   0.00000     )  GT  
+      1  ( =   1.00000     )  THEN    
+
+ *ENDIF
+
+ *IF  mesh_only_preflight  ( =   0.00000     )  LT  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ *IF  mesh_only_preflight  ( =   0.00000     )  GT  
+      1  ( =   1.00000     )  THEN    
+
+ *ENDIF
+
+ ELEMENT TYPE          1 IS SOLID187     3-D 10-NODE STRUCTURAL SOLID
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE          2 IS TARGE170     3-D TARGET SEGMENT          
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE          3 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+   MOONEY-RIVLIN HYPERELASTIC MATERIAL  OPTION FOR MATERIAL 1 
+ DATA FOR  HYPE  TABLE FOR MATERIAL   1 AT TEMPERATURE=  0.0000    
+ LOC=  1 8.25000e+04     1.87500e+04     1.00000e-07    
+
+
+   MOONEY-RIVLIN HYPERELASTIC MATERIAL  OPTION FOR MATERIAL 2 
+ DATA FOR  HYPE  TABLE FOR MATERIAL   2 AT TEMPERATURE=  0.0000    
+ LOC=  1 7.60000e+04     1.00000e+04     1.00000e-07    
+
+
+ MATERIAL          3     EX   =  0.3500000E+10  
+
+ MATERIAL          3     NUXY =  0.3300000      
+
+ ACTIVE COORDINATE SYSTEM SET TO          0  (CARTESIAN)  
+
+ PARAMETER KCEN =   -0.7800000000E-02
+
+ PARAMETER RCI =    0.7200000000E-02
+
+ KEYPOINT        1                  X,Y,Z=   0.00000       0.00000       0.00000      IN CSYS=        0
+
+ KEYPOINT        2                  X,Y,Z=  0.600000E-02 -0.281603E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT        3                  X,Y,Z=   0.00000     -0.600000E-03   0.00000      IN CSYS=        0
+
+ KEYPOINT        4                  X,Y,Z=  0.553846E-02 -0.319941E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT      100                  X,Y,Z=   0.00000     -0.780000E-02   0.00000      IN CSYS=        0
+
+ ARC BETWEEN KEYPOINTS     1 AND     2  ORIENTATION KEYPOINT=   100
+  RADIUS=  0.78000E-02
+  LINE NO.=     1  KP1=      1  TAN1=   -1.0000   0.0000   0.0000
+                   KP2=      2  TAN2=    0.6390  -0.7692   0.0000
+
+ LINE CONNECTS KEYPOINTS      2     4
+  LINE NO.=     2  KP1=      2  TAN1=    0.7692   0.6390   0.0000
+                   KP2=      4  TAN2=   -0.7692  -0.6390   0.0000
+
+ ARC BETWEEN KEYPOINTS     3 AND     4  ORIENTATION KEYPOINT=   100
+  RADIUS=  0.72000E-02
+  LINE NO.=     3  KP1=      3  TAN1=   -1.0000   0.0000   0.0000
+                   KP2=      4  TAN2=    0.6390  -0.7692   0.0000
+
+ LINE CONNECTS KEYPOINTS      1     3
+  LINE NO.=     4  KP1=      1  TAN1=    0.0000   1.0000   0.0000
+                   KP2=      3  TAN2=    0.0000  -1.0000   0.0000
+
+ DEFINE AREA BY LIST OF LINES
+      LINE LIST =     1    2    3    4
+      (TRAVERSED IN SAME DIRECTION AS LINE     1)
+
+     AREA NUMBER =      1
+
+ PARAMETER RCE =    0.9050000000E-02
+
+ KEYPOINT        5                  X,Y,Z=   0.00000      0.125000E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT        6                  X,Y,Z=  0.696154E-02 -0.201731E-02   0.00000      IN CSYS=        0
+
+ ARC BETWEEN KEYPOINTS     5 AND     6  ORIENTATION KEYPOINT=   100
+  RADIUS=  0.90500E-02
+  LINE NO.=     5  KP1=      5  TAN1=   -1.0000  -0.0000   0.0000
+                   KP2=      6  TAN2=    0.6390  -0.7692   0.0000
+
+ LINE CONNECTS KEYPOINTS      6     2
+  LINE NO.=     6  KP1=      6  TAN1=    0.7692   0.6390   0.0000
+                   KP2=      2  TAN2=   -0.7692  -0.6390   0.0000
+
+ LINE CONNECTS KEYPOINTS      1     5
+  LINE NO.=     7  KP1=      1  TAN1=    0.0000  -1.0000   0.0000
+                   KP2=      5  TAN2=    0.0000   1.0000   0.0000
+
+ DEFINE AREA BY LIST OF LINES
+      LINE LIST =     5    6    1    7
+      (TRAVERSED IN SAME DIRECTION AS LINE     5)
+
+     AREA NUMBER =      2
+
+ PARAMETER PY =    0.1550000000E-02
+
+ KEYPOINT       10                  X,Y,Z=   0.00000      0.155000E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT       11                  X,Y,Z=  0.216000E-02  0.155000E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT       12                  X,Y,Z=  0.216000E-02  0.555000E-02   0.00000      IN CSYS=        0
+
+ KEYPOINT       13                  X,Y,Z=   0.00000      0.555000E-02   0.00000      IN CSYS=        0
+
+ LINE CONNECTS KEYPOINTS     10    11
+  LINE NO.=     8  KP1=     10  TAN1=   -1.0000   0.0000   0.0000
+                   KP2=     11  TAN2=    1.0000   0.0000   0.0000
+
+ LINE CONNECTS KEYPOINTS     11    12
+  LINE NO.=     9  KP1=     11  TAN1=    0.0000  -1.0000   0.0000
+                   KP2=     12  TAN2=    0.0000   1.0000   0.0000
+
+ LINE CONNECTS KEYPOINTS     12    13
+  LINE NO.=    10  KP1=     12  TAN1=    1.0000   0.0000   0.0000
+                   KP2=     13  TAN2=   -1.0000   0.0000   0.0000
+
+ LINE CONNECTS KEYPOINTS     13    10
+  LINE NO.=    11  KP1=     13  TAN1=    0.0000   1.0000   0.0000
+                   KP2=     10  TAN2=    0.0000  -1.0000   0.0000
+
+ DEFINE AREA BY LIST OF LINES
+      LINE LIST =     8    9   10   11
+      (TRAVERSED IN SAME DIRECTION AS LINE     8)
+
+     AREA NUMBER =      3
+
+ KEYPOINT      200                  X,Y,Z=   0.00000      -1.00000       0.00000      IN CSYS=        0
+
+ KEYPOINT      201                  X,Y,Z=   0.00000       1.00000       0.00000      IN CSYS=        0
+
+ *** NOTE ***                            CP =       0.337   TIME= 10:54:24
+ There are no VOLUMES defined.  Parameter VOL_BEFORE on the *GET command 
+ will be set to zero.                                                    
+
+ *GET  VOL_BEFORE  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  0.00000000    
+
+ SELECT       FOR ITEM=AREA COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+        1  AREAS (OF        3  DEFINED) SELECTED BY  ASEL  COMMAND.
+
+ ROTATE AREAS 
+        1,
+      ABOUT THE AXIS DEFINED BY KEYPOINTS    200   201
+     DEGREES OF ARC=   360.00   NUMBER OF SEGMENTS=   4
+
+ *GET  VOL_AFTER  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  4.00000000    
+
+ SELECT       FOR ITEM=VOLU COMPONENT=    
+  IN RANGE         1 TO          4 STEP          1
+
+        4  VOLUMES (OF        4  DEFINED) SELECTED BY  VSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = VCORNEA   ENTITY=VOLU
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ *GET  VOL_BEFORE  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  4.00000000    
+
+ SELECT       FOR ITEM=AREA COMPONENT=    
+  IN RANGE         2 TO          2 STEP          1
+
+        1  AREAS (OF       18  DEFINED) SELECTED BY  ASEL  COMMAND.
+
+ ROTATE AREAS 
+        2,
+      ABOUT THE AXIS DEFINED BY KEYPOINTS    200   201
+     DEGREES OF ARC=   360.00   NUMBER OF SEGMENTS=   4
+
+ *GET  VOL_AFTER  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  8.00000000    
+
+ SELECT       FOR ITEM=VOLU COMPONENT=    
+  IN RANGE         5 TO          8 STEP          1
+
+        4  VOLUMES (OF        8  DEFINED) SELECTED BY  VSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = VEYELID   ENTITY=VOLU
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ *GET  VOL_BEFORE  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  8.00000000    
+
+ SELECT       FOR ITEM=AREA COMPONENT=    
+  IN RANGE         3 TO          3 STEP          1
+
+        1  AREAS (OF       33  DEFINED) SELECTED BY  ASEL  COMMAND.
+
+ ROTATE AREAS 
+        3,
+      ABOUT THE AXIS DEFINED BY KEYPOINTS    200   201
+     DEGREES OF ARC=   360.00   NUMBER OF SEGMENTS=   4
+
+ *GET  VOL_AFTER  FROM  VOLU  ITEM=NUM  MAXD  VALUE=  12.0000000    
+
+ SELECT       FOR ITEM=VOLU COMPONENT=    
+  IN RANGE         9 TO         12 STEP          1
+
+        4  VOLUMES (OF       12  DEFINED) SELECTED BY  VSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = VPROBE    ENTITY=VOLU
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT VPROBE                                                                                                                                                                                                                                                          
+
+ MOVE ORIGINAL VOLUMES      
+   SET IS ALL SELECTED VOLUMES      
+   DX,DY,DZ=    0.00        0.00        0.00           CSYS=  0
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ DEFAULT ELEMENT DIVISIONS PER LINE BASED ON ELEMENT SIZE =  0.200E-03
+ PRODUCE ALL TETRAHEDRAL ELEMENTS IN 3D.
+
+ SELECT      COMPONENT VCORNEA                                                                                                                                                                                                                                                         
+
+ SET ATTRIBUTES FOR ALL SELECTED VOLUMES
+      MAT =    1   REAL =       0   TYPE =    1   ESYS =    0   SECT =    0
+
+ ATTRIBUTES SET FOR      4 VOLUMES (OUT OF      4 SELECTED)
+
+ GENERATE NODES AND ELEMENTS   IN  ALL  SELECTED VOLUMES  
+
+ NUMBER OF VOLUMES MESHED   =         4
+ MAXIMUM NODE NUMBER        =    140100
+ MAXIMUM ELEMENT NUMBER     =     91177
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT VEYELID                                                                                                                                                                                                                                                         
+
+ SET ATTRIBUTES FOR ALL SELECTED VOLUMES
+      MAT =    2   REAL =       0   TYPE =    1   ESYS =    0   SECT =    0
+
+ ATTRIBUTES SET FOR      4 VOLUMES (OUT OF      4 SELECTED)
+
+ GENERATE NODES AND ELEMENTS   IN  ALL  SELECTED VOLUMES  
+
+ NUMBER OF VOLUMES MESHED   =         4
+ MAXIMUM NODE NUMBER        =    467754
+ MAXIMUM ELEMENT NUMBER     =    318655
+
+ ------------------------------------------------------------------------------
+            <<<<<<          SHAPE TESTING SUMMARY           >>>>>>
+            <<<<<<       FOR NEW OR MODIFIED ELEMENTS       >>>>>>
+ ------------------------------------------------------------------------------
+                    --------------------------------------
+                    |  Element count    227478 SOLID187  |
+                    --------------------------------------
+
+  Test                Number tested  Warning count  Error count    Warn+Err %
+  ----                -------------  -------------  -----------    ----------
+  Aspect Ratio             227478              1             0         0.00 %
+  Maximum Angle            227478              4             0         0.00 %
+  Jacobian Ratio           227478              0             0         0.00 %
+
+  Any                      227478              4             0         0.00 %
+ ------------------------------------------------------------------------------
+
+ *** WARNING ***                         CP =       3.876   TIME= 10:54:26
+ Shape testing revealed that 4 of the 227478 new or modified elements    
+ violate shape warning limits.  To review test results, please see the   
+ output file or issue the CHECK command.                                 
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT VPROBE                                                                                                                                                                                                                                                          
+
+ SET ATTRIBUTES FOR ALL SELECTED VOLUMES
+      MAT =    3   REAL =       0   TYPE =    1   ESYS =    0   SECT =    0
+
+ ATTRIBUTES SET FOR      4 VOLUMES (OUT OF      4 SELECTED)
+
+ GENERATE NODES AND ELEMENTS   IN  ALL  SELECTED VOLUMES  
+
+ NUMBER OF VOLUMES MESHED   =         4
+ MAXIMUM NODE NUMBER        =    545045
+ MAXIMUM ELEMENT NUMBER     =    373285
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ *GET  SOLID_ELEMENTS_BEFORE_REFINE  FROM  ELEM  ITEM=COUN           VALUE=  373285.000    
+
+ *GET  SOLID_NODES_BEFORE_REFINE  FROM  NODE  ITEM=COUN       VALUE=  545045.000     
+
+ PARAMETER SELECTED_ELEMENTS_FOR_REFINE =     0.000000000    
+
+ PARAMETER REFINE_LAYER_HALFHEIGHT =    0.4000000000E-03
+
+ *IF  local_refine_level  ( =   1.00000     )  GT  
+      0  ( =   0.00000     )  THEN    
+
+ *DO LOOP ON PARAMETER= REFINE_PASS FROM  1.0000     TO  1.0000     BY  1.0000    
+
+ SELECT       FOR ITEM=TYPE COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+     373285  ELEMENTS (OF     373285  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ SELECT      ALL NODES HAVING ANY ELEMENT IN ELEMENT SET.
+
+     545045 NODES (OF     545045  DEFINED) SELECTED FROM
+   373285 SELECTED ELEMENTS BY NSLE COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=X     BETWEEN-0.18000E-02 AND  0.18000E-02
+   KABS=  0.  TOLERANCE= 0.360000E-10
+
+     270407  NODES (OF     545045  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Z     BETWEEN-0.18000E-02 AND  0.18000E-02
+   KABS=  0.  TOLERANCE= 0.360000E-10
+
+     138452  NODES (OF     545045  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = AM_CENTRAL_NODES  ENTITY=NODE
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Y     BETWEEN-0.40000E-03 AND  0.40000E-03
+   KABS=  0.  TOLERANCE= 0.800000E-11
+
+      33197  NODES (OF     545045  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = AM_INTERFACE_NODES  ENTITY=NODE
+
+ SELECT      COMPONENT AM_CENTRAL_NODES                                                                                                                                                                                                                                                
+
+ PARAMETER REFINE_CONTACT_YMIN =    0.8500000000E-03
+
+ PARAMETER REFINE_CONTACT_YMAX =    0.1950000000E-02
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Y     BETWEEN 0.85000E-03 AND  0.19500E-02
+   KABS=  0.  TOLERANCE= 0.110000E-10
+
+      19324  NODES (OF     545045  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ ALSO SELECT COMPONENT AM_INTERFACE_NODES                                                                                                                                                                                                                                              
+
+ SELECT      ALL ELEMENTS HAVING ANY NODE IN NODAL SET.
+
+      45439 ELEMENTS (OF     373285  DEFINED) SELECTED FROM
+    52521 SELECTED NODES BY  ESLN COMMAND.
+
+ *GET  SELECTED_ELEMENTS_THIS_PASS  FROM  ELEM  ITEM=COUN           VALUE=  45439.0000    
+
+ DELETE COMPONENT AM_CENTRAL_NODES                                                                                                                                                                                                                                                
+
+ DELETE COMPONENT AM_INTERFACE_NODES                                                                                                                                                                                                                                              
+
+ *IF  selected_elements_this_pass  ( =   45439.0     )  LT  
+      1  ( =   1.00000     )  THEN    
+
+ *ENDIF
+
+ PARAMETER SELECTED_ELEMENTS_FOR_REFINE =     45439.00000    
+
+   REFINE ELEMENTS   AT  ALL  SELECTED ELEMENTS 
+
+ *** NOTE ***                            CP =      10.347   TIME= 10:54:31
+ The initial memory allocation (-m) has been exceeded.                   
+  Supplemental memory allocations are being used.                        
+
+ Additional Nodes    =  395643
+ Additional Elements =  282289
+
+ ------------------------------------------------------------------------------
+            <<<<<<          SHAPE TESTING SUMMARY           >>>>>>
+            <<<<<<       FOR NEW OR MODIFIED ELEMENTS       >>>>>>
+ ------------------------------------------------------------------------------
+                    --------------------------------------
+                    |  Element count    331031 SOLID187  |
+                    --------------------------------------
+
+  Test                Number tested  Warning count  Error count    Warn+Err %
+  ----                -------------  -------------  -----------    ----------
+  Aspect Ratio             331031              4             0         0.00 %
+  Maximum Angle            331031              5             0         0.00 %
+  Jacobian Ratio           331031              0             0         0.00 %
+
+  Any                      331031              5             0         0.00 %
+ ------------------------------------------------------------------------------
+
+ *** WARNING ***                         CP =      14.575   TIME= 10:54:35
+ Shape testing revealed that 5 of the 331031 new or modified elements    
+ violate shape warning limits.  To review test results, please see the   
+ output file or issue the CHECK command.                                 
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ *ENDDO  INDEX= REFINE_PASS                     
+
+ *ENDIF
+
+ *GET  SOLID_ELEMENTS_AFTER_REFINE  FROM  ELEM  ITEM=COUN           VALUE=  655574.000    
+
+ *GET  SOLID_NODES_AFTER_REFINE  FROM  NODE  ITEM=COUN       VALUE=  940688.000     
+
+ PARAMETER LOCAL_TARGET_SIZE =    0.1000000000E-03
+
+ PARAMETER WRITE_AGGRESSIVE_INVENTORY =     1.000000000    
+
+ *IF  write_aggressive_inventory  ( =   1.00000     )  GT  
+      0  ( =   0.00000     )  THEN    
+
+ OPENED FILE= aggressive_mesh_inventory.csv FOR COMMAND FILE DATA 
+
+
+ PARAMETER AM_BM =    0.2000000000E-03
+
+ PARAMETER AM_TM =    0.1000000000E-03
+
+ PARAMETER AM_HW =    0.1800000000E-02
+
+ PARAMETER AM_LV =     1.000000000    
+
+ PARAMETER AM_SP =     45439.00000    
+
+ PARAMETER AM_E0 =     373285.0000    
+
+ PARAMETER AM_E1 =     655574.0000    
+
+ PARAMETER AM_N0 =     545045.0000    
+
+ PARAMETER AM_N1 =     940688.0000    
+
+  COMMAND FILE CLOSED 
+
+
+ *ENDIF
+
+ *IF  mesh_only_preflight  ( =   0.00000     )  EQ  
+      1  ( =   1.00000     )  THEN    
+
+ *ENDIF
+
+ SELECT      COMPONENT VPROBE                                                                                                                                                                                                                                                          
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+     133329  NODES (OF     940688  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ DEFINITION OF COMPONENT = PROBE_NODES  ENTITY=NODE
+
+ *GET  PYMAX     FROM  NODE  ITEM=MXLO Y     VALUE= 0.555000000E-002
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Y     BETWEEN 0.49500E-02 AND  0.56500E-02
+   KABS=  0.  TOLERANCE= 0.700000E-11
+
+      12735  NODES (OF     940688  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ DEFINITION OF COMPONENT = PROBE_TOP_NODES  ENTITY=NODE
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT VEYELID                                                                                                                                                                                                                                                         
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+     570294  NODES (OF     940688  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=X     BETWEEN-0.10000E-04 AND  0.10000E-04
+   KABS=  0.  TOLERANCE= 0.200000E-12
+
+       3577  NODES (OF     940688  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Z     BETWEEN-0.10000E-04 AND  0.10000E-04
+   KABS=  0.  TOLERANCE= 0.200000E-12
+
+         27  NODES (OF     940688  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Y     BETWEEN 0.12400E-02 AND  0.12600E-02
+   KABS=  0.  TOLERANCE= 0.200000E-12
+
+          1  NODES (OF     940688  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ *GET  EYELID_APEX_COUNT  FROM  NODE  ITEM=COUN       VALUE=  1.00000000     
+
+ *IF  eyelid_apex_count  ( =   1.00000     )  LT  
+      1  ( =   1.00000     )  THEN    
+
+ *ENDIF
+
+ *GET  EYELID_APEX_NODE_ID  FROM  NODE  ITEM=NUM  MIN   VALUE=  140101.000     
+
+ DEFINITION OF COMPONENT = EYELID_APEX_NODE  ENTITY=NODE
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ REAL CONSTANT SET          3  ITEMS   1 TO   6
+    0.0000       0.0000       0.0000       0.0000       0.0000       0.0000    
+
+ MODIFY REAL CONSTANTS FOR SET      3  STARTING WITH  3  NEW VALUES ARE
+
+    1.0000       0.0000       0.0000       0.0000    
+
+ MODIFY REAL CONSTANTS FOR SET      3  STARTING WITH  6  NEW VALUES ARE
+
+  -0.50000E-03
+
+ ELEMENT TYPE       3 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE       3 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE       3 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      1      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ COORDINATE SYSTEM         13 DEFINITION.  TYPE= 2  (SPHERICAL)  
+   XC,YC,ZC=  0.0000    -0.78000E-02  0.0000    
+   ANGLES=    0.00    0.00    0.00   PARAMETERS=   1.000   1.000
+   ORIENTATION=  1.00  0.00  0.00   0.00  1.00  0.00   0.00  0.00  1.00
+
+ ACTIVE COORDINATE SYSTEM SET TO        13  (SPHERICAL)  
+
+ ACTIVE COORDINATE SYSTEM SET TO         13  (SPHERICAL)  
+
+ SELECT      COMPONENT VEYELID                                                                                                                                                                                                                                                         
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+     570294  NODES (OF     940688  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=X     BETWEEN 0.88000E-02 AND  0.93500E-02
+   KABS=  0.  TOLERANCE= 0.550000E-11
+
+     155616  NODES (OF     940688  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ ACTIVE COORDINATE SYSTEM SET TO          0  (CARTESIAN)  
+
+ ELEMENT TYPE SET TO         3
+
+ REAL CONSTANT NUMBER=        3
+
+ MATERIAL NUMBER SET TO         2
+
+ GENERATE ELEMENTS ON SURFACE DEFINED BY SELECTED NODES
+  TYPE=        3  REAL=        3  MATERIAL=        2  ESYS=    0
+
+ NUMBER OF ELEMENTS GENERATED=      17800                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT      COMPONENT PROBE_NODES                                                                                                                                                                                                                                                     
+
+ *GET  PYMIN     FROM  NODE  ITEM=MNLO Y     VALUE= 0.155000000E-002
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Y     BETWEEN 0.15400E-02 AND  0.21500E-02
+   KABS=  0.  TOLERANCE= 0.610000E-11
+
+      68849  NODES (OF     940688  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ ELEMENT TYPE SET TO         2
+
+ REAL CONSTANT NUMBER=        3
+
+ MATERIAL NUMBER SET TO         3
+
+ GENERATE ELEMENTS ON SURFACE DEFINED BY SELECTED NODES
+  TYPE=        2  REAL=        3  MATERIAL=        3  ESYS=    0
+
+ NUMBER OF ELEMENTS GENERATED=       3832                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ ELEMENT TYPE          4 IS TARGE170     3-D TARGET SEGMENT          
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE          5 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      0
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ REAL CONSTANT SET          4  ITEMS   1 TO   6
+    0.0000       0.0000       0.0000       0.0000       0.0000       0.0000    
+
+ ELEMENT TYPE       5 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      0      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      5
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ELEMENT TYPE       5 IS CONTA174     3D 8-NODE SURF-SURF CONTACT 
+  KEYOPT( 1- 6)=        0      1      0        0      0      0
+  KEYOPT( 7-12)=        0      0      0        0      0      5
+  KEYOPT(13-18)=        0      0      0        0      0      0
+
+ CURRENT NODAL DOF SET IS  UX    UY    UZ  
+  THREE-DIMENSIONAL MODEL
+
+ ACTIVE COORDINATE SYSTEM SET TO         13  (SPHERICAL)  
+
+ SELECT      COMPONENT VCORNEA                                                                                                                                                                                                                                                         
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+     237156  NODES (OF     940688  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=X     BETWEEN 0.75500E-02 AND  0.80500E-02
+   KABS=  0.  TOLERANCE= 0.500000E-11
+
+     143304  NODES (OF     940688  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ ACTIVE COORDINATE SYSTEM SET TO          0  (CARTESIAN)  
+
+ ELEMENT TYPE SET TO         5
+
+ REAL CONSTANT NUMBER=        4
+
+ MATERIAL NUMBER SET TO         1
+
+ GENERATE ELEMENTS ON SURFACE DEFINED BY SELECTED NODES
+  TYPE=        5  REAL=        4  MATERIAL=        1  ESYS=    0
+
+ NUMBER OF ELEMENTS GENERATED=      14762                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ ACTIVE COORDINATE SYSTEM SET TO         13  (SPHERICAL)  
+
+ SELECT      COMPONENT VEYELID                                                                                                                                                                                                                                                         
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+     570294  NODES (OF     940688  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=X     BETWEEN 0.75500E-02 AND  0.80500E-02
+   KABS=  0.  TOLERANCE= 0.500000E-11
+
+     136608  NODES (OF     940688  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ ACTIVE COORDINATE SYSTEM SET TO          0  (CARTESIAN)  
+
+ ELEMENT TYPE SET TO         4
+
+ REAL CONSTANT NUMBER=        4
+
+ MATERIAL NUMBER SET TO         2
+
+ GENERATE ELEMENTS ON SURFACE DEFINED BY SELECTED NODES
+  TYPE=        4  REAL=        4  MATERIAL=        2  ESYS=    0
+
+ NUMBER OF ELEMENTS GENERATED=      14752                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ PARAMETER EDGE_Y =   -0.2816025682E-02
+
+ SELECT      COMPONENT VCORNEA                                                                                                                                                                                                                                                         
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+     237156  NODES (OF     940688  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=Y     BETWEEN-0.33160E-02 AND -0.24160E-02
+   KABS=  0.  TOLERANCE= 0.900000E-11
+
+      24092  NODES (OF     940688  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ SPECIFIED CONSTRAINT UX   FOR SELECTED NODES            1 TO      940688 BY           1
+ REAL=  0.00000000       IMAG=  0.00000000    
+ ADDITIONAL DOFS=  UY    UZ  
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ ACTIVE COORDINATE SYSTEM SET TO         13  (SPHERICAL)  
+
+ SELECT      COMPONENT VCORNEA                                                                                                                                                                                                                                                         
+
+ SELECT      ALL NODES (INTERIOR TO VOLUME, INTERIOR TO AREAS
+ INTERIOR TO LINES, AND AT KEYPOINTS) RELATED TO SELECTED VOLUME SET.
+
+     237156  NODES (OF     940688  DEFINED) SELECTED FROM 
+        4 SELECTED VOLUMES BY  NSLV  COMMAND.
+
+ RESELECT     FOR ITEM=LOC  COMPONENT=X     BETWEEN 0.70000E-02 AND  0.74000E-02
+   KABS=  0.  TOLERANCE= 0.400000E-11
+
+      46870  NODES (OF     940688  DEFINED) SELECTED BY  NSEL  COMMAND.
+
+ GENERATE SURFACE LOAD PRES ON SURFACE DEFINED BY ALL SELECTED NODES
+ VALUES=  0.00000000      0.00000000    
+
+ NUMBER OF PRES ELEMENT FACE LOADS STORED =       8066
+
+ ACTIVE COORDINATE SYSTEM SET TO          0  (CARTESIAN)  
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+
+ ***** ROUTINE COMPLETED *****  CP =        22.633
+
+
+
+ *****  MAPDL SOLUTION ROUTINE  *****
+
+
+ PERFORM A STATIC ANALYSIS
+  THIS WILL BE A NEW ANALYSIS
+
+ LARGE DEFORMATION ANALYSIS
+
+ USE THE FULL NEWTON-RAPHSON OPTION FOR  ALL DEGREES OF FREEDOM
+   AND USE THE DEFAULT ADAPTIVE DESCENT OPTION
+
+ USE A LINE SEARCH FOR  ALL DEGREES OF FREEDOM
+
+ NONLINEAR STABILIZATION CONTROL:
+ KEY=CONS   METHOD=ENER   VALUE= 0.10000E-03   SUBSTPOPT=NO     FORCELIMIT= 0.20000    
+
+
+ WRITE ALL  ITEMS TO THE DATABASE WITH A FREQUENCY OF ALL 
+   FOR ALL APPLICABLE ENTITIES
+
+ *** WARNING ***                         CP =      22.635   TIME= 10:54:37
+ The MINREF field of the CNVTOL command has been assigned a default      
+ value of 1.0 for convergence on f.  Check results carefully.            
+
+ CONVERGENCE ON F    BASED ON THE NORM OF THE N-R LOAD
+   WITH A TOLERANCE OF 0.1000E-01 AND A MINIMUM REFERENCE VALUE OF  1.000    
+   USING THE L2 NORM (CHECK THE SRSS VALUE)
+
+ KEY TO TERMINATE RUN IF NO CONVERGENCE=  1
+ DEGREE OF FREEDOM (DISPLACEMENT) LIMIT=  0.0000    
+ CUMULATIVE ITERATION LIMIT=     0
+ ELAPSED TIME LIMIT (SEC)=  0.0000       (  0 HOURS  0 MIN)
+ CPU TIME LIMIT (SEC)=  0.0000       (  0 HOURS  0 MIN)
+
+ USE AUTOMATIC TIME STEPPING THIS LOAD STEP
+
+ STEP BOUNDARY CONDITION KEY= 0
+
+ SELECT      COMPONENT PROBE_TOP_NODES                                                                                                                                                                                                                                                 
+
+ SPECIFIED CONSTRAINT UX   FOR SELECTED NODES            1 TO      940688 BY           1
+ REAL=  0.00000000       IMAG=  0.00000000    
+
+ SPECIFIED CONSTRAINT UY   FOR SELECTED NODES            1 TO      940688 BY           1
+ REAL=  0.00000000       IMAG=  0.00000000    
+
+ SPECIFIED CONSTRAINT UZ   FOR SELECTED NODES            1 TO      940688 BY           1
+ REAL=  0.00000000       IMAG=  0.00000000    
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ TIME=  1.0000    
+
+ *IF  retry_mode  ( =   0.00000     )  EQ  
+      1  ( =   1.00000     )  THEN    
+
+ *ELSE
+
+ USE      20 SUBSTEPS INITIALLY THIS LOAD STEP FOR ALL  DEGREES OF FREEDOM
+ FOR AUTOMATIC TIME STEPPING:
+   USE    200 SUBSTEPS AS A MAXIMUM
+   USE      5 SUBSTEPS AS A MINIMUM
+
+ *ENDIF
+
+ *** NOTE ***                            CP =      23.480   TIME= 10:54:37
+ The automatic domain decomposition logic has selected the MESH domain   
+ decomposition method with 4 processes per solution.                     
+
+ *****  MAPDL SOLVE    COMMAND  *****
+
+ *** NOTE ***                            CP =      25.093   TIME= 10:54:38
+ There is no title defined for this analysis.                            
+
+ *** WARNING ***                         CP =      26.407   TIME= 10:54:38
+ Previous testing revealed that 9 of the 706720 selected elements        
+ violate shape warning limits.  To review warning messages, please see   
+ the output or error file, or issue the CHECK command.                   
+
+ *** NOTE ***                            CP =      26.408   TIME= 10:54:38
+ The model data was checked and warning messages were found.             
+  Please review output or errors file (                                  
+ /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/202 
+ 60813T025418Z_011c77e7_L010_h1p25_iop0_guarded_np4/iop0/eyelid_1p25mm_i 
+ ndent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm0.err ) for these     
+ warning messages.                                                       
+
+ *** SELECTION OF ELEMENT TECHNOLOGIES FOR APPLICABLE ELEMENTS ***
+                ---GIVE SUGGESTIONS ONLY---
+
+ ELEMENT TYPE         1 IS SOLID187. IT IS NOT ASSOCIATED WITH FULLY INCOMPRESSIBLE
+ HYPERELASTIC MATERIALS. NO SUGGESTION IS AVAILABLE.
+
+
+
+ *** MAPDL - ENGINEERING ANALYSIS SYSTEM  RELEASE 2025 R2          25.2     ***
+ Ansys Mechanical Enterprise                       
+ 20120530  VERSION=LINUX x64     10:54:38  AUG 13, 2026 CP=     27.194
+
+                                                                               
+
+
+
+                       S O L U T I O N   O P T I O N S
+
+   PROBLEM DIMENSIONALITY. . . . . . . . . . . . .3-D                  
+   DEGREES OF FREEDOM. . . . . . UX   UY   UZ  
+   ANALYSIS TYPE . . . . . . . . . . . . . . . . .STATIC (STEADY-STATE)
+   NONLINEAR GEOMETRIC EFFECTS . . . . . . . . . .ON
+   NEWTON-RAPHSON OPTION . . . . . . . . . . . . .FULL             
+   GLOBALLY ASSEMBLED MATRIX . . . . . . . . . . .SYMMETRIC  
+
+ *** NOTE ***                            CP =      28.179   TIME= 10:54:39
+ The conditions for direct assembly have been met.  No .emat or .erot    
+ files will be produced.                                                 
+
+ *** NOTE ***                            CP =      34.898   TIME= 10:54:41
+ Smoothing on certain target nodes (e.g.467778) for pair ID 3 may have   
+ accuracy issue.  Please verify element normal of connected target       
+ elements (e.g.673386 & 673433).                                         
+
+ *** WARNING ***                         CP =      48.981   TIME= 10:54:54
+ Node 173 connects both contact element 677217 and target element        
+ 706200.  Please check the model carefully.                              
+
+ *** NOTE ***                            CP =      49.344   TIME= 10:54:55
+ Deformable-deformable contact pair identified by real constant set 3    
+ and contact element type 3 has been set up.                             
+ Contact algorithm: Penalty method
+ Contact detection at: Gauss integration point
+ Contact stiffness factor FKN                  1.0000    
+ The resulting initial contact stiffness      0.77063E+11
+ Default penetration tolerance factor FTOLN   0.10000    
+ The resulting penetration tolerance          0.13392E-04
+ Frictionless contact pair is defined
+ Update contact stiffness at each iteration
+ Average contact surface length               0.14843E-03
+ Average contact pair depth                   0.13392E-03
+ Average target surface length                0.11205E-03
+ User defined pinball region PINB             0.50000E-03
+
+ *** NOTE ***                            CP =      49.344   TIME= 10:54:55
+ One of the contact searching regions contains at least 383 target       
+ elements.  You may reduce the pinball radius.                           
+ *WARNING*: Initial penetration is included.
+
+ *** NOTE ***                            CP =      49.344   TIME= 10:54:55
+ Min.  Initial gap 3.000563622E-04 was detected between contact element  
+ 660020 and target element 673665.                                       
+ You may move entire target surface by: x= 4.619630923E-07, y=           
+ -3.000545534E-04, z= 9.338246193E-07, to bring it in contact.           
+ ****************************************
+  
+
+ *** NOTE ***                            CP =      49.344   TIME= 10:54:55
+ Deformable-deformable contact pair identified by real constant set 4    
+ and contact element type 5 has been set up.                             
+ Contact algorithm: Penalty method
+ Contact detection at: Gauss integration point
+ *WARNING*: Certain nodes (for example 207) are used in both contact and 
+ target elements.  Please check your model carefully.                    
+ Default contact stiffness factor FKN          1.0000    
+ The resulting initial contact stiffness      0.83078E+11
+ Default penetration tolerance factor FTOLN   0.10000    
+ The resulting penetration tolerance          0.12422E-04
+ Default opening contact stiffness OPSF will be used.
+ Default tangent stiffness factor FKT          1.0000    
+ Default elastic slip factor SLTOL            0.50000E-02
+ The resulting elastic slip tolerance         0.69711E-06
+ Update contact stiffness at each iteration
+ Default Max. friction stress TAUMAX          0.10000E+21
+ Average contact surface length               0.13942E-03
+ Average contact pair depth                   0.12422E-03
+ Average target surface length                0.13855E-03
+ Default pinball region factor PINB           0.25000    
+ The resulting pinball region                 0.31055E-04
+ *WARNING*: Initial penetration/gap is included.
+ Bonded contact (always) is defined.
+ *WARNING*: Initial gap may cause problem, pl. reset KEYOPT(9).
+
+ *** NOTE ***                            CP =      49.344   TIME= 10:54:55
+ Max.  Initial penetration 7.580094237E-11 was detected between contact  
+ element 682067 and target element 697320.                               
+ ****************************************
+  
+
+ *** WARNING ***                         CP =      49.344   TIME= 10:54:55
+ For certain bonded contact pairs (e.g.  Real ID 4), initial             
+ penetration/gap is included.  The program will resolve the initial      
+ offset in the very first substep which may affect solution              
+ convergence.  It is recommended to switch to KEYOPT(9)=1 if possible.   
+  
+  
+
+  
+  
+     D I S T R I B U T E D   D O M A I N   D E C O M P O S E R
+  
+  ...Number of elements: 706720
+  ...Number of nodes:    940688
+  ...Decompose to 4 CPU domains
+  ...Element load balance ratio =     1.056
+
+
+                      L O A D   S T E P   O P T I O N S
+
+   LOAD STEP NUMBER. . . . . . . . . . . . . . . .     1
+   TIME AT END OF THE LOAD STEP. . . . . . . . . .  1.0000    
+   AUTOMATIC TIME STEPPING . . . . . . . . . . . .    ON
+      INITIAL NUMBER OF SUBSTEPS . . . . . . . . .    20
+      MAXIMUM NUMBER OF SUBSTEPS . . . . . . . . .   200
+      MINIMUM NUMBER OF SUBSTEPS . . . . . . . . .     5
+   MAXIMUM NUMBER OF EQUILIBRIUM ITERATIONS. . . .    15
+   NONLINEAR STABILIZATION . . . . . . . . . . . .ON (CONSTANT)
+   STEP CHANGE BOUNDARY CONDITIONS . . . . . . . .    NO
+   STRESS-STIFFENING . . . . . . . . . . . . . . .    ON
+   LINE SEARCH . . . . . . . . . . . . . . . . . .    ON
+   TERMINATE ANALYSIS IF NOT CONVERGED . . . . . .YES (EXIT)  
+   CONVERGENCE CONTROLS
+      LABEL   REFERENCE    TOLERANCE  NORM     MINREF
+       F       0.000       0.1000E-01   2      0.000    
+   PRINT OUTPUT CONTROLS . . . . . . . . . . . . .NO PRINTOUT
+   DATABASE OUTPUT CONTROLS
+      ITEM     FREQUENCY   COMPONENT
+       ALL        ALL               
+
+
+ SOLUTION MONITORING INFO IS WRITTEN TO FILE= eyelid_1p25mm_indent_0p28mm.mntr                                                                                                                                                                                                                                    
+ MAXIMUM NUMBER OF EQUILIBRIUM ITERATIONS HAS BEEN MODIFIED              
+  TO BE, NEQIT = 25, BY SOLUTION CONTROL LOGIC.                          
+
+ *** WARNING ***                         CP =      78.023   TIME= 10:55:14
+ Node 173 connects both contact element 677217 and target element        
+ 706200.  Please check the model carefully.                              
+
+
+ Range of element maximum matrix coefficients in global coordinates
+ Maximum = 2903699.46 at element 374655.                                 
+ Minimum = 2.61727004 at element 690972.                                 
+
+   *** ELEMENT MATRIX FORMULATION TIMES
+     TYPE    NUMBER   ENAME      TOTAL CP  AVE CP
+
+        1    655574  SOLID187     21.084   0.000032
+        2      3832  TARGE170      0.006   0.000002
+        3     17800  CONTA174      2.875   0.000162
+        4     14752  TARGE170      0.022   0.000002
+        5     14762  CONTA174      1.038   0.000070
+ Time at end of element matrix formulation CP = 93.0951996.              
+
+ ALL CURRENT MAPDL DATA WRITTEN TO FILE NAME= eyelid_1p25mm_indent_0p28mm.rdb
+  FOR POSSIBLE RESUME FROM THIS POINT
+     FORCE CONVERGENCE VALUE  =  0.6584E-06  CRITERION=  0.1000E-03
+
+ DISTRIBUTED SPARSE MATRIX DIRECT SOLVER.
+  Number of equations =     2711583,    Maximum wavefront =    537
+
+
+  Memory allocated on only this MPI rank (rank     0)
+  -------------------------------------------------------------------
+  Equation solver memory allocated                     =     9.006 GB
+  Equation solver memory required for in-core mode     =     8.602 GB
+  Equation solver memory required for out-of-core mode =     2.142 GB
+  Total (solver and non-solver) memory allocated       =    12.758 GB
+
+
+  Total memory summed across all MPI ranks on this machines
+  -------------------------------------------------------------------
+  Equation solver memory allocated                     =    51.240 GB
+  Equation solver memory required for in-core mode     =    48.900 GB
+  Equation solver memory required for out-of-core mode =     8.350 GB
+  Total (solver and non-solver) memory allocated       =    60.354 GB
+
+ *** NOTE ***                            CP =     100.687   TIME= 10:55:36
+ The Distributed Sparse Matrix Solver is currently running in the        
+ in-core memory mode.  This memory mode uses the most amount of memory   
+ in order to avoid using the hard drive as much as possible, which most  
+ often results in the fastest solution time.  This mode is recommended   
+ if enough physical memory is present to accommodate all of the solver   
+ data.                                                                   
+ Distributed sparse solver maximum pivot= 3448543.85 at node 500008 UY.  
+ Distributed sparse solver minimum pivot= 9.91514578 at node 310319 UZ.  
+ Distributed sparse solver minimum pivot in absolute value= 9.91514578   
+ at node 310319 UZ.                                                      
+     DISP CONVERGENCE VALUE   =  0.3541E-10  CRITERION=  0.1770E-11
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC= -0.3541E-10
+     DISP CONVERGENCE VALUE   =  0.3220E-10  CRITERION=  0.6831E-09 <<< CONVERGED
+      The calculated reference DISP CONVERGENCE VALUE   =  0.3541E-10
+       is less than MINREF (which can be modified on the CNVTOL command).
+     LINE SEARCH PARAMETER =  0.9094     SCALED MAX DOF INC = -0.3220E-10
+     FORCE CONVERGENCE VALUE  =  0.6373E-07  CRITERION=  0.1000E-03 <<< CONVERGED
+     DISP CONVERGENCE VALUE   =  0.3220E-10  CRITERION=  0.6831E-09 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC = -0.3541E-10
+     FORCE CONVERGENCE VALUE  =  0.6373E-07  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   2
+
+   *** ELEMENT RESULT CALCULATION TIMES
+     TYPE    NUMBER   ENAME      TOTAL CP  AVE CP
+
+        1    655574  SOLID187     16.985   0.000026
+        3      5813  CONTA174      0.127   0.000022
+        5     14762  CONTA174      0.421   0.000029
+
+   *** NODAL LOAD CALCULATION TIMES
+     TYPE    NUMBER   ENAME      TOTAL CP  AVE CP
+
+        1    655574  SOLID187      2.963   0.000005
+        3      5813  CONTA174      0.007   0.000001
+        5     14762  CONTA174      0.075   0.000005
+ *** LOAD STEP     1   SUBSTEP     1  COMPLETED.    CUM ITER =      2
+ *** TIME =  0.500000E-01     TIME INC =  0.500000E-01
+ *** DAMPING FACTOR FOR NONLINEAR STABILIZATION = 0.1988E+13
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.50000E-01  UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.1697E-06  CRITERION=  0.1000E-03
+     DISP CONVERGENCE VALUE   =  0.4758E-10  CRITERION=  0.6831E-09 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.4758E-10
+     DISP CONVERGENCE VALUE   =  0.4758E-10  CRITERION=  0.6831E-09 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.4758E-10
+     FORCE CONVERGENCE VALUE  =  0.1808E-11  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     2  COMPLETED.    CUM ITER =      3
+ *** TIME =  0.100000         TIME INC =  0.500000E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.75000E-01  INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.9559E-07  CRITERION=  0.1000E-03
+     DISP CONVERGENCE VALUE   =  0.3138E-10  CRITERION=  0.6831E-09 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.3138E-10
+     DISP CONVERGENCE VALUE   =  0.3138E-10  CRITERION=  0.6831E-09 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.3138E-10
+     FORCE CONVERGENCE VALUE  =  0.1776E-11  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     3  COMPLETED.    CUM ITER =      4
+ *** TIME =  0.175000         TIME INC =  0.750000E-01
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.11250      INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.8079E-11  CRITERION=  0.1000E-03
+     DISP CONVERGENCE VALUE   =  0.2948E-13  CRITERION=  0.6831E-09 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2948E-13
+     DISP CONVERGENCE VALUE   =  0.2948E-13  CRITERION=  0.6831E-09 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.2948E-13
+     FORCE CONVERGENCE VALUE  =  0.1776E-11  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     4  COMPLETED.    CUM ITER =      5
+ *** TIME =  0.287500         TIME INC =  0.112500    
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.16875      INCREASED (FACTOR = 1.5000)
+
+     FORCE CONVERGENCE VALUE  =  0.4363E-11  CRITERION=  0.1000E-03
+     DISP CONVERGENCE VALUE   =  0.1119E-13  CRITERION=  0.6831E-09 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.1119E-13
+     DISP CONVERGENCE VALUE   =  0.1119E-13  CRITERION=  0.6831E-09 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.1119E-13
+     FORCE CONVERGENCE VALUE  =  0.1772E-11  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     5  COMPLETED.    CUM ITER =      6
+ *** TIME =  0.456250         TIME INC =  0.168750    
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.20000      INCREASED (FACTOR = 1.1852)
+
+     FORCE CONVERGENCE VALUE  =  0.3480E-11  CRITERION=  0.1000E-03
+     DISP CONVERGENCE VALUE   =  0.5726E-14  CRITERION=  0.6831E-09 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.5726E-14
+     DISP CONVERGENCE VALUE   =  0.5726E-14  CRITERION=  0.6831E-09 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.5726E-14
+     FORCE CONVERGENCE VALUE  =  0.1781E-11  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     6  COMPLETED.    CUM ITER =      7
+ *** TIME =  0.656250         TIME INC =  0.200000    
+ *** AUTO STEP TIME:  NEXT TIME INC = 0.20000      UNCHANGED
+
+     FORCE CONVERGENCE VALUE  =  0.3098E-11  CRITERION=  0.1000E-03
+     DISP CONVERGENCE VALUE   =  0.2076E-14  CRITERION=  0.6831E-09 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.2076E-14
+     DISP CONVERGENCE VALUE   =  0.2076E-14  CRITERION=  0.6831E-09 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.2076E-14
+     FORCE CONVERGENCE VALUE  =  0.1776E-11  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     7  COMPLETED.    CUM ITER =      8
+ *** TIME =  0.856250         TIME INC =  0.200000    
+ *** AUTO TIME STEP:  NEXT TIME INC = 0.14375      DECREASED (FACTOR = 0.7188)
+
+     FORCE CONVERGENCE VALUE  =  0.2653E-11  CRITERION=  0.1000E-03
+     DISP CONVERGENCE VALUE   =  0.5496E-15  CRITERION=  0.6831E-09 <<< CONVERGED
+    EQUIL ITER   1 COMPLETED.  NEW TRIANG MATRIX.  MAX DOF INC=  0.5496E-15
+     DISP CONVERGENCE VALUE   =  0.5496E-15  CRITERION=  0.6831E-09 <<< CONVERGED
+     LINE SEARCH PARAMETER =   1.000     SCALED MAX DOF INC =  0.5496E-15
+     FORCE CONVERGENCE VALUE  =  0.1766E-11  CRITERION=  0.1000E-03 <<< CONVERGED
+    >>> SOLUTION CONVERGED AFTER EQUILIBRIUM ITERATION   1
+ *** LOAD STEP     1   SUBSTEP     8  COMPLETED.    CUM ITER =      9
+ *** TIME =   1.00000         TIME INC =  0.143750    
+
+
+ *** MAPDL BINARY FILE STATISTICS
+  BUFFER SIZE USED= 16384
+      580.250 MB WRITTEN ON ELEMENT SAVED DATA FILE: eyelid_1p25mm_indent_0p28mm0.esav
+      419.438 MB WRITTEN ON ASSEMBLED MATRIX FILE: eyelid_1p25mm_indent_0p28mm0.full
+     1000.875 MB WRITTEN ON RESULTS FILE: eyelid_1p25mm_indent_0p28mm0.rst
+
+ *GET  PRELOAD_CNV  FROM  ACTI  ITEM=SOLU CNVG  VALUE=  1.00000000    
+
+ *GET  PRELOAD_APEX_UY  FROM  NODE 140101  ITEM=U    Y     VALUE=-0.834032993E-12
+
+ PARAMETER PRELOAD_CLEARANCE =    0.3000000008E-03
+
+ PARAMETER APPROACH_PUSH =    0.3000000008E-03
+
+ *IF  approach_push  ( =  0.300000E-03 )  LE  
+      0  ( =   0.00000     )  THEN    
+
+ *ENDIF
+
+ SELECT      COMPONENT PROBE_TOP_NODES                                                                                                                                                                                                                                                 
+
+ SPECIFIED CONSTRAINT UY   FOR SELECTED NODES            1 TO      940688 BY           1
+ REAL=-3.000000008E-04   IMAG=  0.00000000    
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ TIME=  2.0000    
+
+ *IF  retry_mode  ( =   0.00000     )  EQ  
+      1  ( =   1.00000     )  THEN    
+
+ *ELSE
+
+ USE      20 SUBSTEPS INITIALLY THIS LOAD STEP FOR ALL  DEGREES OF FREEDOM
+ FOR AUTOMATIC TIME STEPPING:
+   USE    200 SUBSTEPS AS A MAXIMUM
+   USE      5 SUBSTEPS AS A MINIMUM
+
+ *ENDIF
+
+ *****  MAPDL SOLVE    COMMAND  *****
+
+ *** MAPDL - ENGINEERING ANALYSIS SYSTEM  RELEASE 2025 R2          25.2     ***
+ Ansys Mechanical Enterprise                       
+ 20120530  VERSION=LINUX x64     11:27:55  AUG 13, 2026 CP=   2046.363
+
+                                                                               
+
+
+
+                      L O A D   S T E P   O P T I O N S
+
+   LOAD STEP NUMBER. . . . . . . . . . . . . . . .     2
+   TIME AT END OF THE LOAD STEP. . . . . . . . . .  2.0000    
+   AUTOMATIC TIME STEPPING . . . . . . . . . . . .    ON
+      INITIAL NUMBER OF SUBSTEPS . . . . . . . . .    20
+      MAXIMUM NUMBER OF SUBSTEPS . . . . . . . . .   200
+      MINIMUM NUMBER OF SUBSTEPS . . . . . . . . .     5
+   MAXIMUM NUMBER OF EQUILIBRIUM ITERATIONS. . . .    15
+   NONLINEAR STABILIZATION . . . . . . . . . . . .ON (CONSTANT)
+   STEP CHANGE BOUNDARY CONDITIONS . . . . . . . .    NO
+   STRESS-STIFFENING . . . . . . . . . . . . . . .    ON
+   LINE SEARCH . . . . . . . . . . . . . . . . . .    ON
+   TERMINATE ANALYSIS IF NOT CONVERGED . . . . . .YES (EXIT)  
+   CONVERGENCE CONTROLS
+      LABEL   REFERENCE    TOLERANCE  NORM     MINREF
+       F       0.000       0.1000E-01   2      0.000    
+   PRINT OUTPUT CONTROLS . . . . . . . . . . . . .NO PRINTOUT
+   DATABASE OUTPUT CONTROLS
+      ITEM     FREQUENCY   COMPONENT
+       ALL        ALL               
+
+
+ SOLUTION MONITORING INFO IS WRITTEN TO FILE= eyelid_1p25mm_indent_0p28mm.mntr                                                                                                                                                                                                                                    
+ MAXIMUM NUMBER OF EQUILIBRIUM ITERATIONS HAS BEEN MODIFIED              
+  TO BE, NEQIT = 25, BY SOLUTION CONTROL LOGIC.                          
+
+     FORCE CONVERGENCE VALUE  =   439.6      CRITERION=   4.396    
