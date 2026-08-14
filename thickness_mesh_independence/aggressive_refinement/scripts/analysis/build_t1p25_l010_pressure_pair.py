@@ -168,6 +168,26 @@ def main() -> int:
     }
     if not all(field_checks.values()):
         raise ValueError(f"field QC failed: {field_checks}")
+    cleanup_root = field_root / "rst_cleanup"
+    with (cleanup_root / "cleanup_summary.csv").open(newline="", encoding="utf-8-sig") as handle:
+        cleanup_status = {row[0]: row[1] for row in csv.reader(handle) if len(row) >= 2}
+    with (cleanup_root / "deleted_rst_manifest.tsv").open(newline="", encoding="utf-8-sig") as handle:
+        deleted_rst = {row["role"]: row for row in csv.DictReader(handle, delimiter="\t")}
+    cleanup_hashes = {}
+    for line in (cleanup_root / "sha256.txt").read_text(encoding="utf-8").splitlines():
+        digest, name = line.split("  ", 1)
+        cleanup_hashes[name] = digest
+    cleanup_checks = {
+        "two_rst_files_deleted": cleanup_status.get("deleted_file_count") == "2",
+        "rst_files_absent_after": cleanup_status.get("iop0_rst_remaining") == cleanup_status.get("iop20_rst_remaining") == "0",
+        "db_files_retained": cleanup_status.get("iop0_db_retained") == cleanup_status.get("iop20_db_retained") == "1",
+        "no_residual_cleanup_session": cleanup_status.get("solver_processes_after") == cleanup_status.get("running_blueknow_units_after") == "0",
+        "deleted_iop0_rst_hash_matches_field_provenance": deleted_rst["iop0"]["sha256"] == field_external["iop0_source_rst"]["sha256"],
+        "deleted_iop20_rst_hash_matches_field_provenance": deleted_rst["iop20"]["sha256"] == field_external["iop20_source_rst"]["sha256"],
+        "cleanup_files_hash_complete": all(sha256(cleanup_root / name) == digest for name, digest in cleanup_hashes.items()),
+    }
+    if not all(cleanup_checks.values()):
+        raise ValueError(f"RST cleanup audit failed: {cleanup_checks}")
     source_artifacts = [
         {
             "role": "accepted_iop0_manifest",
@@ -211,6 +231,15 @@ def main() -> int:
             "authoritative_view": "007 actual-scale deformed central section with native automatic colour scale",
             "visual_assessment": "Both endpoint sections are centered and mechanically continuous. IOP20 shows a coherent redistribution and a higher native maximum equivalent stress (44.488 kPa versus 40.366 kPa); native scales are intentionally not forced equal.",
             "external_artifacts": [field_external[key] for key in sorted(field_external)],
+        },
+        "rst_cleanup": {
+            "checks": cleanup_checks,
+            "authorization": cleanup_status["authorization"],
+            "reason": cleanup_status["reason"],
+            "apparent_bytes_deleted": int(cleanup_status["apparent_bytes_deleted"]),
+            "allocated_bytes_deleted": int(cleanup_status["allocated_bytes_deleted"]),
+            "db_retention": "Both endpoint DB files remain on 5090d with verified SHA-256.",
+            "audit_path": "field_qc/rst_cleanup/cleanup_summary.csv",
         },
         "coarse_reference_comparison": {
             "comparison_role": "directional_mesh_sensitivity_context_not_a_formal_two_percent_convergence_test",

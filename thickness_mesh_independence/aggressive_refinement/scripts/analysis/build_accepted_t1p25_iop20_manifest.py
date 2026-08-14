@@ -66,6 +66,10 @@ def main() -> int:
     for item in external:
         item["size_bytes"] = int(item["size_bytes"])
         item["allocated_bytes"] = int(item["allocated_bytes"])
+        item["availability"] = (
+            "deleted_after_pair_field_qc_and_sha256_audit"
+            if item["role"] == "rst" else "retained_on_5090d"
+        )
     checks = {
         "campaign_complete": status.get("campaign_complete") == "1" and status.get("campaign_incomplete") == "0",
         "runner_complete": row["status"] == "complete" and row["returncode"] == "0",
@@ -168,11 +172,11 @@ def main() -> int:
         "external_artifacts": external,
         "artifacts": artifacts,
         "retention": {
-            "rst_status": "retained_externally_pending_final_field_and_pair_qc",
-            "db_status": "retained_externally_pending_final_field_and_pair_qc",
+            "rst_status": "deleted_after_pair_field_qc_and_sha256_audit",
+            "db_status": "retained_externally_after_pair_qc",
             "failed_attempt_binary_status": "already_deleted_after_hash_audit",
         },
-        "acceptance": "The 1.25-mm IOP20 endpoint is accepted as a complete out-of-core L010 endpoint. It provides F20 but does not provide q until a new-root 1.25-mm IOP0 endpoint is completed, accepted, and paired on the same configuration.",
+        "acceptance": "The 1.25-mm IOP20 endpoint is accepted as a complete out-of-core L010 endpoint and has been paired only with the accepted same-commit IOP0 endpoint; the paired q remains specific to this L010 discretization.",
     }
     args.output.write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",

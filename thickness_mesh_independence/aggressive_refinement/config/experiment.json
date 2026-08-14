@@ -161,6 +161,14 @@
       "q20_mmhg": 4.9439072093374365,
       "pair_qc_pass": true,
       "mesh_independent": false,
+      "rst_cleanup": {
+        "status": "two_successful_rst_deleted_after_pair_field_qc_and_sha256_audit",
+        "deleted_file_count": 2,
+        "apparent_bytes_deleted": 3498967040,
+        "allocated_bytes_deleted": 2637785088,
+        "db_files_retained": 2,
+        "lightweight_audit": "thickness_mesh_independence/aggressive_refinement/results/t1p25_l010_pressure_pair/field_qc/rst_cleanup/cleanup_summary.csv"
+      },
       "claim_boundary": "Accepted only for the L010 discretization at 1.25 mm and 0.28 mm indentation; the 30.09% directional difference from the existing global-0.30 result is not a formal two-level convergence test and does not establish absolute mesh independence."
     },
     "launch_sequence": "IOP20 completed and was accepted first. After separate user authorization, IOP0 completed from a new root at the same exact source commit and with the same out-of-core/last-only strategy. Both endpoints and their pair passed scalar, field, resource, and zero-residual QC."

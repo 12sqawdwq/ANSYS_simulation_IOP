@@ -70,21 +70,24 @@
       "relative_path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.rst",
       "size_bytes": 1788280832,
       "allocated_bytes": 1355564032,
-      "sha256": "9cb58e16f9430696a533bf384fc858210659420a865dca144e8d2f7407715084"
+      "sha256": "9cb58e16f9430696a533bf384fc858210659420a865dca144e8d2f7407715084",
+      "availability": "deleted_after_pair_field_qc_and_sha256_audit"
     },
     {
       "role": "db",
       "relative_path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.db",
       "size_bytes": 497614848,
       "allocated_bytes": 169387008,
-      "sha256": "39487814335e50ddc1350dce40624d5336b5d345b4e817ea4ac305903d484889"
+      "sha256": "39487814335e50ddc1350dce40624d5336b5d345b4e817ea4ac305903d484889",
+      "availability": "retained_on_5090d"
     },
     {
       "role": "solve_out",
       "relative_path": "iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/solve.out",
       "size_bytes": 136890,
       "allocated_bytes": 50176,
-      "sha256": "997ef89d1bb9b18d98dc14f71943be08de66eb3b991e7d24e256e56d20554b12"
+      "sha256": "997ef89d1bb9b18d98dc14f71943be08de66eb3b991e7d24e256e56d20554b12",
+      "availability": "retained_on_5090d"
     }
   ],
   "artifacts": [
@@ -210,9 +213,9 @@
     }
   ],
   "retention": {
-    "rst_status": "retained_externally_pending_final_field_and_pair_qc",
-    "db_status": "retained_externally_pending_final_field_and_pair_qc",
+    "rst_status": "deleted_after_pair_field_qc_and_sha256_audit",
+    "db_status": "retained_externally_after_pair_qc",
     "failed_attempt_binary_status": "already_deleted_after_hash_audit"
   },
-  "acceptance": "The 1.25-mm IOP20 endpoint is accepted as a complete out-of-core L010 endpoint. It provides F20 but does not provide q until a new-root 1.25-mm IOP0 endpoint is completed, accepted, and paired on the same configuration."
+  "acceptance": "The 1.25-mm IOP20 endpoint is accepted as a complete out-of-core L010 endpoint and has been paired only with the accepted same-commit IOP0 endpoint; the paired q remains specific to this L010 discretization."
 }

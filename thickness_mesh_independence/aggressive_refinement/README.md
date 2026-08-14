@@ -15,7 +15,7 @@
 - **当前新阶段为1.25 mm全局基线**：launcher默认从 `config/model_baseline.json` 读取1.25 mm；1.25 mm L010 mesh-only预检已通过。按用户优先级切换后，0 mmHg主动中止，第一次20 mmHg在伪时间2.928125、压入0.259875 mm后因30 GiB内存保护线中止。28个已完成子步均收敛，但没有正式端点；轻量证据见 [`results/t1p25_iop20_resource_aborted/`](results/t1p25_iop20_resource_aborted/)；
 - **IOP20重跑已以显式out-of-core完成并接收**：全新root通过runner参数冻结`out-of-core`与每载荷步末态输出，launcher运行早期确认实际模式；29个子步、三个载荷步、`RUN COMPLETED`、MAPDL error 0、资源和零残留全部通过。正式$F_{20}=-0.18100135590385$ N，轻量证据见 [`results/accepted_iop20_t1p25_ooc/`](results/accepted_iop20_t1p25_ooc/)；
 - **IOP0重跑已完成并接收**：同一源码commit和out-of-core/last-only策略下完成29个子步、三个载荷步，`RUN COMPLETED`、MAPDL error 0、资源、warning、接触边界与零残留QC全部通过；正式$|F_0|=0.17134016405785$ N，证据见 [`results/accepted_iop0_t1p25_ooc/`](results/accepted_iop0_t1p25_ooc/)；
-- **1.25 mm L010压力对已接收**：同配置配对得到$q_{20}=4.9439072093374365$ mmHg；末态中央剖面`007`与完整配对证据见 [`results/t1p25_l010_pressure_pair/`](results/t1p25_l010_pressure_pair/)。该值相对既有全局0.30 mm结果低30.09%，只能作为L010离散结果，不能宣称绝对网格无关。
+- **1.25 mm L010压力对已接收**：同配置配对得到$q_{20}=4.9439072093374365$ mmHg；末态中央剖面`007`与完整配对证据见 [`results/t1p25_l010_pressure_pair/`](results/t1p25_l010_pressure_pair/)。该值相对既有全局0.30 mm结果低30.09%，只能作为L010离散结果，不能宣称绝对网格无关。场QC完成后两份成功RST已按授权和哈希审计删除，DB保留。
 
 详尽依据、资源表、阶段矩阵和判据见 [`EXPERIMENT_DESIGN.md`](EXPERIMENT_DESIGN.md)。
 

@@ -83,21 +83,24 @@
       "relative_path": "iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.rst",
       "size_bytes": 1710686208,
       "allocated_bytes": 1282221056,
-      "sha256": "a9f14eee4ccc6dc7d55b878ed6872828436500b442c49b6a7ff9f16f1be6d341"
+      "sha256": "a9f14eee4ccc6dc7d55b878ed6872828436500b442c49b6a7ff9f16f1be6d341",
+      "availability": "deleted_after_pair_field_qc_and_sha256_audit"
     },
     {
       "role": "db",
       "relative_path": "iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.db",
       "size_bytes": 497221632,
       "allocated_bytes": 169403392,
-      "sha256": "3ea0583611f384db34dbed1f7d5e3163536d96f00f1516882aa5d85e79178bed"
+      "sha256": "3ea0583611f384db34dbed1f7d5e3163536d96f00f1516882aa5d85e79178bed",
+      "availability": "retained_on_5090d"
     },
     {
       "role": "solve_out",
       "relative_path": "iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/solve.out",
       "size_bytes": 134352,
       "allocated_bytes": 50176,
-      "sha256": "46a7dff66d7c5212462c99a9797bca04cdaffe156451c0024eff68fa622d8f50"
+      "sha256": "46a7dff66d7c5212462c99a9797bca04cdaffe156451c0024eff68fa622d8f50",
+      "availability": "retained_on_5090d"
     }
   ],
   "artifacts": [
@@ -253,9 +256,9 @@
     }
   ],
   "retention": {
-    "rst_status": "retained_externally_pending_pressure_pair_field_qc",
-    "db_status": "retained_externally_pending_pressure_pair_field_qc",
+    "rst_status": "deleted_after_pair_field_qc_and_sha256_audit",
+    "db_status": "retained_externally_after_pair_qc",
     "failed_attempt_binary_status": "already_deleted_after_hash_audit"
   },
-  "acceptance": "The 1.25-mm IOP0 endpoint is accepted as a complete out-of-core L010 endpoint and may be paired only with the accepted same-commit IOP20 endpoint after explicit pair compatibility checks."
+  "acceptance": "The 1.25-mm IOP0 endpoint is accepted as a complete out-of-core L010 endpoint and has been paired only with the accepted same-commit IOP20 endpoint after explicit compatibility checks; the paired q remains specific to this L010 discretization."
 }

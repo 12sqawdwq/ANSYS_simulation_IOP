@@ -1,0 +1,511 @@
+
+ Ansys Mechanical Enterprise                       
+
+
+ *------------------------------------------------------------------*
+ |                                                                  |
+ |   W E L C O M E   T O   T H E   A N S Y S (R)  P R O G R A M     |
+ |                                                                  |
+ *------------------------------------------------------------------*
+
+
+
+
+ ***************************************************************
+ *         ANSYS MAPDL 2025 R2          LEGAL NOTICES          *
+ ***************************************************************
+ *                                                             *
+ * Copyright 1971-2025 Ansys, Inc.  All rights reserved.       *
+ * Unauthorized use, distribution or duplication is            *
+ * prohibited.                                                 *
+ *                                                             *
+ * Ansys is a registered trademark of Ansys, Inc. or its       *
+ * subsidiaries in the United States or other countries.       *
+ * See the Ansys, Inc. online documentation or the Ansys, Inc. *
+ * documentation CD or online help for the complete Legal      *
+ * Notice.                                                     *
+ *                                                             *
+ ***************************************************************
+ *                                                             *
+ * THIS ANSYS SOFTWARE PRODUCT AND PROGRAM DOCUMENTATION       *
+ * INCLUDE TRADE SECRETS AND CONFIDENTIAL AND PROPRIETARY      *
+ * PRODUCTS OF ANSYS, INC., ITS SUBSIDIARIES, OR LICENSORS.    *
+ * The software products and documentation are furnished by    *
+ * Ansys, Inc. or its subsidiaries under a software license    *
+ * agreement that contains provisions concerning               *
+ * non-disclosure, copying, length and nature of use,          *
+ * compliance with exporting laws, warranties, disclaimers,    *
+ * limitations of liability, and remedies, and other           *
+ * provisions.  The software products and documentation may be *
+ * used, disclosed, transferred, or copied only in accordance  *
+ * with the terms and conditions of that software license      *
+ * agreement.                                                  *
+ *                                                             *
+ * Ansys, Inc. is a UL registered                              *
+ * ISO 9001:2015 company.                                      *
+ *                                                             *
+ ***************************************************************
+ *                                                             *
+ * This product is subject to U.S. laws governing export and   *
+ * re-export.                                                  *
+ *                                                             *
+ * For U.S. Government users, except as specifically granted   *
+ * by the Ansys, Inc. software license agreement, the use,     *
+ * duplication, or disclosure by the United States Government  *
+ * is subject to restrictions stated in the Ansys, Inc.        *
+ * software license agreement and FAR 12.212 (for non-DOD      *
+ * licenses).                                                  *
+ *                                                             *
+ ***************************************************************
+
+ 2025 R2 
+     
+ Point Releases and Patches installed:   
+     
+ Ansys, Inc. License Manager 2025 R2 
+ Additive 2025 R2
+ Core WB Files 2025 R2   
+ BladeModeler 2025 R2
+ CFX (includes CFD-Post) 2025 R2 
+ CFD-Post only 2025 R2   
+ Chemkin 2025 R2 
+ EnSight 2025 R2 
+ FENSAP-ICE 2025 R2  
+ Fluent (includes CFD-Post) 2025 R2  
+ Polyflow (includes CFD-Post) 2025 R2
+ Forte (includes EnSight) 2025 R2
+ ICEM CFD 2025 R2
+ TurboGrid 2025 R2   
+ Dynamic Reporting 2025 R2   
+ Remote Solve Manager Standalone Services 2025 R2
+ Aqwa 2025 R2
+ Autodyn 2025 R2 
+ Customization Files for User Programmable Features 2025 R2  
+ LS-DYNA 2025 R2 
+ Mechanical Products 2025 R2 
+ Motion 2025 R2  
+ Sherlock 2025 R2
+ ACIS Geometry Interface 2025 R2 
+ AutoCAD Geometry Interface 2025 R2  
+ Catia, Version 4 Geometry Interface 2025 R2 
+ Catia, Version 5 Geometry Interface 2025 R2 
+ Catia, Version 6 Geometry Interface 2025 R2 
+ Creo Parametric Geometry Interface 2025 R2  
+ Inventor Geometry Interface 2025 R2 
+ JTOpen Geometry Interface 2025 R2   
+ NX Geometry Interface 2025 R2   
+ Parasolid Geometry Interface 2025 R2
+ Solid Edge Geometry Interface 2025 R2   
+ SOLIDWORKS Geometry Interface 2025 R2   
+
+
+          *****  MAPDL COMMAND LINE ARGUMENTS  *****
+  INITIAL JOBNAME              = field_qc_iop0                                                                                                                                                                                                                                           
+  BATCH MODE REQUESTED (-b)    = LIST
+  INPUT FILE COPY MODE (-c)    = COPY
+       1 PARALLEL PROCESSES REQUESTED WITH SINGLE THREAD PER PROCESS
+    TOTAL OF     1 CORES REQUESTED
+  INPUT FILE NAME              = /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T085004Z_6ef45199_L010_h1p25_iop0_iop20_field_qc/iop0/driver.dat
+  OUTPUT FILE NAME             = /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T085004Z_6ef45199_L010_h1p25_iop0_iop20_field_qc/iop0/post.out
+  INITIAL DIRECTORY = /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T085004Z_6ef45199_L010_h1p25_iop0_iop20_field_qc/iop0
+
+ RELEASE= 2025 R2              BUILD= 25.2      UP20250519   VERSION=LINUX x64   
+ CURRENT JOBNAME=field_qc_iop0  16:50:06  AUG 14, 2026 CP=      0.223
+
+     1  finish  
+     2  /clear  
+     3  resume,'/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T025331Z_6ef45199_L010_h1p25_iop0_ooc_last_np4/iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm','db' 
+     4  /filname,field_qc_iop0  
+     5  /post1  
+     6  file,'/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T025331Z_6ef45199_L010_h1p25_iop0_ooc_last_np4/iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm','rst'  
+     7  *use,plot_sweep_views.mac   
+     8  finish  
+     9  /exit,nosave
+
+ RUN SETUP PROCEDURE FROM FILE= /home/xuanyu/PROJECT/ziyu/SOFTWARE/ansys_inc/v252/ansys/apdl/start.ans
+
+ /INPUT FILE= /home/xuanyu/PROJECT/ziyu/SOFTWARE/ansys_inc/v252/ansys/apdl/start.ans  LINE=       0
+
+ CLEAR DATABASE AND RERUN START.ANS
+
+ RUN SETUP PROCEDURE FROM FILE= /home/xuanyu/PROJECT/ziyu/SOFTWARE/ansys_inc/v252/ansys/apdl/start.ans
+
+ Ansys Mechanical Enterprise                       
+
+ /INPUT FILE= /home/xuanyu/PROJECT/ziyu/SOFTWARE/ansys_inc/v252/ansys/apdl/start.ans  LINE=       0
+
+ RESUME ANSYS DATA FROM FILE NAME=/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T025331Z_6ef45199_L010_h1p25_iop0_ooc_last_np4/iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.db                                                                
+
+ *** MAPDL GLOBAL STATUS *** 
+
+ TITLE =                                                                       
+ ANALYSIS TYPE =  STATIC (STEADY-STATE)
+        31 KEYPOINTS DEFINED     MAX KEYPOINT NUMBER =            201
+        62 LINES DEFINED         MAX LINE NUMBER =                 62
+        48 AREAS DEFINED         MAX AREA NUMBER =                 48
+        12 VOLUMES DEFINED       MAX VOLUME NUMBER =               12
+         5 ELEM TYPES DEFINED    MAX ELEM TYPE NUMBER =             5
+    706720 ELEMENTS DEFINED      MAX ELEMENT NUMBER =          706720
+    940688 NODES DEFINED         MAX NODE NUMBER =             940688
+         3 MATERIALS DEFINED     MAX MATERIAL NUMBER =              3
+         2 REAL CONSTS DEFINED   MAX REAL CONST NUMBER =            4
+         0 SECTIONS DEFINED      MAX SECTION NUMBER =               0
+         1 COORD SYS DEFINED     MAX COORD SYS NUMBER =            13
+ 
+ ACTIVE COORDINATE SYSTEM             =          0  (CARTESIAN)
+ NUMBER OF DEFINED NODAL CONSTRAINTS  =     110481
+ NUMBER OF DEFINED NODAL LOADS        =          0
+ NUMBER OF DEFINED COMPONENTS         =          6
+ NUMBER OF DEFINED ELEM SURFACE LOADS =       8066
+ NUMBER OF DEFINED ELEM BODY LOADS    =          0
+ NUMBER OF DEFINED NODE BODY FORCES   =          0
+
+ INITIAL JOBNAME = field_qc_iop0
+ CURRENT JOBNAME = field_qc_iop0
+
+ CURRENT JOBNAME REDEFINED AS field_qc_iop0
+
+ *** MAPDL - ENGINEERING ANALYSIS SYSTEM  RELEASE 2025 R2          25.2     ***
+ Ansys Mechanical Enterprise                       
+ 20120530  VERSION=LINUX x64     16:50:07  AUG 14, 2026 CP=      1.019
+
+                                                                               
+
+
+
+          ***** MAPDL RESULTS INTERPRETATION (POST1) *****
+
+ *** NOTE ***                            CP =       1.020   TIME= 16:50:07
+ Reading results into the database (SET command) will update the current 
+ displacement and force boundary conditions in the database with the     
+ values from the results file for that load set.  Note that any          
+ subsequent solutions will use these values unless action is taken to    
+ either SAVE the current values or not overwrite them (/EXIT,NOSAVE).    
+
+ DATA FILE CHANGED TO FILE= /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T025331Z_6ef45199_L010_h1p25_iop0_ooc_last_np4/iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.rst
+
+ USE MACRO FILE  plot_sweep_views.mac
+ You have already entered the general postprocessor (POST1).             
+
+ PARAMETER POST_TIME =     0.000000000    
+
+ *IF  post_time  ( =   0.00000     )  GT  
+      0  ( =   0.00000     )  THEN    
+
+ *ELSE
+
+
+ USE LAST SUBSTEP ON RESULT FILE  FOR LOAD CASE 0 
+
+ *** NOTE ***                            CP =       1.969   TIME= 16:50:08
+ The initial memory allocation (-m) has been exceeded.                   
+  Supplemental memory allocations are being used.                        
+
+ Memory resident data base increased from      1024 MB to      2048 MB.
+
+ Memory resident data base increased from      2048 MB to      4096 MB.
+
+ SET COMMAND GOT LOAD STEP=     3  SUBSTEP=    13  CUMULATIVE ITERATION=    48
+   TIME/FREQUENCY=  3.0000    
+ TITLE=                                                                         
+
+ *ENDIF
+
+ /SHOW SWITCH PLOTS TO  PNG         - RASTER MODE.
+
+ GRAPHICS FILE PIXEL RESOLUTION =   1200
+ INFO LEGEND DISPLAY = 3   
+ CONTOUR LEGEND HEADER DISPLAY = 0   
+ DATE/TIME DISPLAY = 0
+ JOBNAME DISPLAY = 0
+
+ NUMBER KEY SET TO  0  -1=NONE  0=BOTH  1=COLOR  2=NUMBER
+
+ NO DISTORTION SCALING IN WINDOW 1
+
+ view point for window  1    1.0000     0.30000     0.50000    
+
+ MAT  NUMBERING KEY =  1
+
+ TITLE= 
+ GEOMETRY - material IDs                                                       
+
+
+ PRODUCE ELEMENT PLOT IN DSYS =   0
+
+ CUMULATIVE DISPLAY NUMBER   1 WRITTEN TO FILE field_qc_iop0000. - RASTER MODE.
+ DISPLAY TITLE= 
+ GEOMETRY - material IDs                                                 
+
+ MAT  NUMBERING KEY =  0
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=REAL COMPONENT=    
+  IN RANGE         3 TO          3 STEP          1
+
+      21632  ELEMENTS (OF     706720  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=ENAM COMPONENT=    
+  IN RANGE       174 TO        174 STEP          1
+
+      17800  ELEMENTS (OF     706720  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ view point for window  1    0.0000      1.0000      0.0000    
+
+ TITLE= 
+ OUTER CONTACT PRESSURE - top                                                  
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=CONT  COMP=PRES              
+
+ *** NOTE ***
+
+  libpng version 1.0.8 - July 24, 2000
+    Copyright (c) 1998-2000 Glenn Randers-Pehrson
+    Copyright (c) 1996, 1997 Andreas Dilger
+    Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.
+
+ ZLIB Version 1.2.13 Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler
+
+ CUMULATIVE DISPLAY NUMBER   2 WRITTEN TO FILE field_qc_iop0001. - RASTER MODE.
+ DISPLAY TITLE= 
+ OUTER CONTACT PRESSURE - top                                            
+
+ view point for window  1    0.0000      0.0000      1.0000    
+
+ TITLE= 
+ OUTER CONTACT PRESSURE - front                                                
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=CONT  COMP=PRES              
+
+ CUMULATIVE DISPLAY NUMBER   3 WRITTEN TO FILE field_qc_iop0002. - RASTER MODE.
+ DISPLAY TITLE= 
+ OUTER CONTACT PRESSURE - front                                          
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=TYPE COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+     655574  ELEMENTS (OF     706720  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=MAT  COMPONENT=    
+  IN RANGE         2 TO          2 STEP          1
+
+     401161  ELEMENTS (OF     706720  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ view point for window  1    0.0000      0.0000      1.0000    
+
+ TITLE= 
+ EYELID VON MISES STRESS                                                       
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=S     COMP=EQV               
+
+ CUMULATIVE DISPLAY NUMBER   4 WRITTEN TO FILE field_qc_iop0003. - RASTER MODE.
+ DISPLAY TITLE= 
+ EYELID VON MISES STRESS                                                 
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=TYPE COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+     655574  ELEMENTS (OF     706720  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=MAT  COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+     159927  ELEMENTS (OF     706720  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ view point for window  1    0.0000      0.0000      1.0000    
+
+ TITLE= 
+ CORNEA VON MISES STRESS                                                       
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=S     COMP=EQV               
+
+ CUMULATIVE DISPLAY NUMBER   5 WRITTEN TO FILE field_qc_iop0004. - RASTER MODE.
+ DISPLAY TITLE= 
+ CORNEA VON MISES STRESS                                                 
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=TYPE COMPONENT=    
+  IN RANGE         1 TO          1 STEP          1
+
+     655574  ELEMENTS (OF     706720  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=MAT  COMPONENT=    
+  IN RANGE         3 TO          3 STEP          1
+
+      94486  ELEMENTS (OF     706720  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ view point for window  1    0.0000      0.0000      1.0000    
+
+ TITLE= 
+ PROBE VON MISES STRESS                                                        
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=S     COMP=EQV               
+
+ CUMULATIVE DISPLAY NUMBER   6 WRITTEN TO FILE field_qc_iop0005. - RASTER MODE.
+ DISPLAY TITLE= 
+ PROBE VON MISES STRESS                                                  
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ CREATE WORKING PLANE AT LOCAL SYSTEM      0
+
+ CUTTING PLANE SET TO THE WORKING PLANE
+
+ CAPPED HIDDEN DISPLAY (Z-BUFFER) IN WINDOW  1
+
+ view point for window  1    0.0000      0.0000      1.0000    
+
+ TITLE= 
+ CENTRAL SECTION - stress                                                      
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=S     COMP=EQV               
+
+ CUMULATIVE DISPLAY NUMBER   7 WRITTEN TO FILE field_qc_iop0006. - RASTER MODE.
+ DISPLAY TITLE= 
+ CENTRAL SECTION - stress                                                
+
+ HIDDEN DISPLAY (Z-BUFFER) IN WINDOW  1
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ CREATE WORKING PLANE AT LOCAL SYSTEM      0
+
+ CUTTING PLANE SET TO THE WORKING PLANE
+
+ CAPPED HIDDEN DISPLAY (Z-BUFFER) IN WINDOW  1
+
+ DISTORTION SCALE FOR WINDOW 1    1.0000    
+
+ view point for window  1    0.0000      0.0000      1.0000    
+
+ TITLE= 
+ DEFORMED CENTRAL SECTION - actual scale                                       
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=S     COMP=EQV               
+
+ CUMULATIVE DISPLAY NUMBER   8 WRITTEN TO FILE field_qc_iop0007. - RASTER MODE.
+ DISPLAY TITLE= 
+ DEFORMED CENTRAL SECTION - actual scale                                 
+
+ HIDDEN DISPLAY (Z-BUFFER) IN WINDOW  1
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ SELECT       FOR ITEM=REAL COMPONENT=    
+  IN RANGE         3 TO          3 STEP          1
+
+      21632  ELEMENTS (OF     706720  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ RESELECT     FOR ITEM=ENAM COMPONENT=    
+  IN RANGE       174 TO        174 STEP          1
+
+      17800  ELEMENTS (OF     706720  DEFINED) SELECTED BY  ESEL  COMMAND.
+
+ view point for window  1    0.0000      1.0000      0.0000    
+
+ TITLE= 
+ OUTER CONTACT PENETRATION - top                                               
+
+
+ DISPLAY NODAL SOLUTION,  ITEM=CONT  COMP=PENE              
+
+ CUMULATIVE DISPLAY NUMBER   9 WRITTEN TO FILE field_qc_iop0008. - RASTER MODE.
+ DISPLAY TITLE= 
+ OUTER CONTACT PENETRATION - top                                         
+
+ SELECT ALL ENTITIES OF TYPE= ALL  AND BELOW
+
+ EXIT THE MAPDL POST1 DATABASE PROCESSOR
+
+
+ ***** ROUTINE COMPLETED *****  CP =        22.028
+
+
+
+ EXIT MAPDL WITHOUT SAVING DATABASE
+
+
+ NUMBER OF WARNING MESSAGES ENCOUNTERED=          0
+ NUMBER OF ERROR   MESSAGES ENCOUNTERED=          0
+
++--------------------- M A P D L   S T A T I S T I C S ------------------------+
+
+Release: 2025 R2            Build: 25.2       Update: UP20250519   Platform: LINUX x64   
+Date Run: 08/14/2026   Time: 16:50     Process ID: 1323522
+Operating System: Ubuntu 24.04.3 LTS
+
+Processor Model: AMD Ryzen 9 9950X 16-Core Processor
+
+Compiler: Intel(R) Fortran Compiler Classic Version 2021.9  (Build: 20230302)
+          Intel(R) C/C++ Compiler Classic Version 2021.9  (Build: 20230302)
+          AOCL-BLAS 5.0.1 Build 20250320
+
+Number of machines requested            :    1
+Total number of cores available         :   32
+Number of physical cores available      :   16
+Number of processes requested           :    1
+Number of threads per process requested :    1
+Total number of cores requested         :    1 (Shared Memory Parallel)                    
+
+GPU Acceleration: Not Requested
+
+Job Name: field_qc_iop0
+Input File: /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T085004Z_6ef45199_L010_h1p25_iop0_iop20_field_qc/iop0/driver.dat
+Working Directory: /home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T085004Z_6ef45199_L010_h1p25_iop0_iop20_field_qc/iop0
+
+Total CPU time for main thread                    :       21.4 seconds
+Total CPU time summed for all threads             :       22.4 seconds
+
+Elapsed time spent obtaining a license            :        1.2 seconds
+Elapsed time spent pre-processing model (/PREP7)  :        0.0 seconds
+Elapsed time spent solution - preprocessing       :        0.0 seconds
+Elapsed time spent computing solution             :        0.0 seconds
+Elapsed time spent solution - postprocessing      :        0.0 seconds
+Elapsed time spent post-processing model (/POST1) :       21.0 seconds
+ 
+
+Sum of disk space used on all processes           :        0.0 MB
+
+Sum of memory used on all processes               :     4808.0 MB
+Sum of memory allocated on all processes          :     8448.0 MB
+Physical memory available                         :        123 GB
+Total amount of I/O written to disk               :        0.0 GB
+Total amount of I/O read from disk                :        1.0 GB
+
++------------------ E N D   M A P D L   S T A T I S T I C S -------------------+
+
+
+ *-----------------------------------------------------------------------------*
+ |                                                                             |
+ |                               RUN COMPLETED                                 |
+ |                                                                             |
+ |-----------------------------------------------------------------------------|
+ |                                                                             |
+ |  Ansys MAPDL 2025 R2         Build 25.2         UP20250519    LINUX x64     |
+ |                                                                             |
+ |-----------------------------------------------------------------------------|
+ |                                                                             |
+ |  Database Requested(-db)     1024 MB     Scratch Memory Requested   1024 MB |
+ |  Max Database Used(Master)   2733 MB     Max Scratch Used(Master)   2075 MB |
+ |  Max Database Used(Workers)     0 MB     Max Scratch Used(Workers)     0 MB |
+ |  Sum Database Used(All)      2733 MB     Sum Scratch Used(All)      2075 MB |
+ |                                                                             |
+ |-----------------------------------------------------------------------------|
+ |                                                                             |
+ |        CP Time      (sec) =         22.389       Time  =  16:50:30          |
+ |        Elapsed Time (sec) =         26.000       Date  =  08/14/2026        |
+ |                                                                             |
+ *-----------------------------------------------------------------------------*

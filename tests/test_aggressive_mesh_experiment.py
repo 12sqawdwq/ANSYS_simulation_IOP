@@ -113,6 +113,8 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     assert pair["q20_mmhg"] == pytest.approx(4.9439072093374365)
     assert pair["pair_qc_pass"] is True
     assert pair["mesh_independent"] is False
+    assert pair["rst_cleanup"]["deleted_file_count"] == 2
+    assert pair["rst_cleanup"]["db_files_retained"] == 2
     readiness = config["restart_readiness"]
     assert readiness["old_campaign_reusable"] is False
     assert readiness["iop0_new_campaign_eligible"] is False
@@ -590,6 +592,9 @@ def test_accepted_t1p25_iop0_out_of_core_endpoint_is_hash_complete():
     assert set(external) == {"rst", "db", "solve_out"}
     assert external["rst"]["size_bytes"] == 1710686208
     assert external["rst"]["sha256"] == "a9f14eee4ccc6dc7d55b878ed6872828436500b442c49b6a7ff9f16f1be6d341"
+    assert external["rst"]["availability"] == "deleted_after_pair_field_qc_and_sha256_audit"
+    assert manifest["retention"]["rst_status"] == "deleted_after_pair_field_qc_and_sha256_audit"
+    assert manifest["retention"]["db_status"] == "retained_externally_after_pair_qc"
     for item in manifest["artifacts"]:
         path = root / item["path"]
         assert path.is_file()
@@ -618,6 +623,9 @@ def test_t1p25_l010_pressure_pair_is_compatible_and_hash_complete():
     external_field = {item["role"]: item for item in manifest["field_qc"]["external_artifacts"]}
     assert external_field["iop0_central_007"]["size_bytes"] == 56723
     assert external_field["iop20_central_007"]["size_bytes"] == 56970
+    assert all(manifest["rst_cleanup"]["checks"].values())
+    assert manifest["rst_cleanup"]["apparent_bytes_deleted"] == 3498967040
+    assert manifest["rst_cleanup"]["allocated_bytes_deleted"] == 2637785088
     for item in manifest["source_artifacts"]:
         path = ROOT / item["path"]
         assert path.is_file()
@@ -660,12 +668,14 @@ def test_accepted_t1p25_iop20_out_of_core_endpoint_is_hash_complete():
     assert manifest["warning_assessment"]["accepted"] is True
     assert manifest["warning_assessment"]["shape_warning_elements"] == 9
     assert manifest["warning_assessment"]["shape_errors"] == 0
-    assert manifest["retention"]["rst_status"] == "retained_externally_pending_final_field_and_pair_qc"
-    assert "does not provide q" in manifest["acceptance"]
+    assert manifest["retention"]["rst_status"] == "deleted_after_pair_field_qc_and_sha256_audit"
+    assert manifest["retention"]["db_status"] == "retained_externally_after_pair_qc"
+    assert "has been paired" in manifest["acceptance"]
     external = {item["role"]: item for item in manifest["external_artifacts"]}
     assert set(external) == {"rst", "db", "solve_out"}
     assert external["rst"]["size_bytes"] == 1788280832
     assert external["rst"]["sha256"] == "9cb58e16f9430696a533bf384fc858210659420a865dca144e8d2f7407715084"
+    assert external["rst"]["availability"] == "deleted_after_pair_field_qc_and_sha256_audit"
     for item in manifest["artifacts"]:
         path = root / item["path"]
         assert path.is_file()

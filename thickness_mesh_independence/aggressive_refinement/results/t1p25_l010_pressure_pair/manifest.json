@@ -111,6 +111,23 @@
       }
     ]
   },
+  "rst_cleanup": {
+    "checks": {
+      "two_rst_files_deleted": true,
+      "rst_files_absent_after": true,
+      "db_files_retained": true,
+      "no_residual_cleanup_session": true,
+      "deleted_iop0_rst_hash_matches_field_provenance": true,
+      "deleted_iop20_rst_hash_matches_field_provenance": true,
+      "cleanup_files_hash_complete": true
+    },
+    "authorization": "user_allowed_deletion_of_unneeded_rst",
+    "reason": "accepted_pair_scalar_contact_and_native_007_field_qc_complete",
+    "apparent_bytes_deleted": 3498967040,
+    "allocated_bytes_deleted": 2637785088,
+    "db_retention": "Both endpoint DB files remain on 5090d with verified SHA-256.",
+    "audit_path": "field_qc/rst_cleanup/cleanup_summary.csv"
+  },
   "coarse_reference_comparison": {
     "comparison_role": "directional_mesh_sensitivity_context_not_a_formal_two_percent_convergence_test",
     "global_0p30_q20_mmhg": 7.072211426411742,
@@ -122,14 +139,14 @@
     {
       "role": "accepted_iop0_manifest",
       "path": "thickness_mesh_independence/aggressive_refinement/results/accepted_iop0_t1p25_ooc/manifest.json",
-      "size_bytes": 9217,
-      "sha256": "f792ac52f41ada97daca0ab4c1d0efb9aba34954b23a3baffd7207829ed7aefa"
+      "size_bytes": 9406,
+      "sha256": "7530b21b64dd0a06aa439e416a119e5c171d9ba1272d0e03cda449468999e7d1"
     },
     {
       "role": "accepted_iop20_manifest",
       "path": "thickness_mesh_independence/aggressive_refinement/results/accepted_iop20_t1p25_ooc/manifest.json",
-      "size_bytes": 7644,
-      "sha256": "5ff421bdbe1a6d103f0d2a0e0563c0812ffaffcd9badb6338bb7c2c335af8c42"
+      "size_bytes": 7763,
+      "sha256": "2d7d5f0e3766a71d63b2ff211b61684aa9001e255da57f32a04a07317d5b5697"
     },
     {
       "role": "coarse_global_0p30_reference",
@@ -155,14 +172,29 @@
       "sha256": "7fb3d04021604bb1ca4e954ec9e55ade40c8003e7c57c682b1f51d6293fbe4ee"
     },
     {
-      "path": "field_qc/iop0_post.out",
+      "path": "field_qc/iop0_post_excerpt.txt",
       "size_bytes": 21242,
       "sha256": "d47ea7cf0ed3435804c28dc90bcc8b72294a4f1b5f76641f1393d22af43c7cb6"
     },
     {
-      "path": "field_qc/iop20_post.out",
+      "path": "field_qc/iop20_post_excerpt.txt",
       "size_bytes": 21258,
       "sha256": "99f8db838403ef40b9cdd8991a56fe6b5383dbe15b11296a48167002cd82f106"
+    },
+    {
+      "path": "field_qc/rst_cleanup/cleanup_summary.csv",
+      "size_bytes": 787,
+      "sha256": "12f9f9fe1af635198d66c6b292ec677f4b2c9203956284e13ea58db5532424c1"
+    },
+    {
+      "path": "field_qc/rst_cleanup/deleted_rst_manifest.tsv",
+      "size_bytes": 715,
+      "sha256": "c2a00624d07adb94a3ac8c7e94d863b616738b1af11aa2c2218ecb81cd63959e"
+    },
+    {
+      "path": "field_qc/rst_cleanup/sha256.txt",
+      "size_bytes": 177,
+      "sha256": "8e3e8fc54f8c5d0b2704a44d18bbb2476094a6818998eba17d78bd6642b241bd"
     },
     {
       "path": "field_qc/status.csv",

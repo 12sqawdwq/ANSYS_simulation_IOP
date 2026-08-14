@@ -29,4 +29,4 @@
 - 眼睑峰值等效应力：`33.932100176185 kPa`；
 - MAPDL子进程墙钟：`20793.338 s`（约5.78 h）。
 
-本端点现可与同一commit的已接收IOP20端点执行配对QC。DB/RST仍保存在5090d并有SHA-256；在配对与必要场变量QC完成前暂不删除。完整机器可读接收口径见`manifest.json`。
+本端点已与同一commit的IOP20端点完成配对和中央剖面场QC。源RST在保存路径、大小、mtime和SHA-256后按授权删除；DB继续保存在5090d。完整机器可读接收口径见`manifest.json`，删除审计见`../t1p25_l010_pressure_pair/field_qc/rst_cleanup/`。
