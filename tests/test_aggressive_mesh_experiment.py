@@ -32,7 +32,7 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     config = json.loads(CONFIG.read_text(encoding="utf-8"))
     assert config["schema_version"] == 2
     assert config["git_branch"] == "l010-baseline-t1p25-experiment-20260813"
-    assert config["status"] == "t1p25_iop20_endpoint_accepted_iop0_out_of_core_rerun_active"
+    assert config["status"] == "t1p25_l010_pressure_pair_accepted_absolute_amplitude_not_mesh_independent"
     assert config["formal_preflight_source_commit"] == "8768e6ec6afb41225d729c21aac80b467c266897"
     assert config["hard_budget"]["wall_clock_hours"] == 72
     assert config["hard_budget"]["maximum_simultaneous_mapdl_cases"] == 1
@@ -79,14 +79,15 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     assert baseline["iop0"]["scientific_result_available"] is False
     assert baseline["iop0"]["q_calculable"] is False
     iop0_rerun = baseline["iop0"]["out_of_core_rerun"]
-    assert iop0_rerun["status"] == "active_mode_verified_no_endpoint_yet"
+    assert iop0_rerun["status"] == "accepted_complete_l010_t1p25_iop0_out_of_core_endpoint"
     assert iop0_rerun["source_commit"] == "6ef45199bec06139538c5a68a1538ae683ea1c3b"
     assert iop0_rerun["solver_memory_mode_requested"] == "out-of-core"
     assert iop0_rerun["solver_memory_mode_observed"] == "out-of-core"
     assert iop0_rerun["result_output_frequency"] == "last"
-    assert iop0_rerun["run_completed"] is False
-    assert iop0_rerun["scientific_result_available"] is False
-    assert iop0_rerun["q_calculable"] is False
+    assert iop0_rerun["run_completed"] is True
+    assert iop0_rerun["scientific_result_available"] is True
+    assert iop0_rerun["probe_fy_n"] == pytest.approx(-0.17134016405785)
+    assert iop0_rerun["q_calculable"] is True
     assert baseline["iop20"]["authorized"] is True
     assert baseline["iop20"]["status"] == "resource_guard_abort_near_endpoint_archived_out_of_core_rerun_ready"
     assert baseline["iop20"]["source_commit"] == "5d3ece4bccf67e382bdfa639b0da80711c8008b8"
@@ -106,11 +107,17 @@ def test_aggressive_experiment_freezes_resource_and_claim_boundaries():
     assert rerun["scientific_result_available"] is True
     assert rerun["probe_fy_n"] == pytest.approx(-0.18100135590385)
     assert rerun["maximum_penetration_mm"] == pytest.approx(0.0064352781616132)
-    assert rerun["q_calculable"] is False
+    assert rerun["q_calculable"] is True
+    pair = baseline["accepted_pressure_pair"]
+    assert pair["status"] == "accepted_complete_l010_t1p25_iop0_iop20_pressure_pair"
+    assert pair["q20_mmhg"] == pytest.approx(4.9439072093374365)
+    assert pair["pair_qc_pass"] is True
+    assert pair["mesh_independent"] is False
     readiness = config["restart_readiness"]
     assert readiness["old_campaign_reusable"] is False
     assert readiness["iop0_new_campaign_eligible"] is False
-    assert readiness["iop0_campaign_active"] is True
+    assert readiness["iop0_campaign_active"] is False
+    assert readiness["pressure_pair_complete"] is True
     assert readiness["iop20_authorized"] is True
     strategies = {item["id"]: item for item in config["candidate_strategies"]}
     assert strategies["G010"]["decision"].startswith("reject_before_solve")
@@ -545,6 +552,83 @@ def test_t1p25_iop0_out_of_core_launch_record_freezes_verified_strategy():
         expected[name] = digest
     for name, digest in expected.items():
         assert sha256(root / name) == digest
+
+
+def test_accepted_t1p25_iop0_out_of_core_endpoint_is_hash_complete():
+    root = EXPERIMENT / "results" / "accepted_iop0_t1p25_ooc"
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "accepted_complete_l010_t1p25_iop0_out_of_core_endpoint"
+    assert manifest["source_git_commit"] == "6ef45199bec06139538c5a68a1538ae683ea1c3b"
+    assert manifest["condition"] == {
+        "eyelid_thickness_mm": 1.25,
+        "iop_mmhg": 0.0,
+        "indent_mm": 0.28,
+        "background_mesh_mm": 0.2,
+        "local_refine_level": 1,
+        "nominal_local_target_mm": 0.1,
+        "np": 4,
+        "solver_memory_mode": "out-of-core",
+        "result_output_frequency": "last",
+    }
+    assert all(manifest["qc"].values())
+    result = manifest["result"]
+    assert result["probe_fy_n"] == pytest.approx(-0.17134016405785)
+    assert result["force_magnitude_n"] == pytest.approx(0.17134016405785)
+    assert result["contact_area_mm2"] == pytest.approx(5.7508535621642)
+    assert result["maximum_contact_pressure_kpa"] == pytest.approx(44.899486979167)
+    assert result["maximum_penetration_mm"] == pytest.approx(0.004724236077891)
+    assert result["completed_substeps"] == 29
+    assert result["cumulative_equilibrium_iterations"] == 48
+    assert manifest["resources"]["minimum_mem_available_kib"] == 73469352
+    assert manifest["resources"]["solver_non_solver_allocated_gb_all_ranks"] == pytest.approx(17.776)
+    assert manifest["warning_assessment"]["accepted"] is True
+    assert manifest["warning_assessment"]["shape_warning_elements"] == 9
+    assert manifest["warning_assessment"]["shape_errors"] == 0
+    assert manifest["human_geometry_qc"]["accepted"] is True
+    assert manifest["human_geometry_qc"]["outer_break_radius_mm"] == pytest.approx(1.50066315243692)
+    external = {item["role"]: item for item in manifest["external_artifacts"]}
+    assert set(external) == {"rst", "db", "solve_out"}
+    assert external["rst"]["size_bytes"] == 1710686208
+    assert external["rst"]["sha256"] == "a9f14eee4ccc6dc7d55b878ed6872828436500b442c49b6a7ff9f16f1be6d341"
+    for item in manifest["artifacts"]:
+        path = root / item["path"]
+        assert path.is_file()
+        assert path.stat().st_size == item["size_bytes"]
+        assert sha256(path) == item["sha256"]
+
+
+def test_t1p25_l010_pressure_pair_is_compatible_and_hash_complete():
+    root = EXPERIMENT / "results" / "t1p25_l010_pressure_pair"
+    manifest = json.loads((root / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["status"] == "accepted_complete_l010_t1p25_iop0_iop20_pressure_pair"
+    assert manifest["source_git_commit"] == "6ef45199bec06139538c5a68a1538ae683ea1c3b"
+    assert all(manifest["pair_qc"].values())
+    result = manifest["result"]
+    assert result["force0_magnitude_n"] == pytest.approx(0.17134016405785)
+    assert result["force20_magnitude_n"] == pytest.approx(0.18100135590385)
+    assert result["delta_force_n"] == pytest.approx(0.009661191846000006)
+    assert result["probe_area_mm2"] == pytest.approx(14.65741468458854)
+    assert result["delta_probe_pressure_pa"] == pytest.approx(659.1334184027838)
+    assert result["q20_mmhg"] == pytest.approx(4.9439072093374365)
+    assert result["pair_qc_pass"] == 1
+    assert manifest["coarse_reference_comparison"]["global_0p30_q20_mmhg"] == pytest.approx(7.072211426411742)
+    assert manifest["coarse_reference_comparison"]["l010_change_from_global_0p30_percent"] == pytest.approx(-30.09389975426897)
+    assert all(manifest["field_qc"]["checks"].values())
+    assert manifest["field_qc"]["authoritative_view"].startswith("007")
+    external_field = {item["role"]: item for item in manifest["field_qc"]["external_artifacts"]}
+    assert external_field["iop0_central_007"]["size_bytes"] == 56723
+    assert external_field["iop20_central_007"]["size_bytes"] == 56970
+    for item in manifest["source_artifacts"]:
+        path = ROOT / item["path"]
+        assert path.is_file()
+        assert path.stat().st_size == item["size_bytes"]
+        assert sha256(path) == item["sha256"]
+    for item in manifest["artifacts"]:
+        path = root / item["path"]
+        assert path.is_file()
+        assert path.stat().st_size == item["size_bytes"]
+        assert sha256(path) == item["sha256"]
+    assert "not a mesh-independent" in manifest["claim_boundary"]
 
 
 def test_accepted_t1p25_iop20_out_of_core_endpoint_is_hash_complete():

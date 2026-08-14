@@ -1,0 +1,12 @@
+key,value
+created_at_utc,2026-08-14T08:50:04Z
+source_git_commit,6ef45199bec06139538c5a68a1538ae683ea1c3b
+result_state,load_step_3_time_3p0
+view_policy,native_auto_scale_plot_sweep_views_007
+iop0_mapdl_error_count,0
+iop0_png_count,9
+iop20_mapdl_error_count,0
+iop20_png_count,9
+solver_processes_after,0
+running_blueknow_units_after,0
+ended_at_utc,2026-08-14T08:51:00Z

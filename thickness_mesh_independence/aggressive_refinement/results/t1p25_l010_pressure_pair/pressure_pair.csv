@@ -1,0 +1,2 @@
+eyelid_thickness_mm,iop0_mmhg,iop20_mmhg,indent_mm,background_mesh_mm,local_refine_level,nominal_local_target_mm,force0_magnitude_n,force20_magnitude_n,delta_force_n,probe_area_mm2,delta_probe_pressure_pa,q20_mmhg,coarse_global_0p30_q20_mmhg,l010_change_from_coarse_global_0p30_percent,pair_qc_pass,source_git_commit
+1.25,0.0,20.0,0.28,0.2,1,0.1,0.17134016405785,0.18100135590385,0.009661191846000006,14.65741468458854,659.1334184027838,4.9439072093374365,7.072211426411742,-30.09389975426897,1,6ef45199bec06139538c5a68a1538ae683ea1c3b

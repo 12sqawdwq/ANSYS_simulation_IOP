@@ -1,0 +1,15 @@
+key,value
+captured_at_utc,2026-08-14T08:43:07Z
+campaign_complete,1
+campaign_incomplete,0
+run_completed_count,1
+mapdl_error_count,0
+warning_message_count,11
+completed_substeps,29
+last_completed_state,*** LOAD STEP     3   SUBSTEP    13  COMPLETED.    CUM ITER =     48
+solver_mode,out-of-core
+solver_mode_verified,1
+solver_processes,0
+token_processes,0
+blueknow_running_units,0
+zfs_arc_max_bytes,17179869184

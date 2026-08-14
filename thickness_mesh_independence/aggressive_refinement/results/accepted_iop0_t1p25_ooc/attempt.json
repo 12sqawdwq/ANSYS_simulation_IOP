@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "retry_mode": 0,
+  "encoded_mode": 11010,
+  "np": 4,
+  "local_refine_level": 1,
+  "local_refine_halfwidth_mm": 1.8,
+  "solver_memory_mode": "out-of-core",
+  "result_output_frequency": "last",
+  "command": [
+    "/home/xuanyu/PROJECT/ziyu/SOFTWARE/ansys_inc/v252/ansys/bin/mapdl",
+    "-b",
+    "-np",
+    "4",
+    "-dir",
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T025331Z_6ef45199_L010_h1p25_iop0_ooc_last_np4/iop0/eyelid_1p25mm_indent_0p28mm/attempt_1",
+    "-i",
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T025331Z_6ef45199_L010_h1p25_iop0_ooc_last_np4/iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/driver.dat",
+    "-o",
+    "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T025331Z_6ef45199_L010_h1p25_iop0_ooc_last_np4/iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/solve.out",
+    "-j",
+    "eyelid_1p25mm_indent_0p28mm"
+  ],
+  "started_at_utc": "2026-08-14T02:53:34+00:00",
+  "ended_at_utc": "2026-08-14T08:40:09+00:00",
+  "elapsed_seconds": 20793.338,
+  "status": "complete",
+  "reason": "",
+  "returncode": 0,
+  "ansys_error_count": 0,
+  "artifact_retention": {
+    "policy": "mapdl-auditable-results",
+    "pruned_files": 21,
+    "pruned_bytes": 10394942050,
+    "error": ""
+  }
+}

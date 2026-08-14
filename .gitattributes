@@ -31,4 +31,6 @@ thickness_mesh_independence/aggressive_refinement/results/t1p25_iop20_resource_a
 thickness_mesh_independence/aggressive_refinement/results/t1p25_iop20_ooc_launch/** -text -eol whitespace=-trailing-space
 thickness_mesh_independence/aggressive_refinement/results/accepted_iop20_t1p25_ooc/** -text -eol whitespace=-trailing-space
 thickness_mesh_independence/aggressive_refinement/results/t1p25_iop0_ooc_launch/** -text -eol whitespace=-trailing-space
+thickness_mesh_independence/aggressive_refinement/results/accepted_iop0_t1p25_ooc/** -text -eol whitespace=-trailing-space
+thickness_mesh_independence/aggressive_refinement/results/t1p25_l010_pressure_pair/** -text -eol whitespace=-trailing-space
 

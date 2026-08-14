@@ -14,7 +14,8 @@
 - **2.00 mm、0 mmHg端点已接收**：commit `abf4175...` 的新campaign在约10.67 h后自然完成，三个载荷步、返回码、ANSYS error、穿透、资源和零残留均通过；轻量证据见 [`results/accepted_iop0_h2p00/`](results/accepted_iop0_h2p00/)。该端点是2.00 mm显式厚度覆盖，不是1.25 mm基线；
 - **当前新阶段为1.25 mm全局基线**：launcher默认从 `config/model_baseline.json` 读取1.25 mm；1.25 mm L010 mesh-only预检已通过。按用户优先级切换后，0 mmHg主动中止，第一次20 mmHg在伪时间2.928125、压入0.259875 mm后因30 GiB内存保护线中止。28个已完成子步均收敛，但没有正式端点；轻量证据见 [`results/t1p25_iop20_resource_aborted/`](results/t1p25_iop20_resource_aborted/)；
 - **IOP20重跑已以显式out-of-core完成并接收**：全新root通过runner参数冻结`out-of-core`与每载荷步末态输出，launcher运行早期确认实际模式；29个子步、三个载荷步、`RUN COMPLETED`、MAPDL error 0、资源和零残留全部通过。正式$F_{20}=-0.18100135590385$ N，轻量证据见 [`results/accepted_iop20_t1p25_ooc/`](results/accepted_iop20_t1p25_ooc/)；
-- **压力对仍不完整，IOP0重跑进行中**：经用户单独授权，1.25 mm IOP0已沿用同一源码commit和out-of-core/last-only策略从全新root启动，且实际solver模式已验证。它在自然完成和人工接收前仍不是端点，所以暂不能计算$q$。
+- **IOP0重跑已完成并接收**：同一源码commit和out-of-core/last-only策略下完成29个子步、三个载荷步，`RUN COMPLETED`、MAPDL error 0、资源、warning、接触边界与零残留QC全部通过；正式$|F_0|=0.17134016405785$ N，证据见 [`results/accepted_iop0_t1p25_ooc/`](results/accepted_iop0_t1p25_ooc/)；
+- **1.25 mm L010压力对已接收**：同配置配对得到$q_{20}=4.9439072093374365$ mmHg；末态中央剖面`007`与完整配对证据见 [`results/t1p25_l010_pressure_pair/`](results/t1p25_l010_pressure_pair/)。该值相对既有全局0.30 mm结果低30.09%，只能作为L010离散结果，不能宣称绝对网格无关。
 
 详尽依据、资源表、阶段矩阵和判据见 [`EXPERIMENT_DESIGN.md`](EXPERIMENT_DESIGN.md)。
 
@@ -40,7 +41,7 @@ export RUN_EXTREME=1
 
 本阶段保持L010网格策略、材料、0.28 mm推进、0.30 mm初始间隙、4 ranks、1 worker和资源门不变，只把眼睑厚度切换为机器可读全局基线1.25 mm。由于几何变化会改变实际单元/节点数，非线性求解前必须先运行同一commit上的1.25 mm mesh-only预检；预检只验证构网格和shape error，不产生力学端点。
 
-新campaign仍强制一个压力。20 mmHg已完成并通过三个载荷步、`RUN COMPLETED`、ANSYS error、穿透、资源、out-of-core实际模式和残留人工QC。0 mmHg已从全新root启动；在其自然完成并接收前仍不能计算$q$。
+每个campaign仍严格只含一个压力。0和20 mmHg均已从独立新root自然完成，并通过三个载荷步、`RUN COMPLETED`、ANSYS error、穿透、资源、out-of-core实际模式和残留人工QC；同配置压力对现可计算$q$。
 
 ## 正式 P1 锚点压力对
 
@@ -55,7 +56,7 @@ export NP_PER_CASE=4
 bash thickness_mesh_independence/aggressive_refinement/scripts/server/launch_aggressive_anchor_5090d.sh
 ```
 
-启动器要求 `MemAvailable>=90 GiB`、空闲磁盘 `>=150 GiB`，每 10 s 监测；30 GiB 内存或 100 GiB 磁盘保护线触发时终止完整 cgroup/token process set。当前用户已单独授权先从全新root重跑20 mmHg，launcher还要求在30 min内从`solve.out`核实out-of-core。完成后仍需人工QC；0 mmHg稍后也必须从另一个全新root单独重跑并接收，才可形成压力对。
+启动器要求 `MemAvailable>=90 GiB`、空闲磁盘 `>=150 GiB`，每 10 s 监测；30 GiB 内存或 100 GiB 磁盘保护线触发时终止完整 cgroup/token process set。已完成的1.25 mm压力对严格按两个独立新root运行，并在30 min内从`solve.out`核实out-of-core；两端点均完成人工QC。
 
 不涉及 ANSYS 的 session-tree 回归测试入口为：
 
@@ -93,6 +94,8 @@ python thickness_mesh_independence/aggressive_refinement/scripts/analysis/estima
 - `results/t1p25_iop20_resource_aborted/`：1.25 mm IOP20近终点资源中止、数值状态和失败二进制清理的轻量审计；
 - `results/accepted_iop20_t1p25_ooc/`：已接收1.25 mm IOP20 out-of-core端点的标量、资源、warning、外部哈希和QC；
 - `results/t1p25_iop0_ooc_launch/`：1.25 mm IOP0独立out-of-core重跑的授权、资源门、driver和实际solver模式证据；
+- `results/accepted_iop0_t1p25_ooc/`：已接收1.25 mm IOP0端点的标量、资源、warning、边界图、外部哈希和QC；
+- `results/t1p25_l010_pressure_pair/`：同配置0/20 mmHg压力对、$q_{20}$、中央剖面`007`和claim边界；
 - `scripts/server/`：5090d 启动器、cgroup session guard 及其回归测试；
 - `scripts/analysis/`：资源收集、估算和压力对评估。
 

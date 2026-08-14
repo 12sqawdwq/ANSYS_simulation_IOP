@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "status": "accepted_complete_l010_t1p25_iop0_iop20_pressure_pair",
+  "source_git_commit": "6ef45199bec06139538c5a68a1538ae683ea1c3b",
+  "pair_qc": {
+    "both_endpoints_accepted": true,
+    "same_source_commit": true,
+    "same_geometry_material_mesh_and_parallelism": true,
+    "only_pressure_differs": true,
+    "same_mesh_inventory": true,
+    "same_apdl_inputs": true,
+    "same_global_baseline": true,
+    "same_solver_and_result_strategy": true,
+    "three_load_steps_each": true,
+    "same_endpoint_load_state": true,
+    "ansys_error_zero_each": true,
+    "force_increment_positive": true
+  },
+  "definition": {
+    "formula": "q20=(|probe_fy_iop20|-|probe_fy_iop0|)/(A_probe*Pa_per_mmHg)",
+    "force_semantics": "F is the positive indentation-force magnitude; raw MAPDL probe_fy is negative under the model coordinate convention.",
+    "probe_area_mm2": 14.65741468458854,
+    "pa_per_mmhg": 133.32236842105263
+  },
+  "result": {
+    "eyelid_thickness_mm": 1.25,
+    "iop0_mmhg": 0.0,
+    "iop20_mmhg": 20.0,
+    "indent_mm": 0.28,
+    "background_mesh_mm": 0.2,
+    "local_refine_level": 1,
+    "nominal_local_target_mm": 0.1,
+    "force0_magnitude_n": 0.17134016405785,
+    "force20_magnitude_n": 0.18100135590385,
+    "delta_force_n": 0.009661191846000006,
+    "probe_area_mm2": 14.65741468458854,
+    "delta_probe_pressure_pa": 659.1334184027838,
+    "q20_mmhg": 4.9439072093374365,
+    "coarse_global_0p30_q20_mmhg": 7.072211426411742,
+    "l010_change_from_coarse_global_0p30_percent": -30.09389975426897,
+    "pair_qc_pass": 1,
+    "source_git_commit": "6ef45199bec06139538c5a68a1538ae683ea1c3b"
+  },
+  "endpoint_differences": {
+    "contact_area_change_mm2": 0.10746365997069951,
+    "maximum_contact_pressure_change_kpa": 1.9388346354160007,
+    "maximum_penetration_change_mm": 0.0017110420837222005
+  },
+  "field_qc": {
+    "checks": {
+      "iop0_mapdl_error_zero": true,
+      "iop20_mapdl_error_zero": true,
+      "nine_native_views_each": true,
+      "load_step_3_time_3p0": true,
+      "native_auto_scale_view_007": true,
+      "no_residual_postprocess_session": true,
+      "iop0_007_hash_matches_external_root": true,
+      "iop20_007_hash_matches_external_root": true
+    },
+    "external_root": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T085004Z_6ef45199_L010_h1p25_iop0_iop20_field_qc",
+    "authoritative_view": "007 actual-scale deformed central section with native automatic colour scale",
+    "visual_assessment": "Both endpoint sections are centered and mechanically continuous. IOP20 shows a coherent redistribution and a higher native maximum equivalent stress (44.488 kPa versus 40.366 kPa); native scales are intentionally not forced equal.",
+    "external_artifacts": [
+      {
+        "role": "iop0_central_007",
+        "relative_path": "iop0/field_qc_iop0007.png",
+        "size_bytes": 56723,
+        "sha256": "184c7744be1e593e17018b81f1f051404aaf2b90d349b1bedb295722e93a3f77"
+      },
+      {
+        "role": "iop0_post_out",
+        "relative_path": "iop0/post.out",
+        "size_bytes": 21242,
+        "sha256": "d47ea7cf0ed3435804c28dc90bcc8b72294a4f1b5f76641f1393d22af43c7cb6"
+      },
+      {
+        "role": "iop0_source_db",
+        "relative_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T025331Z_6ef45199_L010_h1p25_iop0_ooc_last_np4/iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.db",
+        "size_bytes": 497221632,
+        "sha256": "3ea0583611f384db34dbed1f7d5e3163536d96f00f1516882aa5d85e79178bed"
+      },
+      {
+        "role": "iop0_source_rst",
+        "relative_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260814T025331Z_6ef45199_L010_h1p25_iop0_ooc_last_np4/iop0/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.rst",
+        "size_bytes": 1710686208,
+        "sha256": "a9f14eee4ccc6dc7d55b878ed6872828436500b442c49b6a7ff9f16f1be6d341"
+      },
+      {
+        "role": "iop20_central_007",
+        "relative_path": "iop20/field_qc_iop20007.png",
+        "size_bytes": 56970,
+        "sha256": "7fb3d04021604bb1ca4e954ec9e55ade40c8003e7c57c682b1f51d6293fbe4ee"
+      },
+      {
+        "role": "iop20_post_out",
+        "relative_path": "iop20/post.out",
+        "size_bytes": 21258,
+        "sha256": "99f8db838403ef40b9cdd8991a56fe6b5383dbe15b11296a48167002cd82f106"
+      },
+      {
+        "role": "iop20_source_db",
+        "relative_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T140838Z_6ef45199_L010_h1p25_iop20_ooc_last_np4/iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.db",
+        "size_bytes": 497614848,
+        "sha256": "39487814335e50ddc1350dce40624d5336b5d345b4e817ea4ac305903d484889"
+      },
+      {
+        "role": "iop20_source_rst",
+        "relative_path": "/home/xuanyu/PROJECT/ziyu/blueknow-data/thickness_mesh_independence/20260813T140838Z_6ef45199_L010_h1p25_iop20_ooc_last_np4/iop20/eyelid_1p25mm_indent_0p28mm/attempt_1/eyelid_1p25mm_indent_0p28mm.rst",
+        "size_bytes": 1788280832,
+        "sha256": "9cb58e16f9430696a533bf384fc858210659420a865dca144e8d2f7407715084"
+      }
+    ]
+  },
+  "coarse_reference_comparison": {
+    "comparison_role": "directional_mesh_sensitivity_context_not_a_formal_two_percent_convergence_test",
+    "global_0p30_q20_mmhg": 7.072211426411742,
+    "l010_q20_mmhg": 4.9439072093374365,
+    "l010_change_from_global_0p30_percent": -30.09389975426897,
+    "interpretation": "The L010 pair is internally valid, but a single contact-refined pair cannot establish absolute mesh independence. Its material difference from the existing global-0.30 result reinforces the existing amplitude-nonconvergence warning."
+  },
+  "source_artifacts": [
+    {
+      "role": "accepted_iop0_manifest",
+      "path": "thickness_mesh_independence/aggressive_refinement/results/accepted_iop0_t1p25_ooc/manifest.json",
+      "size_bytes": 9217,
+      "sha256": "f792ac52f41ada97daca0ab4c1d0efb9aba34954b23a3baffd7207829ed7aefa"
+    },
+    {
+      "role": "accepted_iop20_manifest",
+      "path": "thickness_mesh_independence/aggressive_refinement/results/accepted_iop20_t1p25_ooc/manifest.json",
+      "size_bytes": 7644,
+      "sha256": "5ff421bdbe1a6d103f0d2a0e0563c0812ffaffcd9badb6338bb7c2c335af8c42"
+    },
+    {
+      "role": "coarse_global_0p30_reference",
+      "path": "analysis/outputs/sensitivity_results.csv",
+      "size_bytes": 2985,
+      "sha256": "cd66c625ed5d9291e250c97425ed8dbd694b8f8f0b466ffc39dffba8dafc5cca"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "field_qc/artifact_manifest.tsv",
+      "size_bytes": 1628,
+      "sha256": "f52301071a44afcd217836d0d28370eaab28f1456acde2c580bd9e97b3350558"
+    },
+    {
+      "path": "field_qc/central_section_iop0_007.png",
+      "size_bytes": 56723,
+      "sha256": "184c7744be1e593e17018b81f1f051404aaf2b90d349b1bedb295722e93a3f77"
+    },
+    {
+      "path": "field_qc/central_section_iop20_007.png",
+      "size_bytes": 56970,
+      "sha256": "7fb3d04021604bb1ca4e954ec9e55ade40c8003e7c57c682b1f51d6293fbe4ee"
+    },
+    {
+      "path": "field_qc/iop0_post.out",
+      "size_bytes": 21242,
+      "sha256": "d47ea7cf0ed3435804c28dc90bcc8b72294a4f1b5f76641f1393d22af43c7cb6"
+    },
+    {
+      "path": "field_qc/iop20_post.out",
+      "size_bytes": 21258,
+      "sha256": "99f8db838403ef40b9cdd8991a56fe6b5383dbe15b11296a48167002cd82f106"
+    },
+    {
+      "path": "field_qc/status.csv",
+      "size_bytes": 366,
+      "sha256": "610c6a034fd52231b00f3c783211a275974fe20925017b25b8a4a5c0a673a7f1"
+    },
+    {
+      "path": "pressure_pair.csv",
+      "size_bytes": 538,
+      "sha256": "a9ad02c0adacba8fb3142d5166c4129c6530865fc95ea8af6c9f08be66509348"
+    }
+  ],
+  "claim_boundary": "This result is the accepted q20 for the L010 discretization at 1.25 mm and 0.28 mm indentation. It is not a mesh-independent tissue threshold, a production calibration, or an independent validation of the pressure algorithm."
+}
