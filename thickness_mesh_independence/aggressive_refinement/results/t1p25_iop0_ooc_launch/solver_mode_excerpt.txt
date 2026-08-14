@@ -1,0 +1,18 @@
+  Number of equations =     2711583,    Maximum wavefront =    537
+  Total (solver and non-solver) memory allocated       =     5.975 GB
+
+
+  Total memory summed across all MPI ranks on this machines
+  -------------------------------------------------------------------
+  Equation solver memory allocated                     =     8.662 GB
+  Equation solver memory required for in-core mode     =    48.900 GB
+  Equation solver memory required for out-of-core mode =     8.350 GB
+  Total (solver and non-solver) memory allocated       =    17.776 GB
+
+ *** WARNING ***                         CP =      96.267   TIME= 10:54:45
+ The Distributed Sparse Matrix Solver is currently running in the        
+ out-of-core memory mode.  This memory mode may provide significantly    
+ worse performance compared to the in-core memory mode, depending on     
+ the amount of available system memory and I/O speed.  Please monitor    
+ the solver performance to ensure that the large amount of I/O to the    
+ solver files does not create a bottleneck for performance.              
